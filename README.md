@@ -1,3 +1,18 @@
+#Activities to do
+***To start working on an activity, create a branch with one of these names.***
+
+  + Login and Register -> *Marco*
+  + Restaurant Creation -> *Marco*
+  + Restaurant Management (Restaurants listing) -> *Marco*
+  + Restaurant Page
+  + Menu Creation 
+  + Menu Management (Menus listing)
+  + Menu Page
+  + Order Management (Order listing)
+  + Order page (Details about the order, ability to take the order, mark as dispatched, etc..)
+  + Review Page
+  + Review System (Only people who pay can review)
+
 #Icons (needed and available)
 Icons needed:
 
