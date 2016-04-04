@@ -26,37 +26,37 @@ public class Menu {
 
     /**
      *
-     * @return int: The ID
+     * @return The ID
      */
     public int getMid(){ return this.mid;}
 
     /**
      *
-     * @return String: The name of the menu
+     * @return The name of the menu
      */
     public String getName(){ return this.name;}
 
     /**
      *
-     * @return String: The description of the menu
+     * @return The description of the menu
      */
     public String getDescription(){ return this.description;}
 
     /**
      *
-     * @return float: The price of the menu
+     * @return The price of the menu
      */
     public float getPrice(){ return this.price;}
 
     /**
      *
-     * @return byte[]: The image of the course, in base 64 format
+     * @return The image of the course, in base 64 format
      */
     public byte[] getImage64(){return this.image;}
 
     /**
      *
-     * @return Bitmap: The image of the course, in Bitmap format
+     * @return The image of the course, in Bitmap format
      */
     public Bitmap getImageBitmap(){
         return BitmapFactory.decodeByteArray(this.image, 0, this.image.length);
@@ -68,7 +68,7 @@ public class Menu {
      *  1 = "fixed" = Fixed menu
      *  2 = "fixed options" = Fixed menu with options
      *  3 = "complete" = Complete menu
-     * @return String: Textual representation of the type of menu
+     * @return Textual representation of the type of menu
      */
     public String getTypeString(){
         switch(this.type){
@@ -87,20 +87,20 @@ public class Menu {
 
     /**
      *
-     * @return int: The integer associated with the menu type
+     * @return The integer associated with the menu type
      */
     public int getType(){return this.type;}
 
     /**
      *
-     * @return ArrayList<Course>: The list of all the courses in the menu
+     * @return The list of all the courses in the menu
      */
     public ArrayList<Course> getCourses(){ return this.courses;}
 
     /**
      * This method returns a particular course, given its ID.
      * @param id The id of the course
-     * @return Course: The requested course or null if nothing is found.
+     * @return The requested course or null if nothing is found.
      */
     public Course getCourseFromID(int id){
         for(Course course : this.courses)
@@ -113,7 +113,7 @@ public class Menu {
      * This method returns a particular course, given its name.
      * If the course is not found, it returns null.
      * @param name Name of the course to search for.
-     * @return Course: The requested course or null if nothing is found.
+     * @return The requested course or null if nothing is found.
      */
     public Course getCourseFromName(String name){
         for(Course course : this.courses)
@@ -124,7 +124,7 @@ public class Menu {
 
     /**
      * This method returns the list of all gluten-free courses
-     * @return ArrayList<Course>: The list of gluten-free courses
+     * @return The list of gluten-free courses
      */
     public ArrayList<Course> getGlutenFreeCourses(){
         ArrayList<Course> output = new ArrayList<Course>();
@@ -137,7 +137,7 @@ public class Menu {
 
     /**
      * This method returns the list of all the vegan courses.
-     * @return ArrayList<Course>: The list of vegan courses
+     * @return The list of vegan courses
      */
     public ArrayList<Course> getVeganCourses(){
         ArrayList<Course> output = new ArrayList<Course>();
@@ -150,7 +150,7 @@ public class Menu {
 
     /**
      * This method returns the list of all the vegetarian courses.
-     * @return ArrayList<Course>: The list of vegetarian courses
+     * @return The list of vegetarian courses
      */
     public ArrayList<Course> getVegetarianCourses(){
         ArrayList<Course> output = new ArrayList<Course>();
@@ -163,7 +163,7 @@ public class Menu {
 
     /**
      * This method returns the list of all the spicy courses.
-     * @return ArrayList<Course>: The list of spicy courses
+     * @return The list of spicy courses
      */
     public ArrayList<Course> getSpicyCourses(){
         ArrayList<Course> output = new ArrayList<Course>();
@@ -176,7 +176,7 @@ public class Menu {
 
     /**
      * Returns true if the menu can be bought with tickets. False otherwise.
-     * @return boolean: true or false
+     * @return true or false
      */
     public boolean acceptTicket(){ return this.ticket; }
 
@@ -239,7 +239,7 @@ public class Menu {
      *  Returns true in case of success, false otherwise.
      *
      * @param type The type of the menu, must be between 0 and 3
-     * @return boolean: true or false.
+     * @return true or false.
      */
     public boolean setType(int type){
         switch(type){

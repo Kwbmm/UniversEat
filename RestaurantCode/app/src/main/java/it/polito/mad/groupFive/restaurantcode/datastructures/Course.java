@@ -26,37 +26,37 @@ public class Course {
 
     /**
      *
-     * @return int: The Course ID
+     * @return The Course ID
      */
     public int getCid(){return this.cid;}
 
     /**
      *
-     * @return String: The name of the course
+     * @return The name of the course
      */
     public String getName(){return this.name;}
 
     /**
      *
-     * @return String: The description of the course
+     * @return The description of the course
      */
     public String getDescription(){return this.description;}
 
     /**
      *
-     * @return float: The price of the course
+     * @return The price of the course
      */
     public float getPrice(){return this.price;}
 
     /**
      *
-     * @return byte[]: The image of the course, in base 64 format
+     * @return The image of the course, in base 64 format
      */
     public byte[] getImage64(){return this.image;}
 
     /**
      *
-     * @return Bitmap: The image of the course, in Bitmap format
+     * @return The image of the course, in Bitmap format
      */
     public Bitmap getImageBitmap(){
         return BitmapFactory.decodeByteArray(this.image,0,this.image.length);
@@ -64,25 +64,25 @@ public class Course {
 
     /**
      * Returns true if course is gluten-free. False otherwise.
-     * @return boolean: true or false
+     * @return true or false
      */
     public boolean isGlutenFree(){ return this.glutenFree;}
 
     /**
      * Returns true if course is vegan. False otherwise.
-     * @return boolean: true or false
+     * @return true or false
      */
     public boolean isVegan(){ return this.vegan;}
 
     /**
      * Returns true if course is vegetarian. False otherwise.
-     * @return boolean: true or false
+     * @return true or false
      */
     public boolean isVegetarian(){ return this.vegetarian;}
 
     /**
      * Returns true if course is spicy. False otherwise.
-     * @return boolean: true or false
+     * @return true or false
      */
     public boolean isSpicy(){ return this.spicy;}
 

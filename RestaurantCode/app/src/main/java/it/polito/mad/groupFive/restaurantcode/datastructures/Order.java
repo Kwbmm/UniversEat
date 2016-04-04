@@ -14,25 +14,25 @@ public class Order {
 
     /**
      *
-     * @return int: The order ID
+     * @return The order ID
      */
     public int getOid(){ return this.oid;}
 
     /**
      *
-     * @return int: The user ID that performed this order
+     * @return The user ID that performed this order
      */
     public int getUid(){ return this.uid;}
 
     /**
      *
-     * @return int: The menu ID ordered
+     * @return The menu ID ordered
      */
     public int getMid(){ return this.mid;}
 
     /**
      *
-     * @return Restaurant: The restaurant to which this order belongs to.
+     * @return The restaurant to which this order belongs to.
      */
     public Restaurant getRestaurant(){ return this.restaurant;}
 
