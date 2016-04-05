@@ -21,7 +21,15 @@
       "ticket": false,
       "courses":[
         {
-          "id": 1
+          "id": 1,
+          "name": "Pasta al pomodoro",
+          "description": "A super-tasty pasta al pomodoro",
+          "price": 6.99,
+          "image": null,
+          "glutenFree": false,
+          "vegan": true,
+          "vegetarian": true,
+          "spicy": false
         }
       ]
     }

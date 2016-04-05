@@ -6,6 +6,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
@@ -17,7 +21,7 @@ import java.util.ArrayList;
  */
 public class Menu {
 
-    private Context appContext=null;
+    private JSONObject JSONFile = null;
 
     private int mid;
     private String name=null;
@@ -28,12 +32,70 @@ public class Menu {
     private ArrayList<Course> courses=null;
     private boolean ticket;
 
-    public Menu(Context appContext, int mid){
-        this.appContext = appContext;
+    public Menu(JSONObject file, int mid){
+        this.JSONFile = file;
         this.mid = mid;
     }
 
-    public void saveMenuToJSON(){
+    /**
+     * Reads data from JSON configuration file.
+     * If some field is missing, it throws JSONException
+     * Please note that course objects read like this are just filled with their
+     * own id. The other data must be filled through the methods provided in the Course class.
+     *
+     * @throws JSONException if some field is missing.
+     */
+    public void getData() throws JSONException {
+        JSONArray menus = this.JSONFile.getJSONArray("menus");
+        for (int i = 0; i < menus.length(); i++) {
+            if(menus.getJSONObject(i).getInt("id") == this.mid){
+                JSONObject jsonMenu = menus.getJSONObject(i);
+                this.name = jsonMenu.getString("name");
+                this.description = jsonMenu.getString("description");
+                this.price = (float) jsonMenu.getDouble("price");
+                this.image = jsonMenu.getString("image").getBytes();
+                this.type = jsonMenu.getInt("type");
+                this.ticket = jsonMenu.getBoolean("ticket");
+
+                JSONArray courses = jsonMenu.getJSONArray("courses");
+                for (int j = 0; j < courses.length(); j++)
+                    this.courses.add(new Course(this.JSONFile, courses.getJSONObject(j).getInt("id"), this.mid));
+                break; //Exit from the outer loop
+            }
+        }
+    }
+
+    /**
+     * Saves data to JSON restaurant file.
+     * If some field is missing, it throws JSONException.
+     * Please note that course objects saved like this are just filled with their
+     * own id. The other data must be filled through the methods provided in the Course class.
+     *
+     * @throws JSONException
+     */
+    public void saveData() throws JSONException{
+        JSONArray menus = this.JSONFile.getJSONArray("menus");
+        for (int i = 0; i < menus.length(); i++) {
+            if(menus.getJSONObject(i).getInt("id") == this.mid){
+                JSONObject menu = menus.getJSONObject(i);
+                menu.put("id",this.mid);
+                menu.put("name",this.name);
+                menu.put("description",this.description);
+                menu.put("price",this.price);
+                menu.put("image",this.image.toString());
+                menu.put("type",this.type);
+                JSONArray courses = new JSONArray();
+                for (int j = 0; j < this.courses.size(); j++) {
+                    JSONObject course = new JSONObject();
+                    course.put("id", this.courses.get(j).getCid());
+                    courses.put(j,course);
+                }
+                menu.put("courses",courses);
+                break;
+            }
+        }
+//        menus.getJSONObject(i).put()
+//        this.JSONFile.put("menus",)
     }
 
     /**

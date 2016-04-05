@@ -97,7 +97,7 @@ public class Restaurant {
 
         JSONArray menus = this.JSONFile.getJSONArray("menus");
         for(int i=0; i < menus.length(); i++)
-            this.menus.add(new Menu(this.appContext, menus.getJSONObject(i).getInt("id")));
+            this.menus.add(new Menu(this.JSONFile, menus.getJSONObject(i).getInt("id")));
 
         JSONArray orders = this.JSONFile.getJSONArray("orders");
         for(int i=0; i <orders.length(); i++)
@@ -130,6 +130,7 @@ public class Restaurant {
             menu.put("id",this.menus.get(i).getMid());
             menus.put(i,menu);
         }
+        this.JSONFile.put("menus",menus);
 
         JSONArray orders = new JSONArray();
         for (int i = 0; i <this.orders.size(); i++) {
@@ -137,6 +138,7 @@ public class Restaurant {
             order.put("id",this.orders.get(i).getOid());
             orders.put(i,order);
         }
+        this.JSONFile.put("orders",orders);
     }
 
     /**

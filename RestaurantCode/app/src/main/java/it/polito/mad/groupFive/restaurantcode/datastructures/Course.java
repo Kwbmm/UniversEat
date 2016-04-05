@@ -5,6 +5,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 
 /**
@@ -14,7 +18,11 @@ import java.io.ByteArrayOutputStream;
  * @brief Course class
  */
 public class Course {
+
+    private JSONObject JSONfile = null;
+
     private int cid;
+    private int mid;
     private String name;
     private String description;
     private float price;
@@ -24,6 +32,34 @@ public class Course {
     private boolean vegetarian;
     private boolean spicy;
 
+
+    public Course(JSONObject file, int id, int mid){
+        this.JSONfile = file;
+        this.cid = id;
+        this.mid = mid;
+    }
+
+    public void getData() throws JSONException{
+        //TODO
+        JSONArray courses = this.JSONfile.getJSONArray("courses"); //I don't know if I need to traverse the whole tree or not
+        for (int i = 0; i < courses.length(); i++) {
+            if(courses.getJSONObject(i).getInt("id") == this.cid){
+                JSONObject course = courses.getJSONObject(i);
+                this.name = course.getString("name");
+                this.description = course.getString("description");
+                this.price = (float) course.getDouble("price");
+                this.image = course.getString("image").getBytes();
+                this.glutenFree = course.getBoolean("glutenFree");
+                this.vegan = course.getBoolean("vegan");
+                this.vegetarian = course.getBoolean("vegetarian");
+                this.spicy = course.getBoolean("spicy");
+            }
+        }
+    }
+
+    public void saveData(){
+        //this.JSONfile.pu
+    }
     /**
      *
      * @return The Course ID
