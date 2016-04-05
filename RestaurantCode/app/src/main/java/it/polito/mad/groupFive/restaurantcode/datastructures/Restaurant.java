@@ -37,6 +37,7 @@ public class Restaurant {
     private ArrayList<Order> orders;
     private float xcoord;
     private float ycoord;
+    private int uid;
 
     /**
      * Instantiates a new Restaurant object.
@@ -286,4 +287,19 @@ public class Restaurant {
         this.orders = orders;
     }
 
+    /**
+     *
+     * @return uid: id of user that is the restaurant owner
+     */
+    public int getUid() {
+        return uid;
+    }
+
+    /**
+     *
+     * @param uid: set the id of the restaurant owner
+     */
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
 }
