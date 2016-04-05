@@ -28,8 +28,9 @@ public class Menu {
     private ArrayList<Course> courses=null;
     private boolean ticket;
 
-    public Menu(Context appContext){
+    public Menu(Context appContext, int mid){
         this.appContext = appContext;
+        this.mid = mid;
     }
 
     public void saveMenuToJSON(){

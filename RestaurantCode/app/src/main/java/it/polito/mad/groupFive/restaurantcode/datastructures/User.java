@@ -1,6 +1,13 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
+import android.content.Context;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantIDException;
 
 /**
  * @author Giovanni
@@ -11,17 +18,24 @@ import java.util.ArrayList;
  */
 public class User {
     private int uid;
+    private Restaurant restaurant;
     private String name;
     private String surname;
     private String address;
     private byte[] image;
     private String nickname;
     private ArrayList<Restaurant> favorites;
-    private boolean restaurantowner;
-    private Restaurant restaurant;
+    private boolean restaurantOwner;
 
-    public User() {
+    public User() {}
 
+    /**
+     * Constructor for restaurant owner
+     * @param rid
+     */
+    public User(Context c, int rid) throws JSONException, IOException, RestaurantIDException {
+        this.restaurant = new Restaurant(c,rid);
+        this.restaurantOwner = true;
     }
 
     /**
@@ -109,16 +123,14 @@ public class User {
      * @return yes if the user is the restaurant owner
      */
     public boolean isRestaurantowner() {
-        return restaurantowner;
+        return this.restaurantOwner;
     }
 
     /**
      *
      * @param restaurantowner if is or is not a restaurant owner
      */
-    public void setRestaurantowner(boolean restaurantowner) {
-        this.restaurantowner = restaurantowner;
-    }
+    public void setRestaurantowner(boolean restaurantowner) { this.restaurantOwner = restaurantowner;}
 
     /**
      *

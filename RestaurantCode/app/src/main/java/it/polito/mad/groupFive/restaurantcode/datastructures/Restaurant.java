@@ -2,6 +2,7 @@ package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.content.Context;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,12 +21,10 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
 public class Restaurant {
 
     private Context appContext=null;
-    private final String configFile = "restaurants.json";
-    private JSONObject jsonConfigFile=null;
-
-    private JSONObject myJSONFile=null;
+    private JSONObject JSONFile=null;
 
     private int rid;
+    private int uid;
     private String name;
     private String description;
     private String address;
@@ -35,15 +34,14 @@ public class Restaurant {
     private float rating;
     private ArrayList<Menu> menus;
     private ArrayList<Order> orders;
-    private float xcoord;
-    private float ycoord;
-    private int uid;
+    private double xcoord;
+    private double ycoord;
 
     /**
      * Instantiates a new Restaurant object.
      * The constructor requires the Application Context to read the JSON configuration file
      * from assets folder and the ID of the restaurant because it's the only way to identify
-     * the restaurant uniquely.
+     * the restaurant file uniquely.
      *
      * @param c Application Context.
      * @param restaurantID Unique ID of the restaurant.
@@ -56,27 +54,18 @@ public class Restaurant {
         if(restaurantID < 0)
             throw new RestaurantIDException("Restaurant ID must be positive");
         this.rid = restaurantID;
-        this.jsonConfigFile = new JSONObject(this.loadJSONFromAsset());
-
+        this.JSONFile = new JSONObject(this.loadJSONFromAsset());
     }
 
     /**
-     * This method reads the list of restaurants from restaurant.json asset file.
-     * The restaurant.json file should be structured as follows:
-     *  {
-     *      "restaurants":[
-     *          {"id": 1},
-     *          {"id": 2},
-     *          ...
-     *          {"id": N}
-     *      ]
-     *  }
+     * This method reads the restaurant JSON file.
+     *
      * @return String representation of the JSON file
      * @throws IOException
      */
     public String loadJSONFromAsset() throws IOException {
         String json = null;
-        InputStream is = this.appContext.getAssets().open(this.configFile);
+        InputStream is = this.appContext.getAssets().open("r"+this.rid);
         int size = is.available();
         byte[] buffer = new byte[size];
         is.read(buffer);
@@ -87,14 +76,68 @@ public class Restaurant {
     }
 
     /**
-     * Reads data from the JSON restaurant file
+     * Reads data from JSON configuration file.
+     * If some field is missing, it throws JSONException
+     * Please note that menus and orders objects read like this are just filled with their
+     * own id. The other data must be filled through the methods provided in their classes.
+     *
+     * @throws JSONException if some field is missing.
      */
-    public void getData(){}
+    public void getData() throws JSONException {
+        this.uid = this.JSONFile.getInt("uid");
+        this.name = this.JSONFile.getString("name");
+        this.description = this.JSONFile.getString("description");
+        this.address = this.JSONFile.getString("address");
+        this.city = this.JSONFile.getString("city");
+        this.state = this.JSONFile.getString("state");
+        this.xcoord = this.JSONFile.getDouble("xcoord");
+        this.ycoord = this.JSONFile.getDouble("ycoord");
+        this.image = this.JSONFile.getString("image").getBytes();
+        this.rating = (float)this.JSONFile.getDouble("rating");
+
+        JSONArray menus = this.JSONFile.getJSONArray("menus");
+        for(int i=0; i < menus.length(); i++)
+            this.menus.add(new Menu(this.appContext, menus.getJSONObject(i).getInt("id")));
+
+        JSONArray orders = this.JSONFile.getJSONArray("orders");
+        for(int i=0; i <orders.length(); i++)
+            this.orders.add(new Order(this.appContext,orders.getJSONObject(i).getInt("id")));
+    }
 
     /**
-     * Saves data to the JSON restaurant file
+     * Saves data to JSON restaurant file.
+     * If some field is missing, it throws JSONException.
+     * Please note that menus and orders objects saved like this are just filled with their
+     * own id. The other data must be filled through the methods provided in their classes.
+     *
+     * @throws JSONException
      */
-    public void saveData(){}
+    public void saveData() throws JSONException {
+        this.JSONFile.put("id",this.rid);
+        this.JSONFile.put("uid",this.uid);
+        this.JSONFile.put("name",this.name);
+        this.JSONFile.put("address",this.address);
+        this.JSONFile.put("city",this.city);
+        this.JSONFile.put("state",this.state);
+        this.JSONFile.put("xcoord",this.xcoord);
+        this.JSONFile.put("ycoord",this.ycoord);
+        this.JSONFile.put("image",this.image.toString());
+        this.JSONFile.put("rating",this.rating);
+
+        JSONArray menus = new JSONArray();
+        for (int i = 0; i < this.menus.size(); i++) {
+            JSONObject menu = new JSONObject();
+            menu.put("id",this.menus.get(i).getMid());
+            menus.put(i,menu);
+        }
+
+        JSONArray orders = new JSONArray();
+        for (int i = 0; i <this.orders.size(); i++) {
+            JSONObject order = new JSONObject();
+            order.put("id",this.orders.get(i).getOid());
+            orders.put(i,order);
+        }
+    }
 
     /**
      * @return string: name of restaurant
@@ -179,7 +222,7 @@ public class Restaurant {
      *
      * @return the latitude coordinate of restaurant
      */
-    public float getXcoord() {
+    public double getXcoord() {
         return xcoord;
     }
 
@@ -187,7 +230,7 @@ public class Restaurant {
      *
      * @param xcoord: the latitude coordinate of restaurant
      */
-    public void setXcoord(float xcoord) {
+    public void setXcoord(double xcoord) {
         this.xcoord = xcoord;
     }
 
@@ -195,7 +238,7 @@ public class Restaurant {
      *
      * @return the longitude coordinate of restaurant
      */
-    public float getYcoord() {
+    public double getYcoord() {
         return ycoord;
     }
 
@@ -203,7 +246,7 @@ public class Restaurant {
      *
      * @param ycoord: the longitude coordinate of restaurant
      */
-    public void setYcoord(float ycoord) {
+    public void setYcoord(double ycoord) {
         this.ycoord = ycoord;
     }
 

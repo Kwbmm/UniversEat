@@ -1,5 +1,6 @@
 {
   "id": 1,
+  "uid": 1,
   "name": "Restaurant Name",
   "description": "My nice restaurant is very nice! Come give me money plz!",
   "address": "Corso Duca degli Abruzzi 24",
@@ -11,12 +12,26 @@
   "rating": 3.4,
   "menus": [
     {
-      "id": "1"
+      "id": "1",
+      "name": "My menu",
+      "description": "Description of my menu",
+      "price": 33.33,
+      "image": null,
+      "type": 0,
+      "ticket": false,
+      "courses":[
+        {
+          "id": 1
+        }
+      ]
     }
   ],
   "orders":[
     {
-      "id":1
+      "id": 1,
+      "uid": 1,
+      "mid": 0,
+      "rid": 1
     }
   ]
 

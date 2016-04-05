@@ -1,5 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
+import android.content.Context;
+
 /**
  * @author Marco Ardizzone
  * @class Order
@@ -7,11 +9,16 @@ package it.polito.mad.groupFive.restaurantcode.datastructures;
  * @brief Order class
  */
 public class Order {
+    private Context appContext;
     private int oid;
     private int uid;
     private int mid;
     private Restaurant restaurant;
 
+    public Order(Context c, int oid){
+        this.appContext = c;
+        this.oid = oid;
+    }
     /**
      *
      * @return The order ID
