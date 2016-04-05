@@ -1,6 +1,15 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
+import android.content.Context;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantIDException;
 
 /**
  * @author Giovanni
@@ -9,23 +18,82 @@ import java.util.ArrayList;
  * @brief Restaurant class
  */
 public class Restaurant {
+
+    private Context appContext=null;
+    private final String configFile = "restaurants.json";
+    private JSONObject jsonConfigFile=null;
+
+    private JSONObject myJSONFile=null;
+
     private int rid;
     private String name;
+    private String description;
     private String address;
     private String state;
     private String city;
     private byte[] image;
     private float rating;
     private ArrayList<Menu> menus;
-    private String description;
     private ArrayList<Order> orders;
     private float xcoord;
     private float ycoord;
 
-    public Restaurant(){
-
+    /**
+     * Instantiates a new Restaurant object.
+     * The constructor requires the Application Context to read the JSON configuration file
+     * from assets folder and the ID of the restaurant because it's the only way to identify
+     * the restaurant uniquely.
+     *
+     * @param c Application Context.
+     * @param restaurantID Unique ID of the restaurant.
+     * @throws IOException Thrown if read errors occur.
+     * @throws RestaurantIDException Thrown if ID is negative.
+     * @throws JSONException Thrown if JSON parsing fails.
+     */
+    public Restaurant(Context c, int restaurantID) throws IOException, RestaurantIDException, JSONException {
+        this.appContext = c;
+        if(restaurantID < 0)
+            throw new RestaurantIDException("Restaurant ID must be positive");
+        this.rid = restaurantID;
+        this.jsonConfigFile = new JSONObject(this.loadJSONFromAsset());
 
     }
+
+    /**
+     * This method reads the list of restaurants from restaurant.json asset file.
+     * The restaurant.json file should be structured as follows:
+     *  {
+     *      "restaurants":[
+     *          {"id": 1},
+     *          {"id": 2},
+     *          ...
+     *          {"id": N}
+     *      ]
+     *  }
+     * @return String representation of the JSON file
+     * @throws IOException
+     */
+    public String loadJSONFromAsset() throws IOException {
+        String json = null;
+        InputStream is = this.appContext.getAssets().open(this.configFile);
+        int size = is.available();
+        byte[] buffer = new byte[size];
+        is.read(buffer);
+        is.close();
+        json = new String(buffer, "UTF-8");
+
+        return json;
+    }
+
+    /**
+     * Reads data from the JSON restaurant file
+     */
+    public void getData(){}
+
+    /**
+     * Saves data to the JSON restaurant file
+     */
+    public void saveData(){}
 
     /**
      * @return string: name of restaurant

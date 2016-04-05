@@ -1,0 +1,23 @@
+{
+  "id": 1,
+  "name": "Restaurant Name",
+  "description": "My nice restaurant is very nice! Come give me money plz!",
+  "address": "Corso Duca degli Abruzzi 24",
+  "city": "Torino",
+  "state": "Italy",
+  "xcoord": 343.32,
+  "ycoord": 233.43,
+  "image": null,
+  "rating": 3.4,
+  "menus": [
+    {
+      "id": "1"
+    }
+  ],
+  "orders":[
+    {
+      "id":1
+    }
+  ]
+
+}

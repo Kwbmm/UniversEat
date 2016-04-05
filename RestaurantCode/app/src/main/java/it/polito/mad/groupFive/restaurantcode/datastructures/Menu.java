@@ -1,5 +1,6 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -15,14 +16,24 @@ import java.util.ArrayList;
  * @brief Menu class
  */
 public class Menu {
+
+    private Context appContext=null;
+
     private int mid;
-    private String name;
-    private String description;
+    private String name=null;
+    private String description=null;
     private float price;
-    private byte[] image;
+    private byte[] image=null;
     private int type;
-    private ArrayList<Course> courses;
+    private ArrayList<Course> courses=null;
     private boolean ticket;
+
+    public Menu(Context appContext){
+        this.appContext = appContext;
+    }
+
+    public void saveMenuToJSON(){
+    }
 
     /**
      *
