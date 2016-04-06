@@ -1,6 +1,10 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -8,13 +12,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantIDException;
 
@@ -62,6 +69,15 @@ public class Restaurant {
         this.JSONFile = this.readJSONFile();
     }
 
+    /**
+     * Reads the JSON file from internal storage and returns the corresponding JSONObject.
+     * If the file is not found, FileNotFound exception is caught and createJSONFile method
+     * is called.
+     *
+     * @return Parsed JSON restaurant file.
+     * @throws IOException When read/write errors to file occur.
+     * @throws JSONException When JSON file cannot be parsed properly.
+     */
     public JSONObject readJSONFile() throws IOException, JSONException {
         InputStream is=null;
         try {
@@ -85,6 +101,14 @@ public class Restaurant {
         return null;
     }
 
+    /**
+     * This is called when the JSON file to be read is not found. A new EMPTY file is
+     * initialized. The file is then filled with all the required keys. The corresponding
+     * values are left empty.
+     *
+     * @return The JSONOBject to be used by the class to access the key-value pairs.
+     * @throws JSONException When JSON parsing fails.
+     */
     private JSONObject createJSONFile() throws JSONException {
         final String methodName = "createJSONFile";
 
@@ -120,8 +144,8 @@ public class Restaurant {
     }
 
     /**
-     * Reads data from JSON configuration file.
-     * If some field is missing, it throws JSONException
+     * Reads data from JSON object file.
+     * If some field is missing, it throws JSONException.
      * Please note that menus and orders objects read like this are just filled with their
      * own id. The other data must be filled through the methods provided in their classes.
      *
@@ -154,8 +178,8 @@ public class Restaurant {
      * If some field is missing, it throws JSONException.
      * This method calls, in cascade, the saveData methods of Menu class and Order class.
      *
-     * @throws JSONException
-     * @throws IOException if the output JSON file doesn't exist or a write error occurs
+     * @throws JSONException When JSON parsing fails.
+     * @throws IOException When the output JSON file doesn't exist or a write error occurs.
      */
     public void saveData() throws JSONException, IOException {
         FileOutputStream fos = null;
@@ -185,7 +209,7 @@ public class Restaurant {
     }
 
     /**
-     * @return string: name of restaurant
+     * @return string Name of restaurant
      */
     public String getName() {
         return name;
@@ -193,7 +217,7 @@ public class Restaurant {
 
     /**
      *
-     * @param name of restaurant
+     * @param name Name of restaurant
      */
     public void setName(String name) {
         this.name = name;
@@ -201,7 +225,7 @@ public class Restaurant {
 
     /**
      *
-     * @return address of restaurant
+     * @return Address of restaurant
      */
     public String getAddress() {
         return address;
@@ -209,7 +233,7 @@ public class Restaurant {
 
     /**
      *
-     * @param address of restaurant
+     * @param address Address of restaurant
      */
     public void setAddress(String address) {
         this.address = address;
@@ -225,7 +249,7 @@ public class Restaurant {
 
     /**
      *
-     * @param state: the State of restaurant
+     * @param state The state of restaurant
      */
     public void setState(String state) {
         this.state = state;
@@ -233,7 +257,7 @@ public class Restaurant {
 
     /**
      *
-     * @return city of Restaurant
+     * @return City of Restaurant
      */
     public String getCity() {
         return city;
@@ -241,7 +265,7 @@ public class Restaurant {
 
     /**
      *
-     * @param city of restaurant
+     * @param city City of restaurant
      */
     public void setCity(String city) {
         this.city = city;
@@ -249,23 +273,46 @@ public class Restaurant {
 
     /**
      *
-     * @return byte of restaurant's image
+     * @return The image of the course, in base 64 format
      */
-    public byte[] getImage() {
-        return image;
+    public byte[] getImage64(){return this.image;}
+
+    /**
+     * Sets the base 64 encoding of the image
+     * @param image Byte array of image, encoded in base 64
+     */
+
+    public void setImage64(byte[] image){ this.image = image;}
+    /**
+     *
+     * @return The image of the course, in Bitmap format
+     */
+    public Bitmap getImageBitmap(){
+        return BitmapFactory.decodeByteArray(this.image, 0, this.image.length);
+    }
+
+    /**
+     * Sets the base 64 encoding of the image from an input Bitmap
+     * @param image Bitmap image to save
+     */
+    public void setImage64FromBitmap(Bitmap image){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        this.image = baos.toByteArray();
+    }
+
+    /**
+     * Sets the base 64 encoding of the image from an input Drawable
+     * @param image Drawable image to save
+     */
+    public void setImage64FromDrawable(Drawable image){
+        Bitmap b = ((BitmapDrawable) image).getBitmap();
+        this.setImage64FromBitmap(b);
     }
 
     /**
      *
-     * @param image the byte of image of restaurant
-     */
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
-
-    /**
-     *
-     * @return the latitude coordinate of restaurant
+     * @return The latitude coordinate of restaurant
      */
     public double getXcoord() {
         return xcoord;
@@ -273,7 +320,7 @@ public class Restaurant {
 
     /**
      *
-     * @param xcoord: the latitude coordinate of restaurant
+     * @param xcoord The latitude coordinate of restaurant
      */
     public void setXcoord(double xcoord) {
         this.xcoord = xcoord;
@@ -281,7 +328,7 @@ public class Restaurant {
 
     /**
      *
-     * @return the longitude coordinate of restaurant
+     * @return The longitude coordinate of restaurant
      */
     public double getYcoord() {
         return ycoord;
@@ -289,7 +336,7 @@ public class Restaurant {
 
     /**
      *
-     * @param ycoord: the longitude coordinate of restaurant
+     * @param ycoord The longitude coordinate of restaurant
      */
     public void setYcoord(double ycoord) {
         this.ycoord = ycoord;
@@ -297,7 +344,7 @@ public class Restaurant {
 
     /**
      *
-     * @return the description of restaurant
+     * @return The description of restaurant
      */
     public String getDescription() {
         return description;
@@ -361,6 +408,37 @@ public class Restaurant {
 
     /**
      *
+     * @param id The id of the menu to search for.
+     * @return The Menu object or null if nothing is found.
+     */
+    public Menu getMenuByID(int id){
+        for(Menu m : this.menus)
+            if(m.getMid() == id)
+                return m;
+        return null;
+    }
+
+    /**
+     * The method takes as input an integer representing the menu type as follows:
+     *  0: Menu of the day
+     *  1: Fixed menu
+     *  2: Fixed menu with options
+     *  3: Complete menu
+     * The method returns an ArrayList of Menus or null if nothing is found.
+     *
+     * @param type The type of menu, must be an integer between 0 and 3.
+     * @return An ArrayList of all the menus of the requested type, or null if nothing is found.
+     */
+    public ArrayList<Menu> getMenusByType(int type){
+        ArrayList<Menu> output = new ArrayList<Menu>();
+        for(Menu m : this.menus)
+            if(m.getType() == type)
+                output.add(m);
+        return output.isEmpty() ? null : output;
+    }
+
+    /**
+     *
      * @return the arraylist of restaurant's orders
      */
     public ArrayList<Order> getOrders() {
@@ -377,7 +455,32 @@ public class Restaurant {
 
     /**
      *
-     * @return uid: id of user that is the restaurant owner
+     * @param id The id of the order to search for.
+     * @return The requested order or null if nothing is found.
+     */
+    public Order getOrderByID(int id){
+        for(Order o : this.orders)
+            if(o.getOid() == id)
+                return o;
+        return null;
+    }
+
+    /**
+     *
+     * @param uid The user id who submitted
+     * @return An ArrayList of Orders or null if nothing is found.
+     */
+    public ArrayList<Order> getOrdersByUserID(int uid){
+        ArrayList<Order> output = new ArrayList<Order>();
+        for(Order o : this.orders)
+            if(o.getUid() == uid)
+                output.add(o);
+        return output.isEmpty()? null : output;
+    }
+
+    /**
+     *
+     * @return The id of the restaurant owner
      */
     public int getUid() {
         return uid;
@@ -385,7 +488,7 @@ public class Restaurant {
 
     /**
      *
-     * @param uid: set the id of the restaurant owner
+     * @param uid Set the id of the restaurant owner
      */
     public void setUid(int uid) {
         this.uid = uid;

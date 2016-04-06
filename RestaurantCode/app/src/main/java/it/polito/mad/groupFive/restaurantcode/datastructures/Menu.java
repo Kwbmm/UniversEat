@@ -270,7 +270,7 @@ public class Menu {
 
     /**
      * Sets the base 64 encoding of the image
-     * @param image byte array of image, encoded in base 64
+     * @param image Byte array of image, encoded in base 64
      */
     public void setImage64(byte[] image){ this.image = image;}
 
