@@ -101,14 +101,13 @@ public class Restaurant {
 
         JSONArray orders = this.JSONFile.getJSONArray("orders");
         for(int i=0; i <orders.length(); i++)
-            this.orders.add(new Order(this.appContext,orders.getJSONObject(i).getInt("id")));
+            this.orders.add(new Order(this.JSONFile, orders.getJSONObject(i).getInt("id"), orders.getJSONObject(i).getInt("rid")));
     }
 
     /**
      * Saves data to JSON restaurant file.
      * If some field is missing, it throws JSONException.
-     * Please note that menus and orders objects saved like this are just filled with their
-     * own id. The other data must be filled through the methods provided in their classes.
+     * This method calls, in cascade, the saveData methods of Menu class and Order class.
      *
      * @throws JSONException
      */
@@ -124,21 +123,13 @@ public class Restaurant {
         this.JSONFile.put("image",this.image.toString());
         this.JSONFile.put("rating",this.rating);
 
-        JSONArray menus = new JSONArray();
-        for (int i = 0; i < this.menus.size(); i++) {
-            JSONObject menu = new JSONObject();
-            menu.put("id",this.menus.get(i).getMid());
-            menus.put(i,menu);
-        }
-        this.JSONFile.put("menus",menus);
+        this.JSONFile.put("menus",new JSONArray());
+        for(Menu m : this.menus)
+            this.JSONFile.getJSONArray("menus").put(m.saveData());
 
-        JSONArray orders = new JSONArray();
-        for (int i = 0; i <this.orders.size(); i++) {
-            JSONObject order = new JSONObject();
-            order.put("id",this.orders.get(i).getOid());
-            orders.put(i,order);
-        }
-        this.JSONFile.put("orders",orders);
+        this.JSONFile.put("orders",new JSONArray());
+        for(Order o : this.orders)
+            this.JSONFile.getJSONArray("orders").put(o.saveData());
     }
 
     /**

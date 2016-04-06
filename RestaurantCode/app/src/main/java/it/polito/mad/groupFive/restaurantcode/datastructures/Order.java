@@ -2,6 +2,13 @@ package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.content.Context;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * @author Marco Ardizzone
  * @class Order
@@ -9,15 +16,58 @@ import android.content.Context;
  * @brief Order class
  */
 public class Order {
-    private Context appContext;
+
+    private JSONObject JSONFile = null;
+
     private int oid;
     private int uid;
     private int mid;
-    private Restaurant restaurant;
+    private int rid;
+    private Date date=null;
 
-    public Order(Context c, int oid){
-        this.appContext = c;
+    public Order(JSONObject file, int oid, int rid){
+        this.JSONFile = file;
         this.oid = oid;
+        this.rid = rid;
+    }
+
+    /**
+     * Reads data from JSON configuration file.
+     * If some field is missing, it throws JSONException.
+     *
+     * @throws JSONException if some field is missing
+     * @throws ParseException if date from JSON file cannot be parsed correctly
+     */
+    public void getData() throws JSONException, ParseException {
+        for (int i = 0; i < this.JSONFile.getJSONArray("orders").length(); i++) {
+            if(this.JSONFile.getJSONArray("orders").getJSONObject(i).getInt("id") == this.oid){
+                JSONObject order = this.JSONFile.getJSONArray("orders").getJSONObject(i);
+                this.mid = order.getInt("mid");
+                this.uid = order.getInt("uid");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
+                this.date = sdf.parse(order.getString("date"));
+                break;
+            }
+        }
+    }
+
+    /**
+     * THIS METHOD SHOULD NEVER BE CALLED ON IT'S OWN!
+     * Returns a JSONObject to saveData method of Restaurant class.
+     *
+     * @return JSONObject with the current data of the Order class.
+     * @throws JSONException
+     */
+    public JSONObject saveData() throws JSONException{
+        JSONObject order = new JSONObject();
+        order.put("id",this.oid);
+        order.put("uid",this.uid);
+        order.put("mid",this.mid);
+        order.put("rid",this.rid);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
+        order.put("date",sdf.format(this.date));
+        return order;
     }
     /**
      *
@@ -39,9 +89,9 @@ public class Order {
 
     /**
      *
-     * @return The restaurant to which this order belongs to.
+     * @return The restaurant ID to which this order belongs to.
      */
-    public Restaurant getRestaurant(){ return this.restaurant;}
+    public int getRestaurantID(){ return this.rid;}
 
     /**
      *
@@ -63,7 +113,7 @@ public class Order {
 
     /**
      *
-     * @param r The restaurant to which this order belong to.
+     * @param rid The restaurant ID to which this order belong to.
      */
-    public void setRestaurant(Restaurant r){ this.restaurant = r;}
+    public void setRestaurantID(int rid){ this.rid= rid;}
 }

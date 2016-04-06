@@ -39,7 +39,7 @@ public class Menu {
 
     /**
      * Reads data from JSON configuration file.
-     * If some field is missing, it throws JSONException
+     * If some field is missing, it throws JSONException.
      * Please note that course objects read like this are just filled with their
      * own id. The other data must be filled through the methods provided in the Course class.
      *
@@ -66,36 +66,26 @@ public class Menu {
     }
 
     /**
-     * Saves data to JSON restaurant file.
-     * If some field is missing, it throws JSONException.
-     * Please note that course objects saved like this are just filled with their
-     * own id. The other data must be filled through the methods provided in the Course class.
+     * THIS METHOD SHOULD NEVER BE CALLED ON IT'S OWN!
+     * Returns a JSONObject to saveData method of Restaurant class.
      *
      * @throws JSONException
      */
-    public void saveData() throws JSONException{
-        JSONArray menus = this.JSONFile.getJSONArray("menus");
-        for (int i = 0; i < menus.length(); i++) {
-            if(menus.getJSONObject(i).getInt("id") == this.mid){
-                JSONObject menu = menus.getJSONObject(i);
-                menu.put("id",this.mid);
-                menu.put("name",this.name);
-                menu.put("description",this.description);
-                menu.put("price",this.price);
-                menu.put("image",this.image.toString());
-                menu.put("type",this.type);
-                JSONArray courses = new JSONArray();
-                for (int j = 0; j < this.courses.size(); j++) {
-                    JSONObject course = new JSONObject();
-                    course.put("id", this.courses.get(j).getCid());
-                    courses.put(j,course);
-                }
-                menu.put("courses",courses);
-                break;
-            }
-        }
-//        menus.getJSONObject(i).put()
-//        this.JSONFile.put("menus",)
+    public JSONObject saveData() throws JSONException{
+        JSONObject menu = new JSONObject();
+        menu.put("id",this.mid);
+        menu.put("name",this.name);
+        menu.put("description",this.description);
+        menu.put("price",this.price);
+        menu.put("image",this.image.toString());
+        menu.put("type",this.type);
+        menu.put("ticket",this.ticket);
+        //Add a new array for the courses, and fill it!
+        menu.put("courses",new JSONArray());
+        for(Course c : this.courses)
+            menu.getJSONArray("courses").put(c.saveData());
+
+        return menu;
     }
 
     /**

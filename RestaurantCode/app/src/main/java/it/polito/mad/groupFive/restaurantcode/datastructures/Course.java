@@ -39,8 +39,13 @@ public class Course {
         this.mid = mid;
     }
 
+    /**
+     * Reads data from JSON configuration file.
+     * If some field is missing, it throws JSONException.
+     *
+     * @throws JSONException if some field is missing.
+     */
     public void getData() throws JSONException{
-        //TODO
         JSONArray courses = this.JSONfile.getJSONArray("courses"); //I don't know if I need to traverse the whole tree or not
         for (int i = 0; i < courses.length(); i++) {
             if(courses.getJSONObject(i).getInt("id") == this.cid){
@@ -57,8 +62,23 @@ public class Course {
         }
     }
 
-    public void saveData(){
-        //this.JSONfile.pu
+    /**
+     * THIS METHOD SHOULD NEVER BE CALLED ON IT'S OWN!
+     * Returns a JSONObject to saveData method of Restaurant class.
+     *
+     */
+     public JSONObject saveData() throws JSONException{
+        JSONObject course = new JSONObject();
+        course.put("id",this.cid);
+        course.put("name",this.name);
+        course.put("description",this.description);
+        course.put("price",this.price);
+        course.put("image",this.image.toString());
+        course.put("glutenFree",this.glutenFree);
+        course.put("vegan",this.vegan);
+        course.put("vegetarian",this.vegetarian);
+        course.put("spicy",this.spicy);
+        return course;
     }
     /**
      *
