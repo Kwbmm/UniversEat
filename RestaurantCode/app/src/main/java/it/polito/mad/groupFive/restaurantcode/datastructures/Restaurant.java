@@ -1,13 +1,19 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantIDException;
@@ -40,8 +46,7 @@ public class Restaurant {
     /**
      * Instantiates a new Restaurant object.
      * The constructor requires the Application Context to read the JSON configuration file
-     * from assets folder and the ID of the restaurant because it's the only way to identify
-     * the restaurant file uniquely.
+     * from internal storage and the ID of the restaurant to identify the restaurant uniquely.
      *
      * @param c Application Context.
      * @param restaurantID Unique ID of the restaurant.
@@ -54,25 +59,64 @@ public class Restaurant {
         if(restaurantID < 0)
             throw new RestaurantIDException("Restaurant ID must be positive");
         this.rid = restaurantID;
-        this.JSONFile = new JSONObject(this.loadJSONFromAsset());
+        this.JSONFile = this.readJSONFile();
     }
 
-    /**
-     * This method reads the restaurant JSON file.
-     *
-     * @return String representation of the JSON file
-     * @throws IOException
-     */
-    public String loadJSONFromAsset() throws IOException {
-        String json = null;
-        InputStream is = this.appContext.getAssets().open("r"+this.rid);
-        int size = is.available();
-        byte[] buffer = new byte[size];
-        is.read(buffer);
-        is.close();
-        json = new String(buffer, "UTF-8");
+    public JSONObject readJSONFile() throws IOException, JSONException {
+        InputStream is=null;
+        try {
+            is = this.appContext.openFileInput("r"+this.rid);
+            if(is != null){
+                InputStreamReader inputStreamReader = new InputStreamReader(is);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
 
-        return json;
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+
+                is.close();
+                return new JSONObject(stringBuilder.toString());
+            }
+        } catch (FileNotFoundException e) {
+            return this.createJSONFile();
+        }
+        return null;
+    }
+
+    private JSONObject createJSONFile() throws JSONException {
+        final String methodName = "createJSONFile";
+
+        File file = new File(this.appContext.getFilesDir(),"r"+this.rid);
+        FileOutputStream fos = null;
+        JSONObject newFile = new JSONObject();
+
+        newFile.put("id", this.rid);
+        newFile.put("uid","" );
+        newFile.put("name","" );
+        newFile.put("address","" );
+        newFile.put("city","" );
+        newFile.put("state","" );
+        newFile.put("xcoord",0.0 );
+        newFile.put("ycoord",0.0 );
+        newFile.put("image", "" );
+        newFile.put("rating", 0.0 );
+
+        newFile.put("menus", new JSONArray());
+
+        newFile.put("orders", new JSONArray());
+
+        try {
+            fos = appContext.openFileOutput("r"+this.rid,Context.MODE_PRIVATE);
+            fos.write(newFile.toString(2).getBytes());
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.e(methodName,"File r"+this.rid+" cannot be found!");
+        } catch (IOException e) {
+            Log.e(methodName,"Error in writing to r"+this.rid);
+        }
+        return newFile;
     }
 
     /**
@@ -102,6 +146,7 @@ public class Restaurant {
         JSONArray orders = this.JSONFile.getJSONArray("orders");
         for(int i=0; i <orders.length(); i++)
             this.orders.add(new Order(this.JSONFile, orders.getJSONObject(i).getInt("id"), orders.getJSONObject(i).getInt("rid")));
+
     }
 
     /**
@@ -110,8 +155,11 @@ public class Restaurant {
      * This method calls, in cascade, the saveData methods of Menu class and Order class.
      *
      * @throws JSONException
+     * @throws IOException if the output JSON file doesn't exist or a write error occurs
      */
-    public void saveData() throws JSONException {
+    public void saveData() throws JSONException, IOException {
+        FileOutputStream fos = null;
+
         this.JSONFile.put("id",this.rid);
         this.JSONFile.put("uid",this.uid);
         this.JSONFile.put("name",this.name);
@@ -130,6 +178,10 @@ public class Restaurant {
         this.JSONFile.put("orders",new JSONArray());
         for(Order o : this.orders)
             this.JSONFile.getJSONArray("orders").put(o.saveData());
+
+        fos = appContext.openFileOutput("r"+this.rid,Context.MODE_PRIVATE);
+        fos.write(this.JSONFile.toString(2).getBytes());
+        fos.close();
     }
 
     /**
