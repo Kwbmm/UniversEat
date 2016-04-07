@@ -6,13 +6,24 @@
     tools:context="it.polito.mad.groupFive.restaurantcode.Home"
     android:id="@+id/main">
 
-
-
-    <TextView
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
-
+        android:id="@+id/opt"
+        android:contextClickable="true"
+        android:src="@drawable/ic_settings_24dp"
+        android:layout_alignParentRight="true"
+        android:backgroundTint="#ffffff"
+        android:layout_alignParentEnd="false"></ImageButton>
+    <SearchView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:queryHint="What do you want to eat?"
+        android:divider="#000000"
+        android:dividerPadding="1dp"
+        android:id="@+id/search"
+        android:layout_toLeftOf="@id/opt"
+        android:iconifiedByDefault="false"></SearchView>
 
 
 </RelativeLayout>

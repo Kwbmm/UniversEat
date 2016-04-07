@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.util.Log;
@@ -29,7 +30,9 @@ public class Home extends NavigationDrawer {
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
        // mlay.addView(findViewById(R.id.main));
-        mlay.inflate(this,R.layout.activity_home,mlay);
+        mlay.inflate(this, R.layout.activity_home, mlay);
+        //SearchView searchView=(SearchView) findViewById(R.id.search);
+        //searchView.s
 
 
     }}
