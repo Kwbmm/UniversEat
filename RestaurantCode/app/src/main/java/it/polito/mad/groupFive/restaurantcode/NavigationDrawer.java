@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -35,7 +37,7 @@ public class NavigationDrawer extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         ImageView imageView= (ImageView)findViewById(R.id.iw);
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
-        imageView.setOnClickListener(new View.OnClickListener() {
+        imageView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -44,6 +46,7 @@ public class NavigationDrawer extends AppCompatActivity {
         });
         dList= (ListView)findViewById(R.id.left_drawer);
         dList.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, options));
+        dList.setOnItemClickListener( new DrawerListener());
 
 
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
@@ -106,5 +109,16 @@ public class NavigationDrawer extends AppCompatActivity {
         // Handle your other action bar items...
 
         return super.onOptionsItemSelected(item);
+    }
+    private class DrawerListener implements ListView.OnItemClickListener{
+
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if(position==2){
+                Intent intent= new Intent(view.getContext(),Resturant_management.class);
+                startActivity(intent);
+            }
+        }
     }
 }

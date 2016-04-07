@@ -1,0 +1,50 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#000000"
+            android:id="@+id/iwr"
+            />
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Restaurant Name"
+            android:textSize="20dp"
+            android:gravity="center_horizontal"
+            android:layout_toRightOf="@id/iwr"/>
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rate"
+            android:layout_below="@id/name"
+            android:layout_alignLeft="@+id/name"
+            android:layout_alignStart="@+id/name"
+            android:stepSize="0.5"
+            android:scaleX="0.6"
+            android:scaleY="0.6"
+            android:foregroundGravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/worktime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="19-22"
+            android:textSize="20dp"
+            android:gravity="center_horizontal"
+            android:layout_toRightOf="@id/iwr"
+            android:layout_below="@id/rate"/>
+    </RelativeLayout>
+
+    </FrameLayout>
+
