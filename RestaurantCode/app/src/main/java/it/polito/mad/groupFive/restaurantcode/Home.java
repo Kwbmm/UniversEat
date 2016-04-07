@@ -7,10 +7,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 public class Home extends NavigationDrawer {
 
@@ -19,9 +24,12 @@ public class Home extends NavigationDrawer {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //Every activity should extend navigation drawer activity, and set content view must be called before super.onCreate() to work
-        setContentView(R.layout.activity_home);
+        //Every activity should extend navigation drawer activity, no set content view must be called, layout must be inflated using inflate function
+
         super.onCreate(savedInstanceState);
+        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
+       // mlay.addView(findViewById(R.id.main));
+        mlay.inflate(this,R.layout.activity_home,mlay);
 
 
     }}

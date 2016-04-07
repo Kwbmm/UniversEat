@@ -2,4 +2,13 @@
     <string name="app_name">Restaurant Code</string>
     <string name="open">Open</string>
     <string name="close">close</string>
+    <string-array name="drawer_option_login">
+        <item>Login</item>
+    </string-array>
+    <string-array name="drawer_option_logged_manager">
+        <item>Profile</item>
+        <item>Orders</item>
+        <item>Manage Restaurant</item>
+        <item>Logout</item>
+    </string-array>
 </resources>

@@ -1,6 +1,11 @@
 package it.polito.mad.groupFive.restaurantcode;
 
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,16 +16,35 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+
 public class NavigationDrawer extends AppCompatActivity {
     ActionBarDrawerToggle mDrawerToggle;
+    ListView dList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // not a real activity, it's used to extend toolbar and navigation drawer to all activity created
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_navigation_drawer);
+        String[] options;
+        options= getResources().getStringArray(R.array.drawer_option_logged_manager);
+        setContentView(R.layout.drawer);
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        ImageView imageView= (ImageView)findViewById(R.id.iw);
+        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivity(intent);
+            }
+        });
+        dList= (ListView)findViewById(R.id.left_drawer);
+        dList.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, options));
+
 
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
         {
@@ -28,17 +52,21 @@ public class NavigationDrawer extends AppCompatActivity {
             public void onDrawerClosed(View view)
             {
                 super.onDrawerClosed(view);
+                view.bringToFront();
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 
             }
 
             public void onDrawerOpened(View drawerView)
             {
+
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                drawerView.bringToFront();
             }
         };
         drawerLayout.addDrawerListener(mDrawerToggle);
+
 
 
     }
