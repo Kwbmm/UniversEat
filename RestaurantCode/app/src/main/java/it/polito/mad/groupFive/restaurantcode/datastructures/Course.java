@@ -11,6 +11,8 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
+
 /**
  * @author Marco
  * @class Course
@@ -19,7 +21,8 @@ import java.io.ByteArrayOutputStream;
  */
 public class Course {
 
-    private JSONObject JSONfile = null;
+    private JSONObject JSONFile = null;
+    private Restaurant r=null;
 
     private int cid;
     private int mid;
@@ -32,11 +35,18 @@ public class Course {
     private boolean vegetarian;
     private boolean spicy;
 
+    public Course(Restaurant restaurant){
+        this.r = restaurant;
+        this.JSONFile = restaurant.getJSONFile();
+    }
 
-    public Course(JSONObject file, int id, int mid){
-        this.JSONfile = file;
-        this.cid = id;
+    public Course(Restaurant restaurant, int cid, int mid) throws CourseException {
+        if(cid < 0)
+            throw new CourseException("Course ID must be positive");
+        this.cid = cid;
         this.mid = mid;
+        this.r = restaurant;
+        this.JSONFile = restaurant.getJSONFile();
     }
 
     /**
@@ -46,18 +56,23 @@ public class Course {
      * @throws JSONException if some field is missing.
      */
     public void getData() throws JSONException{
-        JSONArray courses = this.JSONfile.getJSONArray("courses"); //I don't know if I need to traverse the whole tree or not
-        for (int i = 0; i < courses.length(); i++) {
-            if(courses.getJSONObject(i).getInt("id") == this.cid){
-                JSONObject course = courses.getJSONObject(i);
-                this.name = course.getString("name");
-                this.description = course.getString("description");
-                this.price = (float) course.getDouble("price");
-                this.image = course.getString("image").getBytes();
-                this.glutenFree = course.getBoolean("glutenFree");
-                this.vegan = course.getBoolean("vegan");
-                this.vegetarian = course.getBoolean("vegetarian");
-                this.spicy = course.getBoolean("spicy");
+        JSONArray menus = this.JSONFile.getJSONArray("menus");
+        for (int i = 0; i < menus.length(); i++) {
+            if(menus.getJSONObject(i).getInt("id") == this.mid){
+                JSONArray courses = menus.getJSONObject(i).getJSONArray("courses");
+                for (int j = 0; j < courses.length(); j++) {
+                    if(courses.getJSONObject(j).getInt("id") == this.cid){
+                        JSONObject course = courses.getJSONObject(j);
+                        this.name = course.getString("name");
+                        this.description = course.getString("description");
+                        this.price = (float) course.getDouble("price");
+                        this.image = course.getString("image").getBytes();
+                        this.glutenFree = course.getBoolean("glutenFree");
+                        this.vegan = course.getBoolean("vegan");
+                        this.vegetarian = course.getBoolean("vegetarian");
+                        this.spicy = course.getBoolean("spicy");
+                    }
+                }
             }
         }
     }

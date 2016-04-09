@@ -7,7 +7,8 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantIDException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 /**
  * @author Giovanni
@@ -30,11 +31,15 @@ public class User {
     public User() {}
 
     /**
-     * Constructor for restaurant owner
+     * Constructor for restaurant owner.
      * @param rid
      */
-    public User(Context c, int rid) throws JSONException, IOException, RestaurantIDException {
-        this.restaurant = new Restaurant(c,rid);
+    public User(Context c, int rid, int uid) throws JSONException, IOException, RestaurantException, UserException {
+        if(uid < 0)
+            throw new UserException("User ID must be positive");
+        this.uid = uid;
+
+        this.restaurant = new Restaurant(c,rid,this.uid);
         this.restaurantOwner = true;
     }
 

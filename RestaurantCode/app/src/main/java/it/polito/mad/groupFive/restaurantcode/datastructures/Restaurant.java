@@ -19,11 +19,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.List;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantIDException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 /**
  * @author Giovanni
@@ -50,6 +53,13 @@ public class Restaurant {
     private double xcoord;
     private double ycoord;
 
+    public Restaurant(Context c, int rid){
+        this.appContext = c;
+        this.rid = rid;
+        this.menus = new ArrayList<Menu>();
+        this.orders = new ArrayList<Order>();
+    }
+
     /**
      * Instantiates a new Restaurant object.
      * The constructor requires the Application Context to read the JSON configuration file
@@ -57,15 +67,22 @@ public class Restaurant {
      *
      * @param c Application Context.
      * @param restaurantID Unique ID of the restaurant.
+     * @param uid Unique ID of the restaurant owner
      * @throws IOException Thrown if read errors occur.
-     * @throws RestaurantIDException Thrown if ID is negative.
+     * @throws RestaurantException Thrown if ID is negative.
+     * @throws UserException Thrown if ID of the restaurant owner is negative.
      * @throws JSONException Thrown if JSON parsing fails.
      */
-    public Restaurant(Context c, int restaurantID) throws IOException, RestaurantIDException, JSONException {
+    public Restaurant(Context c, int restaurantID, int uid) throws IOException, RestaurantException, UserException, JSONException{
         this.appContext = c;
         if(restaurantID < 0)
-            throw new RestaurantIDException("Restaurant ID must be positive");
+            throw new RestaurantException("Restaurant ID must be positive");
+        if(uid < 0)
+            throw new UserException("User ID must be positive");
         this.rid = restaurantID;
+        this.uid = uid;
+        this.menus = new ArrayList<Menu>();
+        this.orders = new ArrayList<Order>();
         this.JSONFile = this.readJSONFile();
     }
 
@@ -144,6 +161,12 @@ public class Restaurant {
     }
 
     /**
+     *
+     * @return The JSON Object pointing to the JSON configuration file
+     */
+    public JSONObject getJSONFile(){ return this.JSONFile;}
+
+    /**
      * Reads data from JSON object file.
      * If some field is missing, it throws JSONException.
      * Please note that menus and orders objects read like this are just filled with their
@@ -152,6 +175,8 @@ public class Restaurant {
      * @throws JSONException if some field is missing.
      */
     public void getData() throws JSONException {
+        final String methodName = "getData";
+
         this.uid = this.JSONFile.getInt("uid");
         this.name = this.JSONFile.getString("name");
         this.description = this.JSONFile.getString("description");
@@ -164,13 +189,27 @@ public class Restaurant {
         this.rating = (float)this.JSONFile.getDouble("rating");
 
         JSONArray menus = this.JSONFile.getJSONArray("menus");
-        for(int i=0; i < menus.length(); i++)
-            this.menus.add(new Menu(this.JSONFile, menus.getJSONObject(i).getInt("id")));
+        for(int i=0; i < menus.length(); i++){
+            try {
+                Menu m = new Menu(this, menus.getJSONObject(i).getInt("id"));
+                m.getData();
+                this.menus.add(m);
+            } catch (MenuException | CourseException e) {
+                Log.e(methodName, e.getMessage());
+            }
+        }
+
 
         JSONArray orders = this.JSONFile.getJSONArray("orders");
-        for(int i=0; i <orders.length(); i++)
-            this.orders.add(new Order(this.JSONFile, orders.getJSONObject(i).getInt("id"), orders.getJSONObject(i).getInt("rid")));
-
+        for(int i=0; i <orders.length(); i++){
+            try {
+                Order o = new Order(this, orders.getJSONObject(i).getInt("id"), orders.getJSONObject(i).getInt("rid"));
+                o.getData();
+                this.orders.add(o);
+            } catch (OrderException | ParseException e) {
+                Log.e(methodName,e.getMessage());
+            }
+        }
     }
 
     /**
@@ -187,6 +226,7 @@ public class Restaurant {
         this.JSONFile.put("id",this.rid);
         this.JSONFile.put("uid",this.uid);
         this.JSONFile.put("name",this.name);
+        this.JSONFile.put("description",this.description);
         this.JSONFile.put("address",this.address);
         this.JSONFile.put("city",this.city);
         this.JSONFile.put("state",this.state);
@@ -368,9 +408,12 @@ public class Restaurant {
 
     /**
      *
-     * @param rid: the id of restaurant
+     * @param rid: the id of restaurant.
+     * @throws RestaurantException Thrown if restaurant ID is negative.
      */
-    public void setRid(int rid) {
+    public void setRid(int rid) throws RestaurantException {
+        if(rid < 0)
+            throw new RestaurantException("Restaurant ID must be positive");
         this.rid = rid;
     }
 

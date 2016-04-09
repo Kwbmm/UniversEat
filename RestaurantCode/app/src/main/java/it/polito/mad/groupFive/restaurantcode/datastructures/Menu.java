@@ -1,10 +1,10 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,6 +12,9 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 
 /**
  * @author Marco
@@ -31,10 +34,27 @@ public class Menu {
     private int type;
     private ArrayList<Course> courses=null;
     private boolean ticket;
+    private Restaurant r=null;
 
-    public Menu(JSONObject file, int mid){
-        this.JSONFile = file;
+    public Menu(Restaurant restaurant){
+        this.r = restaurant;
+        this.JSONFile = restaurant.getJSONFile();
+        this.courses = new ArrayList<Course>();
+    }
+
+    /**
+     *
+     * @param restaurant Restaurant instance.
+     * @param mid The ID of the menu.
+     * @throws MenuException Thrown if menu ID is negative.
+     */
+    public Menu(Restaurant restaurant, int mid) throws MenuException {
+        this.r = restaurant;
+        this.JSONFile = restaurant.getJSONFile();
+        if(mid < 0)
+            throw new MenuException("Menu ID must be positive");
         this.mid = mid;
+        this.courses = new ArrayList<Course>();
     }
 
     /**
@@ -45,7 +65,7 @@ public class Menu {
      *
      * @throws JSONException if some field is missing.
      */
-    public void getData() throws JSONException {
+    public void getData() throws JSONException, CourseException {
         JSONArray menus = this.JSONFile.getJSONArray("menus");
         for (int i = 0; i < menus.length(); i++) {
             if(menus.getJSONObject(i).getInt("id") == this.mid){
@@ -58,8 +78,11 @@ public class Menu {
                 this.ticket = jsonMenu.getBoolean("ticket");
 
                 JSONArray courses = jsonMenu.getJSONArray("courses");
-                for (int j = 0; j < courses.length(); j++)
-                    this.courses.add(new Course(this.JSONFile, courses.getJSONObject(j).getInt("id"), this.mid));
+                for (int j = 0; j < courses.length(); j++){
+                    Course c = new Course(this.r, courses.getJSONObject(j).getInt("id"), this.mid);
+                    c.getData();
+                    this.courses.add(c);
+                }
                 break; //Exit from the outer loop
             }
         }
@@ -166,7 +189,7 @@ public class Menu {
      * @param id The id of the course
      * @return The requested course or null if nothing is found.
      */
-    public Course getCourseFromID(int id){
+    public Course getCourseByID(int id){
         for(Course course : this.courses)
             if(course.getCid() == id)
                 return course;
@@ -179,7 +202,7 @@ public class Menu {
      * @param name Name of the course to search for.
      * @return The requested course or null if nothing is found.
      */
-    public Course getCourseFromName(String name){
+    public Course getCourseByName(String name){
         for(Course course : this.courses)
             if(course.getName().equals(name))
                 return course;

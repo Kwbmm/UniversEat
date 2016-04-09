@@ -1,13 +1,13 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderException;
 
 /**
  * @author Marco Ardizzone
@@ -24,10 +24,27 @@ public class Order {
     private int mid;
     private int rid;
     private Date date=null;
+    private Restaurant r = null;
 
-    public Order(JSONObject file, int oid, int rid){
-        this.JSONFile = file;
+    public Order(Restaurant restaurant){
+        this.r = restaurant;
+        this.JSONFile = restaurant.getJSONFile();
+    }
+
+    public Order(Restaurant restaurant, int oid) throws OrderException {
+        this.r = restaurant;
+        if(oid < 0)
+            throw new OrderException("Order ID must be positive");
         this.oid = oid;
+        this.JSONFile = restaurant.getJSONFile();
+    }
+
+    public Order(Restaurant restaurant, int oid, int rid) throws OrderException {
+        this.r = restaurant;
+        if(oid < 0)
+            throw new OrderException("Order ID must be positive");
+        this.oid = oid;
+        this.JSONFile = restaurant.getJSONFile();
         this.rid = rid;
     }
 
@@ -93,11 +110,17 @@ public class Order {
      */
     public int getRestaurantID(){ return this.rid;}
 
+    public Date getDate(){ return this.date;}
+
     /**
      *
      * @param oid The order ID
      */
-    public void setOid(int oid){ this.oid = oid;}
+    public void setOid(int oid) throws OrderException {
+        if(oid < 0)
+            throw new OrderException("Order ID must be positive");
+        this.oid = oid;
+    }
 
     /**
      *
@@ -116,4 +139,6 @@ public class Order {
      * @param rid The restaurant ID to which this order belong to.
      */
     public void setRestaurantID(int rid){ this.rid= rid;}
+
+    public void setDate(Date d){ this.date = d;}
 }
