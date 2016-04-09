@@ -10,50 +10,48 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="customer details"
+            android:text="@string/reservation_textViewUsername"
             android:id="@+id/username"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:textColor="#304ffe" />
-
+            android:textColor="#304ffe"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Lunch Time"
+            android:text="@string/reservation_textViewLunchtime"
             android:id="@+id/lunchtime"
             android:layout_below="@+id/username"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
+            android:layout_alignParentStart="true"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Ordered Meal"
+            android:text="@string/reservation_textViewOrder"
             android:id="@+id/order"
             android:layout_below="@+id/lunchtime"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
+            android:layout_alignParentStart="true"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Reservation notes"
+            android:text="@string/reservation_textViewNotes"
             android:id="@+id/notes"
             android:layout_gravity="right|bottom"
             android:layout_below="@+id/order"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
+            android:layout_alignParentStart="true"
+            />
     </RelativeLayout>
-
 </FrameLayout>
 

@@ -12,8 +12,9 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="#000000"
             android:id="@+id/iwr"
+            android:background="#000000"
+            android:contentDescription="@string/fragment_restaurant_view_imageViewIwr_contentDesc"
             />
         <TextView
             android:id="@+id/name"
@@ -22,7 +23,8 @@
             android:text="Restaurant Name"
             android:textSize="20dp"
             android:gravity="center_horizontal"
-            android:layout_toRightOf="@id/iwr"/>
+            android:layout_toRightOf="@id/iwr"
+            android:layout_toEndOf="@id/iwr"/>
         <RatingBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,13 +38,14 @@
             android:foregroundGravity="center_horizontal" />
 
         <TextView
-            android:id="@+id/worktime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/worktime"
             android:text="19-22"
             android:textSize="20dp"
             android:gravity="center_horizontal"
             android:layout_toRightOf="@id/iwr"
+            android:layout_toEndOf="@id/iwr"
             android:layout_below="@id/rate"/>
     </RelativeLayout>
 

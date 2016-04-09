@@ -9,26 +9,30 @@
         android:layout_alignParentTop="true"
         android:text="Dinner"
         android:id="@+id/crtw_3_1"
-        android:textSize="20dp"/>
-
+        android:textSize="20dp"
+        />
     <include layout="@layout/working_h_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/crtw_3_1"
         android:id="@+id/list_w_h_d"
-        ></include>
+        />
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ticket"
         android:id="@+id/ticket_1"
-        android:layout_below="@id/list_w_h_d"/>
+        android:layout_below="@id/list_w_h_d"
+        />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:text="Finish"
         android:layout_below="@id/ticket_1"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        />
 </RelativeLayout>
