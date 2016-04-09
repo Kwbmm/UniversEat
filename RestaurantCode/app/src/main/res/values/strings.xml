@@ -41,4 +41,19 @@
     <string name="reservation_textViewLunchtime">Lunch Time</string>
     <string name="reservation_textViewOrder">Ordered Meal</string>
     <string name="reservation_textViewNotes">Reservation Notes</string>
+
+    <string name="restaurantInfo_imageButtonImg">Restaurant Image</string>
+    <string name="restaurantInfo_textViewName">Restaurant Name</string>
+    <string name="restaurantInfo_imageViewMaps">Map view of the restaurant</string>
+    <string name="restaurantInfo_textViewAddress">Restaurant Address</string>
+    <string name="restaurauntInfo_textViewDescription">Brief description of the place.</string>
+    <string name="restaurauntInfo_textViewTimetable">Timetable:\nMon: time\nTue: time\nWed: time\nThu: time\nFri: time\nSat: time\nSun: time</string>
+
+    <string name="restaurantViewEdit_textViewName">Restaurant Name</string>
+
+    <string name="reviewlist_imageButtonImg">Restaurant Image</string>
+    <string name="reviewlist_textViewName">Restaurant Name</string>
+
+    <string name="workingHItem_textViewFrom">From</string>
+    <string name="workingHItem_textViewTo">To</string>
 </resources>

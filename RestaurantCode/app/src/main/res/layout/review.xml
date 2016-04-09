@@ -19,39 +19,40 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentRight="false"
             android:layout_alignParentEnd="false"
-            android:textColor="#304ffe" />
-
+            android:textColor="#304ffe"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/textView2"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text=" - "
-            android:id="@+id/textView2"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/username"
-            android:layout_toEndOf="@+id/username" />
-
+            android:layout_toRightOf="@id/username"
+            android:layout_toEndOf="@id/username"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/lunchtime"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="22/03/2016"
-            android:id="@+id/lunchtime"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/textView2"
-            android:layout_toEndOf="@+id/textView2" />
-
+            android:layout_toRightOf="@id/textView2"
+            android:layout_toEndOf="@id/textView2"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliq"
             android:id="@+id/review"
-            android:layout_below="@+id/username"
+            android:layout_below="@id/username"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            />
     </RelativeLayout>
-
 </FrameLayout>
 
