@@ -51,3 +51,11 @@ Icons already available (through design.google.com/icons):
   + Favourite (for saving restaurants)
   + Add
   + Settings
+
+
+##Step 2 main point
+
+  * Menu Fixed/MOTD creation activity integration [Giò]
+  * Restaurant creation activity integration [Marco]
+  * Order management activity integration and layout improvement [Cristiano]
+  * Complete menu management activity, drawer management, functional activities [Fede]
