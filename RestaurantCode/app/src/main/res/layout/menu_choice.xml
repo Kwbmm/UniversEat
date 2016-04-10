@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/twch"
+        android:text="Option"
+        android:textSize="20dp"/>
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/iwch"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_add_24dp"
+        android:backgroundTint="#ffffff"
+        android:contentDescription="Add"
+        android:layout_alignParentRight="true" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iwch"
+        android:background="@drawable/rectangle">
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lwch">
+
+        </ListView>
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/iwch_2"
+            android:src="@drawable/ic_settings_24dp"
+            android:backgroundTint="#ffffff"
+            android:layout_gravity="right|bottom"
+            android:contentDescription="Add" />
+    </FrameLayout>
+
+</RelativeLayout>

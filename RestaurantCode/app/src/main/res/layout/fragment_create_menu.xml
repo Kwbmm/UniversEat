@@ -1,0 +1,89 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="it.polito.mad.groupFive.restaurantcode.Create_menu">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:id="@+id/cmiw_1_1"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_add_a_photo_black_24dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Menu name"
+            android:id="@+id/cmtw_1_1"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/cmiw_1_1"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cmed_1_1"
+            android:layout_below="@id/cmtw_1_1"
+            android:layout_toRightOf="@id/cmiw_1_1"
+            android:layout_marginLeft="15dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:id="@+id/cmtw_1_2"
+            android:layout_below="@id/cmiw_1_1"
+            android:textSize="20dp"
+            android:layout_marginTop="5dp"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cmed_1_2"
+            android:layout_below="@id/cmtw_1_2"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cmtw_1_3"
+            android:layout_below="@id/cmed_1_2"
+            android:text="Type"
+            android:textSize="20dp"/>
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@+id/cmtw_1_1"
+            android:layout_below="@id/cmtw_1_3"
+            android:scrollIndicators="bottom"
+            android:spinnerMode="dropdown" />
+
+        <NumberPicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/numberPicker"
+            android:layout_alignBottom="@+id/spinner"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/spinner" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/numberPicker"
+            android:layout_alignParentRight="true"
+            android:text="Next"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="5dp"/>
+
+
+    </RelativeLayout>
+
+</FrameLayout>
