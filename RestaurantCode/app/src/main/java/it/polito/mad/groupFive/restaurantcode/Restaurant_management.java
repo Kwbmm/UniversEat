@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.widget.FrameLayout;
 
-public class Resturant_management extends NavigationDrawer {
+public class Restaurant_management extends NavigationDrawer {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-        mlay.inflate(this, R.layout.resturant_view_edit, mlay);
+        mlay.inflate(this, R.layout.restaurant_view_edit, mlay);
 
     }
 

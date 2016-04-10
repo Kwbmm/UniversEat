@@ -16,7 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".NavigationDrawer" />
-        <activity android:name=".Resturant_management" />
+        <activity android:name=".Restaurant_management" />
         <activity android:name=".Create_restaurant"/>
     </application>
 

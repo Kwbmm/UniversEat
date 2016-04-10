@@ -2,16 +2,10 @@ package it.polito.mad.groupFive.restaurantcode;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -116,7 +110,7 @@ public class NavigationDrawer extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if(position==2){
-                Intent intent= new Intent(view.getContext(),Resturant_management.class);
+                Intent intent= new Intent(view.getContext(),Restaurant_management.class);
                 startActivity(intent);
             }
         }
