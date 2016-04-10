@@ -1,3 +1,59 @@
 <resources>
     <string name="app_name">Restaurant Code</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string-array name="drawer_option_login">
+        <item>Login</item>
+    </string-array>
+    <string-array name="drawer_option_logged_manager">
+        <item>Profile</item>
+        <item>Orders</item>
+        <item>Manage Restaurant</item>
+        <item>Logout</item>
+    </string-array>
+    <string-array name="week">
+        <item>Monday></item>
+        <item>Tuesday></item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="search_hello">What do you want to eat?</string>
+
+    <string name="home_imageButtonOpt_contentDesc">This button can change the search type.</string>
+
+    <string name="fragment_restaurant_view_imageViewIwr_contentDesc">Image of the restaurant.</string>
+
+    <string name="menu_imageViewIwr_contentDesc">Image of the menu.</string>
+
+    <string name="motd_imageViewIwr_contentDesc">Image of the menu of the day.</string>
+    <string name="motd_textViewTitle">Menu of the day</string>
+    <string name="motd_textViewDescription">Description</string>
+    <string name="motd_textViewPrice">Price</string>
+
+    <string name="reservation_textViewUsername">Customer Details</string>
+    <string name="reservation_textViewLunchtime">Lunch Time</string>
+    <string name="reservation_textViewOrder">Ordered Meal</string>
+    <string name="reservation_textViewNotes">Reservation Notes</string>
+
+    <string name="restaurantInfo_imageButtonImg">Restaurant Image</string>
+    <string name="restaurantInfo_textViewName">Restaurant Name</string>
+    <string name="restaurantInfo_imageViewMaps">Map view of the restaurant</string>
+    <string name="restaurantInfo_textViewAddress">Restaurant Address</string>
+    <string name="restaurauntInfo_textViewDescription">Brief description of the place.</string>
+    <string name="restaurauntInfo_textViewTimetable">Timetable:\nMon: time\nTue: time\nWed: time\nThu: time\nFri: time\nSat: time\nSun: time</string>
+
+    <string name="restaurantViewEdit_textViewName">Restaurant Name</string>
+
+    <string name="reviewlist_imageButtonImg">Restaurant Image</string>
+    <string name="reviewlist_textViewName">Restaurant Name</string>
+
+    <string name="workingHItem_textViewFrom">From</string>
+    <string name="workingHItem_textViewTo">To</string>
 </resources>
