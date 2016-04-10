@@ -51,8 +51,7 @@ Icons already available (through design.google.com/icons):
   + Favourite (for saving restaurants)
   + Add
   + Settings
-
-
+  
 ##Step 2 main point
 
   * Menu Fixed/MOTD creation activity integration [Giò]
