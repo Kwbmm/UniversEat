@@ -1,6 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,10 @@ public class Restaurant_management extends NavigationDrawer {
     */
 
     User user;
+
+    //Intent request codes
+    private static final int CREATE_RESTAURANT = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user=new User();
@@ -40,11 +45,6 @@ public class Restaurant_management extends NavigationDrawer {
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.restaurant_view_edit, mlay);
         showresturant();
-
-
-
-
-
     }
 
     @Override
@@ -78,7 +78,9 @@ public class Restaurant_management extends NavigationDrawer {
             SharedPreferences.Editor editor= sharedPreferences.edit();
             editor.putInt("uid",1);
             editor.commit();
-            showresturant();
+            Intent i = new Intent(getApplicationContext(),Create_restaurant.class);
+            startActivityForResult(i,CREATE_RESTAURANT);
+//            showresturant();
         }
         return super.onOptionsItemSelected(item);
     }

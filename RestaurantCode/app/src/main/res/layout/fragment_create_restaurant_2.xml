@@ -10,30 +10,31 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Telephone number:"
-            android:textSize="20dp"
-            android:id="@+id/crtw_2_1"
-            android:layout_below="@id/rest_image"
+            android:id="@+id/textView_Address"
+            android:text="@string/frg_create_restaurant_1_textView_Address"
+            android:textSize="@dimen/frg_textView_textSize"
+            android:layout_below="@id/LL_imageAndRestaurantName"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/crtw_2_1"
-            android:id="@+id/cred_2_1"
+            android:id="@+id/editText_Address"
+            android:layout_below="@id/textView_Address"
+            android:inputType="text"
             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Website:"
-            android:textSize="20dp"
-            android:id="@+id/crtw_2_2"
-            android:layout_below="@id/cred_2_1"
-            />
-        <EditText
+
+        <!--
+            For now we are just using a fixed image, as suggest by Prof. Malnati.
+            Later we'll implement the google map view.
+        -->
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/crtw_2_2"
-            android:id="@+id/cred_2_2"
+            android:id="@+id/map"
+            android:src="@drawable/restaurant_map_view"
+            android:layout_below="@id/editText_Address"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -41,7 +42,7 @@
             android:text="Open hour: Lunch"
             android:textSize="20dp"
             android:id="@+id/crtw_2_3"
-            android:layout_below="@id/cred_2_2"
+            android:layout_below="@id/map"
             />
         <include layout="@layout/working_h_list"
             android:layout_width="wrap_content"
