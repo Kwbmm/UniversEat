@@ -10,8 +10,16 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+
+import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 public class Restaurant_management extends NavigationDrawer {
 
@@ -33,6 +41,7 @@ public class Restaurant_management extends NavigationDrawer {
     */
 
     User user;
+    Restaurant restaurant;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user=new User();
@@ -54,9 +63,10 @@ public class Restaurant_management extends NavigationDrawer {
         return true;
     }
 
-    private boolean showresturant(){
+    private boolean showresturant() {
+        int uid=1,rid;
         SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
-        if (sharedPreferences.getInt("uid",-1)!=-1){
+        if ((rid=sharedPreferences.getInt("rid",-1))!=-1){
             FrameLayout rview= (FrameLayout) findViewById(R.id.fl_redit);
             rview.inflate(this,R.layout.resturant_view_edit_fragment,rview);
             ImageButton modify = (ImageButton) findViewById(R.id.rved_modify);
@@ -66,6 +76,20 @@ public class Restaurant_management extends NavigationDrawer {
                     Log.v("ciao","ciao");
                 }
             });
+
+            try {
+                user=new User(this,uid,rid);
+                restaurant=new Restaurant(this,1,1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (RestaurantException e) {
+                e.printStackTrace();
+            } catch (UserException e) {
+                e.printStackTrace();
+            }
+            getResaurantdata();
             return true;
         }
         return false;
@@ -76,10 +100,24 @@ public class Restaurant_management extends NavigationDrawer {
         if(item.getItemId()==R.id.add_ab){
             SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
             SharedPreferences.Editor editor= sharedPreferences.edit();
-            editor.putInt("uid",1);
+            editor.putInt("rid",1);
             editor.commit();
             showresturant();
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean getResaurantdata(){
+        TextView textView= (TextView)findViewById(R.id.rs_name);
+        try {
+            restaurant.getData();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        textView.setText(restaurant.getName());
+        return true;
+
     }
 }

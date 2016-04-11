@@ -21,7 +21,7 @@
             android:id="@+id/iwr"
             />
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/rs_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/restaurantViewEdit_textViewName"
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/rate"
-            android:layout_below="@id/name"
+            android:layout_below="@id/rs_name"
             android:layout_alignLeft="@id/name"
             android:layout_alignStart="@id/name"
             android:foregroundGravity="center_horizontal"
