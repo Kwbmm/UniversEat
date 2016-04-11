@@ -2,6 +2,7 @@ package it.polito.mad.groupFive.restaurantcode;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-public class NavigationDrawer extends AppCompatActivity {
+public class NavigationDrawer extends AppCompatActivity{
     ActionBarDrawerToggle mDrawerToggle;
     ListView dList;
     @Override
