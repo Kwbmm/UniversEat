@@ -2,6 +2,7 @@
     <string name="app_name">Restaurant Code</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="user_pref">RestaurantCode.Userdata</string>
     <string-array name="drawer_option_login">
         <item>Login</item>
     </string-array>

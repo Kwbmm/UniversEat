@@ -22,17 +22,14 @@ public class Home extends NavigationDrawer {
 
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Every activity should extend navigation drawer activity, no set content view must be called, layout must be inflated using inflate function
 
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-       // mlay.addView(findViewById(R.id.main));
         mlay.inflate(this, R.layout.activity_home, mlay);
-        //SearchView searchView=(SearchView) findViewById(R.id.search);
-        //searchView.s
+
 
 
     }}
