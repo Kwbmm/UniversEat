@@ -18,6 +18,8 @@
         <activity android:name=".NavigationDrawer" />
         <activity android:name=".Restaurant_management" />
         <activity android:name=".Create_restaurant"/>
+        <activity android:name=".Menu_view_edit"/>
+        <activity android:name=".Order_management"/>
     </application>
 
 </manifest>

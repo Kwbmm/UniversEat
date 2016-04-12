@@ -113,6 +113,10 @@ public class NavigationDrawer extends AppCompatActivity {
                 Intent intent= new Intent(view.getContext(),Restaurant_management.class);
                 startActivity(intent);
             }
+            if(position==1){
+                Intent intent= new Intent(view.getContext(),Order_management.class);
+                startActivity(intent);
+            }
         }
     }
 }
