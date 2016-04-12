@@ -12,7 +12,7 @@
         <include
             android:layout_width="wrap_content"
             android:layout_height="160dp"
-            layout="@layout/motd"
+            layout="@layout/menu_otd_edit"
             android:layout_gravity="center_horizontal"
             />
         <ListView

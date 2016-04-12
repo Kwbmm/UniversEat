@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
@@ -12,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.CursorAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -52,8 +54,34 @@ ArrayList<Menu> menus;
 
 
     }
+    public void showMenu(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
 
-    public class MenuAdpter extends BaseAdapter{
+        // This activity implements OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                return false;
+            }
+        });
+        popup.inflate(R.menu.popup);
+        popup.show();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar_add, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.add_ab) {
+            showMenu(findViewById(R.id.add_ab));
+        }
+        return true;
+    }
+
+        public class MenuAdpter extends BaseAdapter{
         ArrayList<Menu> menus;
         Context context;
         public MenuAdpter(Context context,ArrayList<Menu> menus){
@@ -78,7 +106,7 @@ ArrayList<Menu> menus;
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView=LayoutInflater.from(context).inflate(R.layout.menu,null);
+            convertView=LayoutInflater.from(context).inflate(R.layout.menu_list_item_edit_fragment,null);
             TextView title= (TextView) convertView.findViewById(R.id.m_title);
             Menu menu= (Menu) getItem(position);
             TextView name =(TextView) convertView.findViewById(R.id.m_name);
