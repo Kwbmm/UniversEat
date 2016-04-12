@@ -5,7 +5,10 @@
     android:id="@+id/lledit_r">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle"
+        android:layout_marginTop="5dp"
+        android:id="@+id/rvef_rectangle">
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,9 +37,9 @@
             />
         <RatingBar
             style = "?android:attr/ratingBarStyleIndicator"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rate"
+            android:id="@+id/rwef_rate"
             android:layout_below="@id/rs_name"
             android:layout_alignLeft="@id/name"
             android:layout_alignStart="@id/name"
@@ -44,17 +47,23 @@
             android:stepSize="0.5"
             android:layout_toStartOf="@id/rved_modify"
             android:layout_toLeftOf="@id/rved_modify"
+            android:layout_toRightOf="@id/iwr"
+            android:layout_toEndOf="@id/iwr"
             android:numStars="5" />
         <TextView
-            android:id="@+id/worktime"
+            android:id="@+id/rwef_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="19-22"
+            android:text="Street"
             android:textSize="20dp"
             android:gravity="center_horizontal"
             android:layout_toRightOf="@id/iwr"
             android:layout_toEndOf="@id/iwr"
-            android:layout_below="@id/rate"
+            android:layout_below="@id/rwef_rate"
+            android:layout_toStartOf="@id/rved_modify"
+            android:layout_toLeftOf="@id/rved_modify"
+
+
             />
 
     </RelativeLayout>
