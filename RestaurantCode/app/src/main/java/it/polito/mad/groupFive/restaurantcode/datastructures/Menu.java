@@ -73,7 +73,7 @@ public class Menu {
                 this.name = jsonMenu.getString("name");
                 this.description = jsonMenu.getString("description");
                 this.price = (float) jsonMenu.getDouble("price");
-                this.image = jsonMenu.getString("image").getBytes();
+                //this.image = jsonMenu.getString("image").getBytes();
                 this.type = jsonMenu.getInt("type");
                 this.ticket = jsonMenu.getBoolean("ticket");
 
@@ -100,7 +100,7 @@ public class Menu {
         menu.put("name",this.name);
         menu.put("description",this.description);
         menu.put("price",this.price);
-        menu.put("image",this.image.toString());
+       // menu.put("image",this.image.toString());
         menu.put("type",this.type);
         menu.put("ticket",this.ticket);
         //Add a new array for the courses, and fill it!

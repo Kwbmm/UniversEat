@@ -15,19 +15,12 @@
             layout="@layout/motd"
             android:layout_gravity="center_horizontal"
             />
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/menu_lw">
 
-        <include
-            android:layout_width="wrap_content"
-            android:layout_height="160dp"
-            layout="@layout/menu"
-            android:layout_gravity="center_horizontal"
-            />
-        <include
-            android:layout_width="wrap_content"
-            android:layout_height="160dp"
-            layout="@layout/menu"
-            android:layout_gravity="center_horizontal"
-            />
+        </ListView>
     </LinearLayout>
     <Button
         android:layout_width="wrap_content"

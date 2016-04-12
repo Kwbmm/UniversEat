@@ -2,6 +2,7 @@ package it.polito.mad.groupFive.restaurantcode;
 
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -68,7 +69,8 @@ public class Restaurant_management extends NavigationDrawer {
         rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("intent","menu");
+                Intent menuview =new Intent(v.getContext(),Menu_view_edit.class);
+                startActivity(menuview);
             }
         });
 
