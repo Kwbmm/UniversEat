@@ -1,6 +1,5 @@
 package it.polito.mad.groupFive.restaurantcode;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
@@ -78,7 +76,7 @@ public class Restaurant_management extends NavigationDrawer {
             SharedPreferences.Editor editor= sharedPreferences.edit();
             editor.putInt("uid",1);
             editor.commit();
-            Intent i = new Intent(getApplicationContext(),Create_restaurant.class);
+            Intent i = new Intent(getApplicationContext(),CreateRestaurant.class);
             startActivityForResult(i,CREATE_RESTAURANT);
 //            showresturant();
         }

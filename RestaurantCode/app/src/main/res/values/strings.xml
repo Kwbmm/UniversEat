@@ -30,12 +30,12 @@
 
     <string name="fragment_restaurant_view_imageViewIwr_contentDesc">Image of the restaurant.</string>
 
-    <!-- Create_restaurant_frag.java -->
+    <!-- CreateRestaurant_1.java -->
     <string name="pick_gallery">Pick from Gallery</string>
     <string name="take_picture">Take a picture</string>
     <string name="alertBox_photo_title">Add Picture</string>
     <string name="intentChooser_select_image">Select Picture</string>
-    <!-- END Create_restaurant_frag.java -->
+    <!-- END CreateRestaurant_1.java -->
 
     <!-- fragment_create_restaurant_1.xml -->
     <string name="frg_create_restaurant_1_textView_RestaurantName">Restaurant name:</string>
@@ -75,4 +75,7 @@
 
     <string name="workingHItem_textViewFrom">From</string>
     <string name="workingHItem_textViewTo">To</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

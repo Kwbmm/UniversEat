@@ -1,6 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,7 +14,6 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.json.JSONException;
 
@@ -34,6 +35,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -44,12 +47,12 @@ import it.polito.mad.groupFive.restaurantcode.libs.RealPathUtil;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Create_restaurant_frag.OnFragmentInteractionListener} interface
+ * {@link CreateRestaurant_1.onFragInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Create_restaurant_frag#newInstance} factory method to
+ * Use the {@link CreateRestaurant_1#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Create_restaurant_frag extends Fragment {
+public class CreateRestaurant_1 extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -64,13 +67,14 @@ public class Create_restaurant_frag extends Fragment {
     private String mParam2;
 
     private Uri restaurantPicUri = null;
+    private View parentView=null;
 
-    private OnFragmentInteractionListener mListener;
+    private onFragInteractionListener mListener;
     private ImageView restaurantPic = null;
 
     private Restaurant restaurant = null;
 
-    public Create_restaurant_frag() {
+    public CreateRestaurant_1() {
         // Required empty public constructor
     }
 
@@ -80,11 +84,11 @@ public class Create_restaurant_frag extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Create_restaurant_frag.
+     * @return A new instance of fragment CreateRestaurant_1.
      */
     // TODO: Rename and change types and number of parameters
-    public static Create_restaurant_frag newInstance(String param1, String param2) {
-        Create_restaurant_frag fragment = new Create_restaurant_frag();
+    public static CreateRestaurant_1 newInstance(String param1, String param2) {
+        CreateRestaurant_1 fragment = new CreateRestaurant_1();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -106,8 +110,8 @@ public class Create_restaurant_frag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
 
-        View v = inflater.inflate(R.layout.fragment_create_restaurant_1, container, false);
-        ImageView restaurantImg = (ImageView) v.findViewById(R.id.imageView_RestaurantImage);
+        this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_1, container, false);
+        ImageView restaurantImg = (ImageView) this.parentView.findViewById(R.id.imageView_RestaurantImage);
         restaurantImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,14 +128,67 @@ public class Create_restaurant_frag extends Fragment {
             }
         });
 
-        Button btnNext = (Button) v.findViewById(R.id.Button_Next);
+        Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(METHOD_NAME,"Hi!");
+                Activity a = getActivity();
+                if(a instanceof onFragInteractionListener) {
+                    setRestaurantData();
+                    Log.d(METHOD_NAME,restaurant.getDescription());
+
+                    onFragInteractionListener obs = (onFragInteractionListener) a;
+                    obs.onChangeFrag1(restaurant);
+                }
             }
+
         });
-        return v;
+        return this.parentView;
+    }
+
+    private void setRestaurantData() {
+        final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
+        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                restaurant = new Restaurant(getActivity(),ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE),sp.getInt("uid",-1));
+            else //TODO Move randInt inside dataStructures classes
+                restaurant = new Restaurant(getActivity(),randInt(),sp.getInt("uid",-1));
+            TextView name = (TextView) parentView.findViewById(R.id.editText_RestaurantName);
+            restaurant.setName(name.getText().toString());
+
+            TextView description = (TextView) parentView.findViewById(R.id.editText_Description);
+            restaurant.setDescription(description.getText().toString());
+
+            ImageView restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
+            restaurant.setImage64FromDrawable(restaurantImg.getDrawable());
+
+            Log.d(METHOD_NAME,restaurant.getDescription());
+
+        } catch (RestaurantException |
+                UserException |
+                JSONException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        } catch (IOException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+        }
+    }
+
+    //TODO Move randInt inside the dataStructures classes
+    public static int randInt() {
+
+        // NOTE: This will (intentionally) not run as written so that folks
+        // copy-pasting have to think about how to initialize their
+        // Random instance.  Initialization of the Random instance is outside
+        // the main scope of the question, but some decent options are to have
+        // a field that is initialized once and then re-used as needed or to
+        // use ThreadLocalRandom (if using at least Java 1.7).
+        Random rand= new Random();
+
+        // nextInt is normally exclusive of the top value,
+        // so add 1 to make it inclusive
+        return rand.nextInt(Integer.MAX_VALUE -1 );
     }
 
     private void pickImage(){
@@ -295,21 +352,14 @@ public class Create_restaurant_frag extends Fragment {
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof onFragInteractionListener) {
+            mListener = (onFragInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement onFragInteractionListener");
         }
     }
 
@@ -329,8 +379,8 @@ public class Create_restaurant_frag extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface onFragInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onChangeFrag1(Restaurant r);
     }
 }
