@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="New Fixed price menu"></item>
-    <item android:title="New Daily menu"></item>
+    <item android:title="New Fixed price menu"
+        android:id="@+id/nfpm"></item>
+    <item android:title="New Daily menu"
+        android:id="@+id/ndm"></item>
 </menu>

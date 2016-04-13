@@ -149,7 +149,7 @@ public class NavigationDrawer extends AppCompatActivity {
                     //rest.setImage64FromDrawable(drawable);
                     rest.saveData();
 
-                    rest.getData();
+                    //rest.getData();
                     ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> ms = rest.getMenus();
                     for (int i = 0; i < 5; i++) {
 

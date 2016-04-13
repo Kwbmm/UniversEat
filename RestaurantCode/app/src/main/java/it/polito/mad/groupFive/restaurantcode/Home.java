@@ -35,8 +35,7 @@ public class Home extends NavigationDrawer {
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_home, mlay);
-        Intent intent= new Intent(this,Create_menu.class);
-        startActivity(intent);
+
 
 
     }}

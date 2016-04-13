@@ -1,6 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.SimpleAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -31,8 +33,8 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseEx
  * Created by MacBookRetina on 12/04/16.
  */
 public class Menu_view_edit extends NavigationDrawer {
-ArrayList<Menu> menus;
-    ArrayList<Menu> motd;
+    private ArrayList<Menu> menus;
+    private  ArrayList<Menu> motd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,21 @@ ArrayList<Menu> menus;
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                return false;
+                switch (item.getItemId()) {
+                    case R.id.nfpm: {
+                        Intent intent = new Intent(getBaseContext(), Create_menu.class);
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.ndm: {
+                        Intent intent = new Intent(getBaseContext(), Create_menu.class);
+                        startActivity(intent);
+
+                        break;
+
+                    }
+                }
+                return true;
             }
         });
         popup.inflate(R.menu.popup);

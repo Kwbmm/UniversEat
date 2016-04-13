@@ -99,7 +99,8 @@ public class Restaurant_management extends NavigationDrawer {
             modify.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.v("ciao","ciao");
+                    Intent intent= new Intent(v.getContext(),Create_menu.class);
+                    startActivity(intent);
                 }
             });
             RelativeLayout rl=(RelativeLayout) findViewById(R.id.rvef_rectangle);

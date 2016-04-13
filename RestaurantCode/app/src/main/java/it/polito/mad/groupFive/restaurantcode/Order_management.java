@@ -2,8 +2,10 @@ package it.polito.mad.groupFive.restaurantcode;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,6 +43,7 @@ public class Order_management extends NavigationDrawer {
     private SharedPreferences sharedPreferences;
     private ArrayList<Order> orders;
     private String[] months={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+    private int deletecheck;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,8 +91,26 @@ public class Order_management extends NavigationDrawer {
             lview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
                 @Override
                 public void onItemClick(AdapterView<?> parent,View view,int position,long id) {
+                    AlertDialog.Builder dialog=new AlertDialog.Builder(Order_management.this);
+                    final CharSequence[] items = { "Yes", "No" };
+                    dialog.setTitle("Delete?");
+                    dialog.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which==0){
+                                deletecheck=1;
+                            }else{
+                                deletecheck=0;
+                            }
+
+                        }
+
+                    });
+                    dialog.show();
+                    if (deletecheck==1){
                     orders.remove(position);
-                    restaurant.setOrders(orders);
+                    restaurant.setOrders(orders);}
+
                     try {
                         restaurant.saveData();
                     } catch (JSONException e) {
