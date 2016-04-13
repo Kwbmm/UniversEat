@@ -134,7 +134,7 @@ public class NavigationDrawer extends AppCompatActivity {
                     rest.setRating(3.5f);
                     rest.setCity("Politia");
                     rest.setAddress("Via vai");
-                    rest.setImage64FromDrawable(drawable);
+                    //rest.setImage64FromDrawable(drawable);
                     rest.saveData();
 
                     rest.getData();
@@ -147,7 +147,7 @@ public class NavigationDrawer extends AppCompatActivity {
                         mn.setPrice(1.5f);
                         mn.setTicket(true);
                         mn.setType(1);
-                        mn.setImage64FromDrawable(drawable);
+                        //mn.setImage64FromDrawable(drawable);
                         mn.saveData();
                         ms.add(mn);
                         count++;
