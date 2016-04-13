@@ -9,11 +9,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.FrameLayout;
 
+import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
+
 public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener
          {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final String METHOD_NAME =this.getClass().getName()+" - OnCreate";
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_create_menu, mlay);
@@ -26,9 +29,16 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
 
 
     }
+    @Override
+    public void onChangeFrag(Menu menu) {
+        final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag";
+        Create_menu_frag2 frag2 = new Create_menu_frag2();
+        getSupportFragmentManager().beginTransaction().replace(R.id.acm_2,frag2).addToBackStack(null).commit();
 
-             @Override
-             public void onFragmentInteraction(Uri uri) {
-
+    }
+             public interface OnFragmentInteractionListener {
+                 // TODO: Update argument type and name
+                 void onFragmentInteraction(Uri uri);
              }
-         }
+
+}

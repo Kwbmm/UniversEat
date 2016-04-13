@@ -29,4 +29,12 @@
         android:layout_alignParentRight="true"
         android:layout_alignBottom="@id/cbch_2_1"
         android:text="Price"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Finish"
+        android:id="@+id/fin"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
 </RelativeLayout>

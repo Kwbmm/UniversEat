@@ -1,6 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,15 +31,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+import org.json.JSONException;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.User;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 import it.polito.mad.groupFive.restaurantcode.libs.RealPathUtil;
 
 
@@ -74,10 +83,14 @@ public class Create_menu_frag extends Fragment {
     private Restaurant restaurant= null;
     private EditText txtname;
     private EditText txtdesc;
-    private String type = "Fixed";
+    private int type=1;
+    private int value;
+    private String spin = "Fixed";
     int mid;
     private SharedPreferences file;
     private SharedPreferences.Editor editor;
+
+    private View v=null;
 
     public Create_menu_frag() {
         // Required empty public constructor
@@ -117,7 +130,7 @@ public class Create_menu_frag extends Fragment {
                              Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_create_menu, container, false);
+        v = inflater.inflate(R.layout.fragment_create_menu, container, false);
         txtname = (EditText) v.findViewById(R.id.cmed_1_1);
         txtdesc = (EditText) v.findViewById(R.id.cmed_1_2);
         final Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
@@ -137,20 +150,20 @@ public class Create_menu_frag extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                type = parent.getItemAtPosition(position).toString();
+                spin = parent.getItemAtPosition(position).toString();
                 String s = "Multiple choice";
-                if(type.equals(s)) {
+                if(spin.equals(s)) {
                     numberPicker.setEnabled(true);
                     numberPicker.setMinValue(1);
                     numberPicker.setMaxValue(6);
                     numberPicker.setWrapSelectorWheel(true);
-                    int value =numberPicker.getValue();
-                    String log = Integer.toString(value);
-                    Log.d(METHOD_NAME,log);
+                    value =numberPicker.getValue();
+                    type=2;
 
                 }
                 else {
                     numberPicker.setEnabled(false);
+                    type=1;
 
                 }
             }
@@ -183,20 +196,21 @@ public class Create_menu_frag extends Fragment {
             public void onClick(View v) {
                 Log.d(METHOD_NAME,"Press Next: OK");
 
-                String namemenu = txtname.getText().toString();
-                String description = txtdesc.getText().toString();
+                Activity a = getActivity();
+                if(a instanceof OnFragmentInteractionListener) {
+                    setMenuData();
+
+                    OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
+                    obs.onChangeFrag(menu);
+                }
+
+
                 //TODO passare type, immagine, recuperare restaurant id, creare oggetto menu, lanciare nuova activity
             }
         });
         return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -227,7 +241,7 @@ public class Create_menu_frag extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onChangeFrag(Menu menu);
     }
 
     private void pickImage(){
@@ -387,6 +401,51 @@ public class Create_menu_frag extends Fragment {
         else{
             Bitmap bitmapResized = Bitmap.createScaledBitmap(img, 512, 512, false);
             return new BitmapDrawable(getResources(),bitmapResized);
+        }
+    }
+    //TODO Move randInt inside the dataStructures classes
+    public static int randInt() {
+
+        // NOTE: This will (intentionally) not run as written so that folks
+        // copy-pasting have to think about how to initialize their
+        // Random instance.  Initialization of the Random instance is outside
+        // the main scope of the question, but some decent options are to have
+        // a field that is initialized once and then re-used as needed or to
+        // use ThreadLocalRandom (if using at least Java 1.7).
+        Random rand= new Random();
+
+        // nextInt is normally exclusive of the top value,
+        // so add 1 to make it inclusive
+        return rand.nextInt(Integer.MAX_VALUE -1 );
+    }
+    private void setMenuData() {
+        final String METHOD_NAME = this.getClass().getName()+" - setMenuData";
+        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), Create_menu.MODE_PRIVATE);
+        int rid = sp.getInt("rid",-1);
+        int uid = sp.getInt("uid",-1);
+
+        try {
+            User user = new User(getActivity(),rid,uid);
+            restaurant = user.getRestaurant();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                menu = new Menu(restaurant,ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE));
+            else //TODO Move randInt inside dataStructures classes
+                menu = new Menu(restaurant,randInt());
+            menu.setName(txtname.getText().toString());
+            menu.setDescription(txtdesc.getText().toString());
+            if(!menu.setType(type))
+                throw new MenuException("Error number of type");
+
+            ImageView menuImg = (ImageView) v.findViewById(R.id.cmiw_1_1);
+            menu.setImage64FromDrawable(menuImg.getDrawable());
+            menu.saveData();
+            restaurant.addMenu(menu);
+
+        } catch (MenuException |UserException|RestaurantException|
+                JSONException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        } catch (IOException e) {
+            Log.e(METHOD_NAME, e.getMessage());
         }
     }
 }
