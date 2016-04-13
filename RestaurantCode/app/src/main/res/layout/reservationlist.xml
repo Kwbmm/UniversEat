@@ -1,26 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@android:drawable/divider_horizontal_textfield"
-        android:showDividers="middle">
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            layout="@layout/reservation"
-            />
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            layout="@layout/reservation"
-            />
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            layout="@layout/reservation"
-            />
-    </LinearLayout>
+    android:id="@+id/fl_redit"
+    android:background="@color/material_grey_100">
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:id="@+id/listView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:divider="@color/material_grey_100"
+        android:layout_alignParentBottom="true"
+        android:headerDividersEnabled="false"
+        android:dividerHeight="16dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="7dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="7dp" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="No items to display."
+        android:id="@+id/noItemsTextView"
+        android:gravity="center_horizontal"
+        android:visibility="invisible"
+        android:layout_marginTop="16dp" />
 </RelativeLayout>
+
