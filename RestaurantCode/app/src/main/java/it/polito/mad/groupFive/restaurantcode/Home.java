@@ -1,5 +1,6 @@
 package it.polito.mad.groupFive.restaurantcode;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -34,6 +35,8 @@ public class Home extends NavigationDrawer {
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_home, mlay);
+        Intent intent= new Intent(this,Create_menu.class);
+        startActivity(intent);
 
 
     }}

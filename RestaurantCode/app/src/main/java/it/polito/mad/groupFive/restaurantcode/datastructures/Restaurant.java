@@ -46,6 +46,9 @@ public class Restaurant {
     private String address;
     private String state;
     private String city;
+    private String website;
+    private String phone;
+
     private byte[] image;
     private float rating;
     private ArrayList<Menu> menus;
@@ -53,11 +56,16 @@ public class Restaurant {
     private double xcoord;
     private double ycoord;
 
-    public Restaurant(Context c, int rid){
+    public  Restaurant(){}
+
+    public Restaurant(Context c, int rid) throws RestaurantException{
         this.appContext = c;
+        if(rid < 0)
+            throw new RestaurantException("Restaurant ID must be positive");
         this.rid = rid;
         this.menus = new ArrayList<Menu>();
         this.orders = new ArrayList<Order>();
+
     }
 
     /**
@@ -454,7 +462,9 @@ public class Restaurant {
      * @param id The id of the menu to search for.
      * @return The Menu object or null if nothing is found.
      */
-    public Menu getMenuByID(int id){
+    public Menu getMenuByID(int id) throws MenuException{
+        if (id <0)
+            throw new MenuException("Menu ID must be positive");
         for(Menu m : this.menus)
             if(m.getMid() == id)
                 return m;
@@ -501,7 +511,9 @@ public class Restaurant {
      * @param id The id of the order to search for.
      * @return The requested order or null if nothing is found.
      */
-    public Order getOrderByID(int id){
+    public Order getOrderByID(int id) throws OrderException{
+        if(id <0)
+            throw new OrderException("Order ID must be positive");
         for(Order o : this.orders)
             if(o.getOid() == id)
                 return o;
@@ -513,7 +525,9 @@ public class Restaurant {
      * @param uid The user id who submitted
      * @return An ArrayList of Orders or null if nothing is found.
      */
-    public ArrayList<Order> getOrdersByUserID(int uid){
+    public ArrayList<Order> getOrdersByUserID(int uid) throws UserException{
+        if(uid <0)
+            throw new UserException("User ID must be positive");
         ArrayList<Order> output = new ArrayList<Order>();
         for(Order o : this.orders)
             if(o.getUid() == uid)
@@ -536,4 +550,44 @@ public class Restaurant {
     public void setUid(int uid) {
         this.uid = uid;
     }
+
+    /**
+     *
+     * @return a string with the restaurant's website
+     */
+    public String getWebsite() { return website; }
+
+    /**
+     *
+     * @param website of the restaurant
+     */
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    /**
+     *
+     * @return a string with the restaurant's phone number
+     */
+    public String getPhone() {
+        return phone;
+    }
+
+    /**
+     *
+     * @param phone the phone number of the restaurant
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    /**
+     *
+     * @param menu a new menu to add ad menu list of the restaurant
+     */
+    public void addMenu(Menu menu){
+        this.menus.add(menu);
+
+    }
+
 }
