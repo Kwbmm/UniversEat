@@ -1,6 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,6 +16,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+
+import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
 public class NavigationDrawer extends AppCompatActivity {
     ActionBarDrawerToggle mDrawerToggle;
@@ -109,6 +115,48 @@ public class NavigationDrawer extends AppCompatActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (position==0){
+
+                int count=1;
+
+                try {
+                    Restaurant rest = new User(view.getContext(), 2, 2).getRestaurant();
+                    rest.setUid(2);
+                    rest.setXcoord(0.0f);
+                    rest.setYcoord(0.0f);
+                    rest.setName("Pippo");
+                    rest.setDescription("Figo");
+                    rest.setState("Bello");
+                    rest.setRating(3.5f);
+                    rest.setCity("Politia");
+                    rest.setAddress("Via vai");
+                    rest.saveData();
+
+                    rest.getData();
+                    ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> ms = rest.getMenus();
+                    for (int i = 0; i < 5; i++) {
+
+                        it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest, count);
+                        mn.setName("Gatto");
+                        mn.setDescription("Gatto");
+                        mn.setPrice(1.5f);
+                        mn.setTicket(true);
+                        mn.setType(1);
+                        mn.saveData();
+                        ms.add(mn);
+                        count++;
+
+                    }
+                    rest.saveData();
+                    SharedPreferences sharedPreferences=view.getContext().getSharedPreferences(getString(R.string.user_pref),view.getContext().MODE_PRIVATE);
+                    SharedPreferences.Editor editor= sharedPreferences.edit();
+                    editor.putInt("uid",2);
+                    editor.putInt("rid",2);
+                    editor.commit();
+
+                }catch (Exception e){}
+
+            }
             if(position==2){
                 Intent intent= new Intent(view.getContext(),Restaurant_management.class);
                 startActivity(intent);
