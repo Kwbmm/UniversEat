@@ -185,7 +185,7 @@ public class Restaurant {
         this.state = this.JSONFile.getString("state");
         this.xcoord = this.JSONFile.getDouble("xcoord");
         this.ycoord = this.JSONFile.getDouble("ycoord");
-        //this.image = this.JSONFile.getString("image").getBytes();
+        this.image = this.JSONFile.getString("image").getBytes();
         this.rating = (float)this.JSONFile.getDouble("rating");
 
         JSONArray menus = this.JSONFile.getJSONArray("menus");
@@ -232,7 +232,7 @@ public class Restaurant {
         this.JSONFile.put("state",this.state);
         this.JSONFile.put("xcoord",this.xcoord);
         this.JSONFile.put("ycoord",this.ycoord);
-       // this.JSONFile.put("image",this.image.toString());
+        this.JSONFile.put("image",this.image.toString());
         this.JSONFile.put("rating",this.rating);
 
         this.JSONFile.put("menus",new JSONArray());

@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -132,6 +133,7 @@ public class Restaurant_management extends NavigationDrawer {
         TextView rname= (TextView)findViewById(R.id.rs_name);
         TextView raddress= (TextView)findViewById(R.id.rwef_address);
         RatingBar rbar=(RatingBar)findViewById(R.id.rwef_rate);
+        ImageView rmimw = (ImageView) findViewById(R.id.iwr);
         try {
             restaurant.getData();
 
@@ -141,6 +143,7 @@ public class Restaurant_management extends NavigationDrawer {
         rname.setText(restaurant.getName());
         raddress.setText(restaurant.getAddress());
         rbar.setRating(restaurant.getRating());
+        rmimw.setImageBitmap(restaurant.getImageBitmap());
 
 
         return true;

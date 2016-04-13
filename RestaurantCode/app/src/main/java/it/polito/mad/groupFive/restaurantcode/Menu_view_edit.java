@@ -32,6 +32,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseEx
  */
 public class Menu_view_edit extends NavigationDrawer {
 ArrayList<Menu> menus;
+    ArrayList<Menu> motd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +44,20 @@ ArrayList<Menu> menus;
             Restaurant rest = new User(this, 2, 2).getRestaurant();
             rest.getData();
             menus = rest.getMenus();
+            motd = rest.getMenusByType(2);
 
             Log.v("dim",String.valueOf(menus.size()));
             MenuAdpter adp=new MenuAdpter(this,menus);
             ListView lwcm = (ListView) findViewById(R.id.menu_lw);
             lwcm.setAdapter(adp);
+
+            TextView motd_name = (TextView) findViewById(R.id.name);
+            motd_name.setText(motd.get(0).getName());
+            TextView motd_desc = (TextView) findViewById(R.id.description);
+            motd_desc.setText(motd.get(0).getDescription());
+            TextView motd_price = (TextView) findViewById(R.id.price);
+            motd_price.setText(motd.get(0).getPrice()+"€");
+
         }catch (Exception e){
 
         }

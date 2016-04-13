@@ -3,6 +3,8 @@ package it.polito.mad.groupFive.restaurantcode;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -119,6 +121,8 @@ public class NavigationDrawer extends AppCompatActivity {
 
                 int count=1;
 
+                Drawable drawable= getDrawable(R.drawable.ic_account_circle_black_24dp);
+
                 try {
                     Restaurant rest = new User(view.getContext(), 2, 2).getRestaurant();
                     rest.setUid(2);
@@ -130,6 +134,7 @@ public class NavigationDrawer extends AppCompatActivity {
                     rest.setRating(3.5f);
                     rest.setCity("Politia");
                     rest.setAddress("Via vai");
+                    rest.setImage64FromDrawable(drawable);
                     rest.saveData();
 
                     rest.getData();
@@ -142,11 +147,20 @@ public class NavigationDrawer extends AppCompatActivity {
                         mn.setPrice(1.5f);
                         mn.setTicket(true);
                         mn.setType(1);
+                        mn.setImage64FromDrawable(drawable);
                         mn.saveData();
                         ms.add(mn);
                         count++;
 
                     }
+                    it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest, count);
+                    mn.setName("Orecchiette tris");
+                    mn.setDescription("orecchiette, patate, pollo");
+                    mn.setPrice(1.5f);
+                    mn.setTicket(true);
+                    mn.setType(2);
+                    mn.saveData();
+                    ms.add(mn);
                     rest.saveData();
                     SharedPreferences sharedPreferences=view.getContext().getSharedPreferences(getString(R.string.user_pref),view.getContext().MODE_PRIVATE);
                     SharedPreferences.Editor editor= sharedPreferences.edit();
