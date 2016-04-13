@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
@@ -200,8 +201,13 @@ public class Create_menu_frag extends Fragment {
                 if(a instanceof OnFragmentInteractionListener) {
                     setMenuData();
 
-                    OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
-                    obs.onChangeFrag(menu);
+                    FrameLayout mlay= (FrameLayout) v.findViewById(R.id.frame);
+                    mlay.inflate(v.getContext(), R.layout.activity_create_menu, mlay);
+                    Create_menu_frag2 fragment= new Create_menu_frag2();
+                    getFragmentManager().beginTransaction().replace(R.id.acm_1,fragment).commit();
+
+                    //OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
+                    //obs.onChangeFrag(menu);
                 }
 
 
@@ -437,8 +443,8 @@ public class Create_menu_frag extends Fragment {
                 throw new MenuException("Error number of type");
 
             ImageView menuImg = (ImageView) v.findViewById(R.id.cmiw_1_1);
-            menu.setImage64FromDrawable(menuImg.getDrawable());
-            menu.saveData();
+           // menu.setImage64FromDrawable(menuImg.getDrawable());
+            //menu.saveData();
             restaurant.addMenu(menu);
 
         } catch (MenuException |UserException|RestaurantException|

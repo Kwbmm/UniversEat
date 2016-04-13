@@ -27,14 +27,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignBottom="@id/cbch_2_1"
-        android:text="Price"/>
+        android:layout_alignTop="@id/cbch_2_1"
+        android:text="Price"
+        android:id="@+id/fcm2_price"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Finish"
         android:id="@+id/fin"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_below="@id/fcm2_price"
+        android:layout_alignParentRight="true"/>
 </RelativeLayout>

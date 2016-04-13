@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 
-public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener
+public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener
          {
 
     @Override
@@ -36,6 +36,12 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         getSupportFragmentManager().beginTransaction().replace(R.id.acm_2,frag2).addToBackStack(null).commit();
 
     }
+
+             @Override
+             public void onFragmentInteraction(Uri uri) {
+
+             }
+
              public interface OnFragmentInteractionListener {
                  // TODO: Update argument type and name
                  void onFragmentInteraction(Uri uri);
