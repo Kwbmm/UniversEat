@@ -75,6 +75,7 @@ ArrayList<Menu> menus;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.add_ab) {
             showMenu(findViewById(R.id.add_ab));
         }
