@@ -50,6 +50,8 @@ public class Order_management extends NavigationDrawer {
         Log.e("RID E UID",""+rid+" "+uid);
         try {
             user=new User(this,rid,uid);
+            restaurant=user.getRestaurant();
+            restaurant.getData();
         } catch (JSONException e) {
             Log.e("Exception",e.toString());
         } catch (IOException e) {
@@ -59,7 +61,6 @@ public class Order_management extends NavigationDrawer {
         } catch (UserException e) {
             Log.e("Exception",e.toString());
         }
-        restaurant=user.getRestaurant();
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.reservationlist, mlay);
         //generaordinifittizi();
@@ -80,6 +81,7 @@ public class Order_management extends NavigationDrawer {
         TextView noitems = (TextView)findViewById(R.id.noItemsTextView);
         ListView lview = (ListView) findViewById(R.id.listView);
         orders=restaurant.getOrders();
+        Log.v("Order",String.valueOf(orders.size()));
         if (orders.size()>0) {
             noitems.setVisibility(View.INVISIBLE);
             lview.setVisibility(View.VISIBLE);

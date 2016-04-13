@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.LoginFilter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +21,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
+import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
@@ -123,8 +126,15 @@ public class NavigationDrawer extends AppCompatActivity {
 
                 Drawable drawable= getDrawable(R.drawable.ic_account_circle_black_24dp);
 
+
                 try {
                     Restaurant rest = new User(view.getContext(), 2, 2).getRestaurant();
+                    Order order =new Order(rest,2);
+                    order.setDate(new Date());
+                    order.setMid(14);
+                    order.setUid(22);
+                    order.saveData();
+
                     rest.setUid(2);
                     rest.setXcoord(0.0f);
                     rest.setYcoord(0.0f);
@@ -134,6 +144,8 @@ public class NavigationDrawer extends AppCompatActivity {
                     rest.setRating(3.5f);
                     rest.setCity("Politia");
                     rest.setAddress("Via vai");
+                    rest.getOrders().add(order);
+                    Log.v("create",String.valueOf(rest.getOrders().size()));
                     //rest.setImage64FromDrawable(drawable);
                     rest.saveData();
 
