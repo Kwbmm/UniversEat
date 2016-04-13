@@ -1,16 +1,29 @@
 package it.polito.mad.groupFive.restaurantcode;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +45,8 @@ public class CreateRestaurant_2 extends Fragment {
 
     private onFragInteractionListener mListener;
     private View parentView=null;
+
+    private Restaurant restaurant=null;
 
     public CreateRestaurant_2() {
         // Required empty public constructor
@@ -68,8 +83,74 @@ public class CreateRestaurant_2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_2, container, false);
-        Log.d(METHOD_NAME,"Hi Frag 2!");
+        Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity a = getActivity();
+                if(a instanceof onFragInteractionListener) {
+                    setRestaurantData();
+
+                    onFragInteractionListener obs = (onFragInteractionListener) a;
+                    obs.onChangeFrag2(restaurant);
+                }
+            }
+
+        });
+
         return this.parentView;
+    }
+
+    private void setRestaurantData() {
+        final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
+
+        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                restaurant = new Restaurant(getActivity(), ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE),sp.getInt("uid",-1));
+            else //TODO Move randInt inside dataStructures classes
+                restaurant = new Restaurant(getActivity(),randInt(),sp.getInt("uid",-1));
+            TextView address = (TextView) parentView.findViewById(R.id.editText_Address);
+            restaurant.setAddress(address.getText().toString());
+
+            TextView city = (TextView) parentView.findViewById(R.id.editText_City);
+            restaurant.setCity(city.getText().toString());
+
+            //TODO Create methods to set this data
+            //TextView ZIPCode = (TextView) parentView.findViewById(R.id.editText_ZIPCode);
+            //restaurant.setZIPCode(ZIPCode.getText().toString());
+
+            TextView state = (TextView) parentView.findViewById(R.id.editText_State);
+            restaurant.setState(state.getText().toString());
+
+            //TODO Manage GMaps to set this data
+            //restaurant.setXcoord();
+            //restaurant.setYcoord();
+
+        } catch (RestaurantException |
+                UserException |
+                JSONException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        } catch (IOException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+        }
+    }
+
+    //TODO Move randInt inside the dataStructures classes
+    public static int randInt() {
+
+        // NOTE: This will (intentionally) not run as written so that folks
+        // copy-pasting have to think about how to initialize their
+        // Random instance.  Initialization of the Random instance is outside
+        // the main scope of the question, but some decent options are to have
+        // a field that is initialized once and then re-used as needed or to
+        // use ThreadLocalRandom (if using at least Java 1.7).
+        Random rand= new Random();
+
+        // nextInt is normally exclusive of the top value,
+        // so add 1 to make it inclusive
+        return rand.nextInt(Integer.MAX_VALUE -1 );
     }
 
     @Override

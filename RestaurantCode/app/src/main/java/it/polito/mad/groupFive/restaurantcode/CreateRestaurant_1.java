@@ -135,7 +135,6 @@ public class CreateRestaurant_1 extends Fragment {
                 Activity a = getActivity();
                 if(a instanceof onFragInteractionListener) {
                     setRestaurantData();
-                    Log.d(METHOD_NAME,restaurant.getDescription());
 
                     onFragInteractionListener obs = (onFragInteractionListener) a;
                     obs.onChangeFrag1(restaurant);
@@ -163,8 +162,6 @@ public class CreateRestaurant_1 extends Fragment {
 
             ImageView restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
             restaurant.setImage64FromDrawable(restaurantImg.getDrawable());
-
-            Log.d(METHOD_NAME,restaurant.getDescription());
 
         } catch (RestaurantException |
                 UserException |

@@ -4,35 +4,42 @@
     android:id="@+id/create_r_3"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:text="Dinner"
-        android:id="@+id/crtw_3_1"
-        android:textSize="20dp"
+        android:id="@+id/textView_TimetableLunch"
+        android:text="@string/frg_create_restaurant_3_textView_TimetableLunch"
+        android:textSize="@dimen/frg_textView_textSize"
         />
     <include layout="@layout/working_h_list"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/crtw_3_1"
-        android:id="@+id/list_w_h_d"
+        android:id="@+id/includeLayout_workingHListLunch"
+        android:layout_below="@id/textView_TimetableLunch"
         />
-    <CheckBox
-        android:layout_width="wrap_content"
+
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ticket"
-        android:id="@+id/ticket_1"
-        android:layout_below="@id/list_w_h_d"
+        android:id="@+id/textView_TimetableDinner"
+        android:layout_below="@id/includeLayout_workingHListLunch"
+        android:text="@string/frg_create_restaurant_3_textView_TimetableDinner"
+        android:textSize="@dimen/frg_textView_textSize"
+        />
+    <include layout="@layout/working_h_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/includeLayout_workingHListDinner"
+        android:layout_below="@id/textView_TimetableDinner"
         />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:text="Finish"
-        android:layout_below="@id/ticket_1"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginEnd="5dp"
+        android:text="@string/next"
+        android:layout_below="@id/includeLayout_workingHListDinner"
+        android:layout_marginTop="@dimen/btn_marginTop"
+        android:layout_marginRight="@dimen/btn_marginRight"
+        android:layout_marginEnd="@dimen/btn_marginRight"
         />
 </RelativeLayout>

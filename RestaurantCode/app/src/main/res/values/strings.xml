@@ -46,8 +46,16 @@
     <!-- END fragment_create_restaurant_1.xml -->
 
     <!-- fragment_create_restaurant_2.xml -->
-    <string name="frg_create_restaurant_1_textView_Address">Address:</string>
+    <string name="frg_create_restaurant_2_textView_Address">Address:</string>
+    <string name="frg_create_restaurant_2_textView_City">City:</string>
+    <string name="frg_create_restaurant_2_textView_ZIPCode">ZIP Code:</string>
+    <string name="frg_create_restaurant_2_textView_State">State:</string>
     <!-- END fragment_create_restaurant_2.xml -->
+
+    <!-- fragment_create_restaurant_3.xml -->
+    <string name="frg_create_restaurant_3_textView_TimetableLunch">Timetable - Lunch</string>
+    <string name="frg_create_restaurant_3_textView_TimetableDinner">Timetable - Dinner</string>
+    <!-- END fragment_create_restaurant_3.xml -->
 
     <string name="menu_imageViewIwr_contentDesc">Image of the menu.</string>
 

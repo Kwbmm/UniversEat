@@ -25,8 +25,13 @@ public class CreateRestaurant
 
     @Override
     public void onChangeFrag1(Restaurant r) {
-        final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag";
-        this.restaurant = r;
+        final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag1";
+        this.restaurant.setName(r.getName());
+        this.restaurant.setDescription(r.getDescription());
+        this.restaurant.setImage64(r.getImage64());
+        //TODO set telehpone and website
+        //this.restaurant.setTelephone(r.getTelephone());
+        //this.restaurant.setWebsite(r.getWebsite());
 
         CreateRestaurant_2 cr2 = new CreateRestaurant_2();
         getSupportFragmentManager()
@@ -34,12 +39,27 @@ public class CreateRestaurant
                 .replace(R.id.fragment_CreateRestaurant,cr2)
                 .addToBackStack(null)
                 .commit();
-
     }
 
     @Override
     public void onChangeFrag2(Restaurant r) {
+        final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag2";
+        this.restaurant.setAddress(r.getAddress());
 
+        //TODO set XCoord and YCoord in the future when we will know about GMaps
+        //this.restaurant.setXcoord(r.getXcoord());
+        //this.restaurant.setYcoord(r.getYcoord());
+        //this.restaurant.setZIPCode(r.getZIPCode());
+
+        this.restaurant.setState(r.getState());
+        this.restaurant.setCity(r.getCity());
+
+        CreateRestaurant_3 cr3 = new CreateRestaurant_3();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_CreateRestaurant,cr3)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
