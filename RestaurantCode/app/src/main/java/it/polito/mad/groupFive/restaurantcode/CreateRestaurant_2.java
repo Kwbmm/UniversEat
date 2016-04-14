@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -89,10 +90,14 @@ public class CreateRestaurant_2 extends Fragment {
             public void onClick(View v) {
                 Activity a = getActivity();
                 if(a instanceof onFragInteractionListener) {
-                    setRestaurantData();
-
-                    onFragInteractionListener obs = (onFragInteractionListener) a;
-                    obs.onChangeFrag2(restaurant);
+                    if(setRestaurantData()){
+                        onFragInteractionListener obs = (onFragInteractionListener) a;
+                        obs.onChangeFrag2(restaurant);
+                    }
+                    else{
+                        Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
+                                .show();
+                    }
                 }
             }
 
@@ -101,7 +106,7 @@ public class CreateRestaurant_2 extends Fragment {
         return this.parentView;
     }
 
-    private void setRestaurantData() {
+    private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
 
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
@@ -112,28 +117,38 @@ public class CreateRestaurant_2 extends Fragment {
             else //TODO Move randInt inside dataStructures classes
                 restaurant = new Restaurant(getActivity(),randInt(),sp.getInt("uid",-1));
             TextView address = (TextView) parentView.findViewById(R.id.editText_Address);
+            if(address.getText().toString().equals("") || address.getText() == null)
+                return false;
             restaurant.setAddress(address.getText().toString());
 
             TextView city = (TextView) parentView.findViewById(R.id.editText_City);
+            if(city.getText().toString().equals("") || city.getText() == null)
+                return false;
             restaurant.setCity(city.getText().toString());
 
             //TODO Create methods to set this data
-            //TextView ZIPCode = (TextView) parentView.findViewById(R.id.editText_ZIPCode);
+            TextView ZIPCode = (TextView) parentView.findViewById(R.id.editText_ZIPCode);
+            if(ZIPCode.getText().toString().equals("") || ZIPCode.getText() == null)
+                return false;
             //restaurant.setZIPCode(ZIPCode.getText().toString());
 
             TextView state = (TextView) parentView.findViewById(R.id.editText_State);
+            if(state.getText().toString().equals("") || state.getText() == null)
+                return false;
             restaurant.setState(state.getText().toString());
 
             //TODO Manage GMaps to set this data
             //restaurant.setXcoord();
             //restaurant.setYcoord();
-
+            return true;
         } catch (RestaurantException |
                 UserException |
                 JSONException e) {
             Log.e(METHOD_NAME,e.getMessage());
+            return false;
         } catch (IOException e) {
             Log.e(METHOD_NAME, e.getMessage());
+            return false;
         }
     }
 

@@ -32,7 +32,11 @@ public class CreateRestaurant
         final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag1";
         this.restaurant.setName(r.getName());
         this.restaurant.setDescription(r.getDescription());
-        this.restaurant.setImage64(r.getImage64());
+
+        //TODO Fix this!
+        //this.restaurant.setImage64(r.getImage64());
+        this.restaurant.setImage64(new byte[]{0xA});
+
         //TODO set telehpone and website
         //this.restaurant.setTelephone(r.getTelephone());
         //this.restaurant.setWebsite(r.getWebsite());
@@ -102,9 +106,9 @@ public class CreateRestaurant
         //TODO Create getter/setter for ticket inside Restaurant class
         //this.restaurant.setTickets(r.getTickets());
 
-        finish();
         try {
             this.restaurant.saveData();
+            finish();
         } catch (JSONException e) {
             Log.e(METHOD_NAME,e.getMessage());
         } catch (IOException e) {
