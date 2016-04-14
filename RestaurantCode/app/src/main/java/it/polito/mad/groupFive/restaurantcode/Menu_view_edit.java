@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.zip.Inflater;
 
@@ -33,23 +35,28 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseEx
  * Created by MacBookRetina on 12/04/16.
  */
 public class Menu_view_edit extends NavigationDrawer {
-    private ArrayList<Menu> menus;
+    private ArrayList<Menu> menusshared;
     private  ArrayList<Menu> motd;
+    private MenuAdpter adp;
+    private Restaurant rest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        showview();
+
+    }
+    public void showview(){
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.menulist, mlay);
         try {
-            Restaurant rest = new User(this, 2, 2).getRestaurant();
+            rest = new User(this, 2, 2).getRestaurant();
             rest.getData();
-            menus = rest.getMenus();
+            menusshared = rest.getMenus();
             motd = rest.getMenusByType(2);
 
-            Log.v("dim",String.valueOf(menus.size()));
-            MenuAdpter adp=new MenuAdpter(this,menus);
+            Log.v("dim",String.valueOf(menusshared.size()));
+            adp=new MenuAdpter(this,menusshared);
             ListView lwcm = (ListView) findViewById(R.id.menu_lw);
             lwcm.setAdapter(adp);
 
@@ -65,7 +72,9 @@ public class Menu_view_edit extends NavigationDrawer {
         }
 
 
+
     }
+
     public void showMenu(View v) {
         PopupMenu popup = new PopupMenu(this, v);
 
@@ -132,7 +141,7 @@ public class Menu_view_edit extends NavigationDrawer {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             convertView=LayoutInflater.from(context).inflate(R.layout.menu_list_item_edit_fragment,null);
             TextView title= (TextView) convertView.findViewById(R.id.m_title);
             Menu menu= (Menu) getItem(position);
@@ -151,6 +160,14 @@ public class Menu_view_edit extends NavigationDrawer {
             title.setText("Fixed Price Menu");
             price.setText(menu.getPrice()+"€");
             description.setText(menu.getDescription());
+            Button delete = (Button) convertView.findViewById(R.id.mlf_del);
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                remove(position);
+
+                }
+            });
 
 
 
@@ -160,6 +177,19 @@ public class Menu_view_edit extends NavigationDrawer {
 
 
         }
+
+            public void remove(int position) {
+                menusshared.remove(position);
+                try {
+                    rest.saveData();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                showview();
+
+            }
     }
 
 }
