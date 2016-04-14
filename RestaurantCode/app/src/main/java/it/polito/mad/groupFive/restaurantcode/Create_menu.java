@@ -7,11 +7,12 @@ import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 
-public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener
+public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Add_dish.OnFragmentInteractionListener
          {
 
     @Override
@@ -32,8 +33,8 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
     @Override
     public void onChangeFrag(Menu menu) {
         final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag";
-        Create_menu_frag2 frag2 = new Create_menu_frag2();
-        getSupportFragmentManager().beginTransaction().replace(R.id.acm_2,frag2).addToBackStack(null).commit();
+        //Create_menu_frag2 frag2 = new Create_menu_frag2();
+        //getSupportFragmentManager().beginTransaction().replace(R.id.acm_2,frag2).addToBackStack(null).commit();
 
     }
 
@@ -45,6 +46,17 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
              public interface OnFragmentInteractionListener {
                  // TODO: Update argument type and name
                  void onFragmentInteraction(Uri uri);
+             }
+             @Override
+             public void onBackPressed(){
+                 FragmentManager fm = getFragmentManager();
+                 if (fm.getBackStackEntryCount() > 0) {
+                     Log.i("MainActivity", "popping backstack");
+                     fm.popBackStack();
+                 } else {
+                     Log.i("MainActivity", "nothing on backstack, calling super");
+                     super.onBackPressed();
+                 }
              }
 
 }

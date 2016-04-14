@@ -30,6 +30,8 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -123,7 +125,6 @@ public class Create_menu_frag2 extends Fragment {
         MenuCourse adp=new MenuCourse(container.getContext(),options);
         ListView lwcm = (ListView) v.findViewById(R.id.lwch_2_1);
         lwcm.setAdapter(adp);
-        Log.v("dim",adp.getCount()+"num");
         return v;
     }
 
@@ -203,6 +204,18 @@ public class Create_menu_frag2 extends Fragment {
 
 
             }
+
+            ImageButton add_dish =(ImageButton)convertView.findViewById(R.id.iwch);
+            add_dish.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FrameLayout mlay= (FrameLayout) v.findViewById(R.id.frame);
+                    mlay.inflate(v.getContext(), R.layout.activity_create_menu, mlay);
+                    Add_dish fragment= new Add_dish();
+                    getFragmentManager().beginTransaction().replace(R.id.acm_1,fragment).addToBackStack(null).commit();
+
+                }
+            });
             return convertView;
 
 

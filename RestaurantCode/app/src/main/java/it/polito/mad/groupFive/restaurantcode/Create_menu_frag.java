@@ -204,7 +204,7 @@ public class Create_menu_frag extends Fragment {
                     FrameLayout mlay= (FrameLayout) v.findViewById(R.id.frame);
                     mlay.inflate(v.getContext(), R.layout.activity_create_menu, mlay);
                     Create_menu_frag2 fragment= new Create_menu_frag2();
-                    getFragmentManager().beginTransaction().replace(R.id.acm_1,fragment).commit();
+                    getFragmentManager().beginTransaction().replace(R.id.acm_1,fragment).addToBackStack(null).commit();
 
                     //OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
                     //obs.onChangeFrag(menu);

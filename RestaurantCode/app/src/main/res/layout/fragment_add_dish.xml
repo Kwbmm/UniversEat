@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/acm_3">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nd_tw_1"
+        android:textSize="20dp"
+        android:text="Name" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/nd_et_1"
+        android:layout_below="@id/nd_tw_1"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nd_tw_2"
+        android:text="Type"
+        android:layout_below="@id/nd_et_1"/>
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nd_type"
+        android:layout_below="@id/nd_tw_2">
+    </Spinner>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nd_tw_3"
+        android:text="Cuisine"
+        android:textSize="20dp"
+        android:layout_below="@id/nd_type"/>
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nd_type_2"
+        android:layout_below="@id/nd_tw_3">
+    </Spinner>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nd_ck_1"
+        android:layout_below="@id/nd_type_2"
+        android:text="Vegan"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nd_ck_2"
+        android:layout_below="@id/nd_ck_1"
+        android:text="Vegetarian"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nd_ck_3"
+        android:layout_below="@id/nd_ck_2"
+        android:text="Hot"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:text="Add"/>
+
+</RelativeLayout>
