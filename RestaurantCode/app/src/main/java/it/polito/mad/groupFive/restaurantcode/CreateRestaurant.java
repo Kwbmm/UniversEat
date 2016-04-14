@@ -30,6 +30,15 @@ public class CreateRestaurant
     @Override
     public void onChangeFrag1(Restaurant r) {
         final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag1";
+        try {
+            this.restaurant.setRid(r.getRid());
+            SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
+            SharedPreferences.Editor editor= sharedPreferences.edit();
+            editor.putInt("rid",this.restaurant.getRid());
+            editor.commit();
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        }
         this.restaurant.setName(r.getName());
         this.restaurant.setDescription(r.getDescription());
 
