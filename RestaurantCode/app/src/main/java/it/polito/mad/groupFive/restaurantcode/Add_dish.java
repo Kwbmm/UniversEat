@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -85,6 +86,13 @@ public class Add_dish extends Fragment {
         ArrayAdapter<String> tp2 =new ArrayAdapter<String>(view.getContext(),android.R.layout.simple_spinner_dropdown_item,strings_2);
         type2.setAdapter(tp2);
 
+        Button add = (Button) view.findViewById(R.id.ad_add);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().popBackStack();
+            }
+        });
         return view;
 
 
