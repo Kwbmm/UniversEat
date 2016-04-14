@@ -200,14 +200,14 @@ public class Create_menu_frag extends Fragment {
                 Activity a = getActivity();
                 if(a instanceof OnFragmentInteractionListener) {
                     setMenuData();
-
+/*
                     FrameLayout mlay= (FrameLayout) v.findViewById(R.id.frame);
                     mlay.inflate(v.getContext(), R.layout.activity_create_menu, mlay);
                     Create_menu_frag2 fragment= new Create_menu_frag2();
                     getFragmentManager().beginTransaction().replace(R.id.acm_1,fragment).addToBackStack(null).commit();
-
-                    //OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
-                    //obs.onChangeFrag(menu);
+*/
+                    OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
+                    obs.onChangeFrag(menu);
                 }
 
 
@@ -412,16 +412,8 @@ public class Create_menu_frag extends Fragment {
     //TODO Move randInt inside the dataStructures classes
     public static int randInt() {
 
-        // NOTE: This will (intentionally) not run as written so that folks
-        // copy-pasting have to think about how to initialize their
-        // Random instance.  Initialization of the Random instance is outside
-        // the main scope of the question, but some decent options are to have
-        // a field that is initialized once and then re-used as needed or to
-        // use ThreadLocalRandom (if using at least Java 1.7).
         Random rand= new Random();
 
-        // nextInt is normally exclusive of the top value,
-        // so add 1 to make it inclusive
         return rand.nextInt(Integer.MAX_VALUE -1 );
     }
     private void setMenuData() {
@@ -433,19 +425,21 @@ public class Create_menu_frag extends Fragment {
         try {
             User user = new User(getActivity(),rid,uid);
             restaurant = user.getRestaurant();
+            restaurant.getData();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 menu = new Menu(restaurant,ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE));
             else //TODO Move randInt inside dataStructures classes
                 menu = new Menu(restaurant,randInt());
             menu.setName(txtname.getText().toString());
             menu.setDescription(txtdesc.getText().toString());
+            menu.setNumberchoice(value);
             if(!menu.setType(type))
                 throw new MenuException("Error number of type");
 
+
+
             ImageView menuImg = (ImageView) v.findViewById(R.id.cmiw_1_1);
            // menu.setImage64FromDrawable(menuImg.getDrawable());
-            //menu.saveData();
-            restaurant.addMenu(menu);
 
         } catch (MenuException |UserException|RestaurantException|
                 JSONException e) {

@@ -4,16 +4,32 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.User;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Add_dish.OnFragmentInteractionListener
          {
+             private Restaurant restaurant=null;
+             private User user=null;
+             private Menu menu=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +40,24 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         Create_menu_frag fragment= new Create_menu_frag();
         getSupportFragmentManager().beginTransaction().add(R.id.acm_1,fragment).commit();
 
+        SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref), Create_menu.MODE_PRIVATE);
+
+        try {
+            user = new User(getApplicationContext(),sp.getInt("rid",-1),sp.getInt("uid",-1));
+            restaurant= user.getRestaurant();
+            restaurant.getData();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                this.menu = new Menu(restaurant, ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE));
+            else //TODO Move randInt inside dataStructures classes
+                this.menu = new Menu(restaurant,randInt());
+        } catch (MenuException |
+                RestaurantException|
+                UserException |
+                JSONException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        } catch (IOException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+        }
 
 
 
@@ -31,11 +65,40 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
 
     }
     @Override
-    public void onChangeFrag(Menu menu) {
+    public void onChangeFrag(Menu m) {
         final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag";
-        //Create_menu_frag2 frag2 = new Create_menu_frag2();
-        //getSupportFragmentManager().beginTransaction().replace(R.id.acm_2,frag2).addToBackStack(null).commit();
+        this.menu.setName(m.getName());
+        this.menu.setDescription(m.getDescription());
+        this.menu.setType(m.getType());
+        this.menu.setNumberchoice(m.getNumberchoice());
 
+        //this.menu.setImage64(m.getImage64());
+        Log.d(METHOD_NAME,"Name: "+menu.getName());
+        Log.d(METHOD_NAME,"Description: "+menu.getDescription());
+
+
+
+        Create_menu_frag2 frag2 = new Create_menu_frag2();
+        getSupportFragmentManager().beginTransaction().replace(R.id.acm_1,frag2).addToBackStack(null).commit();
+
+    }
+    public void onChangeFrag1(Menu m){
+        final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag1";
+        this.menu.setPrice(m.getPrice());
+        Log.d(METHOD_NAME,"Price: "+ String.valueOf(menu.getPrice()));
+        this.menu.setBeverage(m.isBeverage());
+        this.menu.setServicefee(m.isServicefee());
+/*
+
+        try {
+            menu.saveData();
+        } catch (JSONException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        }
+
+        restaurant.addMenu(this.menu);
+*/
+//TODO return to menu view of the restaurant
     }
 
              @Override
@@ -57,6 +120,11 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
                      Log.i("MainActivity", "nothing on backstack, calling super");
                      super.onBackPressed();
                  }
+             }
+             public static int randInt() {
+                 Random rand= new Random();
+
+                 return rand.nextInt(Integer.MAX_VALUE -1 );
              }
 
 }

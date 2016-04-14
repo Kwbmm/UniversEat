@@ -1,61 +1,38 @@
 package it.polito.mad.groupFive.restaurantcode;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.app.VoiceInteractor;
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.NumberPicker;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
-import it.polito.mad.groupFive.restaurantcode.libs.RealPathUtil;
+import it.polito.mad.groupFive.restaurantcode.datastructures.User;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 public class Create_menu_frag2 extends Fragment {
     int dimension=3;
@@ -67,6 +44,11 @@ public class Create_menu_frag2 extends Fragment {
 
     private String mParam1;
     private String mParam2;
+    private Menu menu=null;
+    private Restaurant restaurant=null;
+    private EditText editprice;
+    private boolean beverage;
+    private boolean servicefee;
 
     private OnFragmentInteractionListener mListener;
 
@@ -105,16 +87,42 @@ public class Create_menu_frag2 extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_create_menu_2, container, false);
 
+        editprice = (EditText) v.findViewById(R.id.fcm2_price);
+        final CheckBox ckbBeverage = (CheckBox) v.findViewById(R.id.cbch_2_1);
+        ckbBeverage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                if(ckbBeverage.isChecked())
+                    beverage =true;
+                else beverage = false;
+            }
+        });
+
+
+        final CheckBox ckbServicefee = (CheckBox) v.findViewById(R.id.cbch_2_2);
+        ckbServicefee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                if(ckbServicefee.isChecked())
+                    servicefee =true;
+                else servicefee = false;
+            }
+        });
+
+
 
         Button btnNext = (Button) v.findViewById(R.id.fin);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(METHOD_NAME, "Press Next: OK");
+                Log.d(METHOD_NAME, "Press Finish: OK");
+                Activity a = getActivity();
+                if(a instanceof OnFragmentInteractionListener) {
+                    setMenuData();
+                OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
+                obs.onChangeFrag1(menu);
 
-
-                //TODO passare type, immagine, recuperare restaurant id, creare oggetto menu, lanciare nuova activity
-            }
+            }}
         });
         ArrayList<Option> options =new ArrayList<>();
         for (int i=0;i<dimension;i++){
@@ -127,13 +135,44 @@ public class Create_menu_frag2 extends Fragment {
         lwcm.setAdapter(adp);
         return v;
     }
+    private void setMenuData() {
+        final String METHOD_NAME = this.getClass().getName()+" - setMenuData";
+        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), Create_menu.MODE_PRIVATE);
+        int rid = sp.getInt("rid",-1);
+        int uid = sp.getInt("uid",-1);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+        try {
+            User user = new User(getActivity(),rid,uid);
+            restaurant = user.getRestaurant();
+            restaurant.getData();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                menu = new Menu(restaurant, ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE));
+            else //TODO Move randInt inside dataStructures classes
+                menu = new Menu(restaurant,randInt());
+            String txtprice = editprice.getText().toString();
+            menu.setPrice(Float.parseFloat(txtprice));
+            menu.setBeverage(beverage);
+            menu.setServicefee(servicefee);
+
+
+
+
+
+
+
+        } catch (MenuException |UserException |RestaurantException |
+                JSONException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        } catch (IOException e) {
+            Log.e(METHOD_NAME, e.getMessage());
         }
     }
+    public static int randInt() {
+
+        Random rand= new Random();
+        return rand.nextInt(Integer.MAX_VALUE -1 );
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -154,7 +193,7 @@ public class Create_menu_frag2 extends Fragment {
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onChangeFrag1(Menu menu);
 
     }
 
