@@ -49,6 +49,7 @@
     <string name="restaurantInfo_textViewAddress">Restaurant Address</string>
     <string name="restaurauntInfo_textViewDescription">Brief description of the place.</string>
     <string name="restaurauntInfo_textViewTimetable">Timetable:\nMon: time\nTue: time\nWed: time\nThu: time\nFri: time\nSat: time\nSun: time</string>
+    <string name="toastFail">Something went wrong or some mandatory fields are empty!</string>
 
     <string name="restaurantViewEdit_textViewName">Restaurant Name</string>
 
