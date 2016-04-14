@@ -3,6 +3,7 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="next">Next</string>
+    <string name="finish">Finish</string>
     <string name="user_pref">RestaurantCode.Userdata</string>
     <string-array name="drawer_option_login">
         <item>Login</item>
@@ -57,6 +58,26 @@
     <string name="frg_create_restaurant_3_textView_TimetableDinner">Timetable - Dinner</string>
     <!-- END fragment_create_restaurant_3.xml -->
 
+    <!-- timetable_restaurant_item.xml-->
+    <string name="workingHItem_textViewFrom">From</string>
+    <string name="workingHItem_textViewTo">To</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+    <string name="sunday">Sun</string>
+    <!-- END timetable_restaurant_item.xml-->
+
+    <!-- CreateRestaurant_3.java CreateRestaurant_4.java -->
+    <string name="titleTimePickerFrom">Select opening hour</string>
+    <string name="titleTimePickerTo">Select closing hour</string>
+    <!-- END CreateRestaurant_3.java CreateRestaurant_4.java -->
+
+    <!-- fragment_create_restaurant_5.xml -->
+    <string name="frg_create_restaurant_5_textView_AcceptedTickets">Check the tickets your restaurant accepts:</string>
+    <!-- END fragment_create_restaurant_5.xml -->
     <string name="menu_imageViewIwr_contentDesc">Image of the menu.</string>
 
     <string name="motd_imageViewIwr_contentDesc">Image of the menu of the day.</string>
@@ -80,9 +101,6 @@
 
     <string name="reviewlist_imageButtonImg">Restaurant Image</string>
     <string name="reviewlist_textViewName">Restaurant Name</string>
-
-    <string name="workingHItem_textViewFrom">From</string>
-    <string name="workingHItem_textViewTo">To</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

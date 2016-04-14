@@ -19,7 +19,11 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserExce
 
 public class CreateRestaurant
         extends NavigationDrawer
-        implements CreateRestaurant_1.onFragInteractionListener, CreateRestaurant_2.onFragInteractionListener  {
+        implements CreateRestaurant_1.onFragInteractionListener,
+            CreateRestaurant_2.onFragInteractionListener,
+            CreateRestaurant_3.onFragInteractionListener,
+            CreateRestaurant_4.onFragInteractionListener,
+            CreateRestaurant_5.onFragInteractionListener{
 
     private Restaurant restaurant = null;
 
@@ -60,6 +64,51 @@ public class CreateRestaurant
                 .replace(R.id.fragment_CreateRestaurant,cr3)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onChangeFrag3(Restaurant r) {
+        final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag3";
+
+        //TODO Create getter/setters in Restaurant class
+        //this.restaurant.setTimetable(r.getTimetable());
+
+        CreateRestaurant_4 cr4 = new CreateRestaurant_4();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_CreateRestaurant,cr4)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void onChangeFrag4(Restaurant r) {
+        final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag4";
+
+        //TODO Create getter/setters in Restaurant class
+        //this.restaurant.setTimetable(r.getTimetable());
+
+        CreateRestaurant_5 cr5 = new CreateRestaurant_5();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_CreateRestaurant,cr5)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void onChangeFrag5(Restaurant r) {
+        final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag5";
+        //TODO Create getter/setter for ticket inside Restaurant class
+        //this.restaurant.setTickets(r.getTickets());
+
+        try {
+            this.restaurant.saveData();
+        } catch (JSONException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        } catch (IOException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        }
     }
 
     @Override
