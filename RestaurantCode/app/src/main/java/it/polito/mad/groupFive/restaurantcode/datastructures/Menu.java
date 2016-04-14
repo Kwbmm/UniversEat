@@ -32,9 +32,12 @@ public class Menu {
     private float price;
     private byte[] image=null;
     private int type;
+    private int numberchoice;
     private ArrayList<Course> courses=null;
     private boolean ticket;
     private Restaurant r=null;
+    private boolean beverage;
+    private boolean servicefee;
 
     public Menu(Restaurant restaurant){
         this.r = restaurant;
@@ -76,6 +79,9 @@ public class Menu {
                 //this.image = jsonMenu.getString("image").getBytes();
                 this.type = jsonMenu.getInt("type");
                 this.ticket = jsonMenu.getBoolean("ticket");
+                this.numberchoice = jsonMenu.getInt("numberchoice");
+                this.beverage = jsonMenu.getBoolean("beverage");
+                this.servicefee = jsonMenu.getBoolean("servicefee");
 
                 JSONArray courses = jsonMenu.getJSONArray("courses");
                 for (int j = 0; j < courses.length(); j++){
@@ -103,6 +109,9 @@ public class Menu {
        // menu.put("image",this.image.toString());
         menu.put("type",this.type);
         menu.put("ticket",this.ticket);
+        menu.put("numberchoice",this.numberchoice);
+        menu.put("beverage",this.beverage);
+        menu.put("servicefee",this.servicefee);
         //Add a new array for the courses, and fill it!
         menu.put("courses",new JSONArray());
         for(Course c : this.courses)
@@ -358,4 +367,32 @@ public class Menu {
      * @param v true or false.
      */
     public void setTicket(boolean v){ this.ticket = v;}
+
+    /**
+     *
+     * @param numberchoice set the number of multiple choice menu
+     */
+    public void setNumberchoice(int numberchoice){ this.numberchoice=numberchoice; }
+
+    /**
+     *
+     * @return the number of multiple choice menu
+     */
+    public int getNumberchoice(){ return this.numberchoice; }
+
+    public boolean isBeverage() {
+        return beverage;
+    }
+
+    public void setBeverage(boolean beverage) {
+        this.beverage = beverage;
+    }
+
+    public boolean isServicefee() {
+        return servicefee;
+    }
+
+    public void setServicefee(boolean servicefee) {
+        this.servicefee = servicefee;
+    }
 }
