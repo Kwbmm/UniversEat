@@ -102,6 +102,7 @@ public class CreateRestaurant
         //TODO Create getter/setter for ticket inside Restaurant class
         //this.restaurant.setTickets(r.getTickets());
 
+        finish();
         try {
             this.restaurant.saveData();
         } catch (JSONException e) {
