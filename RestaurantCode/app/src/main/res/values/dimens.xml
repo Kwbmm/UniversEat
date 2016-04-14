@@ -2,4 +2,20 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- BUTTONS -->
+    <dimen name="btn_marginTop">20dp</dimen>
+    <dimen name="btn_marginBottom">20dp</dimen>
+    <dimen name="btn_marginRight">5dp</dimen>
+    <dimen name="btn_marginLeft">5dp</dimen>
+
+    <!-- fragment_create_restaurant_1.xml -->
+    <dimen name="frg_imageView_maxWidth">130dp</dimen>
+    <dimen name="frg_imageView_maxHeight">130dp</dimen>
+    <dimen name="frg_textView_textSize">20sp</dimen>
+    <!-- END fragment_create_restaurant_1.xml -->
+
+    <!-- timetable_restaurant_itemaurant_item.xml -->
+    <dimen name="working_h_item_textView_marginBottom">10dp</dimen>
+    <!-- END timetable_restaurant_item.xmlnt_item.xml -->
 </resources>

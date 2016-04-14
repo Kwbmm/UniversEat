@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/frg_create_restaurant_5_textView_AcceptedTickets"
+        android:textSize="@dimen/frg_textView_textSize"
+        />
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BuonChef"
+        android:id="@+id/ticket_1"
+        />
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ticket Restaurant"
+        android:id="@+id/ticket_2"
+        />
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BluTicket"
+        android:id="@+id/ticket_3"
+        />
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="City Time"
+        android:id="@+id/ticket_4"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Button_Finish"
+        android:text="@string/finish"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/btn_marginTop"
+        android:layout_marginRight="@dimen/btn_marginRight"
+        android:layout_marginEnd="@dimen/btn_marginRight"
+        />
+
+</LinearLayout>
