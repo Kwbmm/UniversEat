@@ -1,8 +1,10 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -36,24 +38,30 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseEx
  */
 public class Menu_view_edit extends NavigationDrawer {
     private ArrayList<Menu> menusshared;
-    private  ArrayList<Menu> motd;
+    private ArrayList<Menu> motd;
     private MenuAdpter adp;
     private Restaurant rest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
+
+        mlay.inflate(this, R.layout.menulist, mlay);
+        try {
+
+        rest = new User(this, 2, 2).getRestaurant();
+            rest.getData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        menusshared = rest.getMenusByType(1);
+        motd = rest.getMenusByType(2);
         showview();
 
     }
     public void showview(){
-        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-        mlay.inflate(this, R.layout.menulist, mlay);
-        try {
-            rest = new User(this, 2, 2).getRestaurant();
-            rest.getData();
-            menusshared = rest.getMenus();
-            motd = rest.getMenusByType(2);
 
             Log.v("dim",String.valueOf(menusshared.size()));
             adp=new MenuAdpter(this,menusshared);
@@ -67,9 +75,8 @@ public class Menu_view_edit extends NavigationDrawer {
             TextView motd_price = (TextView) findViewById(R.id.price);
             motd_price.setText(motd.get(0).getPrice()+"€");
 
-        }catch (Exception e){
 
-        }
+
 
 
 
@@ -164,10 +171,19 @@ public class Menu_view_edit extends NavigationDrawer {
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                remove(position);
-
-                }
-            });
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(Menu_view_edit.this);
+                    final CharSequence[] items = {"Yes", "No"};
+                    dialog.setTitle("Delete?");
+                    dialog.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == 0) {
+                                remove(position);
+                            }
+                        }
+                    });
+                    dialog.show();
+                }});
 
 
 
@@ -180,6 +196,7 @@ public class Menu_view_edit extends NavigationDrawer {
 
             public void remove(int position) {
                 menusshared.remove(position);
+                rest.getMenus().addAll(motd);
                 try {
                     rest.saveData();
                 } catch (JSONException e) {
