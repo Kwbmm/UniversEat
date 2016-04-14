@@ -4,12 +4,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -23,6 +26,13 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class Add_dish extends Fragment {
+    private ArrayList<Option> options;
+    private new_dish dish;
+    private String namedish;
+    private View parent;
+    public interface new_dish{
+        public ArrayList<Option> add_new_dish();
+    }
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -59,6 +69,7 @@ public class Add_dish extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        options=dish.add_new_dish();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -71,6 +82,7 @@ public class Add_dish extends Fragment {
         // Inflate the layout for this fragment
 
         View view=inflater.inflate(R.layout.fragment_add_dish, container, false);
+        parent=view;
         Spinner type=(Spinner) view.findViewById(R.id.nd_type);
         ArrayList<String> strings=new ArrayList<>();
         strings.add("Starter");
@@ -86,10 +98,22 @@ public class Add_dish extends Fragment {
         ArrayAdapter<String> tp2 =new ArrayAdapter<String>(view.getContext(),android.R.layout.simple_spinner_dropdown_item,strings_2);
         type2.setAdapter(tp2);
 
+
+
+
+
+
         Button add = (Button) view.findViewById(R.id.ad_add);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                EditText newdish = (EditText) parent.findViewById(R.id.nd_et_1);
+                namedish=  newdish.getText().toString();
+                if (namedish.isEmpty()==false){
+                    options.get(1).add_dish(namedish);
+                    Log.v("dish",namedish);
+                }
+                Log.v("else",namedish);
                 getFragmentManager().popBackStack();
             }
         });
@@ -110,6 +134,7 @@ public class Add_dish extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            dish=(new_dish) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

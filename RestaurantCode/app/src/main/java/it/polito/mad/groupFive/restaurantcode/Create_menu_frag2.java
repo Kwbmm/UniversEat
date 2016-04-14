@@ -59,6 +59,11 @@ import it.polito.mad.groupFive.restaurantcode.libs.RealPathUtil;
 
 public class Create_menu_frag2 extends Fragment {
     int dimension=3;
+    ArrayList<Option> options;
+    shareDish dish;
+    public interface shareDish{
+        public ArrayList<Option> getdish();
+    }
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -95,6 +100,7 @@ public class Create_menu_frag2 extends Fragment {
 
 
         }
+        options=dish.getdish();
 
     }
 
@@ -116,11 +122,7 @@ public class Create_menu_frag2 extends Fragment {
                 //TODO passare type, immagine, recuperare restaurant id, creare oggetto menu, lanciare nuova activity
             }
         });
-        ArrayList<Option> options =new ArrayList<>();
-        for (int i=0;i<dimension;i++){
-            Option opt=new Option();
-            options.add(opt);
-        }
+
 
         MenuCourse adp=new MenuCourse(container.getContext(),options);
         ListView lwcm = (ListView) v.findViewById(R.id.lwch_2_1);
@@ -140,6 +142,7 @@ public class Create_menu_frag2 extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            dish=(shareDish)context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -150,6 +153,12 @@ public class Create_menu_frag2 extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        onCreate(new Bundle());
     }
 
     public interface OnFragmentInteractionListener {
@@ -195,7 +204,7 @@ public class Create_menu_frag2 extends Fragment {
             LinearLayout ll= (LinearLayout) convertView.findViewById(R.id.ll_mc);
 
 
-            for (String str:options.get(position).dishes){
+            for (String str:options.get(position).getDishes()){
                 LayoutInflater inflater=LayoutInflater.from(context);
                 View child =inflater.inflate(R.layout.row,null);
                 ll.addView(child);
@@ -224,7 +233,7 @@ public class Create_menu_frag2 extends Fragment {
 
             }
 
-   private class Option{
+  /* private class Option{
     private ArrayList<String> dishes;
 
        public ArrayList<String> getDishes() {
@@ -241,6 +250,6 @@ public class Create_menu_frag2 extends Fragment {
            dishes.add("pizza");
 
     }
-   }
+   }*/
 }
 

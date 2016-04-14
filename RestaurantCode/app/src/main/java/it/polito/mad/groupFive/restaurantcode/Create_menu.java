@@ -10,11 +10,13 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import java.util.ArrayList;
+
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 
-public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Add_dish.OnFragmentInteractionListener
+public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Add_dish.OnFragmentInteractionListener,Create_menu_frag2.shareDish,Add_dish.new_dish
          {
-
+ArrayList<Option> options;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final String METHOD_NAME =this.getClass().getName()+" - OnCreate";
@@ -23,7 +25,12 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         mlay.inflate(this, R.layout.activity_create_menu, mlay);
         Create_menu_frag fragment= new Create_menu_frag();
         getSupportFragmentManager().beginTransaction().add(R.id.acm_1,fragment).commit();
-
+        int dimension=3;
+        options =new ArrayList<>();
+        for (int i=0;i<dimension;i++){
+            Option opt=new Option();
+            options.add(opt);
+        }
 
 
 
@@ -41,6 +48,17 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
              @Override
              public void onFragmentInteraction(Uri uri) {
 
+             }
+
+
+             @Override
+             public ArrayList<Option> getdish() {
+                 return options;
+             }
+
+             @Override
+             public ArrayList<Option> add_new_dish() {
+                 return options;
              }
 
              public interface OnFragmentInteractionListener {
