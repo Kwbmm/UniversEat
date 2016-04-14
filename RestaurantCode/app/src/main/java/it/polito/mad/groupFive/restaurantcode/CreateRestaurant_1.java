@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -134,10 +135,15 @@ public class CreateRestaurant_1 extends Fragment {
             public void onClick(View v) {
                 Activity a = getActivity();
                 if(a instanceof onFragInteractionListener) {
-                    setRestaurantData();
+                    if(setRestaurantData()){
+                        onFragInteractionListener obs = (onFragInteractionListener) a;
+                        obs.onChangeFrag1(restaurant);
 
-                    onFragInteractionListener obs = (onFragInteractionListener) a;
-                    obs.onChangeFrag1(restaurant);
+                    }
+                    else{
+                        Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
+                        .show();
+                    }
                 }
             }
 
@@ -145,7 +151,7 @@ public class CreateRestaurant_1 extends Fragment {
         return this.parentView;
     }
 
-    private void setRestaurantData() {
+    private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
@@ -155,20 +161,40 @@ public class CreateRestaurant_1 extends Fragment {
             else //TODO Move randInt inside dataStructures classes
                 restaurant = new Restaurant(getActivity(),randInt(),sp.getInt("uid",-1));
             TextView name = (TextView) parentView.findViewById(R.id.editText_RestaurantName);
+            if(name.getText().toString().equals("") || name.getText() == null)
+                return false;
             restaurant.setName(name.getText().toString());
 
             TextView description = (TextView) parentView.findViewById(R.id.editText_Description);
+            if(description.getText().toString().equals("") || description.getText() == null)
+                return false;
             restaurant.setDescription(description.getText().toString());
 
             ImageView restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
-            restaurant.setImage64FromDrawable(restaurantImg.getDrawable());
+            if(restaurantImg.getDrawable() == null)
+                return false;
+            //TODO Fix this!!
+            //restaurant.setImage64FromDrawable(restaurantImg.getDrawable());
 
+            TextView telephone = (TextView) parentView.findViewById(R.id.editText_Telephone);
+            if(telephone.getText().toString().equals("") || telephone.getText() == null)
+                return false;
+            //restaurant.setTelephone(telephone.getText().toString());
+
+            TextView website = (TextView) parentView.findViewById(R.id.editText_Website);
+            if(website.getText().toString().equals("") || website.getText() == null)
+                return false;
+            //restaurant.setWebsite(website.getText().toString());
+
+            return true;
         } catch (RestaurantException |
                 UserException |
                 JSONException e) {
             Log.e(METHOD_NAME,e.getMessage());
+            return false;
         } catch (IOException e) {
             Log.e(METHOD_NAME, e.getMessage());
+            return false;
         }
     }
 

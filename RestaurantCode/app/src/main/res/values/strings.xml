@@ -24,6 +24,8 @@
         <item>Sunday</item>
     </string-array>
 
+    <string name="toastFail">Something went wrong or some mandatory fields are empty!</string>
+
 
     <string name="search_hello">What do you want to eat?</string>
 

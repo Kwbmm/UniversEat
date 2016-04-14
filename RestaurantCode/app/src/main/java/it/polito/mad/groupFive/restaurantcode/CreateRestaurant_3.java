@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -177,17 +178,21 @@ public class CreateRestaurant_3 extends Fragment {
             public void onClick(View v) {
                 Activity a = getActivity();
                 if(a instanceof onFragInteractionListener) {
-                    setRestaurantData();
-
-                    onFragInteractionListener obs = (onFragInteractionListener) a;
-                    obs.onChangeFrag3(restaurant);
+                    if(setRestaurantData()){
+                        onFragInteractionListener obs = (onFragInteractionListener) a;
+                        obs.onChangeFrag3(restaurant);
+                    }
+                    else{
+                        Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
+                                .show();
+                    }
                 }
             }
         });
         return this.parentView;
     }
 
-    private void setRestaurantData() {
+    private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
 
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
@@ -220,13 +225,15 @@ public class CreateRestaurant_3 extends Fragment {
                     //restaurant.setDuration(i,bFrom.getText(),bTo.getText());
                 }
             }
-
+            return true;
         } catch (RestaurantException |
                 UserException |
                 JSONException e) {
             Log.e(METHOD_NAME,e.getMessage());
+            return false;
         } catch (IOException e) {
             Log.e(METHOD_NAME, e.getMessage());
+            return false;
         }
     }
 
