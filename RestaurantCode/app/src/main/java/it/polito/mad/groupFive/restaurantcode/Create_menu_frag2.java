@@ -236,7 +236,7 @@ public class Create_menu_frag2 extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(context).inflate(R.layout.menu_choice, null);
             TextView opt_title= (TextView) convertView.findViewById(R.id.twch);
             opt_title.setText("Option "+(position+1));
@@ -260,6 +260,7 @@ public class Create_menu_frag2 extends Fragment {
                     FrameLayout mlay= (FrameLayout) v.findViewById(R.id.frame);
                     mlay.inflate(v.getContext(), R.layout.activity_create_menu, mlay);
                     Add_dish fragment= new Add_dish();
+                    options.get(0).setOpt_number(position);
                     getFragmentManager().beginTransaction().replace(R.id.acm_1,fragment).addToBackStack(null).commit();
 
                 }
@@ -272,23 +273,5 @@ public class Create_menu_frag2 extends Fragment {
 
             }
 
-  /* private class Option{
-    private ArrayList<String> dishes;
-
-       public ArrayList<String> getDishes() {
-           return dishes;
-       }
-
-       public Option(){
-        dishes=new ArrayList<String>();
-           dishes.add("torta");
-           dishes.add("mela");
-           dishes.add("carota");
-           dishes.add("salame");
-           dishes.add("zucca");
-           dishes.add("pizza");
-
-    }
-   }*/
 }
 

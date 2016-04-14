@@ -31,7 +31,7 @@ public class Add_dish extends Fragment {
     private String namedish;
     private View parent;
     public interface new_dish{
-        public ArrayList<Option> add_new_dish();
+        ArrayList<Option> add_new_dish();
     }
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -107,10 +107,11 @@ public class Add_dish extends Fragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int position=options.get(0).getOpt_number();
                 EditText newdish = (EditText) parent.findViewById(R.id.nd_et_1);
                 namedish=  newdish.getText().toString();
                 if (namedish.isEmpty()==false){
-                    options.get(1).add_dish(namedish);
+                    options.get(position).add_dish(namedish);
                     Log.v("dish",namedish);
                 }
                 Log.v("else",namedish);

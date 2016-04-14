@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -25,11 +26,15 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuExce
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
-public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Add_dish.OnFragmentInteractionListener
+public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Add_dish.OnFragmentInteractionListener,Add_dish.new_dish,Create_menu_frag2.shareDish
          {
              private Restaurant restaurant=null;
              private User user=null;
              private Menu menu=null;
+
+             ArrayList<Option> options;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,14 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         mlay.inflate(this, R.layout.activity_create_menu, mlay);
         Create_menu_frag fragment= new Create_menu_frag();
         getSupportFragmentManager().beginTransaction().add(R.id.acm_1,fragment).commit();
+
+        int dimension=3;
+        options =new ArrayList<>();
+        for (int i=0;i<dimension;i++){
+            Option opt=new Option();
+            options.add(opt);
+        }
+
 
         SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref), Create_menu.MODE_PRIVATE);
 
@@ -104,6 +117,16 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
              @Override
              public void onFragmentInteraction(Uri uri) {
 
+             }
+
+             @Override
+             public ArrayList<Option> add_new_dish() {
+                 return options;
+             }
+
+             @Override
+             public ArrayList<Option> getdish() {
+                 return options;
              }
 
              public interface OnFragmentInteractionListener {

@@ -63,7 +63,6 @@ public class Menu_view_edit extends NavigationDrawer {
     }
     public void showview(){
 
-            Log.v("dim",String.valueOf(menusshared.size()));
             adp=new MenuAdpter(this,menusshared);
             ListView lwcm = (ListView) findViewById(R.id.menu_lw);
             lwcm.setAdapter(adp);

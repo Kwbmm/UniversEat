@@ -7,9 +7,17 @@ import java.util.ArrayList;
  */
 public class Option {
     private ArrayList<String> dishes;
-
+    private int opt_number;
     public ArrayList<String> getDishes() {
         return dishes;
+    }
+
+    public int getOpt_number() {
+        return opt_number;
+    }
+
+    public void setOpt_number(int opt_number) {
+        this.opt_number = opt_number;
     }
 
     public Option(){
@@ -17,6 +25,7 @@ public class Option {
         dishes.add("torta");
         dishes.add("mela");
         dishes.add("carota");
+
         dishes.add("salame");
         dishes.add("zucca");
         dishes.add("pizza");
