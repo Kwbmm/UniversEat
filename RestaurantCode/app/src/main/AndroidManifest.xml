@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="it.polito.mad.groupFive.restaurantcode">
+    <uses-feature android:name="android.hardware.camera"
+        android:required="false"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +20,7 @@
         </activity>
         <activity android:name=".NavigationDrawer" />
         <activity android:name=".Restaurant_management" />
-        <activity android:name=".Create_restaurant"/>
+        <activity android:name=".CreateRestaurant"/>
         <activity android:name=".Menu_view_edit"/>
         <activity android:name=".Order_management"/>
         <activity android:name=".Create_menu"/>

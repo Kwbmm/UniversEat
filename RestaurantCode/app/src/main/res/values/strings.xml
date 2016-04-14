@@ -54,9 +54,8 @@
 
     <string name="reviewlist_imageButtonImg">Restaurant Image</string>
     <string name="reviewlist_textViewName">Restaurant Name</string>
+    <string name="finish">Finish</string>
 
-    <string name="workingHItem_textViewFrom">From</string>
-    <string name="workingHItem_textViewTo">To</string>
 
     <!-- Create_menu_frag.java -->
     <string name="pick_gallery">Pick from Gallery</string>
@@ -68,4 +67,56 @@
         <item>Multiple choice</item>
     </string-array>
     <!-- END Create_menu_frag.java -->
+
+    <!-- timetable_restaurant_item.xml-->
+    <string name="workingHItem_textViewFrom">From</string>
+    <string name="workingHItem_textViewTo">To</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+    <string name="sunday">Sun</string>
+    <string name="next">Next</string>
+
+    <!-- END timetable_restaurant_item.xml-->
+
+
+
+    <!-- fragment_create_restaurant_1.xml -->
+    <string name="frg_create_restaurant_1_textView_RestaurantName">Restaurant name:</string>
+    <string name="frg_create_restaurant_1_imageView_ContentDesc">Image of the restaurant</string>
+    <string name="frg_create_restaurant_1_textView_Description">Description:</string>
+    <string name="frg_create_restaurant_1_textView_Telephone">Telephone number:</string>
+    <string name="frg_create_restaurant_1_textView_Website">Website:</string>
+    <!-- END fragment_create_restaurant_1.xml -->
+
+    <!-- fragment_create_restaurant_2.xml -->
+    <string name="frg_create_restaurant_1_textView_Address">Address:</string>
+    <!-- END fragment_create_restaurant_2.xml -->
+
+
+    <string name="frg_create_restaurant_2_textView_Address">Address:</string>
+    <string name="frg_create_restaurant_2_textView_City">City:</string>
+    <string name="frg_create_restaurant_2_textView_ZIPCode">ZIP Code:</string>
+    <string name="frg_create_restaurant_2_textView_State">State:</string>
+    <!-- END fragment_create_restaurant_2.xml -->
+
+    <!-- fragment_create_restaurant_3.xml -->
+    <string name="frg_create_restaurant_3_textView_TimetableLunch">Timetable - Lunch</string>
+    <string name="frg_create_restaurant_3_textView_TimetableDinner">Timetable - Dinner</string>
+    <!-- END fragment_create_restaurant_3.xml -->
+
+
+
+    <!-- CreateRestaurant_3.java CreateRestaurant_4.java -->
+    <string name="titleTimePickerFrom">Select opening hour</string>
+    <string name="titleTimePickerTo">Select closing hour</string>
+    <!-- END CreateRestaurant_3.java CreateRestaurant_4.java -->
+
+    <!-- fragment_create_restaurant_5.xml -->
+    <string name="frg_create_restaurant_5_textView_AcceptedTickets">Check the tickets your restaurant accepts:</string>
+    <!-- END fragment_create_restaurant_5.xml -->
+
 </resources>
