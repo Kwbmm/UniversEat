@@ -77,9 +77,10 @@
             android:text="Next"
             android:id="@+id/next"
             android:layout_marginTop="20dp"
-            android:layout_below="@+id/numberPicker"
-            android:layout_toRightOf="@+id/cmtw_1_1"
-            android:layout_toEndOf="@+id/cmtw_1_1" />
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"/>
 
         <NumberPicker
             android:layout_width="wrap_content"

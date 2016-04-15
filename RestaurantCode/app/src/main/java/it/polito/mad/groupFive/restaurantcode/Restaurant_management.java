@@ -48,6 +48,7 @@ public class Restaurant_management extends NavigationDrawer {
     private User user;
     private Restaurant restaurant;
     private SharedPreferences sharedPreferences;
+    private Boolean visible=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
@@ -64,6 +65,13 @@ public class Restaurant_management extends NavigationDrawer {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(visible==false){
+        showresturant();}
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_add, menu);
@@ -77,7 +85,7 @@ public class Restaurant_management extends NavigationDrawer {
     }
 
     private boolean showresturant() {
-        int uid=2,rid=2;
+        int uid=0,rid=0;
         SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
         if ((rid=sharedPreferences.getInt("rid",-1))!=-1){
             uid=sharedPreferences.getInt("uid",-1);
@@ -104,6 +112,7 @@ public class Restaurant_management extends NavigationDrawer {
                     startActivity(intent);
                 }
             });
+            visible=true;
             RelativeLayout rl=(RelativeLayout) findViewById(R.id.rvef_rectangle);
             rl.setOnClickListener(new View.OnClickListener() {
                 @Override

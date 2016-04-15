@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -88,39 +89,6 @@ public class Order_management extends NavigationDrawer {
         if (orders.size()>0) {
             noitems.setVisibility(View.INVISIBLE);
             lview.setVisibility(View.VISIBLE);
-            lview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                    AlertDialog.Builder dialog=new AlertDialog.Builder(Order_management.this);
-                    final CharSequence[] items = { "Yes", "No" };
-                    dialog.setTitle("Delete?");
-                    dialog.setItems(items, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            deletecheck=position;
-                            if (which==0){
-                                orders.remove(position);
-                                restaurant.setOrders(orders);
-                                showOrders();
-                            }else{
-                                deletecheck=0;
-                            }
-
-                        }
-
-                    });
-
-                        dialog.show();
-                    try {
-                        restaurant.saveData();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
             OrderAdapter orderAdapter = new OrderAdapter(this, orders);
             lview.setAdapter(orderAdapter);
             return true;
@@ -166,6 +134,41 @@ public class Order_management extends NavigationDrawer {
             TextView date=(TextView) convertView.findViewById(R.id.date);
             TextView oid = (TextView)convertView.findViewById(R.id.orderID);
             TextView meal=(TextView) convertView.findViewById(R.id.meal);
+            ImageButton delete= (ImageButton) convertView.findViewById(R.id.imageView);
+            deletecheck=position;
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder dialog=new AlertDialog.Builder(Order_management.this);
+                    final CharSequence[] items = { "Yes", "No" };
+                    dialog.setTitle("Delete?");
+                    dialog.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which==0){
+                                orders.remove(deletecheck);
+                                restaurant.setOrders(orders);
+                                showOrders();
+                            }else{
+                                deletecheck=0;
+                            }
+
+                        }
+
+                    });
+
+                    dialog.show();
+                    try {
+                        restaurant.saveData();
+                        showOrders();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
 
             Order order= orderlist.get(position);
             Calendar calendar= Calendar.getInstance();

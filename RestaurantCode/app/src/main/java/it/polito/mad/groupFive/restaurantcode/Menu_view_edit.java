@@ -3,6 +3,7 @@ package it.polito.mad.groupFive.restaurantcode;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -41,16 +42,19 @@ public class Menu_view_edit extends NavigationDrawer {
     private ArrayList<Menu> motd;
     private MenuAdpter adp;
     private Restaurant rest;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
 
-        mlay.inflate(this, R.layout.menulist, mlay);
+        sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
+        int rid,uid;
+        uid=sharedPreferences.getInt("uid",-1);
+        rid=sharedPreferences.getInt("rid",-1);
         try {
 
-        rest = new User(this, 2, 2).getRestaurant();
+        rest = new User(this, uid, rid).getRestaurant();
             rest.getData();
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,17 +66,28 @@ public class Menu_view_edit extends NavigationDrawer {
 
     }
     public void showview(){
-
+        if(menusshared!=null||motd!=null){
+        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
+        mlay.inflate(this, R.layout.menulist, mlay);
+        if (menusshared!=null){
             adp=new MenuAdpter(this,menusshared);
             ListView lwcm = (ListView) findViewById(R.id.menu_lw);
-            lwcm.setAdapter(adp);
-
+            lwcm.setAdapter(adp);}
+            if(motd!=null){
             TextView motd_name = (TextView) findViewById(R.id.name);
             motd_name.setText(motd.get(0).getName());
             TextView motd_desc = (TextView) findViewById(R.id.description);
             motd_desc.setText(motd.get(0).getDescription());
             TextView motd_price = (TextView) findViewById(R.id.price);
             motd_price.setText(motd.get(0).getPrice()+"€");
+                TextView motd_title = (TextView) findViewById(R.id.title);
+                motd_title.setText(R.string.motd_textViewTitle);}}
+        else{
+            FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
+            mlay.inflate(this, R.layout.menulist, mlay);
+            TextView motd_title = (TextView) findViewById(R.id.title);
+            motd_title.setText("Your first menu");
+        }
 
 
 

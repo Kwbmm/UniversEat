@@ -76,7 +76,7 @@
             android:layout_alignParentLeft="true"
             android:textSize="15dp" />
 
-        <ImageView
+        <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:id="@+id/imageView"
