@@ -22,6 +22,7 @@
             android:layout_height="100dp"
             android:id="@+id/iwr"
             android:backgroundTint="#000000"
+            android:src="@mipmap/ic_launcher"
             />
         <TextView
             android:id="@+id/rs_name"
