@@ -26,13 +26,21 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuExce
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
+<<<<<<< HEAD
 public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Add_dish.OnFragmentInteractionListener,Add_dish.new_dish,Create_menu_frag2.shareDish,Delete_dish.removeDish,Delete_dish.OnFragmentInteractionListener
          {
              private Restaurant restaurant=null;
              private User user=null;
              private Menu menu=null;
+=======
+public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Add_dish.OnFragmentInteractionListener,Add_dish.new_dish,Create_menu_frag2.shareDish
+{
+    private Restaurant restaurant=null;
+    private User user=null;
+    private Menu menu=null;
+>>>>>>> 5e7e1a1e079c79bb460c754ee3e7b80aec883c42
 
-             ArrayList<Option> options;
+    ArrayList<Option> options;
 
 
 
@@ -71,12 +79,8 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         } catch (IOException e) {
             Log.e(METHOD_NAME, e.getMessage());
         }
-
-
-
-
-
     }
+
     @Override
     public void onChangeFrag(Menu m) {
         final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag";
@@ -114,6 +118,7 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
 //TODO return to menu view of the restaurant
     }
 
+<<<<<<< HEAD
              @Override
              public void onFragmentInteraction(Uri uri) {
 
@@ -154,5 +159,42 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
 
                  return rand.nextInt(Integer.MAX_VALUE -1 );
              }
+=======
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public ArrayList<Option> add_new_dish() {
+        return options;
+    }
+
+    @Override
+    public ArrayList<Option> getdish() {
+        return options;
+    }
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
+    @Override
+    public void onBackPressed(){
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            Log.i("MainActivity", "popping backstack");
+            fm.popBackStack();
+        } else {
+            Log.i("MainActivity", "nothing on backstack, calling super");
+            super.onBackPressed();
+        }
+    }
+    public static int randInt() {
+        Random rand= new Random();
+
+        return rand.nextInt(Integer.MAX_VALUE -1 );
+    }
+>>>>>>> 5e7e1a1e079c79bb460c754ee3e7b80aec883c42
 
 }

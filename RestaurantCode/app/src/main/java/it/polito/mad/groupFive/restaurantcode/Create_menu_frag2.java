@@ -152,14 +152,12 @@ public class Create_menu_frag2 extends Fragment {
             else //TODO Move randInt inside dataStructures classes
                 menu = new Menu(restaurant,randInt());
             String txtprice = editprice.getText().toString();
-            menu.setPrice(Float.parseFloat(txtprice));
+            if(txtprice.equals(""))
+                menu.setPrice(Float.parseFloat("0.0"));
+            else
+                menu.setPrice(Float.parseFloat(txtprice));
             menu.setBeverage(beverage);
             menu.setServicefee(servicefee);
-
-
-
-
-
 
 
         } catch (MenuException |UserException |RestaurantException |
