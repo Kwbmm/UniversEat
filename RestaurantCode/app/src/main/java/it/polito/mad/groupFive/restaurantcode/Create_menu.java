@@ -101,16 +101,16 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         Log.d(METHOD_NAME,"Price: "+ String.valueOf(menu.getPrice()));
         this.menu.setBeverage(m.isBeverage());
         this.menu.setServicefee(m.isServicefee());
-/*
 
         try {
             menu.saveData();
+            restaurant.addMenu(this.menu);
+            finish();
         } catch (JSONException e) {
             Log.e(METHOD_NAME,e.getMessage());
         }
 
-        restaurant.addMenu(this.menu);
-*/
+
 //TODO return to menu view of the restaurant
     }
 
