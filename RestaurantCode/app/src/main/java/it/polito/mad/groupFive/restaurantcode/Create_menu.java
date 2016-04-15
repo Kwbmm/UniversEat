@@ -27,12 +27,12 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Add_dish.OnFragmentInteractionListener,Add_dish.new_dish,Create_menu_frag2.shareDish
-         {
-             private Restaurant restaurant=null;
-             private User user=null;
-             private Menu menu=null;
+{
+    private Restaurant restaurant=null;
+    private User user=null;
+    private Menu menu=null;
 
-             ArrayList<Option> options;
+    ArrayList<Option> options;
 
 
 
@@ -71,12 +71,8 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         } catch (IOException e) {
             Log.e(METHOD_NAME, e.getMessage());
         }
-
-
-
-
-
     }
+
     @Override
     public void onChangeFrag(Menu m) {
         final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag";
@@ -114,40 +110,40 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
 //TODO return to menu view of the restaurant
     }
 
-             @Override
-             public void onFragmentInteraction(Uri uri) {
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
-             }
+    }
 
-             @Override
-             public ArrayList<Option> add_new_dish() {
-                 return options;
-             }
+    @Override
+    public ArrayList<Option> add_new_dish() {
+        return options;
+    }
 
-             @Override
-             public ArrayList<Option> getdish() {
-                 return options;
-             }
+    @Override
+    public ArrayList<Option> getdish() {
+        return options;
+    }
 
-             public interface OnFragmentInteractionListener {
-                 // TODO: Update argument type and name
-                 void onFragmentInteraction(Uri uri);
-             }
-             @Override
-             public void onBackPressed(){
-                 FragmentManager fm = getFragmentManager();
-                 if (fm.getBackStackEntryCount() > 0) {
-                     Log.i("MainActivity", "popping backstack");
-                     fm.popBackStack();
-                 } else {
-                     Log.i("MainActivity", "nothing on backstack, calling super");
-                     super.onBackPressed();
-                 }
-             }
-             public static int randInt() {
-                 Random rand= new Random();
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
+    @Override
+    public void onBackPressed(){
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            Log.i("MainActivity", "popping backstack");
+            fm.popBackStack();
+        } else {
+            Log.i("MainActivity", "nothing on backstack, calling super");
+            super.onBackPressed();
+        }
+    }
+    public static int randInt() {
+        Random rand= new Random();
 
-                 return rand.nextInt(Integer.MAX_VALUE -1 );
-             }
+        return rand.nextInt(Integer.MAX_VALUE -1 );
+    }
 
 }

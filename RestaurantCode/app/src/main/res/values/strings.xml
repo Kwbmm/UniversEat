@@ -120,4 +120,9 @@
     <string name="frg_create_restaurant_5_textView_AcceptedTickets">Check the tickets your restaurant accepts:</string>
     <!-- END fragment_create_restaurant_5.xml -->
 
+    <!-- activity_create_menu_frag2.xml -->
+    <string name="checkBox_ServiceFee">Service Fee</string>
+    <string name="checkBox_BeverageIncluded">Beverage included</string>
+    <string name="editText_Price">Price</string>
+    <!-- END activity_create_menu_frag2.xml -->
 </resources>
