@@ -105,9 +105,12 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         try {
             menu.saveData();
             restaurant.addMenu(this.menu);
+            restaurant.saveData();
             finish();
         } catch (JSONException e) {
             Log.e(METHOD_NAME,e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 

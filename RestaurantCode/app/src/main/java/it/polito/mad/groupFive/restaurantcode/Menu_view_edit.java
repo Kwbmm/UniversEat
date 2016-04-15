@@ -54,7 +54,7 @@ public class Menu_view_edit extends NavigationDrawer {
         rid=sharedPreferences.getInt("rid",-1);
         try {
 
-        rest = new User(this, uid, rid).getRestaurant();
+        rest = new User(this,rid,uid).getRestaurant();
             rest.getData();
         } catch (Exception e) {
             e.printStackTrace();
