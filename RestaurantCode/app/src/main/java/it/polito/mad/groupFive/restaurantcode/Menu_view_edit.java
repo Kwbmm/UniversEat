@@ -47,14 +47,19 @@ public class Menu_view_edit extends NavigationDrawer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        readdata();
+        showview();
 
+
+    }
+    public void readdata(){
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
         int rid,uid;
         uid=sharedPreferences.getInt("uid",-1);
         rid=sharedPreferences.getInt("rid",-1);
         try {
 
-        rest = new User(this,rid,uid).getRestaurant();
+            rest = new User(this,rid,uid).getRestaurant();
             rest.getData();
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,7 +67,7 @@ public class Menu_view_edit extends NavigationDrawer {
 
         menusshared = rest.getMenusByType(1);
         motd = rest.getMenusByType(2);
-        showview();
+
 
     }
     public void showview(){
@@ -94,6 +99,13 @@ public class Menu_view_edit extends NavigationDrawer {
 
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        readdata();
+        showview();
     }
 
     public void showMenu(View v) {
@@ -210,8 +222,10 @@ public class Menu_view_edit extends NavigationDrawer {
 
             public void remove(int position) {
                 menusshared.remove(position);
-                rest.getMenus().addAll(motd);
+                if(motd!=null){
+                rest.getMenus().addAll(motd);}
                 try {
+                    rest.setMenus(menusshared);
                     rest.saveData();
                 } catch (JSONException e) {
                     e.printStackTrace();
