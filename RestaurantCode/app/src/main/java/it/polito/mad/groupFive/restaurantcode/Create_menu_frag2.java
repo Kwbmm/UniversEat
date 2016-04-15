@@ -265,6 +265,17 @@ public class Create_menu_frag2 extends Fragment {
 
                 }
             });
+            ImageButton delete_dish =(ImageButton) convertView.findViewById(R.id.iwch_2);
+            delete_dish.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FrameLayout mlay= (FrameLayout) v.findViewById(R.id.frame);
+                    mlay.inflate(v.getContext(), R.layout.fragment_delete_dish, mlay);
+                    Delete_dish fragment= new Delete_dish();
+                    options.get(0).setOpt_number(position);
+                    getFragmentManager().beginTransaction().replace(R.id.acm_1,fragment).addToBackStack(null).commit();
+                }
+            });
             return convertView;
 
 

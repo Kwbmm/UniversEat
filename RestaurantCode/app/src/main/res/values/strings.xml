@@ -84,7 +84,6 @@
     <!-- END timetable_restaurant_item.xml-->
 
 
-
     <!-- fragment_create_restaurant_1.xml -->
     <string name="frg_create_restaurant_1_textView_RestaurantName">Restaurant name:</string>
     <string name="frg_create_restaurant_1_imageView_ContentDesc">Image of the restaurant</string>
@@ -108,7 +107,6 @@
     <string name="frg_create_restaurant_3_textView_TimetableLunch">Timetable - Lunch</string>
     <string name="frg_create_restaurant_3_textView_TimetableDinner">Timetable - Dinner</string>
     <!-- END fragment_create_restaurant_3.xml -->
-
 
 
     <!-- CreateRestaurant_3.java CreateRestaurant_4.java -->

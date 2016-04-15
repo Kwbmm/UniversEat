@@ -26,7 +26,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuExce
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
-public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Add_dish.OnFragmentInteractionListener,Add_dish.new_dish,Create_menu_frag2.shareDish
+public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Add_dish.OnFragmentInteractionListener,Add_dish.new_dish,Create_menu_frag2.shareDish,Delete_dish.removeDish,Delete_dish.OnFragmentInteractionListener
          {
              private Restaurant restaurant=null;
              private User user=null;
@@ -126,6 +126,11 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
 
              @Override
              public ArrayList<Option> getdish() {
+                 return options;
+             }
+
+             @Override
+             public ArrayList<Option> remdish() {
                  return options;
              }
 
