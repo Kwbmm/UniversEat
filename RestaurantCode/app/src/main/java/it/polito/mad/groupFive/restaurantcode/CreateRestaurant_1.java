@@ -14,6 +14,7 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -309,6 +310,8 @@ public class CreateRestaurant_1 extends Fragment {
             try{
                 Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(restaurantPicUri));
                 String imgPath;
+                ((ImageView)getActivity().findViewById(R.id.imageView_RestaurantImage)).setImageBitmap(imageBitmap);
+
                 if(Build.VERSION.SDK_INT < 11)
                     imgPath = RealPathUtil.getRealPathFromURI_BelowAPI11(getActivity(), restaurantPicUri);
                 else if(Build.VERSION.SDK_INT < 19)
