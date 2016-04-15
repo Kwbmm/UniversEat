@@ -35,7 +35,8 @@
             android:stepSize="0.5"
             android:scaleX="0.6"
             android:scaleY="0.6"
-            android:foregroundGravity="center_horizontal" />
+            android:foregroundGravity="center_horizontal"
+            android:numStars="5"/>
 
         <TextView
             android:layout_width="match_parent"

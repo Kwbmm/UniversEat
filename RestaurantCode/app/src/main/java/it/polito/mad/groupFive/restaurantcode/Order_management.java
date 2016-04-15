@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
@@ -148,6 +149,13 @@ public class Order_management extends NavigationDrawer {
                             if (which==0){
                                 orders.remove(deletecheck);
                                 restaurant.setOrders(orders);
+                                try {
+                                    restaurant.saveData();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                                 showOrders();
                             }else{
                                 deletecheck=0;
@@ -174,8 +182,8 @@ public class Order_management extends NavigationDrawer {
             Calendar calendar= Calendar.getInstance();
             calendar.setTime(order.getDate());
             username.setText(String.valueOf(order.getUid()));
-            hour.setText(String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)));
-            minutes.setText(String.valueOf(calendar.get(Calendar.MINUTE)));
+            hour.setText(String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.HOUR_OF_DAY)));
+            minutes.setText(String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MINUTE)));
             date.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))+" "+months[calendar.get(Calendar.MONTH)]);
             oid.setText(String.valueOf(order.getOid()));
             meal.setText(String.valueOf(order.getMid()));

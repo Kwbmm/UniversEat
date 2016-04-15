@@ -46,10 +46,9 @@
             android:layout_alignStart="@id/name"
             android:foregroundGravity="center_horizontal"
             android:stepSize="0.5"
-            android:layout_toStartOf="@id/rved_modify"
-            android:layout_toLeftOf="@id/rved_modify"
-            android:layout_toRightOf="@id/iwr"
             android:layout_toEndOf="@id/iwr"
+            android:layout_toLeftOf="@id/rved_modify"
+
             android:numStars="5" />
         <TextView
             android:id="@+id/rwef_address"

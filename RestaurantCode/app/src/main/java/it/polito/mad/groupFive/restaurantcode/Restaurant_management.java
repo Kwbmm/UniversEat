@@ -86,7 +86,7 @@ public class Restaurant_management extends NavigationDrawer {
 
     private boolean showresturant() {
         int uid=0,rid=0;
-        SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
+        final SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
         if ((rid=sharedPreferences.getInt("rid",-1))!=-1){
             uid=sharedPreferences.getInt("uid",-1);
             try {
@@ -105,13 +105,15 @@ public class Restaurant_management extends NavigationDrawer {
             FrameLayout rview= (FrameLayout) findViewById(R.id.fl_redit);
             rview.inflate(this,R.layout.resturant_view_edit_fragment,rview);
             ImageButton modify = (ImageButton) findViewById(R.id.rved_modify);
-            modify.setOnClickListener(new View.OnClickListener() {
+            /*modify.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent= new Intent(v.getContext(),Create_menu.class);
-                    startActivity(intent);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("rid",-1);
+                    editor.commit();
+
                 }
-            });
+            });*/
             visible=true;
             RelativeLayout rl=(RelativeLayout) findViewById(R.id.rvef_rectangle);
             rl.setOnClickListener(new View.OnClickListener() {
