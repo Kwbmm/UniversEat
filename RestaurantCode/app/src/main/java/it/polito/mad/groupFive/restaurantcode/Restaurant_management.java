@@ -137,6 +137,7 @@ public class Restaurant_management extends NavigationDrawer {
             Intent intent=new Intent(getApplicationContext(),CreateRestaurant.class);
             editor.putInt("uid",1);
             editor.commit();
+            item.setVisible(false);
             startActivityForResult(intent,CREATE_RESTAURANT);
 
         }
