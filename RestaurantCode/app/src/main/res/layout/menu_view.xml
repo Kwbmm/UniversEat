@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:id="@+id/menu_view_layout"
+        android:elevation="5dp"
+        android:background="#ffffff">
+        <TextView
+            android:id="@+id/menu_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Menu Name"
+            android:layout_alignParentTop="true"
+            android:textAlignment="center"
+            android:textSize="25dp"
+            android:textColor="#000000"
+            />
+
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/menu_name"
+            android:src="@mipmap/ic_launcher"
+            android:id="@+id/menu_image"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@id/menu_name"
+            android:layout_toRightOf="@+id/menu_image"
+            android:textSize="18dp"
+            android:text="Description:"
+            android:paddingLeft="10dp"
+            android:maxLength="150"
+            />
+        <TextView
+            android:id="@+id/menu_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:text="7€"
+            android:textSize="25dp"
+            android:paddingRight="10dp"/>
+        <ImageView
+            android:id="@+id/menu_icon1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/menu_image"
+            android:layout_marginLeft="10dp"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/menu_icon1"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/menu_icon2"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/menu_icon2"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/menu_icon3"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/menu_icon3"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/menu_icon4"/>
+
+
+
+    </RelativeLayout>
+</LinearLayout>

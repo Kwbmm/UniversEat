@@ -154,8 +154,8 @@ public class NavigationDrawer extends AppCompatActivity {
                     for (int i = 0; i < 5; i++) {
 
                         it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest, count);
-                        mn.setName("Gatto");
-                        mn.setDescription("Gatto");
+                        mn.setName("Menu");
+                        mn.setDescription("Description");
                         mn.setPrice(1.5f);
                         mn.setTicket(true);
                         mn.setType(1);

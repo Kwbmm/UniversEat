@@ -1,11 +1,13 @@
 package it.polito.mad.groupFive.restaurantcode;
 
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 import org.json.JSONException;
 
@@ -26,6 +28,7 @@ public class CreateRestaurant
             CreateRestaurant_5.onFragInteractionListener{
 
     private Restaurant restaurant = null;
+
 
     @Override
     public void onChangeFrag1(Restaurant r) {
@@ -49,6 +52,7 @@ public class CreateRestaurant
         //TODO set telehpone and website
         //this.restaurant.setTelephone(r.getTelephone());
         //this.restaurant.setWebsite(r.getWebsite());
+
 
         CreateRestaurant_2 cr2 = new CreateRestaurant_2();
         getSupportFragmentManager()
@@ -129,7 +133,8 @@ public class CreateRestaurant
     protected void onCreate(Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreate";
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_restaurant);
+        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
+        mlay.inflate(this, R.layout.activity_create_restaurant, mlay);
         if(findViewById(R.id.fragment_CreateRestaurant) != null){
             //For more info see: http://developer.android.com/training/basics/fragments/fragment-ui.html
             if(savedInstanceState != null)
