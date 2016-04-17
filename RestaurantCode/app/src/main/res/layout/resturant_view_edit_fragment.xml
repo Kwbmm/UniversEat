@@ -1,71 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/lledit_r">
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    card_view:cardElevation="5dp"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardUseCompatPadding="true"
+    >
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rectangle"
-        android:layout_marginTop="5dp"
-        android:id="@+id/rvef_rectangle">
-        <ImageButton
-            android:layout_width="wrap_content"
+        android:id="@+id/restaurant_view_layout"
+        android:background="#ffffff">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/restaurant_edit_bar"
+            android:layout_alignParentTop="true">
+
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_settings_24dp"
+                android:id="@+id/restaurant_edit"/>
+
+
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/restaurant_name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_settings_24dp"
-            android:id="@+id/rved_modify"
-            android:backgroundTint="#ffffff" />
+            android:text="Restaurant name"
+            android:layout_below="@id/restaurant_edit_bar"
+            android:textAlignment="center"
+            android:textSize="25dp"
+            android:textColor="#000000"
+            />
+
+
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:id="@+id/iwr"
-            android:backgroundTint="#000000"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/restaurant_name"
             android:src="@mipmap/ic_launcher"
-            />
+            android:id="@+id/restaurant_image"/>
+       <RatingBar
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:id="@+id/restaurant_rating"
+           android:layout_toRightOf="@id/restaurant_image"
+           style="@style/Base.Widget.AppCompat.RatingBar.Indicator"
+           android:layout_below="@id/restaurant_name"
+           android:numStars="5"
+           android:stepSize="0.5"
+           android:rating="3.5" />
         <TextView
-            android:id="@+id/rs_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/restaurantViewEdit_textViewName"
-            android:textSize="20dp"
-            android:gravity="center_horizontal"
-            android:layout_toRightOf="@id/iwr"
-            android:layout_toEndOf="@id/iwr"
-            android:layout_toStartOf="@id/rved_modify"
-            android:layout_toLeftOf="@id/rved_modify"
-            />
-        <RatingBar
-            style = "?android:attr/ratingBarStyleIndicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rwef_rate"
-            android:layout_below="@id/rs_name"
-            android:layout_alignLeft="@id/name"
-            android:layout_alignStart="@id/name"
-            android:foregroundGravity="center_horizontal"
-            android:stepSize="0.5"
-            android:layout_toEndOf="@id/iwr"
-            android:layout_toLeftOf="@id/rved_modify"
+            android:id="@+id/restaurant_address"
+            android:layout_below="@id/restaurant_rating"
+            android:textSize="18dp"
+            android:layout_toRightOf="@id/restaurant_image"
+            android:text="Street Address"/>
+        <ImageView
+            android:id="@+id/restaurant_icon1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/restaurant_image"
+            android:layout_marginLeft="10dp"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/restaurant_icon1"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/restaurant_icon2"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/restaurant_icon2"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/restaurant_icon3"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/restaurant_icon3"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/restaurant_icon4"/>
 
-            android:numStars="5" />
-        <TextView
-            android:id="@+id/rwef_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Street"
-            android:textSize="20dp"
-            android:gravity="center_horizontal"
-            android:layout_toRightOf="@id/iwr"
-            android:layout_toEndOf="@id/iwr"
-            android:layout_below="@id/rwef_rate"
-            android:layout_toStartOf="@id/rved_modify"
-            android:layout_toLeftOf="@id/rved_modify"
 
-
-            />
 
     </RelativeLayout>
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

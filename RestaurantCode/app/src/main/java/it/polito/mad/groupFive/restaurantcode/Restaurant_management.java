@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.zip.Inflater;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
@@ -67,8 +69,15 @@ public class Restaurant_management extends NavigationDrawer {
     @Override
     protected void onRestart() {
         super.onRestart();
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if(visible==false){
-        showresturant();}
+            showresturant();}
     }
 
     @Override
@@ -102,9 +111,11 @@ public class Restaurant_management extends NavigationDrawer {
             }
             restaurant=user.getRestaurant();
 
-            FrameLayout rview= (FrameLayout) findViewById(R.id.fl_redit);
+            LinearLayout rview= (LinearLayout) findViewById(R.id.fl_redit);
+            //View nrest = LayoutInflater.from(this).inflate(R.layout.resturant_view_edit_fragment,null);
+            //rview.addView(nrest);
             rview.inflate(this,R.layout.resturant_view_edit_fragment,rview);
-            ImageButton modify = (ImageButton) findViewById(R.id.rved_modify);
+            ImageButton modify = (ImageButton) findViewById(R.id.restaurant_edit);
             /*modify.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -115,7 +126,7 @@ public class Restaurant_management extends NavigationDrawer {
                 }
             });*/
             visible=true;
-            RelativeLayout rl=(RelativeLayout) findViewById(R.id.rvef_rectangle);
+            RelativeLayout rl=(RelativeLayout) findViewById(R.id.restaurant_view_layout);
             rl.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -148,9 +159,9 @@ public class Restaurant_management extends NavigationDrawer {
 
     private boolean getResaurantdata(){
 
-        TextView rname= (TextView)findViewById(R.id.rs_name);
-        TextView raddress= (TextView)findViewById(R.id.rwef_address);
-        RatingBar rbar=(RatingBar)findViewById(R.id.rwef_rate);
+        TextView rname= (TextView)findViewById(R.id.restaurant_name);
+        TextView raddress= (TextView)findViewById(R.id.restaurant_address);
+        RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
         ImageView rmimw = (ImageView) findViewById(R.id.iwr);
         try {
             restaurant.getData();

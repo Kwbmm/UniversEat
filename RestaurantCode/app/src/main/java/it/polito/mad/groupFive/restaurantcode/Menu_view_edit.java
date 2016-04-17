@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,8 +24,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
-import java.util.zip.Inflater;
+
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -143,6 +144,7 @@ public class Menu_view_edit extends NavigationDrawer {
         protected TextView menu_desctiprion;
         protected TextView menu_price;
         protected ImageButton edit;
+        protected CardView card;
 
         public MenuViewHoder(View itemView) {
             super(itemView);
@@ -150,7 +152,7 @@ public class Menu_view_edit extends NavigationDrawer {
             this.menu_desctiprion=(TextView)itemView.findViewById(R.id.menu_description);
             this.menu_price=(TextView)itemView.findViewById(R.id.menu_price);
             this.edit=(ImageButton) itemView.findViewById(R.id.menu_edit);
-
+            this.card= (CardView) itemView.findViewById(R.id.menu_card);
         }
     }
 
