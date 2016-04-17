@@ -26,5 +26,11 @@
         android:layout_toLeftOf="@id/opt"
         android:layout_toStartOf="@id/opt"
         android:iconifiedByDefault="false"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/home_menu_list"
+        android:layout_below="@id/search">
+    </ListView>
 
 </RelativeLayout>

@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -28,14 +29,39 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
 public class NavigationDrawer extends AppCompatActivity {
+    private int phase;//0 Logged out 1 logged in
+    private int usertype;// 0 user 1 restaurant manager
+    private ArrayAdapter<String> adapter;
+
     ActionBarDrawerToggle mDrawerToggle;
     ListView dList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // not a real activity, it's used to extend toolbar and navigation drawer to all activity created
         super.onCreate(savedInstanceState);
+        getUserinfo();
+        createDrawer();
+
+    }
+
+    public ArrayAdapter<String> createAdapter(){
+        ArrayAdapter<String> adp;
         String[] options;
-        options= getResources().getStringArray(R.array.drawer_option_logged_manager);
+        if (phase!=0){
+            options= getResources().getStringArray(R.array.drawer_option_logged_manager);
+
+        }else {
+            options= getResources().getStringArray(R.array.drawer_option_login);
+
+        }
+        adp=new ArrayAdapter<String>(this, R.layout.list_item, options);
+        return adp;
+    }
+
+    public void  createDrawer(){
+
+
+        adapter=createAdapter();
         setContentView(R.layout.drawer);
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -50,9 +76,8 @@ public class NavigationDrawer extends AppCompatActivity {
             }
         });
         dList= (ListView)findViewById(R.id.left_drawer);
-        dList.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, options));
+        dList.setAdapter(adapter);
         dList.setOnItemClickListener( new DrawerListener());
-
 
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
         {
@@ -77,6 +102,16 @@ public class NavigationDrawer extends AppCompatActivity {
 
 
 
+
+    }
+
+    public void getUserinfo(){
+        SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
+        if (sharedPreferences.getInt("uid",-1)>0){
+            phase=1;
+        }else {
+            phase=0;
+        }
     }
 
     @Override
@@ -120,7 +155,16 @@ public class NavigationDrawer extends AppCompatActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (position==0){
+            if (phase==0){
+                if (position==0){
+                    phase=1;
+                    dList.setAdapter(createAdapter());
+                    dList.deferNotifyDataSetChanged();
+                    //Todo intent create profile
+                }
+
+            }
+            else{if (position==0){
 
                 int count=1;
 
@@ -190,6 +234,13 @@ public class NavigationDrawer extends AppCompatActivity {
             if(position==1){
                 Intent intent= new Intent(view.getContext(),Order_management.class);
                 startActivity(intent);
+            }
+                if (position==3){
+                    phase=0;
+                    dList.setAdapter(createAdapter());
+                    dList.deferNotifyDataSetChanged();
+                    //todo remove user from preferences
+                }
             }
         }
     }
