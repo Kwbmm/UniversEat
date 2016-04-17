@@ -44,7 +44,18 @@ public class Order_management extends NavigationDrawer {
     private Restaurant restaurant;
     private SharedPreferences sharedPreferences;
     private ArrayList<Order> orders;
-    private String[] months={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+    private String[] months={getString(R.string.jan),
+                             getString(R.string.feb),
+                             getString(R.string.mar),
+                             getString(R.string.apr),
+                             getString(R.string.may),
+                             getString(R.string.jun),
+                             getString(R.string.jul),
+                             getString(R.string.aug),
+                             getString(R.string.sep),
+                             getString(R.string.oct),
+                             getString(R.string.nov),
+                             getString(R.string.dec)};
     private int deletecheck;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,8 +152,8 @@ public class Order_management extends NavigationDrawer {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder dialog=new AlertDialog.Builder(Order_management.this);
-                    final CharSequence[] items = { "Yes", "No" };
-                    dialog.setTitle("Delete?");
+                    final CharSequence[] items = { getString(R.string.menu_view_edit_yes), getString(R.string.menu_view_edit_no) };
+                    dialog.setTitle(getString(R.string.menu_view_edit_delete));
                     dialog.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

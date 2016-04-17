@@ -123,4 +123,40 @@
     <string name="checkBox_BeverageIncluded">Beverage included</string>
     <string name="editText_Price">Price</string>
     <!-- END activity_create_menu_frag2.xml -->
+
+    <!-- Class Add_dish -->
+    <string name="add_dish_starter">Starter</string>
+    <string name="add_dish_main_dish">Main dish</string>
+    <string name="add_dish_italian">Italian</string>
+    <string name="add_dish_chinese">Chinese</string>
+    <string name="add_dish_indian">Indian</string>
+    <!-- END Class Add_dish -->
+
+    <!-- Class Create_menu_frag -->
+    <string name="create_menu_frag_fixed">Fixed</string>
+    <string name="create_menu_frag_multiple_choice">Multiple choice</string>
+    <!-- END Class Create_menu_frag -->
+
+    <!-- Class Menu_view_edit -->
+    <string name="menu_view_edit_fixed_price_menu">Fixed Price Menu</string>
+    <string name="menu_view_edit_yes">Yes</string>
+    <string name="menu_view_edit_no">No</string>
+    <string name="menu_view_edit_delete">Delete?</string>
+    <!-- END Class Create_menu_frag -->
+
+
+    <string name="jan">Jen</string>
+    <string name="feb">Feb</string>
+    <string name="mar">Mar</string>
+    <string name="apr">Apr</string>
+    <string name="may">May</string>
+    <string name="jun">Jun</string>
+    <string name="jul">Jul</string>
+    <string name="aug">Aug</string>
+    <string name="sep">Sep</string>
+    <string name="oct">Oct</string>
+    <string name="nov">Nov</string>
+    <string name="dec">Dec</string>
+
+
 </resources>

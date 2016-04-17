@@ -190,7 +190,7 @@ public class Menu_view_edit extends NavigationDrawer {
                 e.printStackTrace();
             }
             name.setText(menu.getName());
-            title.setText("Fixed Price Menu");
+            title.setText(getString(R.string.menu_view_edit_fixed_price_menu));
             price.setText(menu.getPrice()+"€");
             description.setText(menu.getDescription());
             Button delete = (Button) convertView.findViewById(R.id.mlf_del);
@@ -198,8 +198,8 @@ public class Menu_view_edit extends NavigationDrawer {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(Menu_view_edit.this);
-                    final CharSequence[] items = {"Yes", "No"};
-                    dialog.setTitle("Delete?");
+                    final CharSequence[] items = {getString(R.string.menu_view_edit_yes), getString(R.string.menu_view_edit_no)};
+                    dialog.setTitle(getString(R.string.menu_view_edit_delete));
                     dialog.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
