@@ -4,97 +4,84 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.util.Log;
+
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * @author Marco
  * @class Course
- * @date 04/04/16
+ * @date 2016-04-18
  * @brief Course class
  */
 public class Course {
 
-    private JSONObject JSONFile = null;
-    private Restaurant r=null;
+    transient private RestaurantV2 r=null;
 
     private int cid;
     private int mid;
     private String name;
     private String description;
     private float price;
-    private byte[] image;
+    private Uri image;
     private boolean glutenFree;
     private boolean vegan;
     private boolean vegetarian;
     private boolean spicy;
 
-    public Course(Restaurant restaurant){
+    public Course(RestaurantV2 restaurant){
         this.r = restaurant;
-        this.JSONFile = restaurant.getJSONFile();
     }
 
-    public Course(Restaurant restaurant, int cid, int mid) throws CourseException {
+    public Course(RestaurantV2 restaurant, int cid, int mid) throws CourseException, MenuException {
         if(cid < 0)
             throw new CourseException("Course ID must be positive");
         this.cid = cid;
+        if(mid < 0)
+            throw new MenuException("Menu ID must be positive");
         this.mid = mid;
         this.r = restaurant;
-        this.JSONFile = restaurant.getJSONFile();
     }
 
-    /**
-     * Reads data from JSON configuration file.
-     * If some field is missing, it throws JSONException.
-     *
-     * @throws JSONException if some field is missing.
-     */
-    public void getData() throws JSONException{
-        JSONArray menus = this.JSONFile.getJSONArray("menus");
-        for (int i = 0; i < menus.length(); i++) {
-            if(menus.getJSONObject(i).getInt("id") == this.mid){
-                JSONArray courses = menus.getJSONObject(i).getJSONArray("courses");
-                for (int j = 0; j < courses.length(); j++) {
-                    if(courses.getJSONObject(j).getInt("id") == this.cid){
-                        JSONObject course = courses.getJSONObject(j);
-                        this.name = course.getString("name");
-                        this.description = course.getString("description");
-                        this.price = (float) course.getDouble("price");
-                        this.image = course.getString("image").getBytes();
-                        this.glutenFree = course.getBoolean("glutenFree");
-                        this.vegan = course.getBoolean("vegan");
-                        this.vegetarian = course.getBoolean("vegetarian");
-                        this.spicy = course.getBoolean("spicy");
-                    }
-                }
+    public void getData() throws RestaurantException {
+        final String METHOD_NAME = this.getClass().getName()+" - getData";
+        this.r.getData();
+        for(Menu m :this.r.getMenus()){
+            if(m.getCourseByID(this.cid) != null) {
+                Course dummy = m.getCourseByID(this.cid);
+                this.copyData(dummy);
             }
         }
     }
 
-    /**
-     * THIS METHOD SHOULD NEVER BE CALLED ON IT'S OWN!
-     * Returns a JSONObject to saveData method of Restaurant class.
-     *
-     */
-     public JSONObject saveData() throws JSONException{
-        JSONObject course = new JSONObject();
-        course.put("id",this.cid);
-        course.put("name",this.name);
-        course.put("description",this.description);
-        course.put("price",this.price);
-        course.put("image",this.image.toString());
-        course.put("glutenFree",this.glutenFree);
-        course.put("vegan",this.vegan);
-        course.put("vegetarian",this.vegetarian);
-        course.put("spicy",this.spicy);
-        return course;
+    private void copyData(Course d){
+        this.cid = d.cid;
+        this.mid = d.mid;
+        this.name = d.name;
+        this.description = d.description;
+        this.price = d.price;
+        this.image = d.image;
+        this.glutenFree = d.glutenFree;
+        this.vegan = d.vegan;
+        this.vegetarian = d.vegetarian;
+        this.spicy = d.spicy;
     }
+
     /**
      *
      * @return The Course ID
@@ -121,17 +108,9 @@ public class Course {
 
     /**
      *
-     * @return The image of the course, in base 64 format
+     * @return The Uri of the course image
      */
-    public byte[] getImage64(){return this.image;}
-
-    /**
-     *
-     * @return The image of the course, in Bitmap format
-     */
-    public Bitmap getImageBitmap(){
-        return BitmapFactory.decodeByteArray(this.image,0,this.image.length);
-    }
+    public Uri getImageUri(){return this.image;}
 
     /**
      * Returns true if course is gluten-free. False otherwise.
@@ -181,29 +160,10 @@ public class Course {
     public void setPrice(float price){ this.price = price;}
 
     /**
-     * Sets the base 64 encoding of the image
-     * @param image byte array of image, encoded in base 64
+     * Sets the Uri of the image.
+     * @param image Uri of the image.
      */
-    public void setImage64(byte[] image){ this.image = image;}
-
-    /**
-     * Sets the base 64 encoding of the image from an input Bitmap
-     * @param image Bitmap image to save
-     */
-    public void setImage64FromBitmap(Bitmap image){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        this.image = baos.toByteArray();
-    }
-
-    /**
-     * Sets the base 64 encoding of the image from an input Drawable
-     * @param image Drawable image to save
-     */
-    public void setImage64FromDrawable(Drawable image){
-        Bitmap b = ((BitmapDrawable) image).getBitmap();
-        this.setImage64FromBitmap(b);
-    }
+    public void setImageUri(Uri image){ this.image = image;}
 
     /**
      * Sets if the course is gluten-free

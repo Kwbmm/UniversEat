@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -12,37 +14,38 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * @author Marco
  * @class Menu
- * @date 04/04/16
+ * @date 2016-04-18
  * @brief Menu class
  */
 public class Menu {
 
-    private JSONObject JSONFile = null;
+    transient private RestaurantV2 r=null;
 
     private int mid;
     private String name=null;
     private String description=null;
     private float price;
-    private byte[] image=null;
+    private Uri image;
     private int type;
     private int numberchoice;
-    private ArrayList<Course> courses=null;
+    private ArrayList<Course> courses = new ArrayList<>();
     private boolean ticket;
-    private Restaurant r=null;
     private boolean beverage;
     private boolean servicefee;
 
-    public Menu(Restaurant restaurant){
+    public Menu(RestaurantV2 restaurant){
         this.r = restaurant;
-        this.JSONFile = restaurant.getJSONFile();
-        this.courses = new ArrayList<Course>();
+        this.mid = Menu.randInt();
     }
 
     /**
@@ -51,13 +54,20 @@ public class Menu {
      * @param mid The ID of the menu.
      * @throws MenuException Thrown if menu ID is negative.
      */
-    public Menu(Restaurant restaurant, int mid) throws MenuException {
+    public Menu(RestaurantV2 restaurant, int mid) throws MenuException {
         this.r = restaurant;
-        this.JSONFile = restaurant.getJSONFile();
         if(mid < 0)
             throw new MenuException("Menu ID must be positive");
         this.mid = mid;
-        this.courses = new ArrayList<Course>();
+    }
+
+    public static int randInt() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
+        else{
+            Random rand= new Random();
+            return rand.nextInt(Integer.MAX_VALUE -1 );
+        }
     }
 
     /**
@@ -68,56 +78,30 @@ public class Menu {
      *
      * @throws JSONException if some field is missing.
      */
-    public void getData() throws JSONException, CourseException {
-        JSONArray menus = this.JSONFile.getJSONArray("menus");
-        for (int i = 0; i < menus.length(); i++) {
-            if(menus.getJSONObject(i).getInt("id") == this.mid){
-                JSONObject jsonMenu = menus.getJSONObject(i);
-                this.name = jsonMenu.getString("name");
-                this.description = jsonMenu.getString("description");
-                this.price = (float) jsonMenu.getDouble("price");
-                //this.image = jsonMenu.getString("image").getBytes();
-                this.type = jsonMenu.getInt("type");
-                this.ticket = jsonMenu.getBoolean("ticket");
-                this.numberchoice = jsonMenu.getInt("numberchoice");
-                this.beverage = jsonMenu.getBoolean("beverage");
-                this.servicefee = jsonMenu.getBoolean("servicefee");
-
-                JSONArray courses = jsonMenu.getJSONArray("courses");
-                for (int j = 0; j < courses.length(); j++){
-                    Course c = new Course(this.r, courses.getJSONObject(j).getInt("id"), this.mid);
-                    c.getData();
-                    this.courses.add(c);
-                }
-                break; //Exit from the outer loop
-            }
+    public void getData() throws MenuException {
+        final String METHOD_NAME = this.getClass().getName()+" - getData";
+        try {
+            this.r.getData();
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+            throw new MenuException(e.getMessage());
         }
+        Menu dummy = this.r.getMenuByID(this.mid);
+        this.copyData(dummy);
     }
 
-    /**
-     * THIS METHOD SHOULD NEVER BE CALLED ON IT'S OWN!
-     * Returns a JSONObject to saveData method of Restaurant class.
-     *
-     * @throws JSONException
-     */
-    public JSONObject saveData() throws JSONException{
-        JSONObject menu = new JSONObject();
-        menu.put("id",this.mid);
-        menu.put("name",this.name);
-        menu.put("description",this.description);
-        menu.put("price",this.price);
-       // menu.put("image",this.image.toString());
-        menu.put("type",this.type);
-        menu.put("ticket",this.ticket);
-        menu.put("numberchoice",this.numberchoice);
-        menu.put("beverage",this.beverage);
-        menu.put("servicefee",this.servicefee);
-        //Add a new array for the courses, and fill it!
-        menu.put("courses",new JSONArray());
-        for(Course c : this.courses)
-            menu.getJSONArray("courses").put(c.saveData());
-
-        return menu;
+    private void copyData(Menu dummy) {
+         this.mid = dummy.mid;
+         this.name = dummy.name;
+         this.description = dummy.description;
+         this.price = dummy.price;
+         this.image = dummy.image;
+         this.type = dummy.type;
+         this.numberchoice = dummy.numberchoice;
+         this.courses = dummy.courses;
+         this.ticket = dummy.ticket;
+         this.beverage = dummy.beverage;
+         this.servicefee = dummy.servicefee;
     }
 
     /**
@@ -146,17 +130,9 @@ public class Menu {
 
     /**
      *
-     * @return The image of the course, in base 64 format
+     * @return The image Uri of the course
      */
-    public byte[] getImage64(){return this.image;}
-
-    /**
-     *
-     * @return The image of the course, in Bitmap format
-     */
-    public Bitmap getImageBitmap(){
-        return BitmapFactory.decodeByteArray(this.image, 0, this.image.length);
-    }
+    public Uri getImageUri(){return this.image;}
 
     /**
      * This method returns a textual representation of the type of menu. It can be:
@@ -304,26 +280,7 @@ public class Menu {
      * Sets the base 64 encoding of the image
      * @param image Byte array of image, encoded in base 64
      */
-    public void setImage64(byte[] image){ this.image = image;}
-
-    /**
-     * Sets the base 64 encoding of the image from an input Bitmap
-     * @param image Bitmap image to save
-     */
-    public void setImage64FromBitmap(Bitmap image){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        this.image = baos.toByteArray();
-    }
-
-    /**
-     * Sets the base 64 encoding of the image from an input Drawable
-     * @param image Drawable image to save
-     */
-    public void setImage64FromDrawable(Drawable image){
-        Bitmap b = ((BitmapDrawable) image).getBitmap();
-        this.setImage64FromBitmap(b);
-    }
+    public void setImageUri(Uri image){ this.image = image;}
 
     /**
      * This method sets the type of the menu. The type can be:
