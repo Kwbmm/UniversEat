@@ -39,7 +39,7 @@ public class User {
             throw new UserException("User ID must be positive");
         this.uid = uid;
 
-        this.restaurant = new Restaurant(c,rid,this.uid);
+        this.restaurant = new Restaurant(c,rid);
         this.restaurantOwner = true;
     }
 

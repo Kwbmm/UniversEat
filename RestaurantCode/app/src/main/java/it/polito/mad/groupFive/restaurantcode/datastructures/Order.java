@@ -1,13 +1,14 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.os.Build;
+import android.util.Log;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * @author Marco Ardizzone
@@ -17,18 +18,17 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderExc
  */
 public class Order {
 
-    private JSONObject JSONFile = null;
+    transient private Restaurant r = null;
 
     private int oid;
     private int uid;
     private int mid;
     private int rid;
     private Date date=null;
-    private Restaurant r = null;
 
     public Order(Restaurant restaurant){
         this.r = restaurant;
-        this.JSONFile = restaurant.getJSONFile();
+        this.oid = Order.randInt();
     }
 
     public Order(Restaurant restaurant, int oid) throws OrderException {
@@ -36,56 +36,47 @@ public class Order {
         if(oid < 0)
             throw new OrderException("Order ID must be positive");
         this.oid = oid;
-        this.JSONFile = restaurant.getJSONFile();
     }
 
-    public Order(Restaurant restaurant, int oid, int rid) throws OrderException {
+    public Order(Restaurant restaurant, int oid, int rid) throws OrderException, RestaurantException {
         this.r = restaurant;
         if(oid < 0)
             throw new OrderException("Order ID must be positive");
         this.oid = oid;
-        this.JSONFile = restaurant.getJSONFile();
+        if(rid < 0)
+            throw new RestaurantException("Restaurant ID must be positive");
         this.rid = rid;
     }
 
-    /**
-     * Reads data from JSON configuration file.
-     * If some field is missing, it throws JSONException.
-     *
-     * @throws JSONException if some field is missing
-     * @throws ParseException if date from JSON file cannot be parsed correctly
-     */
-    public void getData() throws JSONException, ParseException {
-        for (int i = 0; i < this.JSONFile.getJSONArray("orders").length(); i++) {
-            if(this.JSONFile.getJSONArray("orders").getJSONObject(i).getInt("id") == this.oid){
-                JSONObject order = this.JSONFile.getJSONArray("orders").getJSONObject(i);
-                this.mid = order.getInt("mid");
-                this.uid = order.getInt("uid");
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
-                this.date = sdf.parse(order.getString("date"));
-                break;
-            }
+    private static int randInt() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
+        else{
+            Random rand= new Random();
+            return rand.nextInt(Integer.MAX_VALUE -1 );
         }
     }
 
-    /**
-     * THIS METHOD SHOULD NEVER BE CALLED ON IT'S OWN!
-     * Returns a JSONObject to saveData method of Restaurant class.
-     *
-     * @return JSONObject with the current data of the Order class.
-     * @throws JSONException
-     */
-    public JSONObject saveData() throws JSONException{
-        JSONObject order = new JSONObject();
-        order.put("id",this.oid);
-        order.put("uid",this.uid);
-        order.put("mid",this.mid);
-        order.put("rid",this.rid);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
-        order.put("date",sdf.format(this.date));
-        return order;
+    public void getData() throws OrderException {
+        final String METHOD_NAME = this.getClass().getName()+" - getData";
+        try {
+            this.r.getData();
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+            throw new OrderException(e.getMessage());
+        }
+        Order dummy = this.r.getOrderByID(this.oid);
+        this.copyData(dummy);
     }
+
+    private void copyData(Order dummy) {
+        this.oid = dummy.getOid();
+        this.uid = dummy.getUid();
+        this.mid = dummy.getMid();
+        this.rid = dummy.getRid();
+        this.date = dummy.getDate();
+    }
+
     /**
      *
      * @return The order ID
@@ -103,6 +94,8 @@ public class Order {
      * @return The menu ID ordered
      */
     public int getMid(){ return this.mid;}
+
+    public int getRid(){ return this.rid; }
 
     /**
      *
@@ -138,7 +131,7 @@ public class Order {
      *
      * @param rid The restaurant ID to which this order belong to.
      */
-    public void setRestaurantID(int rid){ this.rid= rid;}
+    public void setRid(int rid){ this.rid= rid;}
 
     public void setDate(Date d){ this.date = d;}
 }

@@ -1,23 +1,15 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
@@ -29,7 +21,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
  */
 public class Menu {
 
-    transient private RestaurantV2 r=null;
+    transient private Restaurant r=null;
 
     private int mid;
     private String name=null;
@@ -43,7 +35,7 @@ public class Menu {
     private boolean beverage;
     private boolean servicefee;
 
-    public Menu(RestaurantV2 restaurant){
+    public Menu(Restaurant restaurant){
         this.r = restaurant;
         this.mid = Menu.randInt();
     }
@@ -54,14 +46,14 @@ public class Menu {
      * @param mid The ID of the menu.
      * @throws MenuException Thrown if menu ID is negative.
      */
-    public Menu(RestaurantV2 restaurant, int mid) throws MenuException {
+    public Menu(Restaurant restaurant, int mid) throws MenuException {
         this.r = restaurant;
         if(mid < 0)
             throw new MenuException("Menu ID must be positive");
         this.mid = mid;
     }
 
-    public static int randInt() {
+    private static int randInt() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
         else{
@@ -79,7 +71,7 @@ public class Menu {
      * @throws JSONException if some field is missing.
      */
     public void getData() throws MenuException {
-        final String METHOD_NAME = this.getClass().getName()+" - getData";
+            final String METHOD_NAME = this.getClass().getName()+" - getData";
         try {
             this.r.getData();
         } catch (RestaurantException e) {
@@ -91,17 +83,17 @@ public class Menu {
     }
 
     private void copyData(Menu dummy) {
-         this.mid = dummy.mid;
-         this.name = dummy.name;
-         this.description = dummy.description;
-         this.price = dummy.price;
-         this.image = dummy.image;
-         this.type = dummy.type;
-         this.numberchoice = dummy.numberchoice;
-         this.courses = dummy.courses;
-         this.ticket = dummy.ticket;
-         this.beverage = dummy.beverage;
-         this.servicefee = dummy.servicefee;
+         this.mid = dummy.getMid();
+         this.name = dummy.getName();
+         this.description = dummy.getDescription();
+         this.price = dummy.getPrice();
+         this.image = dummy.getImageUri();
+         this.type = dummy.getType();
+         this.numberchoice = dummy.getNumberchoice();
+         this.courses = dummy.getCourses();
+         this.ticket = dummy.acceptTicket();
+         this.beverage = dummy.isBeverage();
+         this.servicefee = dummy.isServicefee();
     }
 
     /**

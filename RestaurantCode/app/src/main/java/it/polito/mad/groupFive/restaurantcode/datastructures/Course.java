@@ -1,23 +1,10 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.util.Log;
+import android.os.Build;
 
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
@@ -31,7 +18,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
  */
 public class Course {
 
-    transient private RestaurantV2 r=null;
+    transient private Restaurant r=null;
 
     private int cid;
     private int mid;
@@ -44,11 +31,12 @@ public class Course {
     private boolean vegetarian;
     private boolean spicy;
 
-    public Course(RestaurantV2 restaurant){
+    public Course(Restaurant restaurant){
         this.r = restaurant;
+        this.cid = Course.randInt();
     }
 
-    public Course(RestaurantV2 restaurant, int cid, int mid) throws CourseException, MenuException {
+    public Course(Restaurant restaurant, int cid, int mid) throws CourseException, MenuException {
         if(cid < 0)
             throw new CourseException("Course ID must be positive");
         this.cid = cid;
@@ -56,6 +44,15 @@ public class Course {
             throw new MenuException("Menu ID must be positive");
         this.mid = mid;
         this.r = restaurant;
+    }
+
+    private static int randInt() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
+        else{
+            Random rand= new Random();
+            return rand.nextInt(Integer.MAX_VALUE -1 );
+        }
     }
 
     public void getData() throws RestaurantException {
@@ -70,16 +67,16 @@ public class Course {
     }
 
     private void copyData(Course d){
-        this.cid = d.cid;
-        this.mid = d.mid;
-        this.name = d.name;
-        this.description = d.description;
-        this.price = d.price;
-        this.image = d.image;
-        this.glutenFree = d.glutenFree;
-        this.vegan = d.vegan;
-        this.vegetarian = d.vegetarian;
-        this.spicy = d.spicy;
+        this.cid = d.getCid();
+        this.mid = d.getMid();
+        this.name = d.getName();
+        this.description = d.getDescription();
+        this.price = d.getPrice();
+        this.image = d.getImageUri();
+        this.glutenFree = d.isGlutenFree();
+        this.vegan = d.isVegan();
+        this.vegetarian = d.isVegetarian();
+        this.spicy = d.isSpicy();
     }
 
     /**
@@ -87,6 +84,8 @@ public class Course {
      * @return The Course ID
      */
     public int getCid(){return this.cid;}
+
+    public int getMid(){ return this.mid; }
 
     /**
      *
@@ -141,6 +140,9 @@ public class Course {
      * @param cid Course ID
      */
     public void setCid(int cid){ this.cid = cid;}
+
+    public void setMid(int mid){ this.mid = mid; }
+
     /**
      * Sets the name of the course
      * @param name Name of the course
