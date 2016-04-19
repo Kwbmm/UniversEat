@@ -56,32 +56,33 @@
             android:paddingRight="10dp"/>
         <ImageView
             android:id="@+id/menu_icon1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"/>
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@id/menu_icon1"
             android:layout_marginLeft="5dp"
             android:id="@+id/menu_icon2"/>
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@id/menu_icon2"
             android:layout_marginLeft="5dp"
             android:id="@+id/menu_icon3"/>
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@id/menu_icon3"
             android:layout_marginLeft="5dp"
-            android:id="@+id/menu_icon4"/>
+            android:id="@+id/menu_icon4"
+            android:src="@drawable/ic_veg_black"/>
 
 
 
