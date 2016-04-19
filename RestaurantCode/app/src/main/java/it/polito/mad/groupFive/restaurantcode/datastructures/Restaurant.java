@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -38,6 +39,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderExc
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 import it.polito.mad.groupFive.restaurantcode.libs.CustomUriDeserializer;
+import it.polito.mad.groupFive.restaurantcode.libs.CustomUriSerializer;
 
 /**
  * @author Marco Ardizzone
@@ -120,7 +122,7 @@ public class Restaurant {
 
         InputStream is;
         try {
-            is = appContext.openFileInput("r"+this.rid);
+            is = appContext.openFileInput("r"+this.rid+".json");
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
             String inputString;
@@ -146,7 +148,7 @@ public class Restaurant {
     private void createJSONFile() {
         final String METHOD_NAME = this.getClass().getName()+" - createJSONFile";
 
-        File file = new File(appContext.getFilesDir(),"r"+rid);
+        File file = new File(appContext.getFilesDir(),"r"+rid+".json");
         Writer writer = null;
         try {
             writer = new FileWriter(file);
@@ -171,7 +173,7 @@ public class Restaurant {
     public void getData() throws RestaurantException {
         final String METHOD_NAME = this.getClass().getName()+" - getData";
         try {
-            FileInputStream fis = appContext.openFileInput("r"+this.rid);
+            FileInputStream fis = appContext.openFileInput("r"+this.rid+".json");
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader bufferedReader = new BufferedReader(isr);
             StringBuilder sb = new StringBuilder();
@@ -192,11 +194,15 @@ public class Restaurant {
     public void saveData() throws RestaurantException {
         final String METHOD_NAME = this.getClass().getName()+" - saveData";
 
-        Gson root = new Gson();
+        Gson root = new GsonBuilder()
+                .registerTypeAdapter(Uri.class, new CustomUriSerializer())
+                .serializeNulls()
+                .setPrettyPrinting()
+                .create();
         String output = root.toJson(this);
 
         try {
-            FileOutputStream fos = this.appContext.openFileOutput("r"+this.rid,Context.MODE_PRIVATE);
+            FileOutputStream fos = this.appContext.openFileOutput("r"+this.rid+".json",Context.MODE_PRIVATE);
             fos.write(output.getBytes());
             fos.close();
         } catch (IOException e) {
@@ -549,8 +555,8 @@ public class Restaurant {
             return false;
         }
 
-        DateFormat sdfStart = SimpleDateFormat.getTimeInstance();
-        DateFormat sdfEnd = SimpleDateFormat.getTimeInstance();
+        SimpleDateFormat sdfStart = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        SimpleDateFormat sdfEnd = new SimpleDateFormat("HH:mm", Locale.getDefault());
         try {
             Date startDate = sdfStart.parse(timeStart);
             Date endDate = sdfEnd.parse(timeEnd);
@@ -584,8 +590,8 @@ public class Restaurant {
             Log.e(METHOD_NAME, "Day of week is not in the expected range 0-6");
             return false;
         }
-        DateFormat sdfStart = SimpleDateFormat.getTimeInstance();
-        DateFormat sdfEnd = SimpleDateFormat.getTimeInstance();
+        SimpleDateFormat sdfStart = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        SimpleDateFormat sdfEnd = new SimpleDateFormat("HH:mm", Locale.getDefault());
         try {
             Date startDate = sdfStart.parse(timeStart);
             Date endDate = sdfEnd.parse(timeEnd);
