@@ -13,38 +13,36 @@
         android:background="#ffffff"
         android:layout_margin="5dp"
         android:id="@+id/restaurant_view_layout">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:id="@+id/restaurant_edit_bar"
-            android:layout_alignParentTop="true">
 
             <ImageButton
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/ic_settings_24dp"
-                android:id="@+id/restaurant_edit"/>
-
-
-        </RelativeLayout>
-        <TextView
-            android:id="@+id/restaurant_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Restaurant name"
-            android:textAlignment="center"
-            android:textSize="25dp"
-            android:textStyle="bold" />
-
+                android:id="@+id/restaurant_edit"
+                />
 
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:layout_below="@id/restaurant_name"
             android:src="@mipmap/ic_launcher"
             android:id="@+id/restaurant_image"/>
+
+        <TextView
+            android:id="@+id/restaurant_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Restaurant name"
+            android:textSize="25dp"
+            android:layout_toLeftOf="@id/restaurant_edit"
+            android:layout_toRightOf="@id/restaurant_image"
+            android:textStyle="bold" />
+
+
+
        <RatingBar
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
@@ -68,7 +66,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/restaurant_image"
+            android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"/>
         <ImageView
             android:layout_width="30dp"

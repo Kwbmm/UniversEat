@@ -36,7 +36,6 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.User;
  */
 public class Menu_view_edit extends NavigationDrawer {
     private ArrayList<Menu> menusshared;
-    private ArrayList<Menu> motd;
     private MenuAdapter adp;
     private Restaurant rest;
     private SharedPreferences sharedPreferences;

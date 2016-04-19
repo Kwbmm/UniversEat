@@ -162,7 +162,7 @@ public class Restaurant_management extends NavigationDrawer {
         TextView rname= (TextView)findViewById(R.id.restaurant_name);
         TextView raddress= (TextView)findViewById(R.id.restaurant_address);
         RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
-        ImageView rmimw = (ImageView) findViewById(R.id.iwr);
+       // ImageView rmimw = (ImageView) findViewById(R.id.iwr);
         try {
             restaurant.getData();
 
