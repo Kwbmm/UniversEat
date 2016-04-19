@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/opt"
         android:contextClickable="true"
-        android:src="@drawable/ic_settings_24dp"
+        android:src="@drawable/ic_settings_black"
         android:layout_alignParentRight="true"
         android:backgroundTint="#ffffff"
         android:contentDescription="@string/home_imageButtonOpt_contentDesc"
