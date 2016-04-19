@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -57,6 +58,7 @@ public class Restaurant {
     private String city;
     private String website;
     private String telephone;
+    private String ZIPCode;
     private Uri image;
     private float rating;
     private double xcoord;
@@ -64,7 +66,8 @@ public class Restaurant {
     private ArrayList<Menu> menus=new ArrayList<>();
     private ArrayList<Order> orders=new ArrayList<>();
     private ArrayMap<Integer, String> tickets = new ArrayMap<>();
-    private ArrayList<ArrayMap<Integer, Duration>> timetable = new ArrayList<>(2);
+    private ArrayMap<Integer, Duration> timetableLunch = new ArrayMap<>();
+    private ArrayMap<Integer, Duration> timetableDinner = new ArrayMap<>();
 
     public Restaurant(Context appContext) {
         final String METHOD_NAME = this.getClass().getName()+" - constructor";
@@ -101,12 +104,15 @@ public class Restaurant {
         this.city = dummy.getCity();
         this.website = dummy.getWebsite();
         this.telephone = dummy.getTelephone();
-        this.image = dummy.getImage();
+        this.ZIPCode = dummy.getZIPCode();
+        this.image = dummy.getImageUri();
         this.xcoord = dummy.getXcoord();
         this.ycoord = dummy.getYcoord();
         this.menus = dummy.getMenus();
         this.orders = dummy.getOrders();
         this.tickets = dummy.getTickets();
+        this.timetableLunch = dummy.getTimetableLunch();
+        this.timetableDinner = dummy.getTimetableDinner();
     }
 
     private Restaurant readJSONFile(){
@@ -126,6 +132,7 @@ public class Restaurant {
 
             is.close();
             Gson root = new GsonBuilder().registerTypeAdapter(Uri.class, new CustomUriDeserializer()).create();
+            Log.i(METHOD_NAME, "Loading data into structure...");
             return root.fromJson(stringBuilder.toString(), Restaurant.class);
         } catch (FileNotFoundException e) {
             this.createJSONFile();
@@ -242,7 +249,7 @@ public class Restaurant {
      *
      * @return Uri of the image
      */
-    public Uri getImage(){ return this.image;}
+    public Uri getImageUri(){ return this.image;}
 
     /**
      *
@@ -267,6 +274,8 @@ public class Restaurant {
      * @return a string with the restaurant's telephone number
      */
     public String getTelephone() { return this.telephone; }
+
+    public String getZIPCode() { return this.ZIPCode; }
 
     /**
      *
@@ -377,7 +386,7 @@ public class Restaurant {
      *
      * @return ArrayMap of the LUNCH timetable.
      */
-    public ArrayMap<Integer,Duration> getTimetableLunch(){ return this.timetable.get(0); }
+    public ArrayMap<Integer,Duration> getTimetableLunch(){ return this.timetableLunch; }
 
     /**
      * Returns an ArrayMap with keys the number of the day of the week (from 0 [Monday] to 6
@@ -385,7 +394,7 @@ public class Restaurant {
      *
      * @return ArrayMap of the DINNER timetable.
      */
-    public ArrayMap<Integer,Duration> getTimetableDinner(){ return this.timetable.get(1); }
+    public ArrayMap<Integer,Duration> getTimetableDinner(){ return this.timetableDinner; }
 
     /**
      *
@@ -517,6 +526,8 @@ public class Restaurant {
         this.telephone = telephone;
     }
 
+    public void setZIPCode(String ZIPCode){ this.ZIPCode = ZIPCode; }
+
     public void setTickets(ArrayMap<Integer, String> tickets){ this.tickets = tickets; }
 
     /**
@@ -530,7 +541,7 @@ public class Restaurant {
      * @param timeEnd End hour of the shift.
      * @return true if saved correctly, false otherwise
      */
-    boolean setDurationLunch(int dayOfWeek,String timeStart, String timeEnd) {
+    public boolean setDurationLunch(int dayOfWeek,String timeStart, String timeEnd) {
         final String METHOD_NAME = this.getClass().getName()+" - setDurationLunch";
 
         if(dayOfWeek < 0 || dayOfWeek > 6){
@@ -544,7 +555,7 @@ public class Restaurant {
             Date startDate = sdfStart.parse(timeStart);
             Date endDate = sdfEnd.parse(timeEnd);
             Duration d = DatatypeFactory.newInstance().newDuration(endDate.getTime()-startDate.getTime());
-            this.timetable.get(0).put(dayOfWeek,d);
+            this.timetableLunch.put(dayOfWeek,d);
             return true;
         } catch (DatatypeConfigurationException e) {
             Log.e(METHOD_NAME, e.getMessage());
@@ -566,7 +577,7 @@ public class Restaurant {
      * @param timeEnd End hour of the shift.
      * @return true if saved correctly, false otherwise
      */
-    boolean setDurationDinner(int dayOfWeek,String timeStart, String timeEnd){
+    public boolean setDurationDinner(int dayOfWeek,String timeStart, String timeEnd){
         final String METHOD_NAME = this.getClass().getName()+" - setDurationDinner";
 
         if(dayOfWeek < 0 || dayOfWeek > 6){
@@ -579,7 +590,7 @@ public class Restaurant {
             Date startDate = sdfStart.parse(timeStart);
             Date endDate = sdfEnd.parse(timeEnd);
             Duration d = DatatypeFactory.newInstance().newDuration(endDate.getTime()-startDate.getTime());
-            this.timetable.get(1).put(dayOfWeek,d);
+            this.timetableLunch.put(dayOfWeek,d);
             return true;
         } catch (DatatypeConfigurationException e) {
             Log.e(METHOD_NAME, e.getMessage());
@@ -588,5 +599,13 @@ public class Restaurant {
             Log.e(METHOD_NAME,e.getMessage());
             return false;
         }
+    }
+
+    public void setTimetableLunch(Map<Integer,Duration> t){
+        this.timetableLunch.putAll(t);
+    }
+
+    public void setTimetableDinner(Map<Integer,Duration> t){
+        this.timetableDinner.putAll(t);
     }
 }
