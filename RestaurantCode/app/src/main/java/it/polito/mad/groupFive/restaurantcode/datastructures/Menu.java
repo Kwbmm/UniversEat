@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -29,6 +30,7 @@ public class Menu {
     private int type;
     private int choiceAmount;
     private ArrayList<Course> courses = new ArrayList<>();
+    private ArrayList<Option> options = new ArrayList<>();
     private boolean ticket;
     private boolean beverage;
     private boolean serviceFee;
@@ -90,7 +92,13 @@ public class Menu {
             Log.e(METHOD_NAME, e.getMessage());
             throw new MenuException(e.getMessage());
         }
-        Menu dummy = this.r.getMenuByID(this.mid);
+        Menu dummy = null;
+        try {
+            dummy = this.r.getMenuByID(this.mid);
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+            throw new MenuException(e.getMessage());
+        }
         this.copyData(dummy);
     }
 
@@ -99,17 +107,19 @@ public class Menu {
      * @param dummy A dummy Menu object, on which the JSON data is written to.
      */
     private void copyData(Menu dummy) {
-         this.mid = dummy.getMid();
-         this.name = dummy.getName();
-         this.description = dummy.getDescription();
-         this.price = dummy.getPrice();
-         this.image = dummy.getImageUri();
-         this.type = dummy.getType();
-         this.choiceAmount = dummy.getChoiceAmount();
-         this.courses = dummy.getCourses();
-         this.ticket = dummy.acceptTicket();
-         this.beverage = dummy.isBeverage();
-         this.serviceFee = dummy.isServiceFee();
+        this.mid = dummy.getMid();
+        this.name = dummy.getName();
+        this.description = dummy.getDescription();
+        this.price = dummy.getPrice();
+        this.image = dummy.getImageUri();
+        this.type = dummy.getType();
+        this.choiceAmount = dummy.getChoiceAmount();
+        this.courses = dummy.getCourses();
+        this.ticket = dummy.acceptTicket();
+        this.beverage = dummy.isBeverage();
+        this.serviceFee = dummy.isServiceFee();
+        this.options = dummy.getOptions();
+
     }
 
     /**
@@ -291,6 +301,27 @@ public class Menu {
 
     /**
      *
+     * @return An ArrayList with all the options for this menu.
+     */
+    public ArrayList<Option> getOptions(){ return this.options; }
+
+    /**
+     * Looks for an Option object with the given ID in the set of available Options.
+     * If a match is found, the corresponding Option object is returned, otherwise the method returns
+     * null.
+     *
+     * @param optID The ID to look for.
+     * @return Option object if successful, null otherwise
+     */
+    public Option getOptionByID(int optID) {
+        for(Option o : this.options)
+            if(o.getOptID() == optID)
+                return o;
+        return null;
+    }
+
+    /**
+     *
      * @param mid The ID of the menu
      * @throws MenuException if menu id is negative.
      */
@@ -394,4 +425,10 @@ public class Menu {
      * @param serviceFee true or false
      */
     public void setServiceFee(boolean serviceFee) { this.serviceFee = serviceFee; }
+
+    /**
+     *
+     * @param opts An ArrayList of options to set on this menu.
+     */
+    public void setOptions(ArrayList<Option> opts){ this.options = opts; }
 }
