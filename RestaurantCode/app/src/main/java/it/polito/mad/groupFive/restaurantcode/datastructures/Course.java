@@ -2,6 +2,7 @@ package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -35,7 +36,7 @@ public class Course {
      * Create an instance of Course: requires, as parameter, its restaurant object.
      * The ID of the course is generated automatically.
      *
-     * @param restaurant The restaurant object whose course belongs to.
+     * @param restaurant The restaurant object whose this course belongs to.
      */
     public Course(Restaurant restaurant){
         this.r = restaurant;
@@ -59,26 +60,35 @@ public class Course {
 
     /**
      * Generate a random integer in the range [1, Integer.MAX_VALUE]
-     * @return
+     * @return In integer in the range [1, Integer.MAX_VALUE]
      */
     private static int randInt() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
         else{
             Random rand= new Random();
-            return rand.nextInt(Integer.MAX_VALUE -1 );
+            int result;
+            if((result=rand.nextInt(Integer.MAX_VALUE)) == 0)
+                return Course.randInt();
+            return result;
         }
     }
 
     /**
-     * Fetch the data corresponding to this Course ID from the JSON file. Fetch operations are
-     * always performed inside the restaurant object, this is just a call to that method.
+     * Fetch the data corresponding to the Course ID of this object from the JSON file.
+     * Fetch operations are always performed inside the restaurant object, this is just a call to
+     * that method.
      *
-     * @throws RestaurantException If fetch fails inside restaurant object
+     * @throws CourseException If fetch fails
      */
-    public void getData() throws RestaurantException {
+    public void getData() throws CourseException {
         final String METHOD_NAME = this.getClass().getName()+" - getData";
-        this.r.getData();
+        try {
+            this.r.getData();
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+            throw new CourseException(e.getMessage());
+        }
         for(Menu m :this.r.getMenus()){
             if(m.getCourseByID(this.cid) != null) {
                 Course dummy = m.getCourseByID(this.cid);
