@@ -45,7 +45,7 @@ public class Course {
 
     /**
      * Create an instance of Course: requires, as parameters, its restaurant object and an integer
-     * positive ID to uniquely identify this object.
+     * positive ID to uniquely identifying this object.
      *
      * @param restaurant The restaurant object whose course belongs to
      * @param cid A positive integer unique identifier.

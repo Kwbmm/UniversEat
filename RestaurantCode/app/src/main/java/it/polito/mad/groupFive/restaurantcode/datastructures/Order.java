@@ -39,7 +39,7 @@ public class Order {
 
     /**
      * Create an instance of Order: requires, as parameters, its restaurant object and an integer
-     * positive ID to uniquely identify this object.
+     * positive ID to uniquely identifying this object.
      *
      * @param restaurant The restaurant object whose course belongs to
      * @param oid A positive integer unique identifier.
