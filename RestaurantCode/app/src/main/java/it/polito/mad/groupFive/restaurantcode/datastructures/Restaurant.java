@@ -71,6 +71,13 @@ public class Restaurant {
     private ArrayMap<Integer, Duration> timetableLunch = new ArrayMap<>();
     private ArrayMap<Integer, Duration> timetableDinner = new ArrayMap<>();
 
+    /**
+     * Create a Restaurant object. Requires, as parameter, the Android Application Context of the
+     * activity instantiating this class.
+     * The ID uniquely identifying this restaurant is generated automatically.
+     *
+     * @param appContext Application Context
+     */
     public Restaurant(Context appContext) {
         final String METHOD_NAME = this.getClass().getName()+" - constructor";
         this.rid = Restaurant.randInt();
@@ -82,6 +89,15 @@ public class Restaurant {
             this.copyData(dummy);
     }
 
+    /**
+     * Create a Restaurant object. Requires, as parameters, the Android Application Context of the
+     * activity instantiating this class and a positive integer uniquely identifying the restaurant
+     * object.
+     *
+     * @param appContext Application Context
+     * @param rid Positive Integer unique identifier
+     * @throws RestaurantException
+     */
     public Restaurant(Context appContext, int rid) throws RestaurantException {
         final String METHOD_NAME = this.getClass().getName()+" - constructor";
         if(rid < 0)
@@ -89,12 +105,18 @@ public class Restaurant {
         this.rid = rid;
         this.appContext = appContext;
         Restaurant dummy;
-        if((dummy=this.readJSONFile())== null)
+        if((dummy=this.readJSONFile())== null){
             Log.e(METHOD_NAME, "Dummy is null");
+            throw new RestaurantException("Restaurant dummy object used to fill the current object is null");
+        }
         else
             this.copyData(dummy);
     }
 
+    /**
+     * Copy all the data took from the JSON file on this object.
+     * @param dummy A dummy Restaurant object, on which the JSON data is written to.
+     */
     private void copyData(Restaurant dummy) {
         final String METHOD_NAME = this.getClass().getName()+" - copyData";
 
@@ -117,6 +139,17 @@ public class Restaurant {
         this.timetableDinner = dummy.getTimetableDinner();
     }
 
+    /**
+     * Reads the JSON file corresponding to this restaurant and fills this class with the data found
+     * in the file.
+     * If the file doesn't exist CreateJSONFile is called and the file is created. Then the reading
+     * is performed again: this time the file will be found and fields of this class will be filled
+     * with null values (because the created file is empty).
+     *
+     * If a fail occurs, the error message is logged and this method returns null.
+     *
+     * @return A Restaurant object or null if fails.
+     */
     private Restaurant readJSONFile(){
         final String METHOD_NAME = this.getClass().getName()+" - readJSONFile";
 
@@ -145,6 +178,11 @@ public class Restaurant {
         }
     }
 
+    /**
+     * Create the JSON file corresponding to this object. The JSON file is identified by the
+     * restaurant ID set at instantiation time.
+     * If an error occurs, the error is logged.
+     */
     private void createJSONFile() {
         final String METHOD_NAME = this.getClass().getName()+" - createJSONFile";
 
@@ -161,15 +199,30 @@ public class Restaurant {
         }
     }
 
+    /**
+     * Generate a random integer in the range [1, Integer.MAX_VALUE]
+     * @return In integer in the range [1, Integer.MAX_VALUE]
+     */
     public static int randInt() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
         else{
             Random rand= new Random();
-            return rand.nextInt(Integer.MAX_VALUE -1 );
+            int result;
+            if((result=rand.nextInt(Integer.MAX_VALUE)) == 0)
+                return Restaurant.randInt();
+            return result;
         }
     }
 
+    /**
+     * Fetch the data corresponding to the Restaurant ID of this object from the JSON file.
+     * This method is in charge of filling all the other classes of this data set (Menu, Order and
+     * Course).
+     * If an error occurs, it is logged and a RestaurantException is thrown.
+     *
+     * @throws RestaurantException If fetch fails
+     */
     public void getData() throws RestaurantException {
         final String METHOD_NAME = this.getClass().getName()+" - getData";
         try {
@@ -182,7 +235,9 @@ public class Restaurant {
                 sb.append(line);
             }
             String json = sb.toString();
-            Gson root = new GsonBuilder().registerTypeAdapter(Uri.class, new CustomUriDeserializer()).create();
+            Gson root = new GsonBuilder()
+                    .registerTypeAdapter(Uri.class, new CustomUriDeserializer())
+                    .create();
             Restaurant dummy = root.fromJson(json,Restaurant.class);
             this.copyData(dummy);
         } catch (IOException e) {
@@ -191,6 +246,14 @@ public class Restaurant {
         }
     }
 
+    /**
+     * Saves the current data store in this object to its JSON file.
+     * Note that this method also saves the data for the custom sub-objects embedded inside this
+     * class (Order, Menu and Course).
+     * In case of fail, the error is logged and a RestaurantException is thrown.
+     *
+     * @throws RestaurantException
+     */
     public void saveData() throws RestaurantException {
         final String METHOD_NAME = this.getClass().getName()+" - saveData";
 
@@ -206,6 +269,7 @@ public class Restaurant {
             fos.write(output.getBytes());
             fos.close();
         } catch (IOException e) {
+            Log.e(METHOD_NAME,e.getMessage());
             throw new RestaurantException(e.getMessage());
         }
     }
@@ -281,6 +345,10 @@ public class Restaurant {
      */
     public String getTelephone() { return this.telephone; }
 
+    /**
+     *
+     * @return a string with the ZIP code
+     */
     public String getZIPCode() { return this.ZIPCode; }
 
     /**
@@ -307,7 +375,7 @@ public class Restaurant {
      * @return An ArrayList of all the menus of the requested type, or null if nothing is found.
      */
     public ArrayList<Menu> getMenusByType(int type){
-        ArrayList<Menu> output = new ArrayList<Menu>();
+        ArrayList<Menu> output = new ArrayList<>();
         for(Menu m : this.menus)
             if(m.getType() == type)
                 output.add(m);
@@ -318,10 +386,11 @@ public class Restaurant {
      *
      * @param mid The id of the menu to search for.
      * @return The Menu object or null if nothing is found.
+     * @throws RestaurantException if menu id is negative.
      */
-    public Menu getMenuByID(int mid) throws MenuException {
+    public Menu getMenuByID(int mid) throws RestaurantException {
         if (mid <0)
-            throw new MenuException("Menu ID must be positive");
+            throw new RestaurantException("Menu ID must be positive");
         for(Menu m : this.menus)
             if(m.getMid() == mid)
                 return m;
@@ -338,10 +407,11 @@ public class Restaurant {
      *
      * @param oid The id of the order to search for.
      * @return The requested order or null if nothing is found.
+     * @throws RestaurantException if order is negative.
      */
-    public Order getOrderByID(int oid) throws OrderException {
+    public Order getOrderByID(int oid) throws RestaurantException {
         if(oid <0)
-            throw new OrderException("Order ID must be positive");
+            throw new RestaurantException("Order ID must be positive");
         for(Order o : this.orders)
             if(o.getOid() == oid)
                 return o;
@@ -352,11 +422,12 @@ public class Restaurant {
      *
      * @param uid The user id who submitted
      * @return An ArrayList of Orders or null if nothing is found.
+     * @throws RestaurantException if user id is negative.
      */
-    public ArrayList<Order> getOrdersByUserID(int uid) throws UserException {
+    public ArrayList<Order> getOrdersByUserID(int uid) throws RestaurantException {
         if(uid <0)
-            throw new UserException("User ID must be positive");
-        ArrayList<Order> output = new ArrayList<Order>();
+            throw new RestaurantException("User ID must be positive");
+        ArrayList<Order> output = new ArrayList<>();
         for(Order o : this.orders)
             if(o.getUid() == uid)
                 output.add(o);
@@ -509,10 +580,11 @@ public class Restaurant {
     /**
      *
      * @param uid Set the id of the restaurant owner
+     * @throws RestaurantException if user id is negative
      */
-    public void setUid(int uid) throws UserException {
+    public void setUid(int uid) throws RestaurantException {
         if(uid < 0)
-            throw new UserException("User ID must be positive");
+            throw new RestaurantException("User ID must be positive");
         this.uid = uid;
     }
 
@@ -532,8 +604,17 @@ public class Restaurant {
         this.telephone = telephone;
     }
 
+    /**
+     *
+     * @param ZIPCode the zip code of the restaurant's city
+     */
     public void setZIPCode(String ZIPCode){ this.ZIPCode = ZIPCode; }
 
+    /**
+     *
+     * @param tickets An ArrayMap where the Integer representing the ticket is the key, while the
+     *                string is the name of the ticket.
+     */
     public void setTickets(ArrayMap<Integer, String> tickets){ this.tickets = tickets; }
 
     /**
@@ -607,10 +688,18 @@ public class Restaurant {
         }
     }
 
+    /**
+     *
+     * @param t A(n) (Array)Map of the timetable of the Lunch.
+     */
     public void setTimetableLunch(Map<Integer,Duration> t){
         this.timetableLunch.putAll(t);
     }
 
+    /**
+     *
+     * @param t A(n) (Array)Map of the timetable of the Dinner.
+     */
     public void setTimetableDinner(Map<Integer,Duration> t){
         this.timetableDinner.putAll(t);
     }
