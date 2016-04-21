@@ -79,12 +79,12 @@ public class Order {
         final String METHOD_NAME = this.getClass().getName()+" - getData";
         try {
             this.r.getData();
+            Order dummy = this.r.getOrderByID(this.oid);
+            this.copyData(dummy);
         } catch (RestaurantException e) {
             Log.e(METHOD_NAME, e.getMessage());
             throw new OrderException(e.getMessage());
         }
-        Order dummy = this.r.getOrderByID(this.oid);
-        this.copyData(dummy);
     }
 
     /**
