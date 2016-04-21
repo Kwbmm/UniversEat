@@ -205,21 +205,8 @@ public class CreateRestaurant_4 extends Fragment {
                 CheckBox cb = (CheckBox) this.parentView.findViewById(this.weekdayToRL_IDs.get(this.weekDays[i])).findViewById(R.id.checkBox);
                 if(cb.isChecked()){
                     Button bFrom = (Button) this.parentView.findViewById(this.weekdayToRL_IDs.get(this.weekDays[i])).findViewById(R.id.textClockFrom);
-                    /**
-                     * TODO Getter/Setter in restaurant class for duration.
-                     * Create an ArrayMap<Integer,Duration>
-                     *      The Integer key is the number of the weekday (from 0 to 6)
-                     *      The Duration value is an object of type Duration
-                     *      See: https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html
-                     *
-                     * Methods will be:
-                     *      void setDuration(int dayOfWeek,String timeStart, String timeEnd);
-                     *      void setDuration(Duration d);
-                     *      void setTimetable(ArrayMap<Integer,Duration>);
-                     *
-                     *      Duration getDuration(int dayOfWeek);
-                     *      ArrayMap<Integer,Duration> getTimetable();
-                     */
+
+                    //TODO Fix this.
                     Button bTo = (Button) this.parentView.findViewById(this.weekdayToRL_IDs.get(this.weekDays[i])).findViewById(R.id.textClockTo);
                     //restaurant.setDuration(i,bFrom.getText(),bTo.getText());
                 }

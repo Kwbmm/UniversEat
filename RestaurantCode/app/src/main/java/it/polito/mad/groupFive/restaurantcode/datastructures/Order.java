@@ -1,91 +1,104 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.os.Build;
+import android.util.Log;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * @author Marco Ardizzone
  * @class Order
- * @date 04/04/16
+ * @date 2016-04-19
  * @brief Order class
  */
 public class Order {
 
-    private JSONObject JSONFile = null;
+    transient private Restaurant r = null;
 
     private int oid;
     private int uid;
     private int mid;
     private int rid;
     private Date date=null;
-    private Restaurant r = null;
 
+    /**
+     * Create an instance of Order: requires, as parameter, its restaurant object.
+     * The ID of the order is generated automatically.
+     *
+     * @param restaurant The restaurant object whose this order belongs to.
+     */
     public Order(Restaurant restaurant){
         this.r = restaurant;
-        this.JSONFile = restaurant.getJSONFile();
+        this.oid = Order.randInt();
     }
 
+    /**
+     * Create an instance of Order: requires, as parameters, its restaurant object and an integer
+     * positive ID to uniquely identifying this object.
+     *
+     * @param restaurant The restaurant object whose course belongs to
+     * @param oid A positive integer unique identifier.
+     * @throws OrderException Thrown if oid is negative.
+     */
     public Order(Restaurant restaurant, int oid) throws OrderException {
         this.r = restaurant;
         if(oid < 0)
             throw new OrderException("Order ID must be positive");
         this.oid = oid;
-        this.JSONFile = restaurant.getJSONFile();
-    }
-
-    public Order(Restaurant restaurant, int oid, int rid) throws OrderException {
-        this.r = restaurant;
-        if(oid < 0)
-            throw new OrderException("Order ID must be positive");
-        this.oid = oid;
-        this.JSONFile = restaurant.getJSONFile();
-        this.rid = rid;
     }
 
     /**
-     * Reads data from JSON configuration file.
-     * If some field is missing, it throws JSONException.
-     *
-     * @throws JSONException if some field is missing
-     * @throws ParseException if date from JSON file cannot be parsed correctly
+     * Generate a random integer in the range [1, Integer.MAX_VALUE]
+     * @return In integer in the range [1, Integer.MAX_VALUE]
      */
-    public void getData() throws JSONException, ParseException {
-        for (int i = 0; i < this.JSONFile.getJSONArray("orders").length(); i++) {
-            if(this.JSONFile.getJSONArray("orders").getJSONObject(i).getInt("id") == this.oid){
-                JSONObject order = this.JSONFile.getJSONArray("orders").getJSONObject(i);
-                this.mid = order.getInt("mid");
-                this.uid = order.getInt("uid");
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
-                this.date = sdf.parse(order.getString("date"));
-                break;
-            }
+    private static int randInt() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
+        else{
+            Random rand= new Random();
+            int result;
+            if((result=rand.nextInt(Integer.MAX_VALUE)) == 0)
+                return Order.randInt();
+            return result;
         }
     }
 
     /**
-     * THIS METHOD SHOULD NEVER BE CALLED ON IT'S OWN!
-     * Returns a JSONObject to saveData method of Restaurant class.
+     * Fetch the data corresponding to the Order ID of this object from the JSON file.
+     * Fetch operations are always performed inside the restaurant object, this is just a call to
+     * that method.
      *
-     * @return JSONObject with the current data of the Order class.
-     * @throws JSONException
+     * @throws OrderException If fetch fails
      */
-    public JSONObject saveData() throws JSONException{
-        JSONObject order = new JSONObject();
-        order.put("id",this.oid);
-        order.put("uid",this.uid);
-        order.put("mid",this.mid);
-        order.put("rid",this.rid);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
-        order.put("date",sdf.format(this.date));
-        return order;
+    public void getData() throws OrderException {
+        final String METHOD_NAME = this.getClass().getName()+" - getData";
+        try {
+            this.r.getData();
+            Order dummy = this.r.getOrderByID(this.oid);
+            this.copyData(dummy);
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+            throw new OrderException(e.getMessage());
+        }
     }
+
+    /**
+     * Copy all the data took from the JSON file on this object.
+     * @param dummy A dummy Order object, on which the JSON data is written to.
+     */
+    private void copyData(Order dummy) {
+        this.oid = dummy.getOid();
+        this.uid = dummy.getUid();
+        this.mid = dummy.getMid();
+        this.rid = dummy.getRid();
+        this.date = dummy.getDate();
+    }
+
     /**
      *
      * @return The order ID
@@ -106,15 +119,20 @@ public class Order {
 
     /**
      *
-     * @return The restaurant ID to which this order belongs to.
+     * @return The restaurant ID whose this order belongs to
      */
-    public int getRestaurantID(){ return this.rid;}
+    public int getRid(){ return this.rid; }
 
+    /**
+     *
+     * @return The date of the order
+     */
     public Date getDate(){ return this.date;}
 
     /**
      *
      * @param oid The order ID
+     * @throws OrderException if order id is negative
      */
     public void setOid(int oid) throws OrderException {
         if(oid < 0)
@@ -125,20 +143,39 @@ public class Order {
     /**
      *
      * @param uid The user ID making this order
+     * @throws OrderException if user id is negative.
      */
-    public void setUid(int uid){ this.uid = uid;}
+    public void setUid(int uid) throws OrderException {
+        if(uid < 0 )
+            throw new OrderException("User ID must be positive");
+        this.uid = uid;
+    }
 
     /**
      *
      * @param mid The menu ID ordered
+     * @throws OrderException if menu id is negative
      */
-    public void setMid(int mid){ this.mid = mid;}
+    public void setMid(int mid) throws OrderException {
+        if(mid < 0)
+            throw new OrderException("Menu ID must be positive");
+        this.mid = mid;
+    }
 
     /**
      *
      * @param rid The restaurant ID to which this order belong to.
+     * @throws OrderException if restaurant id is negative.
      */
-    public void setRestaurantID(int rid){ this.rid= rid;}
+    public void setRid(int rid) throws OrderException {
+        if(rid < 0)
+            throw new OrderException("Restaurant ID must be positive");
+        this.rid= rid;
+    }
 
+    /**
+     *
+     * @param d Date of the order
+     */
     public void setDate(Date d){ this.date = d;}
 }
