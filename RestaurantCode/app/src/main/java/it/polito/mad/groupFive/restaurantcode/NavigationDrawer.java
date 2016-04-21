@@ -164,68 +164,9 @@ public class NavigationDrawer extends AppCompatActivity {
                 }
 
             }
-            else{if (position==0){
+            else{if
 
-                int count=1;
-
-                Drawable drawable= getDrawable(R.drawable.ic_account_circle_black_24dp);
-
-
-                try {
-                    Restaurant rest = new User(view.getContext(), 2, 2).getRestaurant();
-                    Order order =new Order(rest,2);
-                    order.setDate(new Date());
-                    order.setMid(14);
-                    order.setUid(22);
-                    order.saveData();
-
-                    rest.setUid(2);
-                    rest.setXcoord(0.0f);
-                    rest.setYcoord(0.0f);
-                    rest.setName("Pippo");
-                    rest.setDescription("Figo");
-                    rest.setState("Bello");
-                    rest.setRating(3.5f);
-                    rest.setCity("Politia");
-                    rest.setAddress("Via vai");
-                    rest.getOrders().add(order);
-                    Log.v("create",String.valueOf(rest.getOrders().size()));
-                    //rest.setImage64FromDrawable(drawable);
-                    rest.saveData();
-
-                    //rest.getData();
-                    ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> ms = rest.getMenus();
-                    for (int i = 0; i < 5; i++) {
-
-                        it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest, count);
-                        mn.setName("Menu");
-                        mn.setDescription("Description");
-                        mn.setPrice(1.5f);
-                        mn.setTicket(true);
-                        mn.setType(1);
-                        //mn.setImage64FromDrawable(drawable);
-                        mn.saveData();
-                        ms.add(mn);
-                        count++;
-
-                    }
-                    it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest, count);
-                    mn.setName("Orecchiette tris");
-                    mn.setDescription("orecchiette, patate, pollo");
-                    mn.setPrice(1.5f);
-                    mn.setTicket(true);
-                    mn.setType(2);
-                    mn.saveData();
-                    ms.add(mn);
-                    rest.saveData();
-                    SharedPreferences sharedPreferences=view.getContext().getSharedPreferences(getString(R.string.user_pref),view.getContext().MODE_PRIVATE);
-                    SharedPreferences.Editor editor= sharedPreferences.edit();
-                    editor.putInt("uid",2);
-                    editor.putInt("rid",2);
-                    editor.commit();
-
-                }catch (Exception e){}
-
+                    (position==0){
             }
             if(position==2){
                 Intent intent= new Intent(view.getContext(),Restaurant_management.class);

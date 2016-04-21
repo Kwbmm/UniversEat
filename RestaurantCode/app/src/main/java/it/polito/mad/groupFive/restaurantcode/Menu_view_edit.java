@@ -21,6 +21,9 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -201,6 +204,14 @@ public class Menu_view_edit extends NavigationDrawer {
 
         public void remove(int position){
             menus.remove(position);
+            rest.setMenus(menus);
+            try {
+                rest.saveData();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             menusshared=menus;
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, menus.size());

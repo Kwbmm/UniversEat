@@ -67,6 +67,8 @@
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_hot_black"
+            android:tint="#a60101" />
             android:layout_marginLeft="10dp"/>
         <ImageView
             android:layout_width="40dp"
@@ -74,6 +76,8 @@
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@id/menu_icon1"
             android:layout_marginLeft="5dp"
+            android:src="@drawable/ic_nogluten_black"
+            android:tint="#c8a004"
             android:id="@+id/menu_icon2"/>
         <ImageView
             android:layout_width="40dp"
@@ -81,6 +85,8 @@
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@id/menu_icon2"
             android:layout_marginLeft="5dp"
+            android:src="@drawable/ic_vegetarian_black"
+            android:tint="#951f9b"
             android:id="@+id/menu_icon3"/>
         <ImageView
             android:layout_width="40dp"
@@ -88,7 +94,9 @@
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@id/menu_icon3"
             android:layout_marginLeft="5dp"
-            android:id="@+id/menu_icon4"/>
+            android:id="@+id/menu_icon4"
+            android:src="@drawable/ic_vegan_black"
+            android:tint="#007f24" />
 
 
 

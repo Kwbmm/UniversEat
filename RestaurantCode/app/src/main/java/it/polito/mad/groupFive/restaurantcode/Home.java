@@ -3,6 +3,7 @@ package it.polito.mad.groupFive.restaurantcode;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,7 +30,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
+import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
@@ -38,6 +41,8 @@ public class Home extends NavigationDrawer {
     private MenuAdapter adp;
     private Restaurant rest;
     private SharedPreferences sharedPreferences;
+    private View parent;
+    private int user;
 
 
 
@@ -49,15 +54,83 @@ public class Home extends NavigationDrawer {
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_home, mlay);
+        parent=mlay;
         getMenus();
 
-
+        if(menusshared!=null){
         adp= new MenuAdapter(menusshared);
         RecyclerView recyclerView=(RecyclerView)findViewById(R.id.home_menu_rw);
         recyclerView.setAdapter(adp);
         LinearLayoutManager llm=new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
+        recyclerView.setLayoutManager(llm);}
+
+        ImageButton option= (ImageButton)findViewById(R.id.opt);
+        option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int count=1;
+                try {
+                    Restaurant rest = new User(v.getContext(), 2, 2).getRestaurant();
+                    Order order =new Order(rest,2);
+                    order.setDate(new Date());
+                    order.setMid(14);
+                    order.setUid(22);
+                    order.saveData();
+
+                    rest.setUid(2);
+                    rest.setXcoord(0.0f);
+                    rest.setYcoord(0.0f);
+                    rest.setName("Pippo");
+                    rest.setDescription("Figo");
+                    rest.setState("Bello");
+                    rest.setRating(3.5f);
+                    rest.setCity("Politia");
+                    rest.setAddress("Via vai");
+                    rest.getOrders().add(order);
+                    Log.v("create",String.valueOf(rest.getOrders().size()));
+                    //rest.setImage64FromDrawable(drawable);
+                    rest.saveData();
+
+                    //rest.getData();
+                    ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> ms = rest.getMenus();
+                    for (int i = 0; i < 5; i++) {
+
+                        it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest, count);
+                        mn.setName("Menu");
+                        mn.setDescription("Description");
+                        mn.setPrice(1.5f);
+                        mn.setTicket(true);
+                        mn.setType(1);
+                        //mn.setImage64FromDrawable(drawable);
+                        mn.saveData();
+                        ms.add(mn);
+                        count++;
+
+                    }
+                    it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest, count);
+                    mn.setName("Orecchiette tris");
+                    mn.setDescription("orecchiette, patate, pollo");
+                    mn.setPrice(1.5f);
+                    mn.setTicket(true);
+                    mn.setType(2);
+                    mn.saveData();
+                    ms.add(mn);
+                    rest.saveData();
+                    SharedPreferences sharedPreferences=v.getContext().getSharedPreferences(getString(R.string.user_pref),v.getContext().MODE_PRIVATE);
+                    SharedPreferences.Editor editor= sharedPreferences.edit();
+                    editor.putInt("uid",2);
+                    editor.putInt("rid",2);
+                    editor.commit();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                //parent.invalidate();
+            }
+        });
+
     }
 
 private void getMenus(){
@@ -65,15 +138,15 @@ private void getMenus(){
     int rid, uid;
     uid = sharedPreferences.getInt("uid", -1);
     rid = sharedPreferences.getInt("rid", -1);
-    try {
-
-        rest = new User(this, rid, uid).getRestaurant();
-        rest.getData();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-
-    menusshared = rest.getMenus();
+    user=uid;
+    Log.v("uid",uid+" ");
+        try {if(uid>0){
+                rest = new User(this, rid, uid).getRestaurant();
+                rest.getData();
+                menusshared = rest.getMenus();}else menusshared=null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 }
 
