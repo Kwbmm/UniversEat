@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonReader;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,10 +32,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 import it.polito.mad.groupFive.restaurantcode.libs.CustomUriDeserializer;
 import it.polito.mad.groupFive.restaurantcode.libs.CustomUriSerializer;
 
@@ -68,8 +63,8 @@ public class Restaurant {
     private ArrayList<Menu> menus=new ArrayList<>();
     private ArrayList<Order> orders=new ArrayList<>();
     private ArrayMap<Integer, String> tickets = new ArrayMap<>();
-    private ArrayMap<Integer, Duration> timetableLunch = new ArrayMap<>();
-    private ArrayMap<Integer, Duration> timetableDinner = new ArrayMap<>();
+    private ArrayMap<Integer, Date[]> timetableLunch = new ArrayMap<>();
+    private ArrayMap<Integer, Date[]> timetableDinner = new ArrayMap<>();
 
     /**
      * Create a Restaurant object. Requires, as parameter, the Android Application Context of the
@@ -463,7 +458,7 @@ public class Restaurant {
      *
      * @return ArrayMap of the LUNCH timetable.
      */
-    public ArrayMap<Integer,Duration> getTimetableLunch(){ return this.timetableLunch; }
+    public ArrayMap<Integer,Date[]> getTimetableLunch(){ return this.timetableLunch; }
 
     /**
      * Returns an ArrayMap with keys the number of the day of the week (from 0 [Monday] to 6
@@ -471,7 +466,7 @@ public class Restaurant {
      *
      * @return ArrayMap of the DINNER timetable.
      */
-    public ArrayMap<Integer,Duration> getTimetableDinner(){ return this.timetableDinner; }
+    public ArrayMap<Integer,Date[]> getTimetableDinner(){ return this.timetableDinner; }
 
     /**
      *
@@ -626,14 +621,14 @@ public class Restaurant {
      * @param dayOfWeek Day of the week during which this shift takes place. Must be between 0 and 6
      * @param timeStart Start hour of the shift.
      * @param timeEnd End hour of the shift.
-     * @return true if saved correctly, false otherwise
+     * @throws RestaurantException if day of the week is not in range, or date parsing fails.
      */
-    public boolean setDurationLunch(int dayOfWeek,String timeStart, String timeEnd) {
+    public void setDurationLunch(int dayOfWeek,String timeStart, String timeEnd) throws RestaurantException {
         final String METHOD_NAME = this.getClass().getName()+" - setDurationLunch";
 
         if(dayOfWeek < 0 || dayOfWeek > 6){
             Log.e(METHOD_NAME, "Day of week is not in the expected range 0-6");
-            return false;
+            throw new RestaurantException("Day of week is not in the expected range 0-6");
         }
 
         SimpleDateFormat sdfStart = new SimpleDateFormat("HH:mm", Locale.getDefault());
@@ -641,15 +636,11 @@ public class Restaurant {
         try {
             Date startDate = sdfStart.parse(timeStart);
             Date endDate = sdfEnd.parse(timeEnd);
-            Duration d = DatatypeFactory.newInstance().newDuration(endDate.getTime()-startDate.getTime());
-            this.timetableLunch.put(dayOfWeek,d);
-            return true;
-        } catch (DatatypeConfigurationException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            return false;
+
+            this.timetableLunch.put(dayOfWeek,new Date[]{startDate,endDate});
         } catch (ParseException e) {
             Log.e(METHOD_NAME,e.getMessage());
-            return false;
+            throw new RestaurantException(e.getMessage());
         }
     }
 
@@ -662,45 +653,48 @@ public class Restaurant {
      * @param dayOfWeek Day of the week during which this shift takes place. Must be between 0 and 6
      * @param timeStart Start hour of the shift.
      * @param timeEnd End hour of the shift.
-     * @return true if saved correctly, false otherwise
+     * @throws RestaurantException if day of the week is not in range, or date parsing fails.
      */
-    public boolean setDurationDinner(int dayOfWeek,String timeStart, String timeEnd){
+    public void setDurationDinner(int dayOfWeek,String timeStart, String timeEnd) throws RestaurantException {
         final String METHOD_NAME = this.getClass().getName()+" - setDurationDinner";
 
         if(dayOfWeek < 0 || dayOfWeek > 6){
             Log.e(METHOD_NAME, "Day of week is not in the expected range 0-6");
-            return false;
+            throw new RestaurantException("Day of week is not in the expected range 0-6");
         }
         SimpleDateFormat sdfStart = new SimpleDateFormat("HH:mm", Locale.getDefault());
         SimpleDateFormat sdfEnd = new SimpleDateFormat("HH:mm", Locale.getDefault());
         try {
             Date startDate = sdfStart.parse(timeStart);
             Date endDate = sdfEnd.parse(timeEnd);
-            Duration d = DatatypeFactory.newInstance().newDuration(endDate.getTime()-startDate.getTime());
-            this.timetableLunch.put(dayOfWeek,d);
-            return true;
-        } catch (DatatypeConfigurationException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            return false;
+            this.timetableDinner.put(dayOfWeek,new Date[]{startDate,endDate});
         } catch (ParseException e) {
             Log.e(METHOD_NAME,e.getMessage());
-            return false;
+            throw new RestaurantException(e.getMessage());
         }
     }
 
     /**
-     *
-     * @param t A(n) (Array)Map of the timetable of the Lunch.
+     * Set the timetable for lunch time of this restaurant.
+     * Input parameter is a Map with key the days of the week (from 0 to 6) and as value an array
+     * of Date. The array must be of length 2. It should be structured as:
+     * [0] startHour
+     * [1] endHour
+     * @param timetable A(n) (Array)Map of the timetable of the Lunch.
      */
-    public void setTimetableLunch(Map<Integer,Duration> t){
-        this.timetableLunch.putAll(t);
+    public void setTimetableLunch(Map<Integer,Date[]> timetable){
+        this.timetableLunch.putAll(timetable);
     }
 
     /**
-     *
-     * @param t A(n) (Array)Map of the timetable of the Dinner.
+     * Set the timetable for dinner time of this restaurant.
+     * Input parameter is a Map with key the days of the week (from 0 to 6) and as value an array
+     * of Date. The array must be of length 2. It should be structured as:
+     * [0] startHour
+     * [1] endHour
+     * @param timetable A(n) (Array)Map of the timetable of the Dinner.
      */
-    public void setTimetableDinner(Map<Integer,Duration> t){
-        this.timetableDinner.putAll(t);
+    public void setTimetableDinner(Map<Integer,Date[]> timetable){
+        this.timetableDinner.putAll(timetable);
     }
 }
