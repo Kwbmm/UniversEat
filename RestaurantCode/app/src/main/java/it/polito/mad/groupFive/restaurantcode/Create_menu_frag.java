@@ -89,7 +89,7 @@ public class Create_menu_frag extends Fragment {
     private EditText txtdesc;
     private int type=1;
     private int value;
-    private String spin = "Fixed";
+    private String spin = getString(R.string.create_menu_frag_fixed);
     int mid;
     private SharedPreferences file;
     private SharedPreferences.Editor editor;
@@ -155,7 +155,7 @@ public class Create_menu_frag extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 spin = parent.getItemAtPosition(position).toString();
-                String s = "Multiple choice";
+                String s = getString(R.string.create_menu_frag_multiple_choice);
                 if(spin.equals(s)) {
                     numberPicker.setEnabled(true);
                     numberPicker.setMinValue(1);

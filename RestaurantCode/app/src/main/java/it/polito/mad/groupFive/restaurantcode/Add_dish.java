@@ -85,16 +85,16 @@ public class Add_dish extends Fragment {
         parent=view;
         Spinner type=(Spinner) view.findViewById(R.id.nd_type);
         ArrayList<String> strings=new ArrayList<>();
-        strings.add("Starter");
-        strings.add("Main dish");
+        strings.add(getString(R.string.add_dish_starter));
+        strings.add(getString(R.string.add_dish_main_dish));
         ArrayAdapter<String> tp =new ArrayAdapter<String>(view.getContext(),android.R.layout.simple_spinner_dropdown_item,strings);
         type.setAdapter(tp);
 
         Spinner type2=(Spinner) view.findViewById(R.id.nd_type_2);
         ArrayList<String> strings_2=new ArrayList<>();
-        strings_2.add("Italian");
-        strings_2.add("Chinese");
-        strings_2.add("Indian");
+        strings_2.add(getString(R.string.add_dish_italian));
+        strings_2.add(getString(R.string.add_dish_chinese));
+        strings_2.add(getString(R.string.add_dish_indian));
         ArrayAdapter<String> tp2 =new ArrayAdapter<String>(view.getContext(),android.R.layout.simple_spinner_dropdown_item,strings_2);
         type2.setAdapter(tp2);
 
