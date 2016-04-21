@@ -150,7 +150,8 @@ private void getMenus(){
 
 }
 
-public static class MenuViewHoder extends RecyclerView.ViewHolder {
+
+    public static class MenuViewHoder extends RecyclerView.ViewHolder {
     protected TextView menu_name;
     protected TextView menu_desctiprion;
     protected TextView menu_price;
@@ -204,6 +205,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuViewHoder>{
 
 
     }
+
+
 
     @Override
     public int getItemCount() {

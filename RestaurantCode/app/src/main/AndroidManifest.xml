@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Home"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,15 +21,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".NavigationDrawer"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            />
         <activity android:name=".Restaurant_management"
             android:screenOrientation="portrait"/>
         <activity android:name=".CreateRestaurant"
             android:screenOrientation="portrait"/>
         <activity android:name=".Menu_view_edit"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".Order_management"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
         <activity android:name=".Create_menu"
             android:screenOrientation="portrait"/>
     </application>

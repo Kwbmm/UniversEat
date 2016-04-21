@@ -44,22 +44,13 @@ public class Order_management extends NavigationDrawer {
     private Restaurant restaurant;
     private SharedPreferences sharedPreferences;
     private ArrayList<Order> orders;
-    private String[] months={getString(R.string.jan),
-                             getString(R.string.feb),
-                             getString(R.string.mar),
-                             getString(R.string.apr),
-                             getString(R.string.may),
-                             getString(R.string.jun),
-                             getString(R.string.jul),
-                             getString(R.string.aug),
-                             getString(R.string.sep),
-                             getString(R.string.oct),
-                             getString(R.string.nov),
-                             getString(R.string.dec)};
+    private String[] months;
     private int deletecheck;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        months=getResources().getStringArray(R.array.months);
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
         int uid=sharedPreferences.getInt("uid",-1);
         int rid=sharedPreferences.getInt("rid",-1);

@@ -7,6 +7,7 @@
         <item>Login</item>
     </string-array>
     <string-array name="drawer_option_logged_manager">
+        <item>Search</item>
         <item>Profile</item>
         <item>Orders</item>
         <item>Manage Restaurant</item>
@@ -144,8 +145,22 @@
     <string name="menu_view_edit_delete">Delete?</string>
     <!-- END Class Create_menu_frag -->
 
+    <string-array name="months">
+        <item>Jen</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Aug</item>
+        <item>Sep</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
+        </string-array>
 
-    <string name="jan">Jen</string>
+    <string name="jen">Jen</string>
     <string name="feb">Feb</string>
     <string name="mar">Mar</string>
     <string name="apr">Apr</string>

@@ -89,7 +89,7 @@ public class Create_menu_frag extends Fragment {
     private EditText txtdesc;
     private int type=1;
     private int value;
-    private String spin = getString(R.string.create_menu_frag_fixed);
+    private String spin ;
     int mid;
     private SharedPreferences file;
     private SharedPreferences.Editor editor;
@@ -126,6 +126,7 @@ public class Create_menu_frag extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        spin=getString(R.string.create_menu_frag_fixed);
 
     }
 

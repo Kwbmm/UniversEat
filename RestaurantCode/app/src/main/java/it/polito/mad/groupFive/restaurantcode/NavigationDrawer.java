@@ -35,6 +35,7 @@ public class NavigationDrawer extends AppCompatActivity {
 
     ActionBarDrawerToggle mDrawerToggle;
     ListView dList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // not a real activity, it's used to extend toolbar and navigation drawer to all activity created
@@ -44,29 +45,29 @@ public class NavigationDrawer extends AppCompatActivity {
 
     }
 
-    public ArrayAdapter<String> createAdapter(){
+    public ArrayAdapter<String> createAdapter() {
         ArrayAdapter<String> adp;
         String[] options;
-        if (phase!=0){
-            options= getResources().getStringArray(R.array.drawer_option_logged_manager);
+        if (phase != 0) {
+            options = getResources().getStringArray(R.array.drawer_option_logged_manager);
 
-        }else {
-            options= getResources().getStringArray(R.array.drawer_option_login);
+        } else {
+            options = getResources().getStringArray(R.array.drawer_option_login);
 
         }
-        adp=new ArrayAdapter<String>(this, R.layout.list_item, options);
+        adp = new ArrayAdapter<String>(this, R.layout.list_item, options);
         return adp;
     }
 
-    public void  createDrawer(){
+    public void createDrawer() {
 
 
-        adapter=createAdapter();
+        adapter = createAdapter();
         setContentView(R.layout.drawer);
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        ImageView imageView= (ImageView)findViewById(R.id.iw);
+        ImageView imageView = (ImageView) findViewById(R.id.iw);
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
         imageView.setOnClickListener(new OnClickListener() {
             @Override
@@ -75,23 +76,20 @@ public class NavigationDrawer extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        dList= (ListView)findViewById(R.id.left_drawer);
+        dList = (ListView) findViewById(R.id.left_drawer);
         dList.setAdapter(adapter);
-        dList.setOnItemClickListener( new DrawerListener());
+        dList.setOnItemClickListener(new DrawerListener());
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
-        {
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close) {
 
-            public void onDrawerClosed(View view)
-            {
+            public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 view.bringToFront();
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 
             }
 
-            public void onDrawerOpened(View drawerView)
-            {
+            public void onDrawerOpened(View drawerView) {
 
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
@@ -101,16 +99,14 @@ public class NavigationDrawer extends AppCompatActivity {
         drawerLayout.addDrawerListener(mDrawerToggle);
 
 
-
-
     }
 
-    public void getUserinfo(){
-        SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
-        if (sharedPreferences.getInt("uid",-1)>0){
-            phase=1;
-        }else {
-            phase=0;
+    public void getUserinfo() {
+        SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
+        if (sharedPreferences.getInt("uid", -1) > 0) {
+            phase = 1;
+        } else {
+            phase = 0;
         }
     }
 
@@ -119,25 +115,26 @@ public class NavigationDrawer extends AppCompatActivity {
         // If the nav drawer is open, hide action items related to the content view
         return super.onPrepareOptionsMenu(menu);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
+
     @Override
-    protected void onPostCreate(Bundle savedInstanceState)
-    {
+    protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
@@ -150,34 +147,37 @@ public class NavigationDrawer extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    private class DrawerListener implements ListView.OnItemClickListener{
+
+    private class DrawerListener implements ListView.OnItemClickListener {
 
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (phase==0){
-                if (position==0){
-                    phase=1;
+            if (phase == 0) {
+                if (position == 0) {
+                    phase = 1;
                     dList.setAdapter(createAdapter());
                     dList.deferNotifyDataSetChanged();
                     //Todo intent create profile
                 }
 
-            }
-            else{if
-
-                    (position==0){
-            }
-            if(position==2){
-                Intent intent= new Intent(view.getContext(),Restaurant_management.class);
-                startActivity(intent);
-            }
-            if(position==1){
-                Intent intent= new Intent(view.getContext(),Order_management.class);
-                startActivity(intent);
-            }
-                if (position==3){
-                    phase=0;
+            } else {
+                if (position == 0) {
+                    Intent home = new Intent(getBaseContext(), Home.class);
+                    startActivity(home);
+                }
+                if (position == 1) {
+                }
+                if (position == 3) {
+                    Intent intent = new Intent(view.getContext(), Restaurant_management.class);
+                    startActivity(intent);
+                }
+                if (position == 2) {
+                    Intent intent = new Intent(view.getContext(), Order_management.class);
+                    startActivity(intent);
+                }
+                if (position == 4) {
+                    phase = 0;
                     dList.setAdapter(createAdapter());
                     dList.deferNotifyDataSetChanged();
                     //todo remove user from preferences
