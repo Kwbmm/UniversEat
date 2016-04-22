@@ -24,9 +24,10 @@ public class User {
     private Restaurant restaurant;
     private String name;
     private String surname;
-    private String address;
+    private String mail;
     private byte[] image;
     private String nickname;
+    private String password;
     private ArrayList<Restaurant> favorites;
     private boolean restaurantOwner;
 
@@ -91,16 +92,16 @@ public class User {
      *
      * @return the address of user
      */
-    public String getAddress() {
-        return address;
+    public String getMail() {
+        return mail;
     }
 
     /**
      *
-     * @param address of the user
+     * @param mail of the user
      */
-    public void setAddress(String address) {
-        this.address = address;
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     /**
@@ -197,4 +198,11 @@ public class User {
         this.restaurant = restaurant;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

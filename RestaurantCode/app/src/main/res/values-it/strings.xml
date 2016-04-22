@@ -159,4 +159,13 @@
     <string name="nov">Nov</string>
     <string name="dec">Dic</string>
 
+    <string name="username">User nome:</string>
+    <string name="mailaddress">Indirizzo mail:</string>
+    <string name="surname">User cognome:</string>
+    <string name="nickname">Nickname:</string>
+    <string name="password">Password:</string>
+    <string name="password_repeat">Ripeti la password:</string>
+    <string name="button_end">FINE</string>
+    <string name="restaurantowner">Proprietario di ristorante</string>
+
 </resources>

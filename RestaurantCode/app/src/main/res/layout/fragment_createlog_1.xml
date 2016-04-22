@@ -1,0 +1,120 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Createlog_frag">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/create_log_1">
+        <!-- Restaurant Image and Restaurant Name -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/LL_imageAndUserName"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal">
+            <!-- Restaurant Image -->
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".35"
+                android:layout_gravity="center"
+                android:maxWidth="@dimen/frg_imageView_maxWidth"
+                android:maxHeight="@dimen/frg_imageView_maxHeight"
+                android:id="@+id/imageView_UserImage"
+                android:src="@drawable/ic_add_a_photo_black_24dp"
+                android:background="#fefeff"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc"
+                />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight=".65">
+                <!-- Restaurant Name -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView_UserName"
+                    android:text="@string/username"
+                    android:textSize="@dimen/frg_textView_textSize"
+                    />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editText_UserName"
+                    android:inputType="text"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- User Surname -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_surname"
+            android:layout_below="@id/LL_imageAndUserName"
+            android:text="@string/surname"
+            android:textSize="@dimen/frg_textView_textSize"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText_surname"
+            android:layout_below="@id/textView_surname"
+            android:inputType="text"
+            />
+
+        <!-- User Telephone -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_Nickname"
+            android:text="@string/nickname"
+            android:textSize="@dimen/frg_textView_textSize"
+            android:layout_below="@id/editText_surname"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText_Nickname"
+            android:layout_below="@id/textView_Nickname"
+            />
+
+        <!-- User mail -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mailaddress"
+            android:textSize="@dimen/frg_textView_textSize"
+            android:id="@+id/textView_Mailaddress"
+            android:layout_below="@id/editText_Nickname"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText_Mail"
+            android:layout_below="@id/textView_Mailaddress"
+            android:inputType="textUri"
+            />
+
+        <!-- Next button -->
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Button_Next"
+            android:layout_below="@id/editText_Mail"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/next"
+            android:layout_marginTop="@dimen/btn_marginTop"
+            android:layout_marginRight="@dimen/btn_marginRight"
+            android:layout_marginEnd="@dimen/btn_marginRight"
+            />
+    </RelativeLayout>
+</FrameLayout>
