@@ -1,4 +1,13 @@
-#Things to fix
+review class
+	string comment
+	arraylist reply
+	float rating
 
-  + Restaurant management: delete button update view.
-  + Add Dish class do datastructures
+restaurant and user add arraylist review
+
+all classes getimagebitmap
+
+user
+	email field
+	psw field
+	persist data to json

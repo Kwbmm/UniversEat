@@ -84,7 +84,7 @@ public class Menu {
      * @throws MenuException If fetch fails
      */
     public void getData() throws MenuException {
-            final String METHOD_NAME = this.getClass().getName()+" - getData";
+        final String METHOD_NAME = this.getClass().getName()+" - getData";
         try {
             this.r.getData();
         } catch (RestaurantException e) {
