@@ -59,10 +59,6 @@ public class Order_management extends NavigationDrawer {
             user=new User(this,rid,uid);
             restaurant=user.getRestaurant();
             restaurant.getData();
-        } catch (JSONException e) {
-            Log.e("Exception",e.toString());
-        } catch (IOException e) {
-            Log.e("Exception",e.toString());
         } catch (RestaurantException e) {
             Log.e("Exception",e.toString());
         } catch (UserException e) {
@@ -153,9 +149,7 @@ public class Order_management extends NavigationDrawer {
                                 restaurant.setOrders(orders);
                                 try {
                                     restaurant.saveData();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
+                                } catch (RestaurantException e) {
                                     e.printStackTrace();
                                 }
                                 showOrders();
@@ -171,9 +165,7 @@ public class Order_management extends NavigationDrawer {
                     try {
                         restaurant.saveData();
                         showOrders();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
+                    } catch (RestaurantException e) {
                         e.printStackTrace();
                     }
 
@@ -193,69 +185,4 @@ public class Order_management extends NavigationDrawer {
         }
     }
 
-    private void generaordinifittizi(){
-        try{
-            ArrayList<Order> ordini = new ArrayList<Order>();
-            Order o = new Order(restaurant,2234,2);
-            Order e = new Order(restaurant,23454,2);
-            Order i = new Order(restaurant,34545,2);
-            Order a = new Order(restaurant,75672,2);
-            Order u = new Order(restaurant,4532,2);
-            Order og = new Order(restaurant,96782,2);
-            Order eg = new Order(restaurant,12,2);
-            Order ig = new Order(restaurant,2452,2);
-            Order ag = new Order(restaurant,85672,2);
-            Order ug = new Order(restaurant,2222,2);
-            o.setDate(new Date());
-            o.setMid(1);
-            o.setUid(45);
-            o.setRestaurantID(restaurant.getRid());
-            a.setDate(new Date());
-            a.setMid(3);
-            a.setRestaurantID(restaurant.getRid());
-            i.setDate(new Date());
-            i.setMid(4);
-            i.setRestaurantID(restaurant.getRid());
-            u.setDate(new Date());
-            u.setMid(66);
-            u.setRestaurantID(restaurant.getRid());
-            e.setDate(new Date());
-            e.setMid(8);
-            e.setRestaurantID(restaurant.getRid());
-            og.setDate(new Date());
-            og.setMid(1);
-            og.setUid(45);
-            og.setRestaurantID(restaurant.getRid());
-            ag.setDate(new Date());
-            ag.setMid(3);
-            ag.setRestaurantID(restaurant.getRid());
-            ig.setDate(new Date());
-            ig.setMid(4);
-            ig.setRestaurantID(restaurant.getRid());
-            ug.setDate(new Date());
-            ug.setMid(66);
-            ug.setRestaurantID(restaurant.getRid());
-            eg.setDate(new Date());
-            eg.setMid(8);
-            eg.setRestaurantID(restaurant.getRid());
-            ordini.add(o);
-            ordini.add(a);
-            ordini.add(e);
-            ordini.add(i);
-            ordini.add(u);
-            ordini.add(og);
-            ordini.add(ag);
-            ordini.add(eg);
-            ordini.add(ig);
-            ordini.add(ug);
-            restaurant.setOrders(ordini);
-            restaurant.saveData();
-        } catch (OrderException e) {
-            Log.e("Exception",e.toString());
-        } catch (IOException e) {
-            Log.e("Exception",e.toString());
-        } catch (JSONException e) {
-            Log.e("Exception",e.toString());
-        }
-    }
 }

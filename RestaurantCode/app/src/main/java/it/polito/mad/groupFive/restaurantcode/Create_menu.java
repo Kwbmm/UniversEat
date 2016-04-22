@@ -59,21 +59,14 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
             user = new User(getApplicationContext(),sp.getInt("rid",-1),sp.getInt("uid",-1));
             restaurant= user.getRestaurant();
             restaurant.getData();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                this.menu = new Menu(restaurant, ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE));
-            else //TODO Move randInt inside dataStructures classes
-                this.menu = new Menu(restaurant,randInt());
-        } catch (MenuException |
-                RestaurantException|
-                UserException |
-                JSONException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-        } catch (IOException e) {
-            Log.e(METHOD_NAME, e.getMessage());
+            this.menu=new Menu(restaurant);
+        } catch (UserException e) {
+            e.printStackTrace();
+        } catch (RestaurantException e) {
+            e.printStackTrace();
+        } catch (MenuException e) {
+            e.printStackTrace();
         }
-
-
-
 
 
     }
@@ -83,7 +76,7 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         this.menu.setName(m.getName());
         this.menu.setDescription(m.getDescription());
         this.menu.setType(m.getType());
-        this.menu.setNumberchoice(m.getNumberchoice());
+        this.menu.setChoiceAmount(m.getChoiceAmount());
 
         //this.menu.setImage64(m.getImage64());
         Log.d(METHOD_NAME,"Name: "+menu.getName());
@@ -100,16 +93,13 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         this.menu.setPrice(m.getPrice());
         Log.d(METHOD_NAME,"Price: "+ String.valueOf(menu.getPrice()));
         this.menu.setBeverage(m.isBeverage());
-        this.menu.setServicefee(m.isServicefee());
+        this.menu.setServiceFee(m.isServiceFee());
 
         try {
-            menu.saveData();
-            restaurant.addMenu(this.menu);
+            restaurant.getMenus().add(this.menu);
             restaurant.saveData();
             finish();
-        } catch (JSONException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-        } catch (IOException e) {
+        } catch (RestaurantException e) {
             e.printStackTrace();
         }
 

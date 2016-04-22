@@ -113,10 +113,7 @@ public class CreateRestaurant_5 extends Fragment {
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                restaurant = new Restaurant(getActivity(), ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE),sp.getInt("uid",-1));
-            else //TODO Move randInt inside dataStructures classes
-                restaurant = new Restaurant(getActivity(),randInt(),sp.getInt("uid",-1));
+            restaurant=new Restaurant(getContext(),sp.getInt("uid",-1));
             /**
              * TODO create getter/setter for saving tickets inside Restaurant class.
              * Methods should be:
@@ -138,13 +135,8 @@ public class CreateRestaurant_5 extends Fragment {
                 }
             }
             return true;
-        } catch (RestaurantException |
-                UserException |
-                JSONException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            return false;
-        } catch (IOException e) {
-            Log.e(METHOD_NAME, e.getMessage());
+        } catch (RestaurantException e) {
+            e.printStackTrace();
             return false;
         }
     }

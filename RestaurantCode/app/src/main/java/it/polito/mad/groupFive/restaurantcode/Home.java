@@ -77,7 +77,6 @@ public class Home extends NavigationDrawer {
                     order.setDate(new Date());
                     order.setMid(14);
                     order.setUid(22);
-                    order.saveData();
 
                     rest.setUid(2);
                     rest.setXcoord(0.0f);
@@ -104,7 +103,6 @@ public class Home extends NavigationDrawer {
                         mn.setTicket(true);
                         mn.setType(1);
                         //mn.setImage64FromDrawable(drawable);
-                        mn.saveData();
                         ms.add(mn);
                         count++;
 
@@ -115,7 +113,6 @@ public class Home extends NavigationDrawer {
                     mn.setPrice(1.5f);
                     mn.setTicket(true);
                     mn.setType(2);
-                    mn.saveData();
                     ms.add(mn);
                     rest.saveData();
                     SharedPreferences sharedPreferences=v.getContext().getSharedPreferences(getString(R.string.user_pref),v.getContext().MODE_PRIVATE);

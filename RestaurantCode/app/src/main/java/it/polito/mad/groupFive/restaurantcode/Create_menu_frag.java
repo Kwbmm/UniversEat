@@ -427,29 +427,26 @@ public class Create_menu_frag extends Fragment {
         int uid = sp.getInt("uid",-1);
 
         try {
-            User user = new User(getActivity(),rid,uid);
+            User user = new User(getActivity(), rid, uid);
             restaurant = user.getRestaurant();
             restaurant.getData();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                menu = new Menu(restaurant,ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE));
-            else //TODO Move randInt inside dataStructures classes
-                menu = new Menu(restaurant,randInt());
+            menu=new Menu(restaurant);
             menu.setName(txtname.getText().toString());
             menu.setDescription(txtdesc.getText().toString());
-            menu.setNumberchoice(value);
-            if(!menu.setType(type))
+            menu.setChoiceAmount(value);
+            if (!menu.setType(type))
                 throw new MenuException("Error number of type");
 
 
-
             ImageView menuImg = (ImageView) v.findViewById(R.id.cmiw_1_1);
-           // menu.setImage64FromDrawable(menuImg.getDrawable());
-
-        } catch (MenuException |UserException|RestaurantException|
-                JSONException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-        } catch (IOException e) {
-            Log.e(METHOD_NAME, e.getMessage());
+            // menu.setImage64FromDrawable(menuImg.getDrawable());
+        } catch (RestaurantException e) {
+            e.printStackTrace();
+        } catch (UserException e) {
+            e.printStackTrace();
+        } catch (MenuException e) {
+            e.printStackTrace();
         }
+
     }
 }

@@ -32,6 +32,7 @@ import java.util.Comparator;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 
 /**
@@ -207,9 +208,7 @@ public class Menu_view_edit extends NavigationDrawer {
             rest.setMenus(menus);
             try {
                 rest.saveData();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (RestaurantException e) {
                 e.printStackTrace();
             }
             menusshared=menus;

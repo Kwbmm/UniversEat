@@ -197,10 +197,7 @@ public class CreateRestaurant_4 extends Fragment {
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                restaurant = new Restaurant(getActivity(), ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE),sp.getInt("uid",-1));
-            else //TODO Move randInt inside dataStructures classes
-                restaurant = new Restaurant(getActivity(),randInt(),sp.getInt("uid",-1));
+            restaurant=new Restaurant(getContext(),sp.getInt("uid",-1));
             for(int i = 0; i < this.weekDays.length; i++) {
                 CheckBox cb = (CheckBox) this.parentView.findViewById(this.weekdayToRL_IDs.get(this.weekDays[i])).findViewById(R.id.checkBox);
                 if(cb.isChecked()){
@@ -212,13 +209,8 @@ public class CreateRestaurant_4 extends Fragment {
                 }
             }
             return true;
-        } catch (RestaurantException |
-                UserException |
-                JSONException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            return false;
-        } catch (IOException e) {
-            Log.e(METHOD_NAME, e.getMessage());
+        } catch (RestaurantException e) {
+            e.printStackTrace();
             return false;
         }
     }

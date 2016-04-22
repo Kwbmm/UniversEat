@@ -100,12 +100,6 @@ public class Restaurant_management extends NavigationDrawer {
             uid=sharedPreferences.getInt("uid",-1);
             try {
                 user=new User(this,rid,uid);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (RestaurantException e) {
-                e.printStackTrace();
             } catch (UserException e) {
                 e.printStackTrace();
             }
@@ -166,7 +160,7 @@ public class Restaurant_management extends NavigationDrawer {
         try {
             restaurant.getData();
 
-        } catch (JSONException e) {
+        } catch (RestaurantException e) {
             e.printStackTrace();
         }
         rname.setText(restaurant.getName());

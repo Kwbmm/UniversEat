@@ -47,7 +47,7 @@ public class CreateRestaurant
 
         //TODO Fix this!
         //this.restaurant.setImage64(r.getImage64());
-        this.restaurant.setImage64(new byte[]{0xA});
+        //this.restaurant.setImage64(new byte[]{0xA});
 
         //TODO set telehpone and website
         //this.restaurant.setTelephone(r.getTelephone());
@@ -122,10 +122,8 @@ public class CreateRestaurant
         try {
             this.restaurant.saveData();
             finish();
-        } catch (JSONException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-        } catch (IOException e) {
-            Log.e(METHOD_NAME,e.getMessage());
+        } catch (RestaurantException e) {
+            e.printStackTrace();
         }
     }
 
@@ -148,16 +146,9 @@ public class CreateRestaurant
         }
         SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                this.restaurant = new Restaurant(getApplicationContext(), ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE),sp.getInt("uid",-1));
-            else //TODO Move randInt inside dataStructures classes
-                this.restaurant = new Restaurant(getApplicationContext(),randInt(),sp.getInt("uid",-1));
-        } catch (RestaurantException |
-                UserException |
-                JSONException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-        } catch (IOException e) {
-            Log.e(METHOD_NAME, e.getMessage());
+            this.restaurant=new Restaurant(this.getBaseContext());
+        } catch (RestaurantException e) {
+            e.printStackTrace();
         }
     }
 
