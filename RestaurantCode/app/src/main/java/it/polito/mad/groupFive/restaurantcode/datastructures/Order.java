@@ -31,10 +31,10 @@ public class Order {
      * The ID of the order is generated automatically.
      *
      * @param restaurant The restaurant object whose this order belongs to.
+     * @throws OrderException If order id is negative
      */
-    public Order(Restaurant restaurant){
-        this.r = restaurant;
-        this.oid = Order.randInt();
+    public Order(Restaurant restaurant) throws OrderException {
+        this(restaurant,Order.randInt());
     }
 
     /**

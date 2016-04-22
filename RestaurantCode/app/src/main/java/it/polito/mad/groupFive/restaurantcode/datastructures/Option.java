@@ -28,10 +28,10 @@ public class Option {
      * The ID of the option is generated automatically.
      *
      * @param r The restaurant object whose this menu belongs to.
+     * @throws OptionException If option id is negative.
      */
-    public Option(Restaurant r){
-        this.r = r;
-        this.optID = Option.randInt();
+    public Option(Restaurant r) throws OptionException {
+        this(r, Option.randInt());
     }
 
     /**
@@ -40,7 +40,7 @@ public class Option {
      *
      * @param r The restaurant object whose course belongs to
      * @param optID A positive integer unique identifier.
-     * @throws OptionException Thrown if mid is negative.
+     * @throws OptionException If option id is negative.
      */
     public Option(Restaurant r, int optID) throws OptionException {
         if(optID < 0)
