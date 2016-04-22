@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -40,10 +39,10 @@ public class Menu {
      * The ID of the menu is generated automatically.
      *
      * @param restaurant The restaurant object whose this menu belongs to.
+     * @throws MenuException If menu id is negative
      */
-    public Menu(Restaurant restaurant){
-        this.r = restaurant;
-        this.mid = Menu.randInt();
+    public Menu(Restaurant restaurant) throws MenuException {
+        this(restaurant, Menu.randInt());
     }
 
     /**
@@ -52,7 +51,7 @@ public class Menu {
      *
      * @param restaurant The restaurant object whose course belongs to
      * @param mid A positive integer unique identifier.
-     * @throws MenuException Thrown if mid is negative.
+     * @throws MenuException If menu id is negative
      */
     public Menu(Restaurant restaurant, int mid) throws MenuException {
         this.r = restaurant;

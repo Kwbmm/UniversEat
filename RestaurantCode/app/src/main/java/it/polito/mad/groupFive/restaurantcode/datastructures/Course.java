@@ -37,10 +37,10 @@ public class Course {
      * The ID of the course is generated automatically.
      *
      * @param restaurant The restaurant object whose this course belongs to.
+     * @throws CourseException If course id is negative.
      */
-    public Course(Restaurant restaurant){
-        this.r = restaurant;
-        this.cid = Course.randInt();
+    public Course(Restaurant restaurant) throws CourseException {
+        this(restaurant,Course.randInt());
     }
 
     /**
@@ -49,7 +49,7 @@ public class Course {
      *
      * @param restaurant The restaurant object whose course belongs to
      * @param cid A positive integer unique identifier.
-     * @throws CourseException Thrown if cid is negative.
+     * @throws CourseException If course id is negative.
      */
     public Course(Restaurant restaurant, int cid) throws CourseException {
         if(cid < 0)

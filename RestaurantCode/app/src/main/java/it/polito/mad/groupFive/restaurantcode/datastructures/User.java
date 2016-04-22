@@ -1,10 +1,12 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -28,18 +30,28 @@ public class User {
     private ArrayList<Restaurant> favorites;
     private boolean restaurantOwner;
 
-    public User() {}
-
     /**
-     * Constructor for restaurant owner.
-     * @param rid
+     * Create a User object. Requires, as parameters, the Android Application Context of the
+     * activity instantiating this class, a positive integer uniquely identifying the restaurant
+     * object and another positive integer uniquely identifying the user object.
+     * In case of fail, the error is logged and a UserException is thrown.
+     *
+     * @param c The Android Application Context
+     * @param rid A positive unique integer identifying a restaurant object
+     * @param uid A positive unique integer identifying a user object
+     * @throws UserException If user id is negative or if restaurant creation fails for some reason.
      */
-    public User(Context c, int rid, int uid) throws JSONException, IOException, RestaurantException, UserException {
+    public User(Context c, int rid, int uid) throws UserException {
+        final String METHOD_NAME = this.getClass().getName()+" - constructor";
         if(uid < 0)
             throw new UserException("User ID must be positive");
         this.uid = uid;
 
-        this.restaurant = new Restaurant(c,rid);
+        try {
+            this.restaurant = new Restaurant(c,rid);
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        }
         this.restaurantOwner = true;
     }
 

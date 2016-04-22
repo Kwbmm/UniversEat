@@ -28,10 +28,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.Duration;
-
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.libs.CustomUriDeserializer;
 import it.polito.mad.groupFive.restaurantcode.libs.CustomUriSerializer;
@@ -72,16 +68,10 @@ public class Restaurant {
      * The ID uniquely identifying this restaurant is generated automatically.
      *
      * @param appContext Application Context
+     * @throws RestaurantException if restaurant ID is negative or JSON file read fails.
      */
-    public Restaurant(Context appContext) {
-        final String METHOD_NAME = this.getClass().getName()+" - constructor";
-        this.rid = Restaurant.randInt();
-        this.appContext = appContext;
-        Restaurant dummy;
-        if((dummy=this.readJSONFile())== null)
-            Log.e(METHOD_NAME, "Dummy is null");
-        else
-            this.copyData(dummy);
+    public Restaurant(Context appContext) throws RestaurantException {
+        this(appContext,Restaurant.randInt());
     }
 
     /**

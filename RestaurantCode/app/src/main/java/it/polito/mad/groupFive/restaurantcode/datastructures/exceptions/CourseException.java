@@ -1,7 +1,10 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures.exceptions;
 
 /**
- * Created by Marco on 07/04/16.
+ * @author Marco Ardizzone
+ * @class CourseException
+ * @date 2016-04-16
+ * @brief CourseException class
  */
 public class CourseException extends Exception{
     public CourseException(String s){
