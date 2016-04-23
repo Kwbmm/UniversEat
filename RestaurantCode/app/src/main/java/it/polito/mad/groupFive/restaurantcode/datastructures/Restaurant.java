@@ -239,7 +239,7 @@ public class Restaurant {
      * class (Order, Menu and Course).
      * In case of fail, the error is logged and a RestaurantException is thrown.
      *
-     * @throws RestaurantException
+     * @throws RestaurantException If writing JSON file fails
      */
     public void saveData() throws RestaurantException {
         final String METHOD_NAME = this.getClass().getName()+" - saveData";

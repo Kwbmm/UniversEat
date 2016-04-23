@@ -12,7 +12,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuExce
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
- * @author Marco
+ * @author Marco Ardizzone
  * @class Menu
  * @date 2016-04-18
  * @brief Menu class
