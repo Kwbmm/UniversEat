@@ -148,6 +148,7 @@ public class Customer extends User {
         this.userName = dummy.getUserName();
         this.password = dummy.getPassword();
         this.address = dummy.getAddress();
+        this.email = dummy.getEmail();
         this.image = dummy.getImageUri();
         this.reviews = dummy.getReviews();
         this.favourites = ((Customer) dummy).getFavourites();

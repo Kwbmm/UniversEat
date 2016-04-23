@@ -27,6 +27,7 @@ public abstract class User {
     protected String userName;
     protected String password;
     protected String address;
+    protected String email;
     protected Uri image;
     protected ArrayList<Review> reviews = new ArrayList<>();
 
@@ -139,6 +140,12 @@ public abstract class User {
 
     /**
      *
+     * @return The email of the user
+     */
+    public String getEmail(){ return this.email; }
+
+    /**
+     *
      * @return Uri of user's image
      */
     public Uri getImageUri() {
@@ -238,6 +245,12 @@ public abstract class User {
         //TODO Implement some encryption for password - Sad LIOY is sad;
         this.password = password;
     }
+
+    /**
+     *
+     * @param email A string representing an email address
+     */
+    public void setEmail(String email){ this.email = email; }
 
     /**
      *
