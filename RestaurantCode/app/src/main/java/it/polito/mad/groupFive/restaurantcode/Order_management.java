@@ -73,10 +73,6 @@ public class Order_management extends NavigationDrawer {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.toolbar_add, menu);
-        MenuItem item=menu.findItem(R.id.add_ab);
-        item.setVisible(false);
-        item.setEnabled(false);
         return true;
     }
 
