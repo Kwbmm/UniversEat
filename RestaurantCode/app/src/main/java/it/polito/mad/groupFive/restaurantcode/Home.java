@@ -63,8 +63,10 @@ public class Home extends NavigationDrawer {
         recyclerView.setAdapter(adp);
         LinearLayoutManager llm=new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);}
-
+        recyclerView.setLayoutManager(llm);
+        }
+        SearchView searchView= (SearchView) findViewById(R.id.search);
+        hideSoftKeyboard();
         ImageButton option= (ImageButton)findViewById(R.id.opt);
         option.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,33 +89,36 @@ public class Home extends NavigationDrawer {
                     rest.setRating(3.5f);
                     rest.setCity("Politia");
                     rest.setAddress("Via vai");
+                    rest.setTelephone("011667788");
                     rest.getOrders().add(order);
                     Log.v("create",String.valueOf(rest.getOrders().size()));
                     //rest.setImage64FromDrawable(drawable);
                     rest.saveData();
 
-                    //rest.getData();
                     ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> ms = rest.getMenus();
                     for (int i = 0; i < 5; i++) {
 
-                        it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest, count);
+                        it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
                         mn.setName("Menu");
                         mn.setDescription("Description");
                         mn.setPrice(1.5f);
                         mn.setTicket(true);
                         mn.setType(1);
                         //mn.setImage64FromDrawable(drawable);
-                        ms.add(mn);
-                        count++;
+                        //ms.add(mn);
+                        rest.addMenu(mn);
+                        //count++;
 
                     }
-                    it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest, count);
+                    it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
                     mn.setName("Orecchiette tris");
                     mn.setDescription("orecchiette, patate, pollo");
                     mn.setPrice(1.5f);
                     mn.setTicket(true);
                     mn.setType(2);
-                    ms.add(mn);
+                    rest.addMenu(mn);
+                    //ms.add(mn);
+                    //rest.setMenus(ms);
                     rest.saveData();
                     SharedPreferences sharedPreferences=v.getContext().getSharedPreferences(getString(R.string.user_pref),v.getContext().MODE_PRIVATE);
                     SharedPreferences.Editor editor= sharedPreferences.edit();
@@ -193,14 +198,13 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuViewHoder>{
     }
 
     @Override
-    public void onBindViewHolder(MenuViewHoder holder,int position) {
+    public void onBindViewHolder(final MenuViewHoder holder, int position) {
         it.polito.mad.groupFive.restaurantcode.datastructures.Menu menu =menus.get(position);
         holder.menu_desctiprion.setText(menu.getDescription());
         holder.menu_name.setText(menu.getName());
         holder.menu_price.setText(menu.getPrice()+"€");
-
-
-
+        int rid =menus.get(position).getRid();
+        holder.card.setOnClickListener(new onCardClick(position,rid));
     }
 
 
@@ -211,4 +215,29 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuViewHoder>{
     }
 
 
-    }}
+    }
+public class onCardClick implements View.OnClickListener{
+    private int position;
+    private int rid;
+
+    public onCardClick(int position,int rid){
+        this.position=position;
+        this.rid=rid;
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        Intent restinfo=new Intent(getBaseContext(),User_info_view.class);
+        Log.v("rid",rid+"");
+        restinfo.putExtra("rid",this.rid);
+        startActivity(restinfo);
+
+    }
+}
+
+
+}
+
+
+

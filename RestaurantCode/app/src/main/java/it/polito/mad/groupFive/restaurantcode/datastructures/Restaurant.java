@@ -687,4 +687,12 @@ public class Restaurant {
     public void setTimetableDinner(Map<Integer,Date[]> timetable){
         this.timetableDinner.putAll(timetable);
     }
+
+    public void addMenu(Menu menu){
+        this.menus.add(menu);
+        try {
+            saveData();
+        } catch (RestaurantException e) {
+        }
+    }
 }

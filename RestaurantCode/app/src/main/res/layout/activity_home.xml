@@ -16,16 +16,17 @@
         android:backgroundTint="#ffffff"
         android:contentDescription="@string/home_imageButtonOpt_contentDesc"
         android:layout_alignParentEnd="false"/>
-    <SearchView
+    <android.support.v7.widget.SearchView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/search"
         android:queryHint="@string/search_hello"
         android:divider="#000000"
         android:dividerPadding="1dp"
+        android:layout_marginTop="5dp"
         android:layout_toLeftOf="@id/opt"
         android:layout_toStartOf="@id/opt"
-        android:iconifiedByDefault="false"/>
+        />
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

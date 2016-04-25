@@ -14,8 +14,8 @@
         <item>Logout</item>
     </string-array>
     <string-array name="week">
-        <item>Monday></item>
-        <item>Tuesday></item>
+        <item>Monday</item>
+        <item>Tuesday</item>
         <item>Wednesday</item>
         <item>Thursday</item>
         <item>Friday</item>
@@ -158,7 +158,7 @@
         <item>Oct</item>
         <item>Nov</item>
         <item>Dec</item>
-        </string-array>
+    </string-array>
 
     <string name="jen">Jen</string>
     <string name="feb">Feb</string>

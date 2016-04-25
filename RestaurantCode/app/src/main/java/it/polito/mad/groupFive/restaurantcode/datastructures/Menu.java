@@ -33,6 +33,7 @@ public class Menu {
     private boolean ticket;
     private boolean beverage;
     private boolean serviceFee;
+    private int rid;
 
     /**
      * Create an instance of Menu: requires, as parameter, its restaurant object.
@@ -58,6 +59,12 @@ public class Menu {
         if(mid < 0)
             throw new MenuException("Menu ID must be positive");
         this.mid = mid;
+        try {
+            r.getData();
+        } catch (RestaurantException e) {
+            e.printStackTrace();
+        }
+        this.rid=r.getRid();
     }
 
     /**
@@ -106,6 +113,7 @@ public class Menu {
      * @param dummy A dummy Menu object, on which the JSON data is written to.
      */
     private void copyData(Menu dummy) {
+
         this.mid = dummy.getMid();
         this.name = dummy.getName();
         this.description = dummy.getDescription();
@@ -344,7 +352,17 @@ public class Menu {
 
     /**
      *
+     * @return Restaurant reference to fetch data
+     */
+
+    public int getRid() {
+        return rid;
+    }
+
+    /**
+     *
      * @param price The price of the menu
+
      */
     public void setPrice(float price){ this.price = price; }
 

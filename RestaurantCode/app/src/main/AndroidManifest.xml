@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="it.polito.mad.groupFive.restaurantcode">
-    <uses-feature android:name="android.hardware.camera"
-        android:required="false"/>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -11,29 +14,35 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Home"
-            android:screenOrientation="portrait"
-            >
+        <activity
+            android:name=".Home"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".NavigationDrawer"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".Restaurant_management"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".CreateRestaurant"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Menu_view_edit"
+        <activity
+            android:name=".NavigationDrawer"
             android:screenOrientation="portrait" />
-        <activity android:name=".Order_management"
-            android:screenOrientation="portrait"
-            android:noHistory="true"/>
-        <activity android:name=".Create_menu"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Restaurant_management"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CreateRestaurant"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Menu_view_edit"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Order_management"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Create_menu"
+            android:screenOrientation="portrait" />
+        <activity android:name=".User_info_view"></activity>
     </application>
 
 </manifest>
