@@ -12,7 +12,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuExce
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
- * @author Marco
+ * @author Marco Ardizzone
  * @class Menu
  * @date 2016-04-18
  * @brief Menu class
@@ -91,7 +91,7 @@ public class Menu {
      * @throws MenuException If fetch fails
      */
     public void getData() throws MenuException {
-            final String METHOD_NAME = this.getClass().getName()+" - getData";
+        final String METHOD_NAME = this.getClass().getName()+" - getData";
         try {
             this.r.getData();
         } catch (RestaurantException e) {

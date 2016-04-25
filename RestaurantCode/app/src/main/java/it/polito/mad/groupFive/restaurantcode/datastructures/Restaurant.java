@@ -61,6 +61,7 @@ public class Restaurant {
     private ArrayMap<Integer, String> tickets = new ArrayMap<>();
     private ArrayMap<Integer, Date[]> timetableLunch = new ArrayMap<>();
     private ArrayMap<Integer, Date[]> timetableDinner = new ArrayMap<>();
+    private ArrayList<Review> reviews = new ArrayList<>();
 
     /**
      * Create a Restaurant object. Requires, as parameter, the Android Application Context of the
@@ -122,6 +123,7 @@ public class Restaurant {
         this.tickets = dummy.getTickets();
         this.timetableLunch = dummy.getTimetableLunch();
         this.timetableDinner = dummy.getTimetableDinner();
+        this.reviews = dummy.getReviews();
     }
 
     /**
@@ -237,7 +239,7 @@ public class Restaurant {
      * class (Order, Menu and Course).
      * In case of fail, the error is logged and a RestaurantException is thrown.
      *
-     * @throws RestaurantException
+     * @throws RestaurantException If writing JSON file fails
      */
     public void saveData() throws RestaurantException {
         final String METHOD_NAME = this.getClass().getName()+" - saveData";
@@ -457,6 +459,47 @@ public class Restaurant {
      * @return ArrayMap of the DINNER timetable.
      */
     public ArrayMap<Integer,Date[]> getTimetableDinner(){ return this.timetableDinner; }
+
+    /**
+     *
+     * @return An ArrayList of the Review(s) associated to this restaurant.
+     */
+    public ArrayList<Review> getReviews() { return this.reviews; }
+
+    /**
+     * Returns a Review object corresponding to the supplied review ID.
+     * If no Review object matches the input review ID, this method returns null.
+     *
+     * @param revID The ID corresponding to a Review object
+     * @return The Review objectd corresponding to the supplied review ID.
+     * @throws RestaurantException If review id is negative.
+     */
+    public Review getReviewByRevID(int revID) throws RestaurantException {
+        if(revID < 0)
+            throw new RestaurantException("Review ID must be positive");
+        for(Review r : this.reviews)
+            if(r.getRevID() == revID)
+                return r;
+        return null;
+    }
+
+    /**
+     * Get an ArrayList of Reviews made by the user matching the specified user id.
+     * If the supplied ID returns no results, an empty ArrayList is returned.
+     *
+     * @param uid A user ID.
+     * @return An ArrayList of Review objects matching the specified user id.
+     * @throws RestaurantException If user id is negative.
+     */
+    public ArrayList<Review> getReviewsByUserID(int uid) throws RestaurantException {
+        if(uid < 0)
+            throw new RestaurantException("User ID must be positive");
+        ArrayList<Review> returnRes = new ArrayList<>();
+        for(Review r : this.reviews)
+            if(r.getUid() == uid)
+                returnRes.add(r);
+        return returnRes;
+    }
 
     /**
      *
@@ -688,11 +731,9 @@ public class Restaurant {
         this.timetableDinner.putAll(timetable);
     }
 
-    public void addMenu(Menu menu){
-        this.menus.add(menu);
-        try {
-            saveData();
-        } catch (RestaurantException e) {
-        }
-    }
+    /**
+     *
+     * @param reviews An ArrayList of Review(s) to assign to this restaurant object.
+     */
+    public void setReviews(ArrayList<Review> reviews){ this.reviews = reviews; }
 }
