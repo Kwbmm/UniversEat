@@ -34,6 +34,7 @@ import java.util.Date;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
 public class Home extends NavigationDrawer {
@@ -74,7 +75,7 @@ public class Home extends NavigationDrawer {
 
                 int count=1;
                 try {
-                    Restaurant rest = new User(v.getContext(), 2, 2).getRestaurant();
+                    Restaurant rest = new RestaurantOwner(v.getContext(), 2).getRestaurants().get(0);
                     Order order =new Order(rest,2);
                     order.setDate(new Date());
                     order.setMid(14);

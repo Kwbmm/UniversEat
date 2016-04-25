@@ -731,6 +731,17 @@ public class Restaurant {
         this.timetableDinner.putAll(timetable);
     }
 
+    public void addMenu(Menu menu) throws RestaurantException {
+        final String METHOD_NAME = this.getClass().getName()+"- add menu to list";
+        this.menus.add(menu);
+        try {
+            saveData();
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+            throw new RestaurantException(e.getMessage());
+        }
+    }
+
     /**
      *
      * @param reviews An ArrayList of Review(s) to assign to this restaurant object.
