@@ -31,6 +31,7 @@ import java.util.Comparator;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
@@ -86,7 +87,7 @@ public class Menu_view_edit extends NavigationDrawer {
         rid = sharedPreferences.getInt("rid", -1);
         try {
 
-            rest = new User(this, rid, uid).getRestaurant();
+            rest = new Restaurant(getBaseContext(),rid);
             rest.getData();
         } catch (Exception e) {
             e.printStackTrace();

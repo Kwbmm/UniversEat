@@ -21,6 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -29,7 +30,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserExce
 public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Add_dish.OnFragmentInteractionListener,Add_dish.new_dish,Create_menu_frag2.shareDish,Delete_dish.removeDish,Delete_dish.OnFragmentInteractionListener
 {
     private Restaurant restaurant=null;
-    private User user=null;
+    private RestaurantOwner user=null;
     private Menu menu=null;
 
     ArrayList<Option> options;
@@ -56,12 +57,9 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref), Create_menu.MODE_PRIVATE);
 
         try {
-            user = new User(getApplicationContext(),sp.getInt("rid",-1),sp.getInt("uid",-1));
-            restaurant= user.getRestaurant();
+            restaurant= new Restaurant(getBaseContext());
             restaurant.getData();
             this.menu=new Menu(restaurant);
-        } catch (UserException e) {
-            e.printStackTrace();
         } catch (RestaurantException e) {
             e.printStackTrace();
         } catch (MenuException e) {

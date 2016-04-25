@@ -29,6 +29,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -144,8 +145,7 @@ public class Create_menu_frag2 extends Fragment {
         int uid = sp.getInt("uid",-1);
 
         try {
-            User user = new User(getActivity(), rid, uid);
-            restaurant = user.getRestaurant();
+            restaurant = new Restaurant(getContext(),rid);
             restaurant.getData();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 menu = new Menu(restaurant, ThreadLocalRandom.current().nextInt(1, Integer.MAX_VALUE));
@@ -161,9 +161,7 @@ public class Create_menu_frag2 extends Fragment {
 
         } catch (RestaurantException e) {
             e.printStackTrace();
-        } catch (UserException e) {
-            e.printStackTrace();
-        } catch (MenuException e) {
+        }  catch (MenuException e) {
             e.printStackTrace();
         }
 

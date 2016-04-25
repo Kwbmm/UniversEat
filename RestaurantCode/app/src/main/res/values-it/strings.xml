@@ -8,8 +8,9 @@
         <item>Login</item>
     </string-array>
     <string-array name="drawer_option_logged_manager">
+        <item>Ricerca</item>
         <item>Profilo</item>
-        <item>ordini</item>
+        <item>Ordini</item>
         <item>Gestione Ristorante</item>
         <item>Logout</item>
     </string-array>
@@ -145,6 +146,21 @@
     <string name="menu_view_edit_no">No</string>
     <string name="menu_view_edit_delete">Eliminare?</string>
     <!-- END Class Create_menu_frag -->
+
+    <string-array name="months">
+        <item>Gen</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>Mag</item>
+        <item>Giu</item>
+        <item>Lug</item>
+        <item>Ago</item>
+        <item>Set</item>
+        <item>Ott</item>
+        <item>Nov</item>
+        <item>Dic</item>
+    </string-array>
 
     <string name="jen">Gen</string>
     <string name="feb">Feb</string>

@@ -75,7 +75,8 @@ public class Home extends NavigationDrawer {
 
                 int count=1;
                 try {
-                    Restaurant rest = new RestaurantOwner(v.getContext(), 2).getRestaurants().get(0);
+
+                    Restaurant rest = new Restaurant(v.getContext());
                     Order order =new Order(rest,2);
                     order.setDate(new Date());
                     order.setMid(14);
@@ -124,7 +125,7 @@ public class Home extends NavigationDrawer {
                     SharedPreferences sharedPreferences=v.getContext().getSharedPreferences(getString(R.string.user_pref),v.getContext().MODE_PRIVATE);
                     SharedPreferences.Editor editor= sharedPreferences.edit();
                     editor.putInt("uid",2);
-                    editor.putInt("rid",2);
+                    editor.putInt("rid",rest.getRid());
                     editor.commit();
                 }catch (Exception e){
                     e.printStackTrace();
@@ -144,9 +145,7 @@ private void getMenus(){
     user=uid;
     Log.v("uid",uid+" ");
         try {if(uid>0){
-                rest = new User(this, rid, uid).getRestaurant();
-                rest.getData();
-                menusshared = rest.getMenus();}else menusshared=null;
+                menusshared = new Restaurant(getBaseContext(),rid).getMenus();}else menusshared=null;
         } catch (Exception e) {
             e.printStackTrace();
         }

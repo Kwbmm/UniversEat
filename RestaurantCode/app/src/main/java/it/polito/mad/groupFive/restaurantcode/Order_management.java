@@ -33,6 +33,7 @@ import java.util.Locale;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
+import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderException;
@@ -40,7 +41,6 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 public class Order_management extends NavigationDrawer {
-    private User user;
     private Restaurant restaurant;
     private SharedPreferences sharedPreferences;
     private ArrayList<Order> orders;
@@ -56,12 +56,9 @@ public class Order_management extends NavigationDrawer {
         int rid=sharedPreferences.getInt("rid",-1);
         Log.e("RID E UID",""+rid+" "+uid);
         try {
-            user=new User(this,rid,uid);
-            restaurant=user.getRestaurant();
+            restaurant=new Restaurant(this,rid);
             restaurant.getData();
         } catch (RestaurantException e) {
-            Log.e("Exception",e.toString());
-        } catch (UserException e) {
             Log.e("Exception",e.toString());
         }
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);

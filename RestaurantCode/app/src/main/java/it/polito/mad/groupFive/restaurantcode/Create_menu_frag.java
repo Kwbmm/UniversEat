@@ -46,6 +46,7 @@ import org.json.JSONException;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -427,8 +428,7 @@ public class Create_menu_frag extends Fragment {
         int uid = sp.getInt("uid",-1);
 
         try {
-            User user = new User(getActivity(), rid, uid);
-            restaurant = user.getRestaurant();
+            restaurant = new Restaurant(getContext(),rid);
             restaurant.getData();
             menu=new Menu(restaurant);
             menu.setName(txtname.getText().toString());
@@ -442,9 +442,7 @@ public class Create_menu_frag extends Fragment {
             // menu.setImage64FromDrawable(menuImg.getDrawable());
         } catch (RestaurantException e) {
             e.printStackTrace();
-        } catch (UserException e) {
-            e.printStackTrace();
-        } catch (MenuException e) {
+        }  catch (MenuException e) {
             e.printStackTrace();
         }
 

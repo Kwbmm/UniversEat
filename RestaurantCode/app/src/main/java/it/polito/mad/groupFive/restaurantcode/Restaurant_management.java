@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.zip.Inflater;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
@@ -47,7 +48,7 @@ public class Restaurant_management extends NavigationDrawer {
 
     */
     private static final int CREATE_RESTAURANT = 1;
-    private User user;
+    private RestaurantOwner user;
     private Restaurant restaurant;
     private SharedPreferences sharedPreferences;
     private Boolean visible=false;
@@ -99,11 +100,10 @@ public class Restaurant_management extends NavigationDrawer {
         if ((rid=sharedPreferences.getInt("rid",-1))!=-1){
             uid=sharedPreferences.getInt("uid",-1);
             try {
-                user=new User(this,rid,uid);
-            } catch (UserException e) {
+                restaurant=new Restaurant(getBaseContext(),rid);
+            } catch (RestaurantException e) {
                 e.printStackTrace();
             }
-            restaurant=user.getRestaurant();
 
             LinearLayout rview= (LinearLayout) findViewById(R.id.fl_redit);
             //View nrest = LayoutInflater.from(this).inflate(R.layout.resturant_view_edit_fragment,null);
