@@ -241,6 +241,7 @@ public class RestaurantOwner extends User{
      *
      * @param restaurantIDs An ArrayList of Restaurant IDs (Integers) belonging to this
      *                      Restaurant Owner.
+     * @throws RestaurantOwnerException If one of the restaurant IDs is negative.
      */
     public void setRestaurants(ArrayList<Integer> restaurantIDs) throws RestaurantOwnerException {
         for(int i : restaurantIDs)
