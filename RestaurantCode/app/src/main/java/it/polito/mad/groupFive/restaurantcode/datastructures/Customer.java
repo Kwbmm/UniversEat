@@ -32,7 +32,7 @@ import it.polito.mad.groupFive.restaurantcode.libs.CustomUriSerializer;
  */
 public class Customer extends User {
 
-    private ArrayList<Restaurant> favourites = new ArrayList<>();
+    private ArrayList<Integer> favourites = new ArrayList<>();
 
     /**
      * Create a Customer object. Requires, as parameter, the Android Application Context of the
@@ -216,35 +216,38 @@ public class Customer extends User {
 
     /**
      *
-     * @return ArrayList of user's favourite restaurants
+     * @return ArrayList of user's favourite restaurants IDs
      */
-    public ArrayList<Restaurant> getFavourites() {
+    public ArrayList<Integer> getFavourites() {
         return this.favourites;
     }
 
     /**
-     * Get the Restaurant object matching the input restaurant id.
-     * If no Restaurant object matches the supplied id, this method returns null.
-     * If the provided id is negative, a CustomerException is thrown.
+     * Returns true if the supplied restaurant ID matches one of the user's favourite restaurants.
+     * False otherwise.
      *
-     * @param rid A positive integer uniquely identifying a Restaurant object
-     * @return The restaurant object matching the specified id, or null if no match is found.
-     * @throws CustomerException If restaurant id is negative.
+     * @param rid A positive integer uniquely identifying a restaurant.
+     * @return True if restaurant id is in the set of favourite restaurant's IDs.
+     * @throws CustomerException If supplied restaurant ID is negative
      */
-    public Restaurant getFavouriteRestaurantByID(int rid) throws CustomerException {
-        if(rid < 0)
+    public boolean isFavourite(int rid) throws CustomerException {
+        if(rid < 0 )
             throw new CustomerException("Restaurant ID must be positive");
-        for(Restaurant r : this.favourites)
-            if(r.getRid() == rid)
-                return r;
-        return null;
+        for(int i : this.favourites)
+            if(i == rid)
+                return true;
+        return false;
     }
 
     /**
      *
-     * @param favourites: the ArrayList of user's favourite restaurants
+     * @param favourites: the ArrayList of user's favourite restaurants IDs
+     * @throws CustomerException If one of the restaurant IDs is negative.
      */
-    public void setFavourites(ArrayList<Restaurant> favourites) {
+    public void setFavourites(ArrayList<Integer> favourites) throws CustomerException {
+        for(int i : favourites)
+            if(i < 0)
+                throw new CustomerException("Restaurant ID "+i+" must be positive");
         this.favourites = favourites;
     }
 

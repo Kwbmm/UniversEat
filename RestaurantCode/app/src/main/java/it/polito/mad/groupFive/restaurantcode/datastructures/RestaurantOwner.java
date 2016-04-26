@@ -32,7 +32,7 @@ import it.polito.mad.groupFive.restaurantcode.libs.CustomUriSerializer;
  */
 public class RestaurantOwner extends User{
 
-    private ArrayList<Restaurant> restaurants = new ArrayList<>();
+    private ArrayList<Integer> restaurantIDs = new ArrayList<>();
 
     /**
      * Create a RestaurantOwner object. Requires, as parameter, the Android Application Context of
@@ -151,7 +151,7 @@ public class RestaurantOwner extends User{
         this.email = dummy.getEmail();
         this.image = dummy.getImageUri();
         this.reviews = dummy.getReviews();
-        this.restaurants = ((RestaurantOwner)dummy).getRestaurants();
+        this.restaurantIDs = ((RestaurantOwner)dummy).getRestaurantIDs();
     }
 
     /**
@@ -215,32 +215,38 @@ public class RestaurantOwner extends User{
     }
 
     /**
-     * Get the ArrayList of Restaurant objects belonging to this restaurant owner.
-     * @return ArrayList of Restaurant objects
+     * Get the ArrayList of Restaurant IDs belonging to this restaurant owner.
+     * @return ArrayList of Restaurant IDs
      */
-    public ArrayList<Restaurant> getRestaurants(){ return this.restaurants; }
+    public ArrayList<Integer> getRestaurantIDs(){ return this.restaurantIDs; }
 
     /**
-     * Get a Restaurant object matching the supplied restaurant id.
-     * If no Restaurant object matches the input id, this method returns null.
-     * If the restaurant id is negative a RestaurantOwnerException is thrown.
+     * Returns true if the supplied input ID matches a restaurant id owned by this restaurant owner.
+     * Otherwise this method returns false.
      *
-     * @param rid Positive integer uniquely identifying a Restaurant object belonging to this Restaurant Owner.
-     * @return The Restaurant object matching the specified ID, or null if no match is found.
-     * @throws RestaurantOwnerException If restaurant id is negative.
+     * @param rid A positive integer uniquely identifying a restaurant
+     * @return True if restaurant belongs to this restaurant owner, false otherwise.
+     * @throws RestaurantOwnerException If supplied restaurant id is negative.
      */
-    public Restaurant getRestaurantByID(int rid) throws RestaurantOwnerException {
+    public boolean ownsRestaurant(int rid) throws RestaurantOwnerException {
         if(rid < 0)
             throw new RestaurantOwnerException("Restaurant ID must be positive");
-        for(Restaurant r : this.restaurants)
-            if(r.getRid() == rid)
-                return r;
-        return null;
+        for(int i : this.restaurantIDs)
+            if(i == rid)
+                return true;
+        return false;
     }
 
     /**
      *
-     * @param restaurants An ArrayList of Restaurant objects belonging to this Restaurant Owner.
+     * @param restaurantIDs An ArrayList of Restaurant IDs (Integers) belonging to this
+     *                      Restaurant Owner.
+     * @throws RestaurantOwnerException If one of the restaurant IDs is negative.
      */
-    public void setRestaurants(ArrayList<Restaurant> restaurants){ this.restaurants = restaurants; }
+    public void setRestaurants(ArrayList<Integer> restaurantIDs) throws RestaurantOwnerException {
+        for(int i : restaurantIDs)
+            if(i < 0)
+                throw new RestaurantOwnerException("Restaurant ID "+i+" must be positive");
+        this.restaurantIDs = restaurantIDs;
+    }
 }
