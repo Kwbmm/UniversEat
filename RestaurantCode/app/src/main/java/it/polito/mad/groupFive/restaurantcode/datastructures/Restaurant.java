@@ -324,7 +324,14 @@ public class Restaurant {
      *
      * @return the rating of restaurant
      */
-    public float getRating() { return this.rating; }
+    public float getRating() {
+        float value=0,total;
+        for (Review rev:reviews){
+            value=value+rev.getRating();
+        }
+        total=value/reviews.size();
+        this.rating=total;
+        return this.rating; }
 
     /**
      *
@@ -742,6 +749,16 @@ public class Restaurant {
         }
     }
 
+    public void addReview(Review review) throws RestaurantException {
+        final String METHOD_NAME = this.getClass().getName()+"- add menu to list";
+        this.reviews.add(review);
+        try {
+            saveData();
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+            throw new RestaurantException(e.getMessage());
+        }
+    }
     /**
      *
      * @param reviews An ArrayList of Review(s) to assign to this restaurant object.

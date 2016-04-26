@@ -2,13 +2,8 @@ package it.polito.mad.groupFive.restaurantcode;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +30,7 @@ import java.util.Date;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Review;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
 public class Home extends NavigationDrawer {
@@ -44,7 +40,7 @@ public class Home extends NavigationDrawer {
     private SharedPreferences sharedPreferences;
     private View parent;
     private int user;
-
+    private SearchView searchView;
 
 
 
@@ -66,8 +62,12 @@ public class Home extends NavigationDrawer {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         }
-        SearchView searchView= (SearchView) findViewById(R.id.search);
-        hideSoftKeyboard();
+        SearchView searchView= (SearchView) findViewById(R.id.search_view);
+        searchView.setIconified(false);
+        searchView.setIconifiedByDefault(false);
+        searchView.setQueryHint(getResources().getString(R.string.search_hello));
+
+
         ImageButton option= (ImageButton)findViewById(R.id.opt);
         option.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +110,13 @@ public class Home extends NavigationDrawer {
                         //ms.add(mn);
                         rest.addMenu(mn);
                         //count++;
+                        User user =new RestaurantOwner(v.getContext());
+                        Review review=new Review(rest,user);
+                        review.setRating(4.3f);
+                        review.setReviewText("Molto Buonissimo");
+                        review.setTitle("Il Massimo della Pizza");
+                        rest.addReview(review);
+
 
                     }
                     it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);

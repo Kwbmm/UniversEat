@@ -24,6 +24,16 @@ public class Review {
     private int uid;
     private int rid;
     private String reviewText;
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     private ArrayList<String> replies = new ArrayList<>();
     private float rating;
 
@@ -116,6 +126,7 @@ public class Review {
         this.reviewText = dummy.getReviewText();
         this.replies = dummy.getReplies();
         this.rating = dummy.getRating();
+        this.title=dummy.getTitle();
     }
 
     /**

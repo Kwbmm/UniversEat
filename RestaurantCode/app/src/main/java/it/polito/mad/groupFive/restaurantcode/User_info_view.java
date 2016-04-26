@@ -2,6 +2,7 @@ package it.polito.mad.groupFive.restaurantcode;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -17,7 +18,7 @@ import android.widget.Toolbar;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
-public class User_info_view extends NavigationDrawer implements Restaurant_info_user.OnFragmentInteractionListener,Restaurant_info_user.restaurantData,Restaurant_menu_user.OnFragmentInteractionListener,Restaurant_menu_user.restaurantData{
+public class User_info_view extends NavigationDrawer implements Restaurant_info_user.OnFragmentInteractionListener,Restaurant_info_user.restaurantData,Restaurant_menu_user.OnFragmentInteractionListener,Restaurant_menu_user.restaurantData,Review_user_view.OnFragmentInteractionListener,Review_user_view.restaurantData{
     Restaurant restaurant;
     ImageButton rest_i;
     ImageButton rest_m;
@@ -45,14 +46,14 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     rest_i.getDrawable().setTint(Color.parseColor("#ffffff"));
                     rest_r.getDrawable().setTint(Color.parseColor("#000000"));
-                    rest_m.getDrawable().setTint(Color.parseColor("#000000"));
+                    rest_m.getDrawable().setTint(Color.parseColor("#000000"));}
                     Restaurant_info_user rest_view = new Restaurant_info_user();
                     getSupportFragmentManager()
-                            .beginTransaction()
+                            .beginTransaction().addToBackStack(null)
                             .add(R.id.uif_fragment,rest_view)
                             .commit();
 
-                }
+
             }
         });
         rest_m= (ImageButton) findViewById(R.id.menu_b);
@@ -62,13 +63,13 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     rest_m.getDrawable().setTint(Color.parseColor("#ffffff"));
                     rest_i.getDrawable().setTint(Color.parseColor("#000000"));
-                    rest_r.getDrawable().setTint(Color.parseColor("#000000"));
+                    rest_r.getDrawable().setTint(Color.parseColor("#000000"));}
                     Restaurant_menu_user rest_view = new Restaurant_menu_user();
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.uif_fragment,rest_view)
                             .commit();
-                }
+
 
             }
         });
@@ -79,16 +80,33 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     rest_r.getDrawable().setTint(Color.parseColor("#ffffff"));
                     rest_m.getDrawable().setTint(Color.parseColor("#000000"));
-                    rest_i.getDrawable().setTint(Color.parseColor("#000000"));
-                }
+                    rest_i.getDrawable().setTint(Color.parseColor("#000000"));}
+                    Review_user_view review_user_view=new Review_user_view();
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.uif_fragment,review_user_view)
+                            .commit();
+
         }});
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            rest_i.getDrawable().setTint(Color.parseColor("#ffffff"));
+            rest_r.getDrawable().setTint(Color.parseColor("#000000"));
+            rest_m.getDrawable().setTint(Color.parseColor("#000000"));
+        }
 
         Restaurant_info_user rest_view = new Restaurant_info_user();
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.uif_fragment,rest_view)
                 .commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     @Override
