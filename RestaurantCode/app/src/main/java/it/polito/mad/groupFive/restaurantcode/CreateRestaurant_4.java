@@ -108,10 +108,8 @@ public class CreateRestaurant_4 extends Fragment {
             View timetableItem = li.inflate(R.layout.timetable_item,null);
             ((CheckBox)timetableItem.findViewById(R.id.checkBox)).setText(weekday);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                weekdayToRL_IDs.put(weekday, ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE));
-            else //TODO Move randInt inside dataStructures classes
-                weekdayToRL_IDs.put(weekday,randInt());
+            weekdayToRL_IDs.put(weekday,Restaurant.randInt());
+
             //Set the clock popup for both buttons (to and from)
             final Button btnFrom = (Button) timetableItem.findViewById(R.id.textClockFrom);
             btnFrom.setOnClickListener(new View.OnClickListener() {
@@ -197,38 +195,20 @@ public class CreateRestaurant_4 extends Fragment {
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
         try {
-            restaurant=new Restaurant(getContext(),sp.getInt("uid",-1));
+            restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));
             for(int i = 0; i < this.weekDays.length; i++) {
                 CheckBox cb = (CheckBox) this.parentView.findViewById(this.weekdayToRL_IDs.get(this.weekDays[i])).findViewById(R.id.checkBox);
                 if(cb.isChecked()){
                     Button bFrom = (Button) this.parentView.findViewById(this.weekdayToRL_IDs.get(this.weekDays[i])).findViewById(R.id.textClockFrom);
-
-                    //TODO Fix this.
                     Button bTo = (Button) this.parentView.findViewById(this.weekdayToRL_IDs.get(this.weekDays[i])).findViewById(R.id.textClockTo);
-                    //restaurant.setDuration(i,bFrom.getText(),bTo.getText());
+                    restaurant.setDurationDinner(i,bFrom.getText().toString(),bTo.getText().toString());
                 }
             }
             return true;
         } catch (RestaurantException e) {
-            e.printStackTrace();
+            Log.e(METHOD_NAME, e.getMessage());
             return false;
         }
-    }
-
-    //TODO Move randInt inside the dataStructures classes
-    public static int randInt() {
-
-        // NOTE: This will (intentionally) not run as written so that folks
-        // copy-pasting have to think about how to initialize their
-        // Random instance.  Initialization of the Random instance is outside
-        // the main scope of the question, but some decent options are to have
-        // a field that is initialized once and then re-used as needed or to
-        // use ThreadLocalRandom (if using at least Java 1.7).
-        Random rand= new Random();
-
-        // nextInt is normally exclusive of the top value,
-        // so add 1 to make it inclusive
-        return rand.nextInt(Integer.MAX_VALUE -1 );
     }
 
     @Override
@@ -259,7 +239,6 @@ public class CreateRestaurant_4 extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface onFragInteractionListener {
-        // TODO: Update argument type and name
         void onChangeFrag4(Restaurant r);
     }
 }

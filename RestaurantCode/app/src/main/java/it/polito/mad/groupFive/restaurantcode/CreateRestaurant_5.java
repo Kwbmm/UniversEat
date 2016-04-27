@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,48 +114,24 @@ public class CreateRestaurant_5 extends Fragment {
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
         try {
-            restaurant=new Restaurant(getContext(),sp.getInt("uid",-1));
-            /**
-             * TODO create getter/setter for saving tickets inside Restaurant class.
-             * Methods should be:
-             *      void setTickets(ArrayList<String> tickets);
-             *      void addTicket(String ticket);
-             *
-             *      ArrayList<String> getTickets();
-             *      boolean isTicketAccepted(String ticket);
-             */
+            restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));
             //Get all the tickets
             ArrayList<CheckBox> ticketCBs = new ArrayList<>();
+            //TODO wanna add more tickets??
             ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_1));
             ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_2));
             ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_3));
             ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_4));
+            ArrayMap<Integer,String> ticketMap = new ArrayMap<>();
             for(CheckBox cb : ticketCBs){
-                if(cb.isChecked()) {
-                    //restaurant.addTicket(cb.getText());
-                }
+                if(cb.isChecked()) ticketMap.put(cb.getId(),cb.getText().toString());
             }
+            restaurant.setTickets(ticketMap);
             return true;
         } catch (RestaurantException e) {
-            e.printStackTrace();
+            Log.e(METHOD_NAME, e.getMessage());
             return false;
         }
-    }
-
-    //TODO Move randInt inside the dataStructures classes
-    public static int randInt() {
-
-        // NOTE: This will (intentionally) not run as written so that folks
-        // copy-pasting have to think about how to initialize their
-        // Random instance.  Initialization of the Random instance is outside
-        // the main scope of the question, but some decent options are to have
-        // a field that is initialized once and then re-used as needed or to
-        // use ThreadLocalRandom (if using at least Java 1.7).
-        Random rand= new Random();
-
-        // nextInt is normally exclusive of the top value,
-        // so add 1 to make it inclusive
-        return rand.nextInt(Integer.MAX_VALUE -1 );
     }
 
     @Override

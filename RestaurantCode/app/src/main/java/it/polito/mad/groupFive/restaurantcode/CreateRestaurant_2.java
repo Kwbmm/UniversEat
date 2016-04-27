@@ -112,26 +112,33 @@ public class CreateRestaurant_2 extends Fragment {
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
         try {
-            restaurant=new Restaurant(getContext(),sp.getInt("uid",-1));
+            restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));
             TextView address = (TextView) parentView.findViewById(R.id.editText_Address);
-            if(address.getText().toString().equals("") || address.getText() == null)
+            if(address.getText().toString().equals("") || address.getText() == null){
+                Log.w(METHOD_NAME,"TextView Address is either empty or null");
                 return false;
+            }
             restaurant.setAddress(address.getText().toString());
 
             TextView city = (TextView) parentView.findViewById(R.id.editText_City);
-            if(city.getText().toString().equals("") || city.getText() == null)
+            if(city.getText().toString().equals("") || city.getText() == null){
+                Log.w(METHOD_NAME,"TextView City is either empty or null");
                 return false;
+            }
             restaurant.setCity(city.getText().toString());
 
-            //TODO Create methods to set this data
             TextView ZIPCode = (TextView) parentView.findViewById(R.id.editText_ZIPCode);
-            if(ZIPCode.getText().toString().equals("") || ZIPCode.getText() == null)
+            if(ZIPCode.getText().toString().equals("") || ZIPCode.getText() == null){
+                Log.w(METHOD_NAME,"TextView ZIPCode is either empty or null");
                 return false;
-            //restaurant.setZIPCode(ZIPCode.getText().toString());
+            }
+            restaurant.setZIPCode(ZIPCode.getText().toString());
 
             TextView state = (TextView) parentView.findViewById(R.id.editText_State);
-            if(state.getText().toString().equals("") || state.getText() == null)
+            if(state.getText().toString().equals("") || state.getText() == null){
+                Log.w(METHOD_NAME,"TextView State is either empty or null");
                 return false;
+            }
             restaurant.setState(state.getText().toString());
 
             //TODO Manage GMaps to set this data
@@ -139,26 +146,9 @@ public class CreateRestaurant_2 extends Fragment {
             //restaurant.setYcoord();
             return true;
         } catch (RestaurantException e) {
-            e.printStackTrace();
+            Log.e(METHOD_NAME, e.getMessage());
             return false;
         }
-
-    }
-
-    //TODO Move randInt inside the dataStructures classes
-    public static int randInt() {
-
-        // NOTE: This will (intentionally) not run as written so that folks
-        // copy-pasting have to think about how to initialize their
-        // Random instance.  Initialization of the Random instance is outside
-        // the main scope of the question, but some decent options are to have
-        // a field that is initialized once and then re-used as needed or to
-        // use ThreadLocalRandom (if using at least Java 1.7).
-        Random rand= new Random();
-
-        // nextInt is normally exclusive of the top value,
-        // so add 1 to make it inclusive
-        return rand.nextInt(Integer.MAX_VALUE -1 );
     }
 
     @Override

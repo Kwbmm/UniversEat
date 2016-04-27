@@ -55,8 +55,6 @@ import it.polito.mad.groupFive.restaurantcode.libs.RealPathUtil;
  * create an instance of this fragment.
  */
 public class CreateRestaurant_1 extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -77,7 +75,6 @@ public class CreateRestaurant_1 extends Fragment {
     private Restaurant restaurant = null;
 
     public CreateRestaurant_1() {
-        // Required empty public constructor
     }
 
     /**
@@ -88,7 +85,6 @@ public class CreateRestaurant_1 extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment CreateRestaurant_1.
      */
-    // TODO: Rename and change types and number of parameters
     public static CreateRestaurant_1 newInstance(String param1, String param2) {
         CreateRestaurant_1 fragment = new CreateRestaurant_1();
         Bundle args = new Bundle();
@@ -157,54 +153,51 @@ public class CreateRestaurant_1 extends Fragment {
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
         try {
-            restaurant=new Restaurant(getContext(),sp.getInt("uid",-1));
+            restaurant=new Restaurant(getContext());
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putInt("rid",restaurant.getRid());
+            editor.apply();
             TextView name = (TextView) parentView.findViewById(R.id.editText_RestaurantName);
-            if(name.getText().toString().equals("") || name.getText() == null)
+            if(name.getText().toString().equals("") || name.getText() == null){
+                Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
                 return false;
+            }
             restaurant.setName(name.getText().toString());
 
             TextView description = (TextView) parentView.findViewById(R.id.editText_Description);
-            if(description.getText().toString().equals("") || description.getText() == null)
+            if(description.getText().toString().equals("") || description.getText() == null){
+                Log.w(METHOD_NAME,"TextView Description is either empty or null");
                 return false;
+            }
             restaurant.setDescription(description.getText().toString());
 
             ImageView restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
-            if(restaurantImg.getDrawable() == null)
+            if(restaurantImg.getDrawable() == null){
+                Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
                 return false;
-            //TODO Fix this!!
-            //restaurant.setImage64FromDrawable(restaurantImg.getDrawable());
+            }
+
+            restaurant.setImageUri(this.restaurantPicUri);
 
             TextView telephone = (TextView) parentView.findViewById(R.id.editText_Telephone);
-            if(telephone.getText().toString().equals("") || telephone.getText() == null)
+            if(telephone.getText().toString().equals("") || telephone.getText() == null){
+                Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
                 return false;
-            //restaurant.setTelephone(telephone.getText().toString());
+            }
+            restaurant.setTelephone(telephone.getText().toString());
 
             TextView website = (TextView) parentView.findViewById(R.id.editText_Website);
-            if(website.getText().toString().equals("") || website.getText() == null)
+            if(website.getText().toString().equals("") || website.getText() == null){
+                Log.w(METHOD_NAME,"TextView Website is either empty or null");
                 return false;
-            //restaurant.setWebsite(website.getText().toString());
+            }
+            restaurant.setWebsite(website.getText().toString());
 
             return true;
         } catch (RestaurantException e) {
-            e.printStackTrace();
+            Log.e(METHOD_NAME,e.getMessage());
             return false;
         }
-    }
-
-    //TODO Move randInt inside the dataStructures classes
-    public static int randInt() {
-
-        // NOTE: This will (intentionally) not run as written so that folks
-        // copy-pasting have to think about how to initialize their
-        // Random instance.  Initialization of the Random instance is outside
-        // the main scope of the question, but some decent options are to have
-        // a field that is initialized once and then re-used as needed or to
-        // use ThreadLocalRandom (if using at least Java 1.7).
-        Random rand= new Random();
-
-        // nextInt is normally exclusive of the top value,
-        // so add 1 to make it inclusive
-        return rand.nextInt(Integer.MAX_VALUE -1 );
     }
 
     private void pickImage(){
@@ -314,7 +307,7 @@ public class CreateRestaurant_1 extends Fragment {
                 this.restaurantPic.setImageDrawable(resize(imageBitmap));
             } catch(FileNotFoundException fnfe) { Log.e(METHOD_NAME,fnfe.getMessage());}
         }
-        if(resultCode == getActivity().RESULT_OK && requestCode == CAPTURE_IMAGE){
+        if(resultCode == CreateRestaurant.RESULT_OK && requestCode == CAPTURE_IMAGE){
             this.restaurantPic = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
             try{
                 Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(restaurantPicUri));
@@ -398,7 +391,6 @@ public class CreateRestaurant_1 extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface onFragInteractionListener {
-        // TODO: Update argument type and name
         void onChangeFrag1(Restaurant r);
     }
 }
