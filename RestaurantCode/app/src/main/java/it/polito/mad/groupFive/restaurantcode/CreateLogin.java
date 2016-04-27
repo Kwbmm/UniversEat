@@ -19,18 +19,27 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 /**
  * Created by Giovanni on 22/04/16.
  */
-public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFragmentInteractionListener, Createlog_frag2.OnFragmentInteractionListener{
-    User user=null;
+public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFragmentInteractionListener, Createlog_frag2.OnFragmentInteractionListener,Createlog_frag1.OnFragmentInteractionListener{
+    private int uid;
+    private boolean owner;
+    private RestaurantOwner user_r=null;
+    private Customer user=null;
+    private Bundle bundle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,33 +50,71 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
         Createlog_frag fragment= new Createlog_frag();
         getSupportFragmentManager().beginTransaction().add(R.id.ac_login,fragment).commit();
 
-        SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
 
+    }
+    public void onChangeFrag0(boolean o){
+        SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
+        uid=sp.getInt("uid",-1);
+        this.owner=o;
         try {
-            user = new User(getApplicationContext(),sp.getInt("rid",-1),sp.getInt("uid",-1));
-        } catch (UserException e) {
+            if (owner)
+                user_r = new RestaurantOwner(getApplicationContext(),uid);
+            else
+                user = new Customer(getApplicationContext(),uid);
+
+
+        } catch (RestaurantOwnerException e) {
+            e.printStackTrace();
+        } catch (CustomerException e) {
             e.printStackTrace();
         }
 
 
-    }
-    public void onChangeFrag(User u) {
-        final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag";
-        user.setName(u.getName());
-        user.setSurname(u.getSurname());
-        user.setMail(u.getMail());
-        user.setNickname(u.getNickname());
+        bundle = new Bundle();
+        bundle.putBoolean("owner", owner);
+        Createlog_frag1 frag1 = new Createlog_frag1();
+        frag1.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.ac_login,frag1).addToBackStack(null).commit();
 
+    }
+    public void onChangeFrag(Customer u, RestaurantOwner u_r) {
+        final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag";
+        if(owner){
+            user_r.setName(u_r.getName());
+            user_r.setSurname(u_r.getSurname());
+            user_r.setEmail(u_r.getEmail());
+            user_r.setUserName(u_r.getUserName());
+        }
+        else {
+            user.setName(u.getName());
+            user.setSurname(u.getSurname());
+            user.setEmail(u.getEmail());
+            user.setUserName(u.getUserName());
+        }
         Createlog_frag2 frag2 = new Createlog_frag2();
+        frag2.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.ac_login,frag2).addToBackStack(null).commit();
 
     }
-    public void onChangeFrag1(User u){
+    public void onChangeFrag1(Customer u, RestaurantOwner u_r){
         final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag1";
-        user.setPassword(u.getPassword());
-        user.setRestaurantowner(u.isRestaurantowner());
+        if(owner) {
+            user_r.setPassword(u_r.getPassword());
+            try {
+                user_r.saveData();
+            } catch (RestaurantOwnerException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            user.setPassword(u.getPassword());
+            try {
+                user.saveData();
+            } catch (CustomerException e) {
+                e.printStackTrace();
+            }
+        }
 
-        // TODO: 22/04/16 salvare dati utente
         finish();
     }
 

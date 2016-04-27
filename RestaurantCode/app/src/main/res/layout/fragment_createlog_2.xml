@@ -48,13 +48,6 @@
             android:layout_alignParentStart="true"
             android:inputType="text"
             />
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editText_Password_repeat"
-            android:text="@string/restaurantowner"
-            android:id="@+id/owner"
-            />
 
 
         <Button
@@ -64,10 +57,9 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:text="@string/button_end"
-            android:layout_below="@id/owner"
             android:layout_marginTop="@dimen/btn_marginTop"
             android:layout_marginRight="@dimen/btn_marginRight"
             android:layout_marginEnd="@dimen/btn_marginRight"
-            />
+            android:layout_below="@id/editText_Password_repeat" />
     </RelativeLayout>
 </FrameLayout>

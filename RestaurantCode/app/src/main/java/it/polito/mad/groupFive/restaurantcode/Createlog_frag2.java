@@ -14,8 +14,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
+import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 /**
@@ -37,11 +42,14 @@ public class Createlog_frag2 extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private User user=null;
+    private Customer user=null;
+    private RestaurantOwner user_r=null;
 
     private EditText txtpassword;
     private EditText txtrepeat;
     private boolean owner;
+    private String pw1;
+    private String pw2;
 
 
     public Createlog_frag2(){
@@ -83,27 +91,19 @@ public class Createlog_frag2 extends Fragment {
     }
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onChangeFrag1(User user);
+        void onChangeFrag1(Customer u, RestaurantOwner u_r);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName() + " - onCreateView";
+        owner =this.getArguments().getBoolean("owner");
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_createlog_2, container, false);
         txtpassword = (EditText) v.findViewById(R.id.editText_Password);
         txtrepeat = (EditText) v.findViewById(R.id.editText_Password_repeat);
-
-
-        final CheckBox restaurantowner = (CheckBox) v.findViewById(R.id.owner);
-        restaurantowner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                if(restaurantowner.isChecked())
-                    owner =true;
-                else owner = false;
-            }
-        });
+        pw1 = txtpassword.getText().toString();
+        pw2 = txtrepeat.getText().toString();
 
 
         Button btnNext = (Button) v.findViewById(R.id.Button_End);
@@ -115,10 +115,17 @@ public class Createlog_frag2 extends Fragment {
                 Activity a = getActivity();
                 if(a instanceof OnFragmentInteractionListener) {
                     //// TODO: 22/04/16 confronto se i due campi password sono uguali: if not popup
-                    setUserData();
 
-                    OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
-                    obs.onChangeFrag1(user);
+                    if(pw1.equals(pw2)){
+                        setUserData();
+                        OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
+                        obs.onChangeFrag1(user,user_r);
+                    }
+                    else{
+                        Toast.makeText(getContext(),getResources().getString(R.string.toastloginFail),Toast.LENGTH_LONG)
+                                .show();
+                    }
+
                 }}});
 
         return v;
@@ -128,16 +135,21 @@ public class Createlog_frag2 extends Fragment {
     public void setUserData(){
         final String METHOD_NAME = this.getClass().getName()+" - setUserData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
-        int rid = sp.getInt("rid",-1);
         int uid = sp.getInt("uid",-1);
 
         try {
-            user = new User(getActivity(), rid, uid);
-            user.setPassword(txtpassword.getText().toString());
-            user.setRestaurantowner(owner);
+            if(owner){
+                user_r = new RestaurantOwner(getActivity(),uid);
+                user_r.setPassword(pw1);
+            }
+            else {
+                user = new Customer(getActivity(), uid);
+                user.setPassword(pw1);
+            }
 
-
-        } catch (UserException e) {
+        } catch (RestaurantOwnerException e) {
+            e.printStackTrace();
+        } catch (CustomerException e) {
             e.printStackTrace();
         }
 
