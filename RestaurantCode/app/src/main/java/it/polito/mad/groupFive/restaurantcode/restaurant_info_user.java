@@ -91,6 +91,8 @@ public class Restaurant_info_user extends Fragment {
         } catch (RestaurantException e) {
             e.printStackTrace();
         }
+        TextView rest_rev_det =(TextView)v.findViewById(R.id.restaurant_rev_details);
+        rest_rev_det.setText("Based on "+restaurant.getReviews().size()+" Reviews");
         TextView restname= (TextView) v.findViewById(R.id.restaurant_name);
         restname.setText(restaurant.getName());
         TextView restaddr=(TextView) v.findViewById(R.id.restaurant_address);

@@ -1,6 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -9,6 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
@@ -74,6 +78,25 @@ public class Review_user_view extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuItem glass =menu.findItem(R.id.search_ab);
+        glass.setVisible(false);
+        inflater.inflate(R.menu.toolbar_add,menu);
+        MenuItem item=menu.findItem(R.id.add_ab);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent new_rew= new Intent(getContext(),Create_review.class);
+                new_rew.putExtra("rid",rest.getRid());
+                startActivityForResult(new_rew,1);
+                return true;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
     public void readdata(View v) {
 
 
@@ -105,6 +128,7 @@ public class Review_user_view extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);

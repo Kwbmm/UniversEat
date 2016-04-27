@@ -109,7 +109,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/restaurant_time_t"
                 android:layout_below="@id/restaurant_tel"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
             </LinearLayout>
 
 

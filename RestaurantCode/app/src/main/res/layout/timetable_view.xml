@@ -9,7 +9,8 @@
         android:text="DayOfWeek"
         android:textSize="18dp"
         android:layout_alignParentLeft="true"
-        android:id="@+id/dow"/>
+        android:id="@+id/dow"
+        android:paddingLeft="6dp"/>
     <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

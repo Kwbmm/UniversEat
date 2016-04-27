@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -26,7 +27,6 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         try {
             restaurant=new Restaurant(getBaseContext(),getIntent().getExtras().getInt("rid"));
             restaurant.getData();
@@ -81,6 +81,7 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                     rest_r.getDrawable().setTint(Color.parseColor("#ffffff"));
                     rest_m.getDrawable().setTint(Color.parseColor("#000000"));
                     rest_i.getDrawable().setTint(Color.parseColor("#000000"));}
+
                     Review_user_view review_user_view=new Review_user_view();
                     getSupportFragmentManager()
                             .beginTransaction()
@@ -113,7 +114,6 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
     public void onFragmentInteraction(Uri uri) {
 
     }
-
 
 
     @Override
