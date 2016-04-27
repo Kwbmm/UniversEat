@@ -65,27 +65,13 @@ public class Home extends NavigationDrawer {
             recyclerView.setLayoutManager(llm);
         }
         /**
-         * These lines of code are for setting up the searchview and let it know about the activity
+         * These lines of code are for setting up the searchView and let it know about the activity
          * used to performed searches (SearchResult.java).
          * More info:
          *  http://developer.android.com/guide/topics/search/search-dialog.html#UsingSearchWidget
          */
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView= (SearchView) findViewById(R.id.search_view);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                final String METHOD_NAME = this.getClass().getName()+" - onQueryTextSubmit";
-                Log.d(METHOD_NAME,"Yes, this is dog!");
-                Log.d(METHOD_NAME,query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
 
