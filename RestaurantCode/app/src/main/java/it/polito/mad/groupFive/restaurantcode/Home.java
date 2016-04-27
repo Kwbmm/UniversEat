@@ -1,5 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -55,196 +57,197 @@ public class Home extends NavigationDrawer {
         getMenus();
 
         if(menusshared!=null){
-        adp= new MenuAdapter(menusshared);
-        RecyclerView recyclerView=(RecyclerView)findViewById(R.id.home_menu_rw);
-        recyclerView.setAdapter(adp);
-        LinearLayoutManager llm=new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
+            adp= new MenuAdapter(menusshared);
+            RecyclerView recyclerView=(RecyclerView)findViewById(R.id.home_menu_rw);
+            recyclerView.setAdapter(adp);
+            LinearLayoutManager llm=new LinearLayoutManager(this);
+            llm.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(llm);
         }
+        /**
+         * These lines of code are for setting up the searchview and let it know about the activity
+         * used to performed searches (SearchResult.java).
+         * More info:
+         *  http://developer.android.com/guide/topics/search/search-dialog.html#UsingSearchWidget
+         */
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView= (SearchView) findViewById(R.id.search_view);
-        searchView.setIconified(false);
-        searchView.setIconifiedByDefault(false);
-        searchView.setQueryHint(getResources().getString(R.string.search_hello));
-
-
-        ImageButton option= (ImageButton)findViewById(R.id.opt);
-        option.setOnClickListener(new View.OnClickListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onQueryTextSubmit(String query) {
+                final String METHOD_NAME = this.getClass().getName()+" - onQueryTextSubmit";
+                Log.d(METHOD_NAME,"Yes, this is dog!");
+                Log.d(METHOD_NAME,query);
+                return true;
+            }
 
-                int count=1;
-                try {
-
-                    Restaurant rest = new Restaurant(v.getContext());
-                    Order order =new Order(rest,2);
-                    order.setDate(new Date());
-                    order.setMid(14);
-                    order.setUid(22);
-
-                    rest.setUid(2);
-                    rest.setXcoord(0.0f);
-                    rest.setYcoord(0.0f);
-                    rest.setName("Pippo");
-                    rest.setDescription("Figo");
-                    rest.setState("Bello");
-                    rest.setRating(3.5f);
-                    rest.setCity("Politia");
-                    rest.setAddress("Via vai");
-                    rest.setTelephone("011667788");
-                    rest.getOrders().add(order);
-                    Log.v("create",String.valueOf(rest.getOrders().size()));
-                    //rest.setImage64FromDrawable(drawable);
-                    rest.saveData();
-
-                    ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> ms = rest.getMenus();
-                    for (int i = 0; i < 5; i++) {
-
-                        it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
-                        mn.setName("Menu");
-                        mn.setDescription("Description");
-                        mn.setPrice(1.5f);
-                        mn.setTicket(true);
-                        mn.setType(1);
-                        //mn.setImage64FromDrawable(drawable);
-                        //ms.add(mn);
-                        rest.addMenu(mn);
-                        //count++;
-                        User user =new RestaurantOwner(v.getContext());
-                        Review review=new Review(rest,user);
-                        review.setRating(4.3f);
-                        review.setReviewText("Molto Buonissimo");
-                        review.setTitle("Il Massimo della Pizza");
-                        rest.addReview(review);
-
-
-                    }
-                    it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
-                    mn.setName("Orecchiette tris");
-                    mn.setDescription("orecchiette, patate, pollo");
-                    mn.setPrice(1.5f);
-                    mn.setTicket(true);
-                    mn.setType(2);
-                    rest.addMenu(mn);
-                    //ms.add(mn);
-                    //rest.setMenus(ms);
-                    rest.saveData();
-                    SharedPreferences sharedPreferences=v.getContext().getSharedPreferences(getString(R.string.user_pref),v.getContext().MODE_PRIVATE);
-                    SharedPreferences.Editor editor= sharedPreferences.edit();
-                    editor.putInt("uid",2);
-                    editor.putInt("rid",rest.getRid());
-                    editor.commit();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-                //parent.invalidate();
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
 
+        ImageButton option= (ImageButton)findViewById(R.id.opt);
+        if(option != null)
+            option.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int count=1;
+                    try {
+                        Restaurant rest = new Restaurant(v.getContext());
+                        Order order =new Order(rest,2);
+                        order.setDate(new Date());
+                        order.setMid(14);
+                        order.setUid(22);
+
+                        rest.setUid(2);
+                        rest.setXcoord(0.0f);
+                        rest.setYcoord(0.0f);
+                        rest.setName("Pippo");
+                        rest.setDescription("Figo");
+                        rest.setState("Bello");
+                        rest.setRating(3.5f);
+                        rest.setCity("Politia");
+                        rest.setAddress("Via vai");
+                        rest.setTelephone("011667788");
+                        rest.getOrders().add(order);
+                        Log.v("create",String.valueOf(rest.getOrders().size()));
+                        //rest.setImage64FromDrawable(drawable);
+                        rest.saveData();
+
+                        ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> ms = rest.getMenus();
+                        for (int i = 0; i < 5; i++) {
+                            it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
+                            mn.setName("Menu");
+                            mn.setDescription("Description");
+                            mn.setPrice(1.5f);
+                            mn.setTicket(true);
+                            mn.setType(1);
+                            //mn.setImage64FromDrawable(drawable);
+                            //ms.add(mn);
+                            rest.addMenu(mn);
+                            //count++;
+                            User user =new RestaurantOwner(v.getContext());
+                            Review review=new Review(rest,user);
+                            review.setRating(4.3f);
+                            review.setReviewText("Molto Buonissimo");
+                            review.setTitle("Il Massimo della Pizza");
+                            rest.addReview(review);
+                        }
+                        it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
+                        mn.setName("Orecchiette tris");
+                        mn.setDescription("orecchiette, patate, pollo");
+                        mn.setPrice(1.5f);
+                        mn.setTicket(true);
+                        mn.setType(2);
+                        rest.addMenu(mn);
+                        //ms.add(mn);
+                        //rest.setMenus(ms);
+                        rest.saveData();
+                        SharedPreferences sharedPreferences=v.getContext().getSharedPreferences(getString(R.string.user_pref),v.getContext().MODE_PRIVATE);
+                        SharedPreferences.Editor editor= sharedPreferences.edit();
+                        editor.putInt("uid",2);
+                        editor.putInt("rid",rest.getRid());
+                        editor.commit();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            });
     }
 
-private void getMenus(){
-    sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
-    int rid, uid;
-    uid = sharedPreferences.getInt("uid", -1);
-    rid = sharedPreferences.getInt("rid", -1);
-    user=uid;
-    Log.v("uid",uid+" ");
+    private void getMenus(){
+        sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
+        int rid, uid;
+        uid = sharedPreferences.getInt("uid", -1);
+        rid = sharedPreferences.getInt("rid", -1);
+        user=uid;
+        Log.v("uid",uid+" ");
         try {if(uid>0){
-                menusshared = new Restaurant(getBaseContext(),rid).getMenus();}else menusshared=null;
+            menusshared = new Restaurant(getBaseContext(),rid).getMenus();}else menusshared=null;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-}
-
+    }
 
     public static class MenuViewHoder extends RecyclerView.ViewHolder {
-    protected TextView menu_name;
-    protected TextView menu_desctiprion;
-    protected TextView menu_price;
-    protected CardView card;
+        protected TextView menu_name;
+        protected TextView menu_desctiprion;
+        protected TextView menu_price;
+        protected CardView card;
 
-    public MenuViewHoder(View itemView) {
-        super(itemView);
-        this.menu_name =(TextView)itemView.findViewById(R.id.menu_name);
-        this.menu_desctiprion=(TextView)itemView.findViewById(R.id.menu_description);
-        this.menu_price=(TextView)itemView.findViewById(R.id.menu_price);
-        this.card= (CardView) itemView.findViewById(R.id.menu_card);
+        public MenuViewHoder(View itemView) {
+            super(itemView);
+            this.menu_name =(TextView)itemView.findViewById(R.id.menu_name);
+            this.menu_desctiprion=(TextView)itemView.findViewById(R.id.menu_description);
+            this.menu_price=(TextView)itemView.findViewById(R.id.menu_price);
+            this.card= (CardView) itemView.findViewById(R.id.menu_card);
+        }
+    }
+
+    public class MenuAdapter extends RecyclerView.Adapter<MenuViewHoder>{
+        private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menus;
+
+        public MenuAdapter(ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menus){
+            this.menus=menus;
+            sort();
+
+        }
+
+        public void sort(){
+            Collections.sort(this.menus, new Comparator<it.polito.mad.groupFive.restaurantcode.datastructures.Menu>() {
+                @Override
+                public int compare(it.polito.mad.groupFive.restaurantcode.datastructures.Menu lhs, it.polito.mad.groupFive.restaurantcode.datastructures.Menu rhs) {
+                    return rhs.getType()-lhs.getType();
+                }});
+        }
+
+        public void update(){
+            menus=menusshared;
+            sort();
+        }
+
+        @Override
+        public MenuViewHoder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View menu_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_view,null);
+            return new MenuViewHoder(menu_view);
+        }
+
+        @Override
+        public void onBindViewHolder(final MenuViewHoder holder, int position) {
+            it.polito.mad.groupFive.restaurantcode.datastructures.Menu menu =menus.get(position);
+            holder.menu_desctiprion.setText(menu.getDescription());
+            holder.menu_name.setText(menu.getName());
+            holder.menu_price.setText(menu.getPrice()+"€");
+            int rid =menus.get(position).getRid();
+            holder.card.setOnClickListener(new onCardClick(position,rid));
+        }
+
+        @Override
+        public int getItemCount() {
+            return menus.size();
+        }
+
+
+    }
+    public class onCardClick implements View.OnClickListener{
+        private int position;
+        private int rid;
+
+        public onCardClick(int position,int rid){
+            this.position=position;
+            this.rid=rid;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent restinfo=new Intent(getBaseContext(),User_info_view.class);
+            Log.v("rid",rid+"");
+            restinfo.putExtra("rid",this.rid);
+            startActivity(restinfo);
+
+        }
     }
 }
-
-public class MenuAdapter extends RecyclerView.Adapter<MenuViewHoder>{
-    private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menus;
-
-    public MenuAdapter(ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menus){
-        this.menus=menus;
-        sort();
-
-    }
-    public void sort(){
-        Collections.sort(this.menus, new Comparator<it.polito.mad.groupFive.restaurantcode.datastructures.Menu>() {
-            @Override
-            public int compare(it.polito.mad.groupFive.restaurantcode.datastructures.Menu lhs, it.polito.mad.groupFive.restaurantcode.datastructures.Menu rhs) {
-
-                return rhs.getType()-lhs.getType();
-            }});
-    }
-
-    public void update(){
-        menus=menusshared;
-        sort();
-
-    }
-
-    @Override
-    public MenuViewHoder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View menu_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_view,null);
-        return new MenuViewHoder(menu_view);
-    }
-
-    @Override
-    public void onBindViewHolder(final MenuViewHoder holder, int position) {
-        it.polito.mad.groupFive.restaurantcode.datastructures.Menu menu =menus.get(position);
-        holder.menu_desctiprion.setText(menu.getDescription());
-        holder.menu_name.setText(menu.getName());
-        holder.menu_price.setText(menu.getPrice()+"€");
-        int rid =menus.get(position).getRid();
-        holder.card.setOnClickListener(new onCardClick(position,rid));
-    }
-
-
-
-    @Override
-    public int getItemCount() {
-        return menus.size();
-    }
-
-
-    }
-public class onCardClick implements View.OnClickListener{
-    private int position;
-    private int rid;
-
-    public onCardClick(int position,int rid){
-        this.position=position;
-        this.rid=rid;
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        Intent restinfo=new Intent(getBaseContext(),User_info_view.class);
-        Log.v("rid",rid+"");
-        restinfo.putExtra("rid",this.rid);
-        startActivity(restinfo);
-
-    }
-}
-
-
-}
-
-
-
