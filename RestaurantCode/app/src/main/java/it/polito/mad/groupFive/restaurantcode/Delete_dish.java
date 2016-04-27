@@ -26,10 +26,11 @@ import java.util.ArrayList;
  */
 public class Delete_dish extends Fragment {
 
-    ArrayList<Option> options;
-    removeDish dish;
-    public interface removeDish{
-        public ArrayList<Option> remdish();
+    ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options;
+    Option sett;
+    shareDish dish;
+    public interface shareDish{
+        public Option getOption();
     }
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -91,7 +92,8 @@ public class Delete_dish extends Fragment {
     }
 
     public void showlist(View v){
-        options=dish.remdish();
+        sett=dish.getOption();
+        options=sett.getMenu().getOptions();
         DeleteCourse dc=new DeleteCourse(options,getContext());
         ListView list= (ListView) v.findViewById(R.id.ll_del);
         list.setAdapter(dc);
@@ -110,7 +112,7 @@ public class Delete_dish extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-            dish=(removeDish)context;
+            dish=(shareDish) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -138,39 +140,39 @@ public class Delete_dish extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
     public class DeleteCourse extends BaseAdapter{
-        ArrayList<Option> options;
+        ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options;
         Context context;
-        public DeleteCourse(ArrayList<Option> options,Context context){
+        public DeleteCourse(ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options, Context context){
             this.options=options;
             this.context=context;
         }
 
         @Override
         public int getCount() {
-            return options.get(options.get(0).getOpt_number()).getDishes().size();
+            return options.get(sett.getOpt_number()).getCourses().size();
         }
 
         @Override
         public Object getItem(int position) {
-            return options.get(options.get(0).getOpt_number()).getDishes().get(position);
+            return options.get(sett.getOpt_number()).getCourses().get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return options.get(options.get(0).getOpt_number()).getDishes().get(position).hashCode();
+            return options.get(sett.getOpt_number()).getCourses().get(position).hashCode();
         }
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView=LayoutInflater.from(context).inflate(R.layout.delete_item_list, null);
             TextView name= (TextView) convertView.findViewById(R.id.obj_li);
-            name.setText(getItem(position).toString());
+            name.setText(options.get(sett.getOpt_number()).getCourses().get(position).getName());
 
             ImageButton delete = (ImageButton) convertView.findViewById(R.id.delete_but);
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    options.get(options.get(0).getOpt_number()).getDishes().remove(position);
+                    options.get(sett.getOpt_number()).getCourses().remove(position);
                     showlist(v.getRootView());
                 }
             });

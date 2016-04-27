@@ -24,16 +24,17 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OptionException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
-public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Add_dish.OnFragmentInteractionListener,Add_dish.new_dish,Create_menu_frag2.shareDish,Delete_dish.removeDish,Delete_dish.OnFragmentInteractionListener
-{
+public class Create_menu extends NavigationDrawer implements Create_menu_frag.OnFragmentInteractionListener,Create_menu_frag2.OnFragmentInteractionListener,Create_menu_frag2.shareDish,Add_dish.OnFragmentInteractionListener,Add_dish.shareDish,Delete_dish.OnFragmentInteractionListener,Delete_dish.shareDish{
     private Restaurant restaurant=null;
     private RestaurantOwner user=null;
     private Menu menu=null;
 
-    ArrayList<Option> options;
+    Option option;
+    int dimension;
 
 
 
@@ -46,18 +47,13 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         Create_menu_frag fragment= new Create_menu_frag();
         getSupportFragmentManager().beginTransaction().add(R.id.acm_1,fragment).commit();
 
-        int dimension=3;
-        options =new ArrayList<>();
-        for (int i=0;i<dimension;i++){
-            Option opt=new Option();
-            options.add(opt);
-        }
+
 
 
         SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref), Create_menu.MODE_PRIVATE);
 
         try {
-            restaurant= new Restaurant(getBaseContext());
+            restaurant= new Restaurant(getBaseContext(),sp.getInt("rid",-1));
             restaurant.getData();
             this.menu=new Menu(restaurant);
         } catch (RestaurantException e) {
@@ -75,7 +71,21 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         this.menu.setDescription(m.getDescription());
         this.menu.setType(m.getType());
         this.menu.setChoiceAmount(m.getChoiceAmount());
+        ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> ops=menu.getOptions();
+        int count=0;
+        while (count<menu.getChoiceAmount()){
+            try {
+                ops.add(new it.polito.mad.groupFive.restaurantcode.datastructures.Option(restaurant));
+                count++;
+            } catch (OptionException e) {
+                e.printStackTrace();
+            }
+        }
 
+
+        menu.setOptions(ops);
+        option=new Option(this.menu,this.restaurant);
+        Log.d("menu",menu.getChoiceAmount()+"");
         //this.menu.setImage64(m.getImage64());
         Log.d(METHOD_NAME,"Name: "+menu.getName());
         Log.d(METHOD_NAME,"Description: "+menu.getDescription());
@@ -94,7 +104,7 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         this.menu.setServiceFee(m.isServiceFee());
 
         try {
-            restaurant.getMenus().add(this.menu);
+            restaurant.addMenu(this.menu);
             restaurant.saveData();
             finish();
         } catch (RestaurantException e) {
@@ -111,19 +121,10 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
     }
 
     @Override
-    public ArrayList<Option> add_new_dish() {
-        return options;
+    public Option getOption() {
+        return option;
     }
 
-    @Override
-    public ArrayList<Option> getdish() {
-        return options;
-    }
-
-    @Override
-    public ArrayList<Option> remdish() {
-        return options;
-    }
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

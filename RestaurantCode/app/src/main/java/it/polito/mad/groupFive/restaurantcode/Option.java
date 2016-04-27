@@ -2,14 +2,28 @@ package it.polito.mad.groupFive.restaurantcode;
 
 import java.util.ArrayList;
 
+import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+
 /**
  * Created by MacBookRetina on 14/04/16.
  */
 public class Option {
-    private ArrayList<String> dishes;
+    private Restaurant restaurant;
+    private Menu menu;
     private int opt_number;
-    public ArrayList<String> getDishes() {
-        return dishes;
+
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public Menu getDishes() {
+
+        return this.menu;
     }
 
     public int getOpt_number() {
@@ -20,18 +34,9 @@ public class Option {
         this.opt_number = opt_number;
     }
 
-    public Option(){
-        dishes=new ArrayList<String>();
-        dishes.add("torta");
-        dishes.add("mela");
-        dishes.add("carota");
-
-        dishes.add("salame");
-        dishes.add("zucca");
-        dishes.add("pizza");
-
+    public Option(Menu menu,Restaurant rest) {
+        this.menu=menu;
+        this.restaurant=rest;
     }
-    public void add_dish(String dish){
-        dishes.add(dish);
-    }
+
 }

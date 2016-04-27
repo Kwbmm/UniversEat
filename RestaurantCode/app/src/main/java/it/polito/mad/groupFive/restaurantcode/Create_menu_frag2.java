@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
@@ -36,11 +37,10 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 public class Create_menu_frag2 extends Fragment {
-    int dimension=3;
-    ArrayList<Option> options;
+
     shareDish dish;
     public interface shareDish{
-        public ArrayList<Option> getdish();
+        public Option getOption();
     }
 
     // TODO: Rename parameter arguments, choose names that match
@@ -51,10 +51,13 @@ public class Create_menu_frag2 extends Fragment {
     private String mParam1;
     private String mParam2;
     private Menu menu=null;
+    private Menu optMenu;
     private Restaurant restaurant=null;
     private EditText editprice;
     private boolean beverage;
     private boolean servicefee;
+    private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options;
+    private Option sett;
 
     private OnFragmentInteractionListener mListener;
 
@@ -83,7 +86,7 @@ public class Create_menu_frag2 extends Fragment {
 
 
         }
-        options=dish.getdish();
+
 
     }
 
@@ -92,6 +95,7 @@ public class Create_menu_frag2 extends Fragment {
                              Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName() + " - onCreateView";
         // Inflate the layout for this fragment
+        sett=dish.getOption();
         View v = inflater.inflate(R.layout.fragment_create_menu_2, container, false);
 
         editprice = (EditText) v.findViewById(R.id.fcm2_price);
@@ -131,8 +135,8 @@ public class Create_menu_frag2 extends Fragment {
 
             }}
         });
-
-
+        optMenu=dish.getOption().getMenu();
+        options=optMenu.getOptions();
         MenuCourse adp=new MenuCourse(container.getContext(),options);
         ListView lwcm = (ListView) v.findViewById(R.id.lwch_2_1);
         lwcm.setAdapter(adp);
@@ -145,12 +149,9 @@ public class Create_menu_frag2 extends Fragment {
         int uid = sp.getInt("uid",-1);
 
         try {
+            this.menu=sett.getMenu();
             restaurant = new Restaurant(getContext(),rid);
             restaurant.getData();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                menu = new Menu(restaurant, ThreadLocalRandom.current().nextInt(1, Integer.MAX_VALUE));
-            else //TODO Move randInt inside dataStructures classes
-                menu = new Menu(restaurant, randInt());
             String txtprice = editprice.getText().toString();
             if (txtprice.equals(""))
                 menu.setPrice(Float.parseFloat("0.0"));
@@ -160,8 +161,6 @@ public class Create_menu_frag2 extends Fragment {
             menu.setServiceFee(servicefee);
 
         } catch (RestaurantException e) {
-            e.printStackTrace();
-        }  catch (MenuException e) {
             e.printStackTrace();
         }
 
@@ -205,14 +204,14 @@ public class Create_menu_frag2 extends Fragment {
 
     public class MenuCourse extends BaseAdapter {
         Context context;
-        ArrayList<Option> options;
+        ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options;
 
-        public MenuCourse(ArrayList<Option> options){
+        public MenuCourse(ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options){
             this.options=options;
         }
 
 
-        public MenuCourse(Context context, ArrayList<Option> options) {
+        public MenuCourse(Context context, ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options) {
             this.options=options;
             this.context = context;
         }
@@ -240,12 +239,12 @@ public class Create_menu_frag2 extends Fragment {
             LinearLayout ll= (LinearLayout) convertView.findViewById(R.id.ll_mc);
 
 
-            for (String str:options.get(position).getDishes()){
+            for (Course dish:options.get(position).getCourses()){
                 LayoutInflater inflater=LayoutInflater.from(context);
                 View child =inflater.inflate(R.layout.row,null);
                 ll.addView(child);
                 TextView textView= (TextView) child.findViewById(R.id.ll_row);
-                textView.setText("- "+str);
+                textView.setText("- "+dish.getName());
 
 
             }
@@ -257,7 +256,7 @@ public class Create_menu_frag2 extends Fragment {
                     FrameLayout mlay= (FrameLayout) v.findViewById(R.id.frame);
                     mlay.inflate(v.getContext(), R.layout.activity_create_menu, mlay);
                     Add_dish fragment= new Add_dish();
-                    options.get(0).setOpt_number(position);
+                    sett.setOpt_number(position);
                     getFragmentManager().beginTransaction().replace(R.id.acm_1,fragment).addToBackStack(null).commit();
 
                 }
@@ -269,7 +268,7 @@ public class Create_menu_frag2 extends Fragment {
                     FrameLayout mlay= (FrameLayout) v.findViewById(R.id.frame);
                     mlay.inflate(v.getContext(), R.layout.fragment_delete_dish, mlay);
                     Delete_dish fragment= new Delete_dish();
-                    options.get(0).setOpt_number(position);
+                    sett.setOpt_number(position);
                     getFragmentManager().beginTransaction().replace(R.id.acm_1,fragment).addToBackStack(null).commit();
                 }
             });

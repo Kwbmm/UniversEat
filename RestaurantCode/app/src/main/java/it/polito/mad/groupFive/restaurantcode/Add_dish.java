@@ -16,6 +16,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,12 +29,13 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class Add_dish extends Fragment {
-    private ArrayList<Option> options;
-    private new_dish dish;
+    private Option sett;
+    private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options;
     private String namedish;
     private View parent;
-    public interface new_dish{
-        ArrayList<Option> add_new_dish();
+    private shareDish dish;
+    public interface shareDish{
+        public Option getOption();
     }
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,7 +73,6 @@ public class Add_dish extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        options=dish.add_new_dish();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -81,6 +84,8 @@ public class Add_dish extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+        sett=dish.getOption();
+        options=sett.getMenu().getOptions();
         View view=inflater.inflate(R.layout.fragment_add_dish, container, false);
         parent=view;
         Spinner type=(Spinner) view.findViewById(R.id.nd_type);
@@ -107,11 +112,22 @@ public class Add_dish extends Fragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position=options.get(0).getOpt_number();
+                int position=sett.getOpt_number();
                 EditText newdish = (EditText) parent.findViewById(R.id.nd_et_1);
                 namedish=  newdish.getText().toString();
                 if (namedish.isEmpty()==false){
-                    options.get(position).add_dish(namedish);
+                    try {
+                        //TODO other info
+                        Course course =new Course(dish.getOption().getRestaurant());
+                        ArrayList<Course> courses=options.get(position).getCourses();
+                        course.setName(namedish);
+                        courses.add(course);
+
+                    } catch (CourseException e) {
+                        e.printStackTrace();
+                    }
+
+
                     Log.v("dish",namedish);
                 }
                 Log.v("else",namedish);
@@ -135,7 +151,7 @@ public class Add_dish extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-            dish=(new_dish) context;
+            dish=(shareDish) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

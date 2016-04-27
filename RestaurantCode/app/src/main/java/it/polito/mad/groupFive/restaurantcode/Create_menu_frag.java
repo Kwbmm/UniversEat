@@ -22,6 +22,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -91,6 +92,7 @@ public class Create_menu_frag extends Fragment {
     private int type=1;
     private int value;
     private String spin ;
+    private NumberPicker numberPicker;
     int mid;
     private SharedPreferences file;
     private SharedPreferences.Editor editor;
@@ -147,7 +149,7 @@ public class Create_menu_frag extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
-        final NumberPicker numberPicker = (NumberPicker) v.findViewById(R.id.numberPicker);
+        numberPicker = (NumberPicker) v.findViewById(R.id.numberPicker);
         numberPicker.setEnabled(false);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
@@ -163,7 +165,6 @@ public class Create_menu_frag extends Fragment {
                     numberPicker.setMinValue(1);
                     numberPicker.setMaxValue(6);
                     numberPicker.setWrapSelectorWheel(true);
-                    value =numberPicker.getValue();
                     type=2;
 
                 }
@@ -433,6 +434,10 @@ public class Create_menu_frag extends Fragment {
             menu=new Menu(restaurant);
             menu.setName(txtname.getText().toString());
             menu.setDescription(txtdesc.getText().toString());
+            if(numberPicker.isEnabled()){
+            value =numberPicker.getValue();}
+            else { value=1;
+            }
             menu.setChoiceAmount(value);
             if (!menu.setType(type))
                 throw new MenuException("Error number of type");
