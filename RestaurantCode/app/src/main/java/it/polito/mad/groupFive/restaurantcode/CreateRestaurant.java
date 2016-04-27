@@ -36,7 +36,7 @@ public class CreateRestaurant
         try {
             SharedPreferences sp = getSharedPreferences(getString(R.string.user_pref),CreateRestaurant.MODE_PRIVATE);
             this.restaurant = new Restaurant(getApplicationContext(),sp.getInt("rid",-1));
-            SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
+            SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),CreateRestaurant.MODE_PRIVATE);
             SharedPreferences.Editor editor= sharedPreferences.edit();
             editor.putInt("rid",this.restaurant.getRid());
             editor.commit();
