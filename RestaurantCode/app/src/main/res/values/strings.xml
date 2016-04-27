@@ -173,5 +173,14 @@
     <string name="nov">Nov</string>
     <string name="dec">Dec</string>
 
+    <string name="username">User name:</string>
+    <string name="mailaddress">Mail address:</string>
+    <string name="surname">User surname:</string>
+    <string name="nickname">Nickname:</string>
+    <string name="password">Password:</string>
+    <string name="password_repeat">Repeat password:</string>
+    <string name="button_end">END</string>
+    <string name="restaurantowner">Restaurant owner</string>
+
 
 </resources>
