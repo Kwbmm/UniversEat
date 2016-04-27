@@ -173,14 +173,21 @@
     <string name="nov">Nov</string>
     <string name="dec">Dec</string>
 
-    <string name="username">User name:</string>
+    <string name="username">Name:</string>
     <string name="mailaddress">Mail address:</string>
-    <string name="surname">User surname:</string>
-    <string name="nickname">Nickname:</string>
+    <string name="surname">Surname:</string>
+    <string name="nickname">Username:</string>
     <string name="password">Password:</string>
     <string name="password_repeat">Repeat password:</string>
     <string name="button_end">END</string>
     <string name="restaurantowner">Restaurant owner</string>
+
+    <string name="login">Here you create a new account</string>
+    <string name="login1">Check the box if you are a RESTAURANT OWNER:</string>
+    <string name="login_rest">RESTAURANT OWNER</string>
+
+    <string name="toastloginFail">These passwords don\'t match.</string>
+
 
 
 </resources>
