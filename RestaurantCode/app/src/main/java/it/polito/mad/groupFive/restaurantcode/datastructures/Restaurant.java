@@ -1,6 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.util.ArrayMap;
@@ -154,7 +155,6 @@ public class Restaurant {
 
             is.close();
             Gson root = new GsonBuilder().registerTypeAdapter(Uri.class, new CustomUriDeserializer()).create();
-            Log.i(METHOD_NAME, "Loading data into structure...");
             return root.fromJson(stringBuilder.toString(), Restaurant.class);
         } catch (FileNotFoundException e) {
             this.createJSONFile();
@@ -180,7 +180,6 @@ public class Restaurant {
             Gson root = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
             root.toJson(this, writer);
             writer.close();
-            Log.i(METHOD_NAME,"Wrote to file:\n"+root.toJson(this));
         } catch (IOException e) {
             Log.e(METHOD_NAME, e.getMessage());
         }
@@ -307,6 +306,23 @@ public class Restaurant {
      * @return Uri of the image
      */
     public Uri getImageUri(){ return this.image;}
+
+    /**
+     * Get the Drawable representing the image stored in this object.
+     *
+     * @return Drawable of the image
+     * @throws RestaurantException If URI stream fails
+     */
+    public Drawable getImageDrawable() throws RestaurantException {
+        final String METHOD_NAME = this.getClass().getName()+" - getImageDrawable";
+        try {
+            InputStream is = this.appContext.getContentResolver().openInputStream(this.image);
+            return Drawable.createFromStream(is,this.image.toString());
+        } catch (FileNotFoundException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+            throw new RestaurantException(e.getMessage());
+        }
+    }
 
     /**
      *
@@ -500,6 +516,12 @@ public class Restaurant {
                 returnRes.add(r);
         return returnRes;
     }
+
+    /**
+     * Get the Android Application Context stored in this object.
+     * @return Context
+     */
+    Context getAppContext(){ return this.appContext; }
 
     /**
      *
