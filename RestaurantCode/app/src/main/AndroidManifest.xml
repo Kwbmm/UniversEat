@@ -42,7 +42,14 @@
         <activity
             android:name=".Create_menu"
             android:screenOrientation="portrait" />
-        <activity android:name=".User_info_view"></activity>
+        <activity android:name=".User_info_view" />
+        <activity android:name=".SearchResult">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+        </activity>
     </application>
 
 </manifest>
