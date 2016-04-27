@@ -1,13 +1,18 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 /**
@@ -150,6 +155,23 @@ public abstract class User {
      */
     public Uri getImageUri() {
         return this.image;
+    }
+
+    /**
+     * Get the Drawable representing the image stored in this object.
+     *
+     * @return Drawable of the image
+     * @throws UserException If URI stream fails
+     */
+    public Drawable getImageDrawable() throws UserException {
+        final String METHOD_NAME = this.getClass().getName()+" - getImageDrawable";
+        try {
+            InputStream is = this.appContext.getContentResolver().openInputStream(this.image);
+            return Drawable.createFromStream(is,this.image.toString());
+        } catch (FileNotFoundException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+            throw new UserException(e.getMessage());
+        }
     }
 
     /**

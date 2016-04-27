@@ -34,8 +34,9 @@ public class CreateRestaurant
     public void onChangeFrag1(Restaurant r) {
         final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag1";
         try {
-            this.restaurant.setRid(r.getRid());
-            SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
+            SharedPreferences sp = getSharedPreferences(getString(R.string.user_pref),CreateRestaurant.MODE_PRIVATE);
+            this.restaurant = new Restaurant(getApplicationContext(),sp.getInt("rid",-1));
+            SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),CreateRestaurant.MODE_PRIVATE);
             SharedPreferences.Editor editor= sharedPreferences.edit();
             editor.putInt("rid",this.restaurant.getRid());
             editor.commit();
@@ -44,14 +45,10 @@ public class CreateRestaurant
         }
         this.restaurant.setName(r.getName());
         this.restaurant.setDescription(r.getDescription());
+        this.restaurant.setImageUri(r.getImageUri());
 
-        //TODO Fix this!
-        //this.restaurant.setImage64(r.getImage64());
-        //this.restaurant.setImage64(new byte[]{0xA});
-
-        //TODO set telehpone and website
-        //this.restaurant.setTelephone(r.getTelephone());
-        //this.restaurant.setWebsite(r.getWebsite());
+        this.restaurant.setTelephone(r.getTelephone());
+        this.restaurant.setWebsite(r.getWebsite());
 
 
         CreateRestaurant_2 cr2 = new CreateRestaurant_2();
@@ -70,7 +67,7 @@ public class CreateRestaurant
         //TODO set XCoord and YCoord in the future when we will know about GMaps
         //this.restaurant.setXcoord(r.getXcoord());
         //this.restaurant.setYcoord(r.getYcoord());
-        //this.restaurant.setZIPCode(r.getZIPCode());
+        this.restaurant.setZIPCode(r.getZIPCode());
 
         this.restaurant.setState(r.getState());
         this.restaurant.setCity(r.getCity());
@@ -87,8 +84,7 @@ public class CreateRestaurant
     public void onChangeFrag3(Restaurant r) {
         final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag3";
 
-        //TODO Create getter/setters in Restaurant class
-        //this.restaurant.setTimetable(r.getTimetable());
+        this.restaurant.setTimetableLunch(r.getTimetableLunch());
 
         CreateRestaurant_4 cr4 = new CreateRestaurant_4();
         getSupportFragmentManager()
@@ -102,8 +98,7 @@ public class CreateRestaurant
     public void onChangeFrag4(Restaurant r) {
         final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag4";
 
-        //TODO Create getter/setters in Restaurant class
-        //this.restaurant.setTimetable(r.getTimetable());
+        this.restaurant.setTimetableDinner(r.getTimetableDinner());
 
         CreateRestaurant_5 cr5 = new CreateRestaurant_5();
         getSupportFragmentManager()
@@ -116,14 +111,13 @@ public class CreateRestaurant
     @Override
     public void onChangeFrag5(Restaurant r) {
         final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag5";
-        //TODO Create getter/setter for ticket inside Restaurant class
-        //this.restaurant.setTickets(r.getTickets());
+        this.restaurant.setTickets(r.getTickets());
 
         try {
             this.restaurant.saveData();
             finish();
         } catch (RestaurantException e) {
-            e.printStackTrace();
+            Log.e(METHOD_NAME,e.getMessage());
         }
     }
 
@@ -144,27 +138,5 @@ public class CreateRestaurant
                     .add(R.id.fragment_CreateRestaurant,cr1)
                     .commit();
         }
-        SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
-        try {
-            this.restaurant=new Restaurant(this.getBaseContext());
-        } catch (RestaurantException e) {
-            e.printStackTrace();
-        }
-    }
-
-    //TODO Move randInt inside the dataStructures classes
-    public static int randInt() {
-
-        // NOTE: This will (intentionally) not run as written so that folks
-        // copy-pasting have to think about how to initialize their
-        // Random instance.  Initialization of the Random instance is outside
-        // the main scope of the question, but some decent options are to have
-        // a field that is initialized once and then re-used as needed or to
-        // use ThreadLocalRandom (if using at least Java 1.7).
-        Random rand= new Random();
-
-        // nextInt is normally exclusive of the top value,
-        // so add 1 to make it inclusive
-        return rand.nextInt(Integer.MAX_VALUE -1 );
     }
 }

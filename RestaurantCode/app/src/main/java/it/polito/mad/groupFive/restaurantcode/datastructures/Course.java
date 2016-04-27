@@ -1,9 +1,12 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -149,6 +152,23 @@ public class Course {
      * @return The Uri of the course image
      */
     public Uri getImageUri(){ return this.image; }
+
+    /**
+     * Get the Drawable representing the image stored in this object.
+     *
+     * @return Drawable of the image
+     * @throws CourseException If URI stream fails
+     */
+    public Drawable getImageDrawable() throws CourseException {
+        final String METHOD_NAME = this.getClass().getName()+" - getImageDrawable";
+        try {
+            InputStream is = this.r.getAppContext().getContentResolver().openInputStream(this.image);
+            return Drawable.createFromStream(is,this.image.toString());
+        } catch (FileNotFoundException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+            throw new CourseException(e.getMessage());
+        }
+    }
 
     /**
      * Returns true if course is gluten-free. False otherwise.

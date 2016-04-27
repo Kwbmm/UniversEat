@@ -152,21 +152,25 @@ public class Restaurant_management extends NavigationDrawer {
     }
 
     private boolean getResaurantdata(){
+        final String METHOD_NAME = this.getClass().getName()+" - readFiles";
 
+        try {
+            this.restaurant.getData();
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+        }
         TextView rname= (TextView)findViewById(R.id.restaurant_name);
         TextView raddress= (TextView)findViewById(R.id.restaurant_address);
         RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
-       // ImageView rmimw = (ImageView) findViewById(R.id.iwr);
-        try {
-            restaurant.getData();
-
-        } catch (RestaurantException e) {
-            e.printStackTrace();
-        }
+        ImageView rmimw = (ImageView) findViewById(R.id.restaurant_image);
         rname.setText(restaurant.getName());
         raddress.setText(restaurant.getAddress());
         rbar.setRating(restaurant.getRating());
-        //rmimw.setImageBitmap(restaurant.getImageBitmap());
+        try {
+            rmimw.setImageDrawable(restaurant.getImageDrawable());
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+        }
 
 
         return true;
