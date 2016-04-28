@@ -14,9 +14,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,6 +40,8 @@ public class Home extends NavigationDrawer {
     private View parent;
     private int user;
     private SearchView searchView;
+    private LinearLayout dropdown;
+    private boolean drop_visible;
 
 
 
@@ -50,15 +54,9 @@ public class Home extends NavigationDrawer {
         mlay.inflate(this, R.layout.activity_home, mlay);
         parent=mlay;
         getMenus();
+        adapterData();
 
-        if(menusshared!=null){
-            adp= new MenuAdapter(menusshared);
-            RecyclerView recyclerView=(RecyclerView)findViewById(R.id.home_menu_rw);
-            recyclerView.setAdapter(adp);
-            LinearLayoutManager llm=new LinearLayoutManager(this);
-            llm.setOrientation(LinearLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(llm);
-        }
+
         /**
          * These lines of code are for setting up the searchView and let it know about the activity
          * used to performed searches (SearchResult.java).
@@ -67,6 +65,8 @@ public class Home extends NavigationDrawer {
          */
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) findViewById(R.id.search_view);
+        dropdown= (LinearLayout) findViewById(R.id.dropdown_option);
+        drop_visible=false;
         if(searchView != null){
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchView.setIconifiedByDefault(false);
@@ -89,68 +89,94 @@ public class Home extends NavigationDrawer {
             option.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int count=1;
-                    try {
-                        Restaurant rest = new Restaurant(v.getContext());
-                        Order order =new Order(rest,2);
-                        order.setDate(new Date());
-                        order.setMid(14);
-                        order.setUid(22);
+                    if (drop_visible==false){
+                        View options=LayoutInflater.from(getBaseContext()).inflate(R.layout.dropdown_options,null);
+                        dropdown.addView(options);
+                        Button fakedata=(Button)findViewById(R.id.fake_data);
+                        fakedata.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                int count=1;
+                                try {
+                                    Restaurant rest = new Restaurant(v.getContext());
+                                    Order order =new Order(rest,2);
+                                    order.setDate(new Date());
+                                    order.setMid(14);
+                                    order.setUid(22);
 
-                        rest.setUid(2);
-                        rest.setXcoord(0.0f);
-                        rest.setYcoord(0.0f);
-                        rest.setName("Pippo");
-                        rest.setDescription("Figo");
-                        rest.setState("Bello");
-                        rest.setRating(3.5f);
-                        rest.setCity("Politia");
-                        rest.setAddress("Via vai");
-                        rest.setTelephone("011667788");
-                        rest.getOrders().add(order);
-                        Log.v("create",String.valueOf(rest.getOrders().size()));
-                        //rest.setImage64FromDrawable(drawable);
-                        rest.saveData();
+                                    rest.setUid(2);
+                                    rest.setXcoord(0.0f);
+                                    rest.setYcoord(0.0f);
+                                    rest.setName("Pippo");
+                                    rest.setDescription("Figo");
+                                    rest.setState("Bello");
+                                    rest.setRating(3.5f);
+                                    rest.setCity("Politia");
+                                    rest.setAddress("Via vai");
+                                    rest.setTelephone("011667788");
+                                    rest.getOrders().add(order);
+                                    Log.v("create",String.valueOf(rest.getOrders().size()));
+                                    //rest.setImage64FromDrawable(drawable);
+                                    rest.saveData();
 
-                        ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> ms = rest.getMenus();
-                        for (int i = 0; i < 5; i++) {
-                            it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
-                            mn.setName("Menu");
-                            mn.setDescription("Description");
-                            mn.setPrice(1.5f);
-                            mn.setTicket(true);
-                            mn.setType(1);
-                            //mn.setImage64FromDrawable(drawable);
-                            //ms.add(mn);
-                            rest.addMenu(mn);
-                            //count++;
-                            User user =new RestaurantOwner(v.getContext());
-                            Review review=new Review(rest,user);
-                            review.setRating(4.3f);
-                            review.setReviewText("Molto Buonissimo");
-                            review.setTitle("Il Massimo della Pizza");
-                            rest.addReview(review);
-                        }
-                        it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
-                        mn.setName("Orecchiette tris");
-                        mn.setDescription("orecchiette, patate, pollo");
-                        mn.setPrice(1.5f);
-                        mn.setTicket(true);
-                        mn.setType(2);
-                        rest.addMenu(mn);
-                        //ms.add(mn);
-                        //rest.setMenus(ms);
-                        rest.saveData();
-                        SharedPreferences sharedPreferences=v.getContext().getSharedPreferences(getString(R.string.user_pref),v.getContext().MODE_PRIVATE);
-                        SharedPreferences.Editor editor= sharedPreferences.edit();
-                        editor.putInt("uid",2);
-                        editor.putInt("rid",rest.getRid());
-                        editor.apply();
-                    }catch (Exception e){
-                        e.printStackTrace();
+                                    ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> ms = rest.getMenus();
+                                    for (int i = 0; i < 5; i++) {
+                                        it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
+                                        mn.setName("Menu");
+                                        mn.setDescription("Description");
+                                        mn.setPrice(1.5f);
+                                        mn.setTicket(true);
+                                        mn.setType(1);
+                                        //mn.setImage64FromDrawable(drawable);
+                                        //ms.add(mn);
+                                        rest.addMenu(mn);
+                                        //count++;
+                                        User user =new RestaurantOwner(v.getContext());
+                                        Review review=new Review(rest,user);
+                                        review.setRating(4.3f);
+                                        review.setReviewText("Molto Buonissimo");
+                                        review.setTitle("Il Massimo della Pizza");
+                                        rest.addReview(review);
+                                    }
+                                    it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
+                                    mn.setName("Orecchiette tris");
+                                    mn.setDescription("orecchiette, patate, pollo");
+                                    mn.setPrice(1.5f);
+                                    mn.setTicket(true);
+                                    mn.setType(2);
+                                    rest.addMenu(mn);
+                                    //ms.add(mn);
+                                    //rest.setMenus(ms);
+                                    rest.saveData();
+                                    SharedPreferences sharedPreferences=v.getContext().getSharedPreferences(getString(R.string.user_pref),v.getContext().MODE_PRIVATE);
+                                    SharedPreferences.Editor editor= sharedPreferences.edit();
+                                    editor.putInt("uid",2);
+                                    editor.putInt("rid",rest.getRid());
+                                    editor.apply();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        drop_visible=true;
+                    }else {
+                        drop_visible=false;
+                        dropdown.removeAllViews();
                     }
+
+
                 }
             });
+    }
+
+    private void  adapterData(){
+        adp= new MenuAdapter(menusshared);
+        RecyclerView recyclerView=(RecyclerView)findViewById(R.id.home_menu_rw);
+        recyclerView.setAdapter(adp);
+        LinearLayoutManager llm=new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        return;
     }
 
     @Override

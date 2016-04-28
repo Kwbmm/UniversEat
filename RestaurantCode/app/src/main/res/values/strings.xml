@@ -29,7 +29,8 @@
     <!-- activity_home.xml -->
     <string name="search_hello">What do you want to eat?</string>
     <string name="home_imageButtonOpt_contentDesc">This button can change the search type.</string>
-    <string name="checkbox_searchByRestaurant">Search restaurant</string>
+    <string name="checkbox_searchByRestaurant">Search by Restaurant</string>
+    <string name="checkbox_searchByDish">Search by Dish</string>
 
     <string name="fragment_restaurant_view_imageViewIwr_contentDesc">Image of the restaurant.</string>
 
