@@ -27,7 +27,6 @@
         android:layout_marginTop="5dp"
         android:layout_toLeftOf="@id/opt"
         android:layout_toStartOf="@id/opt"
-        android:iconifiedByDefault="false"
         android:focusable="false"
         />
     <android.support.v7.widget.RecyclerView

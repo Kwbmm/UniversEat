@@ -1,27 +1,21 @@
 package it.polito.mad.groupFive.restaurantcode;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.renderscript.ScriptGroup;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -71,9 +65,23 @@ public class Home extends NavigationDrawer {
          *  http://developer.android.com/guide/topics/search/search-dialog.html#UsingSearchWidget
          */
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView= (SearchView) findViewById(R.id.search_view);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);
+        SearchView searchView = (SearchView) findViewById(R.id.search_view);
+        if(searchView != null){
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setIconifiedByDefault(false);
+            /*searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    onSearchRequested();
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });*/
+        }
 
         ImageButton option= (ImageButton)findViewById(R.id.opt);
         if(option != null)
@@ -142,6 +150,23 @@ public class Home extends NavigationDrawer {
                     }
                 }
             });
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        final String METHOD_NAME = this.getClass().getName()+" - startActivity";
+        /**
+         * After spending 3 hours just by trying to send extra parameters to SearchResult activity
+         * as explained by the android documentation with no success, I found out that the method
+         * onSearchRequested is not available for AppCompat activities. So we need to override
+         * startActivity to catch the intent, check if it's an ACTION_SEARCH intent and, if so, add
+         * extra data.
+         * For more info, see: http://stackoverflow.com/q/26991594/5261306
+         */
+        if(Intent.ACTION_SEARCH.equals(intent.getAction())){
+            intent.putExtra(SearchResult.RESTAURANT_SEARCH,true);
+        }
+        super.startActivity(intent);
     }
 
     private void getMenus(){
