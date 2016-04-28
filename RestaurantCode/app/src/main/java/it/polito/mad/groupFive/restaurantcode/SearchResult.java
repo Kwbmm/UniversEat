@@ -5,6 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.Toast;
+
+import it.polito.mad.groupFive.restaurantcode.datastructures.DataManager;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.DataManagerException;
 
 public class SearchResult extends NavigationDrawer {
     public static final String RESTAURANT_SEARCH = "restaurant";
@@ -20,13 +26,45 @@ public class SearchResult extends NavigationDrawer {
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             boolean isRestaurant = intent.getBooleanExtra(SearchResult.RESTAURANT_SEARCH,false);
-            if(isRestaurant){
-                String query = intent.getStringExtra(SearchManager.QUERY);
-                Log.d(METHOD_NAME,"Rest: "+query);
-            }
-            else{
-                String query = intent.getStringExtra(SearchManager.QUERY);
-                Log.d(METHOD_NAME,query);
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            try {
+                DataManager dm = new DataManager(getApplicationContext());
+                if(isRestaurant){ //Restaurant search
+                    if(dm.getRestaurants().size() == 0)
+                        Toast.makeText(getApplicationContext(),
+                                getString(R.string.SearchResult_toastNoRestaurants),
+                                Toast.LENGTH_LONG)
+                                .show();
+                    else{
+                        for (Restaurant r : dm.getRestaurants()){
+                            if(r.getName().equals(query)){
+                                //TODO Show this restaurant
+                                Log.i(METHOD_NAME,"Matched restaurant "+r.getName());
+                            }
+                        }
+                    }
+                }
+                else{ //Menu search
+                    if(dm.getMenus().size() == 0)
+                        Toast.makeText(getApplicationContext(),
+                                getString(R.string.SearchResult_toastNoMenus),
+                                Toast.LENGTH_LONG)
+                                .show();
+                    else{
+                        for (Menu m : dm.getMenus()){
+                            if(m.getName().equals(query)){
+                                //TODO Show this menu
+                                Log.i(METHOD_NAME,"Matched menu: "+m.getName());
+                            }
+                        }
+                    }
+                }
+            } catch (DataManagerException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        getString(R.string.SearchResult_toastFailLoadDM),
+                        Toast.LENGTH_LONG)
+                        .show();
             }
         }
     }

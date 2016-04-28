@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -144,7 +145,7 @@ public class Home extends NavigationDrawer {
                         SharedPreferences.Editor editor= sharedPreferences.edit();
                         editor.putInt("uid",2);
                         editor.putInt("rid",rest.getRid());
-                        editor.commit();
+                        editor.apply();
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -164,7 +165,9 @@ public class Home extends NavigationDrawer {
          * For more info, see: http://stackoverflow.com/q/26991594/5261306
          */
         if(Intent.ACTION_SEARCH.equals(intent.getAction())){
-            intent.putExtra(SearchResult.RESTAURANT_SEARCH,true);
+            CheckBox cb = (CheckBox) findViewById(R.id.checkBox_searchByRestaurant);
+            if(cb != null && cb.isChecked())
+                intent.putExtra(SearchResult.RESTAURANT_SEARCH,true);
         }
         super.startActivity(intent);
     }

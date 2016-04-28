@@ -26,9 +26,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- activity_home.xml -->
     <string name="search_hello">What do you want to eat?</string>
-
     <string name="home_imageButtonOpt_contentDesc">This button can change the search type.</string>
+    <string name="checkbox_searchByRestaurant">Search restaurant</string>
 
     <string name="fragment_restaurant_view_imageViewIwr_contentDesc">Image of the restaurant.</string>
 
@@ -58,6 +59,11 @@
     <string name="reviewlist_textViewName">Restaurant Name</string>
     <string name="finish">Finish</string>
 
+    <!-- SearchResult.java -->
+    <string name="SearchResult_toastFailLoadDM">Data Manager failed loading files.. :(</string>
+    <string name="SearchResult_toastNoRestaurants">There are no restaurants to show.</string>
+    <string name="SearchResult_toastNoMenus">There are no menus to show.</string>
+    <!-- END SearchResult.java -->
 
     <!-- Create_menu_frag.java -->
     <string name="pick_gallery">Pick from Gallery</string>
