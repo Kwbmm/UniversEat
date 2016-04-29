@@ -15,6 +15,7 @@ public class MenuViewHolder extends RecyclerView.ViewHolder {
 
     public MenuViewHolder(View itemView) {
         super(itemView);
+        //TODO set image
         this.menu_name =(TextView)itemView.findViewById(R.id.menu_name);
         this.menu_description=(TextView)itemView.findViewById(R.id.menu_description);
         this.menu_price=(TextView)itemView.findViewById(R.id.menu_price);
