@@ -49,6 +49,7 @@ public class Review_user_view extends Fragment {
     Restaurant rest;
     ReviewAdapter adp;
     ArrayList<Review> alreviews;
+    RecyclerView recyclerView;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -76,6 +77,11 @@ public class Review_user_view extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        readdata(getView());
     }
 
     @Override
@@ -110,7 +116,7 @@ public class Review_user_view extends Fragment {
         alreviews=rest.getReviews();
         Log.v("rid",alreviews.get(0).getReviewText());
         adp= new ReviewAdapter(alreviews);
-        RecyclerView recyclerView=(RecyclerView)v.findViewById(R.id.review_list);
+        recyclerView=(RecyclerView)v.findViewById(R.id.review_list);
         recyclerView.setAdapter(adp);
         LinearLayoutManager llm=new LinearLayoutManager(v.getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
