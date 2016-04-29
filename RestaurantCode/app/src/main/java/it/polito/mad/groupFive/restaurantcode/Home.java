@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -18,13 +17,13 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
+import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
@@ -35,6 +34,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderExc
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.ReviewException;
+import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
 
 public class Home extends NavigationDrawer {
     private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menusshared;
@@ -58,7 +58,7 @@ public class Home extends NavigationDrawer {
         mlay.inflate(this, R.layout.activity_home, mlay);
         parent=mlay;
         getMenus();
-//        adapterData();
+        adapterData();
 
 
         /**
@@ -161,13 +161,14 @@ public class Home extends NavigationDrawer {
     }
 
     private void  adapterData(){
-        adp= new MenuAdapter(menusshared);
-        RecyclerView recyclerView=(RecyclerView)findViewById(R.id.home_menu_rw);
-        recyclerView.setAdapter(adp);
-        LinearLayoutManager llm=new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
-        return;
+        if(menusshared != null){
+            adp= new MenuAdapter(menusshared);
+            RecyclerView recyclerView=(RecyclerView)findViewById(R.id.home_menu_rw);
+            recyclerView.setAdapter(adp);
+            LinearLayoutManager llm=new LinearLayoutManager(this);
+            llm.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(llm);
+        }
     }
 
     @Override
@@ -203,23 +204,8 @@ public class Home extends NavigationDrawer {
         }
     }
 
-    public static class MenuViewHolder extends RecyclerView.ViewHolder {
-        protected TextView menu_name;
-        protected TextView menu_description;
-        protected TextView menu_price;
-        protected CardView card;
-
-        public MenuViewHolder(View itemView) {
-            super(itemView);
-            this.menu_name =(TextView)itemView.findViewById(R.id.menu_name);
-            this.menu_description=(TextView)itemView.findViewById(R.id.menu_description);
-            this.menu_price=(TextView)itemView.findViewById(R.id.menu_price);
-            this.card= (CardView) itemView.findViewById(R.id.menu_card);
-        }
-    }
-
     public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
-        private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menus;
+        private ArrayList<Menu> menus;
 
         public MenuAdapter(ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menus){
             this.menus=menus;
@@ -227,7 +213,7 @@ public class Home extends NavigationDrawer {
         }
 
         public void sort(){
-            Collections.sort(this.menus, new Comparator<it.polito.mad.groupFive.restaurantcode.datastructures.Menu>() {
+            Collections.sort(this.menus, new Comparator<Menu>() {
                 @Override
                 public int compare(it.polito.mad.groupFive.restaurantcode.datastructures.Menu lhs, it.polito.mad.groupFive.restaurantcode.datastructures.Menu rhs) {
                     return rhs.getType()-lhs.getType();
