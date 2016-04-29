@@ -203,28 +203,27 @@ public class Home extends NavigationDrawer {
         }
     }
 
-    public static class MenuViewHoder extends RecyclerView.ViewHolder {
+    public static class MenuViewHolder extends RecyclerView.ViewHolder {
         protected TextView menu_name;
-        protected TextView menu_desctiprion;
+        protected TextView menu_description;
         protected TextView menu_price;
         protected CardView card;
 
-        public MenuViewHoder(View itemView) {
+        public MenuViewHolder(View itemView) {
             super(itemView);
             this.menu_name =(TextView)itemView.findViewById(R.id.menu_name);
-            this.menu_desctiprion=(TextView)itemView.findViewById(R.id.menu_description);
+            this.menu_description=(TextView)itemView.findViewById(R.id.menu_description);
             this.menu_price=(TextView)itemView.findViewById(R.id.menu_price);
             this.card= (CardView) itemView.findViewById(R.id.menu_card);
         }
     }
 
-    public class MenuAdapter extends RecyclerView.Adapter<MenuViewHoder>{
+    public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
         private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menus;
 
         public MenuAdapter(ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menus){
             this.menus=menus;
             sort();
-
         }
 
         public void sort(){
@@ -241,15 +240,15 @@ public class Home extends NavigationDrawer {
         }
 
         @Override
-        public MenuViewHoder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View menu_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_view,null);
-            return new MenuViewHoder(menu_view);
+            return new MenuViewHolder(menu_view);
         }
 
         @Override
-        public void onBindViewHolder(final MenuViewHoder holder, int position) {
-            it.polito.mad.groupFive.restaurantcode.datastructures.Menu menu =menus.get(position);
-            holder.menu_desctiprion.setText(menu.getDescription());
+        public void onBindViewHolder(final MenuViewHolder holder, int position) {
+            it.polito.mad.groupFive.restaurantcode.datastructures.Menu menu = menus.get(position);
+            holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
             int rid =menus.get(position).getRid();
@@ -260,9 +259,8 @@ public class Home extends NavigationDrawer {
         public int getItemCount() {
             return menus.size();
         }
-
-
     }
+
     public class onCardClick implements View.OnClickListener{
         private int position;
         private int rid;
@@ -278,7 +276,6 @@ public class Home extends NavigationDrawer {
             Log.v("rid",rid+"");
             restinfo.putExtra("rid",this.rid);
             startActivity(restinfo);
-
         }
     }
 }
