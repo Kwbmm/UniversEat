@@ -1,60 +1,22 @@
-package it.polito.mad.groupFive.restaurantcode;
+package it.polito.mad.groupFive.restaurantcode.Login;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.NumberPicker;
-import android.widget.Spinner;
-import android.widget.TextView;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-import org.json.JSONException;
-
+import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
-import it.polito.mad.groupFive.restaurantcode.datastructures.User;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
-import it.polito.mad.groupFive.restaurantcode.libs.RealPathUtil;
 
 /**
  * Created by Giovanni on 22/04/16.

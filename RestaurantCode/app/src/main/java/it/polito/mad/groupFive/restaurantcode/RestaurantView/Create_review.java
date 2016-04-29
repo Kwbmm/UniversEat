@@ -1,4 +1,4 @@
-package it.polito.mad.groupFive.restaurantcode;
+package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -11,6 +11,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import it.polito.mad.groupFive.restaurantcode.NavigationDrawer;
+import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Review;

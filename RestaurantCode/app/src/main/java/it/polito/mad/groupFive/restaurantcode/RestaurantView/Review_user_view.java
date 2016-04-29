@@ -1,10 +1,9 @@
-package it.polito.mad.groupFive.restaurantcode;
+package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,13 +19,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.zip.Inflater;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.DataManager;
+import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Review;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.ReviewException;
 
 
 /**

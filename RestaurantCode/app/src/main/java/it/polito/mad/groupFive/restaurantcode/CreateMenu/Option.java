@@ -1,4 +1,4 @@
-package it.polito.mad.groupFive.restaurantcode;
+package it.polito.mad.groupFive.restaurantcode.CreateMenu;
 
 import java.util.ArrayList;
 

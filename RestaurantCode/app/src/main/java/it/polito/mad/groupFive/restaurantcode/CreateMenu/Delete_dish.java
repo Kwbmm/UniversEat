@@ -1,39 +1,36 @@
-package it.polito.mad.groupFive.restaurantcode;
+package it.polito.mad.groupFive.restaurantcode.CreateMenu;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
+import it.polito.mad.groupFive.restaurantcode.R;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Add_dish.OnFragmentInteractionListener} interface
+ * {@link Delete_dish.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Add_dish#newInstance} factory method to
+ * Use the {@link Delete_dish#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Add_dish extends Fragment {
-    private Option sett;
-    private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options;
-    private String namedish;
-    private View parent;
-    private shareDish dish;
+public class Delete_dish extends Fragment {
+
+    ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options;
+    Option sett;
+    shareDish dish;
     public interface shareDish{
         public Option getOption();
     }
@@ -48,7 +45,7 @@ public class Add_dish extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public Add_dish() {
+    public Delete_dish() {
         // Required empty public constructor
     }
 
@@ -58,11 +55,11 @@ public class Add_dish extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Add_dish.
+     * @return A new instance of fragment Delete_dish.
      */
     // TODO: Rename and change types and number of parameters
-    public static Add_dish newInstance(String param1, String param2) {
-        Add_dish fragment = new Add_dish();
+    public static Delete_dish newInstance(String param1, String param2) {
+        Delete_dish fragment = new Delete_dish();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -83,59 +80,25 @@ public class Add_dish extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        sett=dish.getOption();
-        options=sett.getMenu().getOptions();
-        View view=inflater.inflate(R.layout.fragment_add_dish, container, false);
-        parent=view;
-        Spinner type=(Spinner) view.findViewById(R.id.nd_type);
-        ArrayList<String> strings=new ArrayList<>();
-        strings.add(getString(R.string.add_dish_starter));
-        strings.add(getString(R.string.add_dish_main_dish));
-        ArrayAdapter<String> tp =new ArrayAdapter<String>(view.getContext(),android.R.layout.simple_spinner_dropdown_item,strings);
-        type.setAdapter(tp);
-
-        Spinner type2=(Spinner) view.findViewById(R.id.nd_type_2);
-        ArrayList<String> strings_2=new ArrayList<>();
-        strings_2.add(getString(R.string.add_dish_italian));
-        strings_2.add(getString(R.string.add_dish_chinese));
-        strings_2.add(getString(R.string.add_dish_indian));
-        ArrayAdapter<String> tp2 =new ArrayAdapter<String>(view.getContext(),android.R.layout.simple_spinner_dropdown_item,strings_2);
-        type2.setAdapter(tp2);
-
-
-
-
-
-
-        Button add = (Button) view.findViewById(R.id.ad_add);
-        add.setOnClickListener(new View.OnClickListener() {
+        View v=inflater.inflate(R.layout.fragment_delete_dish, container, false);
+        showlist(v);
+        Button complete= (Button) v.findViewById(R.id.dd_compl);
+        complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position=sett.getOpt_number();
-                EditText newdish = (EditText) parent.findViewById(R.id.nd_et_1);
-                namedish=  newdish.getText().toString();
-                if (namedish.isEmpty()==false){
-                    try {
-                        //TODO other info
-                        Course course =new Course(dish.getOption().getRestaurant());
-                        ArrayList<Course> courses=options.get(position).getCourses();
-                        course.setName(namedish);
-                        courses.add(course);
-
-                    } catch (CourseException e) {
-                        e.printStackTrace();
-                    }
-
-
-                    Log.v("dish",namedish);
-                }
-                Log.v("else",namedish);
                 getFragmentManager().popBackStack();
             }
         });
-        return view;
+        return v;
 
+    }
+
+    public void showlist(View v){
+        sett=dish.getOption();
+        options=sett.getMenu().getOptions();
+        DeleteCourse dc=new DeleteCourse(options,getContext());
+        ListView list= (ListView) v.findViewById(R.id.ll_del);
+        list.setAdapter(dc);
 
     }
 
@@ -169,7 +132,7 @@ public class Add_dish extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
@@ -177,5 +140,47 @@ public class Add_dish extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    public class DeleteCourse extends BaseAdapter{
+        ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options;
+        Context context;
+        public DeleteCourse(ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options, Context context){
+            this.options=options;
+            this.context=context;
+        }
+
+        @Override
+        public int getCount() {
+            return options.get(sett.getOpt_number()).getCourses().size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return options.get(sett.getOpt_number()).getCourses().get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return options.get(sett.getOpt_number()).getCourses().get(position).hashCode();
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            convertView=LayoutInflater.from(context).inflate(R.layout.delete_item_list, null);
+            TextView name= (TextView) convertView.findViewById(R.id.obj_li);
+            name.setText(options.get(sett.getOpt_number()).getCourses().get(position).getName());
+
+            ImageButton delete = (ImageButton) convertView.findViewById(R.id.delete_but);
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    options.get(sett.getOpt_number()).getCourses().remove(position);
+                    showlist(v.getRootView());
+                }
+            });
+
+
+            return convertView;
+        }
     }
 }

@@ -1,4 +1,4 @@
-package it.polito.mad.groupFive.restaurantcode;
+package it.polito.mad.groupFive.restaurantcode.Login;
 
 import android.Manifest;
 import android.app.Activity;
@@ -14,7 +14,6 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,35 +25,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
+import it.polito.mad.groupFive.restaurantcode.R;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
+import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
 import it.polito.mad.groupFive.restaurantcode.libs.RealPathUtil;
 
-
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CreateRestaurant_1.onFragInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CreateRestaurant_1#newInstance} factory method to
- * create an instance of this fragment.
+ * Created by Giovanni on 27/04/16.
  */
-public class CreateRestaurant_1 extends Fragment {
+public class Createlog_frag1 extends Fragment{
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -62,38 +52,36 @@ public class CreateRestaurant_1 extends Fragment {
     private static final int CAPTURE_IMAGE = 1;
     private static final int SELECT_PICTURE = 2;
 
+    private View v=null;
+
+    private OnFragmentInteractionListener mListener;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    private Uri restaurantPicUri = null;
-    private View parentView=null;
+    private Uri userPicUri = null;
+    private Customer user=null;
+    private RestaurantOwner user_r=null;
+    private ImageView userPic = null;
+    private EditText txtname;
+    private EditText txtsurname;
+    private EditText nickname;
+    private EditText txtmail;
+    private boolean owner;
 
-    private onFragInteractionListener mListener;
-    private ImageView restaurantPic = null;
-
-    private Restaurant restaurant = null;
-
-    public CreateRestaurant_1() {
+    public Createlog_frag1(){
+        //void constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CreateRestaurant_1.
-     */
-    public static CreateRestaurant_1 newInstance(String param1, String param2) {
-        CreateRestaurant_1 fragment = new CreateRestaurant_1();
+    public static Createlog_frag1 newInstance(String param1, String param2) {
+        Createlog_frag1 fragment = new Createlog_frag1();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,15 +90,22 @@ public class CreateRestaurant_1 extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        final String METHOD_NAME = this.getClass().getName() + " - onCreateView";
+        owner =this.getArguments().getBoolean("owner");
+        // Inflate the layout for this fragment
+        v = inflater.inflate(R.layout.fragment_createlog_1, container, false);
+        txtname = (EditText) v.findViewById(R.id.editText_UserName);
+        txtmail = (EditText) v.findViewById(R.id.editText_Mail);
+        nickname = (EditText) v.findViewById(R.id.editText_Nickname);
+        txtsurname = (EditText) v.findViewById(R.id.editText_surname);
 
-        this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_1, container, false);
-        ImageView restaurantImg = (ImageView) this.parentView.findViewById(R.id.imageView_RestaurantImage);
-        restaurantImg.setOnClickListener(new View.OnClickListener() {
+        ImageView userImg = (ImageView) v.findViewById(R.id.imageView_UserImage);
+        userImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isStoragePermissionGranted()){
@@ -126,78 +121,83 @@ public class CreateRestaurant_1 extends Fragment {
             }
         });
 
-        Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
+
+        Button btnNext = (Button) v.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(METHOD_NAME,"Press Next: OK");
+
                 Activity a = getActivity();
-                if(a instanceof onFragInteractionListener) {
-                    if(setRestaurantData()){
-                        onFragInteractionListener obs = (onFragInteractionListener) a;
-                        obs.onChangeFrag1(restaurant);
+                if(a instanceof OnFragmentInteractionListener) {
+                    setUserData();
 
-                    }
-                    else{
-                        Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
-                        .show();
-                    }
-                }
-            }
+                    OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
+                    obs.onChangeFrag(user,user_r);
+                }}});
 
-        });
-        return this.parentView;
+        return v;
+
+    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
-    private boolean setRestaurantData() {
-        final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
-        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onChangeFrag(Customer u, RestaurantOwner u_r);
+    }
 
-        try {
-            restaurant=new Restaurant(getContext());
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putInt("rid",restaurant.getRid());
-            editor.apply();
-            TextView name = (TextView) parentView.findViewById(R.id.editText_RestaurantName);
-            if(name.getText().toString().equals("") || name.getText() == null){
-                Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
-                return false;
+
+    public void setUserData() {
+        final String METHOD_NAME = this.getClass().getName()+" - setUserData";
+        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
+        int uid = sp.getInt("uid",-1);
+        ImageView userImg = (ImageView) v.findViewById(R.id.imageView_UserImage);
+
+
+            if(owner){
+                try {
+                    user_r = new RestaurantOwner(getActivity(), uid);
+                } catch (RestaurantOwnerException e) {
+                    e.printStackTrace();
+                }
+                user_r.setName(txtname.getText().toString());
+                user_r.setSurname(txtsurname.getText().toString());
+                user_r.setEmail(txtmail.getText().toString());
+                user_r.setUserName(nickname.getText().toString());
+                // user_r.setImage64FromDrawable(userImg.getDrawable());
+
             }
-            restaurant.setName(name.getText().toString());
-
-            TextView description = (TextView) parentView.findViewById(R.id.editText_Description);
-            if(description.getText().toString().equals("") || description.getText() == null){
-                Log.w(METHOD_NAME,"TextView Description is either empty or null");
-                return false;
-            }
-            restaurant.setDescription(description.getText().toString());
-
-            ImageView restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
-            if(restaurantImg.getDrawable() == null){
-                Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
-                return false;
+            else {
+                try {
+                    user = new Customer(getActivity(), uid);
+                } catch (CustomerException e) {
+                    e.printStackTrace();
+                }
+                user.setName(txtname.getText().toString());
+                user.setSurname(txtsurname.getText().toString());
+                user.setEmail(txtmail.getText().toString());
+                user.setUserName(nickname.getText().toString());
+                // user.setImage64FromDrawable(userImg.getDrawable());
             }
 
-            restaurant.setImageUri(this.restaurantPicUri);
 
-            TextView telephone = (TextView) parentView.findViewById(R.id.editText_Telephone);
-            if(telephone.getText().toString().equals("") || telephone.getText() == null){
-                Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
-                return false;
-            }
-            restaurant.setTelephone(telephone.getText().toString());
 
-            TextView website = (TextView) parentView.findViewById(R.id.editText_Website);
-            if(website.getText().toString().equals("") || website.getText() == null){
-                Log.w(METHOD_NAME,"TextView Website is either empty or null");
-                return false;
-            }
-            restaurant.setWebsite(website.getText().toString());
 
-            return true;
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            return false;
-        }
+
     }
 
     private void pickImage(){
@@ -222,8 +222,8 @@ public class CreateRestaurant_1 extends Fragment {
                             Log.e(METHOD_NAME, ioe.getMessage());
                         }
                         if (photo != null) {
-                            restaurantPicUri = Uri.fromFile(photo);
-                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, restaurantPicUri);
+                            userPicUri = Uri.fromFile(photo);
+                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, userPicUri);
                             startActivityForResult(cameraIntent, CAPTURE_IMAGE);
                         }
                     }
@@ -284,35 +284,32 @@ public class CreateRestaurant_1 extends Fragment {
                 storageDir      /* directory */
         );
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         final String METHOD_NAME = this.getClass().getName()+" - onActivityResult";
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == getActivity().RESULT_OK && requestCode == SELECT_PICTURE){
-            this.restaurantPic = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
-            this.restaurantPicUri = data.getData();
+            this.userPic = (ImageView) getActivity().findViewById(R.id.imageView_UserImage);
+            this.userPicUri = data.getData();
             try{
-                Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(restaurantPicUri));
+                Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(userPicUri));
                 String imgPath;
-                ((ImageView)getActivity().findViewById(R.id.imageView_RestaurantImage)).setImageBitmap(imageBitmap);
-
                 if(Build.VERSION.SDK_INT < 11)
-                    imgPath = RealPathUtil.getRealPathFromURI_BelowAPI11(getActivity(), restaurantPicUri);
+                    imgPath = RealPathUtil.getRealPathFromURI_BelowAPI11(getActivity(), userPicUri);
                 else if(Build.VERSION.SDK_INT < 19)
-                    imgPath = RealPathUtil.getRealPathFromURI_API11to18(getActivity(), restaurantPicUri);
+                    imgPath = RealPathUtil.getRealPathFromURI_API11to18(getActivity(), userPicUri);
                 else
-                    imgPath = RealPathUtil.getRealPathFromURI_API19(getActivity(), restaurantPicUri);
+                    imgPath = RealPathUtil.getRealPathFromURI_API19(getActivity(), userPicUri);
                 imageBitmap = detectOrientation(imgPath, imageBitmap);
-                this.restaurantPic.setImageDrawable(resize(imageBitmap));
+                this.userPic.setImageDrawable(resize(imageBitmap));
             } catch(FileNotFoundException fnfe) { Log.e(METHOD_NAME,fnfe.getMessage());}
         }
-        if(resultCode == CreateRestaurant.RESULT_OK && requestCode == CAPTURE_IMAGE){
-            this.restaurantPic = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
+        if(resultCode == getActivity().RESULT_OK && requestCode == CAPTURE_IMAGE){
+            this.userPic = (ImageView) getActivity().findViewById(R.id.imageView_UserImage);
             try{
-                Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(restaurantPicUri));
-                imageBitmap = detectOrientation(restaurantPicUri.getPath(),imageBitmap);
-                this.restaurantPic.setImageDrawable(resize(imageBitmap));
+                Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(userPicUri));
+                imageBitmap = detectOrientation(userPicUri.getPath(),imageBitmap);
+                this.userPic.setImageDrawable(resize(imageBitmap));
             } catch(FileNotFoundException ffe){Log.e(METHOD_NAME,ffe.getMessage());}
         }
     }
@@ -363,34 +360,4 @@ public class CreateRestaurant_1 extends Fragment {
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof onFragInteractionListener) {
-            mListener = (onFragInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement onFragInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface onFragInteractionListener {
-        void onChangeFrag1(Restaurant r);
-    }
 }

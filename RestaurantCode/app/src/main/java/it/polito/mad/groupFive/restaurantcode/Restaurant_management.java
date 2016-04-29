@@ -1,12 +1,9 @@
 package it.polito.mad.groupFive.restaurantcode;
 
-import android.app.Activity;
-import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,16 +15,10 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.util.zip.Inflater;
-
+import it.polito.mad.groupFive.restaurantcode.CreateRestaurant.CreateRestaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
-import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 public class Restaurant_management extends NavigationDrawer {
 
