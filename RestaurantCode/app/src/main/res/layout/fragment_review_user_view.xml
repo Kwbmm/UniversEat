@@ -29,6 +29,7 @@ android:layout_height="match_parent">
         android:layout_below="@id/restaurant_name"
         android:layout_centerHorizontal="true"
         android:isIndicator="true"
+        style="@style/Base.Widget.AppCompat.RatingBar.Indicator"
         />
     <TextView
         android:layout_width="wrap_content"
