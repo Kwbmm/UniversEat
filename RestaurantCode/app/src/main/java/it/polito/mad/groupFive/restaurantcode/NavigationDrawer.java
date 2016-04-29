@@ -3,31 +3,20 @@ package it.polito.mad.groupFive.restaurantcode;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.LoginFilter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.Date;
-
-import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
 public class NavigationDrawer extends AppCompatActivity {
     private int phase;//0 Logged out 1 logged in
@@ -43,7 +32,6 @@ public class NavigationDrawer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getUserinfo();
         createDrawer();
-
     }
 
     public ArrayAdapter<String> createAdapter() {
@@ -61,8 +49,6 @@ public class NavigationDrawer extends AppCompatActivity {
     }
 
     public void createDrawer() {
-
-
         adapter = createAdapter();
         setContentView(R.layout.drawer);
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -150,6 +136,7 @@ public class NavigationDrawer extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     public void hideSoftKeyboard() {
         if(getCurrentFocus()!=null) {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);

@@ -89,7 +89,7 @@
     <!-- fragment_create_restaurant_1.xml -->
     <string name="frg_create_restaurant_1_textView_RestaurantName">Nome del ristorante:</string>
     <string name="frg_create_restaurant_1_imageView_ContentDesc">Immagine del ristorante</string>
-    <string name="frg_create_restaurant_1_textView_Description">descrizione:</string>
+    <string name="frg_create_restaurant_1_textView_Description">Descrizione:</string>
     <string name="frg_create_restaurant_1_textView_Telephone">Numero di telefono:</string>
     <string name="frg_create_restaurant_1_textView_Website">Sito web:</string>
     <!-- END fragment_create_restaurant_1.xml -->
@@ -189,5 +189,8 @@
     <string name="login_rest">RISTORATORE</string>
 
     <string name="toastloginFail">Le password non coincidono.</string>
+    <string name="SearchResult_toastFailLoadDM">Il Data Manager non è riuscito a caricare i file... :(</string>
+    <string name="SearchResult_toastNoMenus">Non ci sono menù da mostrare.</string>
+    <string name="SearchResult_toastNoRestaurants">Non ci sono ristoranti da mostrare.</string>
 
 </resources>
