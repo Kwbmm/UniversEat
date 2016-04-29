@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
+import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;

@@ -31,6 +31,12 @@
     <string name="home_imageButtonOpt_contentDesc">This button can change the search type.</string>
     <string name="checkbox_searchByRestaurant">Search by Restaurant</string>
     <string name="checkbox_searchByDish">Search by Dish</string>
+    <!-- END activity_home.xml -->
+
+    <!-- restaurant_view.xml -->
+    <string name="restaurantView_textViewRestaurantName">Restaurant Name</string>
+    <string name="restaurantView_textViewRestaurantDescription">Description:</string>
+    <!-- END restaurant_view.xml -->
 
     <string name="fragment_restaurant_view_imageViewIwr_contentDesc">Image of the restaurant.</string>
 

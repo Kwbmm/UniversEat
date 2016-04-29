@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.DataManager;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
