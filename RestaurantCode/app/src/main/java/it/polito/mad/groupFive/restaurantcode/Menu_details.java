@@ -14,17 +14,14 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.*;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Option;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OptionException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
@@ -40,10 +37,8 @@ public class Menu_details extends NavigationDrawer {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //mid=getIntent().getExtras().getInt("mid");
-        //rid=getIntent().getExtras().getInt("rid");
-        mid=69;
-        rid=2;
+        mid=getIntent().getExtras().getInt("mid");
+        rid=getIntent().getExtras().getInt("rid");
         try {
             restaurant=new Restaurant(getBaseContext(),rid);
             restaurant.getData();

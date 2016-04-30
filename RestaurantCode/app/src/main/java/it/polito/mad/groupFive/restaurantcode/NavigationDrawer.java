@@ -186,6 +186,8 @@ public class NavigationDrawer extends AppCompatActivity {
                 }
                 if (position == 1) {
                     Intent menu = new Intent(getBaseContext(), Menu_details.class);
+                    menu.putExtra("rid",2);
+                    menu.putExtra("mid",69);
                     startActivity(menu);
                 }
                 if (position == 3) {
