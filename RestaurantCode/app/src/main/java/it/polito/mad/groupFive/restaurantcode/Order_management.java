@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 
@@ -21,24 +20,14 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
-import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
-import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 public class Order_management extends NavigationDrawer {
     private Restaurant restaurant;
@@ -120,12 +109,14 @@ public class Order_management extends NavigationDrawer {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView= LayoutInflater.from(context).inflate(R.layout.reservation,null);
-            TextView username= (TextView) convertView.findViewById(R.id.username);
+            TextView username= (TextView) convertView.findViewById(R.id.order_username);
+            TextView userID= (TextView) convertView.findViewById(R.id.order_userID);
             TextView hour=(TextView) convertView.findViewById(R.id.hour);
             TextView minutes = (TextView) convertView.findViewById(R.id.minutes);
             TextView date=(TextView) convertView.findViewById(R.id.date);
-            TextView oid = (TextView)convertView.findViewById(R.id.orderID);
-            TextView meal=(TextView) convertView.findViewById(R.id.meal);
+            TextView oid = (TextView)convertView.findViewById(R.id.order_OID);
+            TextView meal=(TextView) convertView.findViewById(R.id.order_meal);
+            TextView notes = (TextView) convertView.findViewById(R.id.order_notes);
             ImageButton delete= (ImageButton) convertView.findViewById(R.id.imageView);
             deletecheck=position;
             delete.setOnClickListener(new View.OnClickListener() {
@@ -168,12 +159,21 @@ public class Order_management extends NavigationDrawer {
             Order order= orderlist.get(position);
             Calendar calendar= Calendar.getInstance();
             calendar.setTime(order.getDate());
-            username.setText(String.valueOf(order.getUid()));
+            username.setText(order.getName());
+            userID.setText(" (User #"+String.valueOf(order.getUid())+")");
+            notes.setText(order.getNotes());
             hour.setText(String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.HOUR_OF_DAY)));
             minutes.setText(String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MINUTE)));
             date.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))+" "+months[calendar.get(Calendar.MONTH)]);
-            oid.setText(String.valueOf(order.getOid()));
-            meal.setText(String.valueOf(order.getMid()));
+            oid.setText("Order ID: "+String.valueOf(order.getOid()));
+            String mealID="#"+String.valueOf(order.getMid());
+            try {
+                if(restaurant.getMenuByID(order.getMid())!=null)
+                    mealID=restaurant.getMenuByID(order.getMid()).getName();
+            } catch (RestaurantException e) {
+                e.printStackTrace();
+            }
+            meal.setText("Menu: "+mealID);
             return convertView;
         }
     }
