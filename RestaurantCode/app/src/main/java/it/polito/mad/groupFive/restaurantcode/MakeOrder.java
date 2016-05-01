@@ -99,7 +99,7 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
                         order.setName(name);
                         order.setNotes(notes);
                         order.setUid(uid);
-                        restaurant.addOrder(order);
+                        restaurant.getOrders().add(order);
                         restaurant.saveData();
                         Toast.makeText(getBaseContext(), "Order successful", Toast.LENGTH_SHORT).show();
                         finish();

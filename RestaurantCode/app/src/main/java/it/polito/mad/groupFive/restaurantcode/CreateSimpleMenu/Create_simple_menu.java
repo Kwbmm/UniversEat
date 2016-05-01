@@ -42,6 +42,7 @@ public class Create_simple_menu extends NavigationDrawer implements Create_simpl
             menuData=new MenuData(rest);
             Menu menu=new Menu(rest);
             menuData.setMenu(menu);
+            rest.getMenus().add(menu);
         } catch (RestaurantException e) {
             e.printStackTrace();
         } catch (MenuException e) {

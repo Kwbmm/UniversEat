@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -33,6 +34,10 @@ public class Add_simple_dish extends Fragment {
     shareData sData;
     private EditText name;
     MenuData data;
+    CheckBox vegan;
+    CheckBox vegetarian;
+    CheckBox glutenFree;
+    CheckBox hot;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -82,6 +87,11 @@ public class Add_simple_dish extends Fragment {
         View v=inflater.inflate(R.layout.fragment_add_simple_dish, container, false);
         data=sData.getdata();
         name= (EditText)v.findViewById(R.id.nd_et_1);
+        vegan=(CheckBox)v.findViewById(R.id.nd_ck_1);
+        vegetarian=(CheckBox)v.findViewById(R.id.nd_ck_2);
+        hot=(CheckBox)v.findViewById(R.id.nd_ck_3);
+        glutenFree=(CheckBox)v.findViewById(R.id.nd_ck_4);
+
         Button add= (Button)v.findViewById(R.id.ad_add);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +99,10 @@ public class Add_simple_dish extends Fragment {
                 try {
                     Course newDish=new Course(data.getRest());
                     newDish.setName(name.getText().toString());
-                    newDish.setVegan(true);
+                    newDish.setVegan(vegan.isChecked());
+                    newDish.setGlutenFree(glutenFree.isChecked());
+                    newDish.setVegetarian(vegetarian.isChecked());
+                    newDish.setSpicy(hot.isChecked());
                     ArrayList<Course> alc=data.getMenu().getCourses();
                     alc.add(newDish);
                     data.getMenu().setCourses(alc);

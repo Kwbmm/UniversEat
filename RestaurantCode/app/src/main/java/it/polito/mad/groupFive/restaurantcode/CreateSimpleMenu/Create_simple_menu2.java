@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,7 @@ import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.holders.DishViewHolder;
 
 /**
@@ -103,6 +105,7 @@ public class Create_simple_menu2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         data=sData.getdata();
+        rest=sData.getdata().rest;
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_create_simple_menu2, container, false);
         //if(!data.getMenu().getCourses().isEmpty()){
@@ -112,6 +115,18 @@ public class Create_simple_menu2 extends Fragment {
         LinearLayoutManager llm=new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);//}
+        Button end =(Button)v.findViewById(R.id.fin);
+        end.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    rest.saveData();
+                    getActivity().finish();
+                } catch (RestaurantException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         return v;
     }
 

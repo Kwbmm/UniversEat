@@ -23,7 +23,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,6 +53,8 @@ public class Create_simple_menu1 extends Fragment {
     }
     shareData sData;
     MenuData data;
+    private EditText name;
+    private EditText description;
     private Uri menuPicUri = null;
     private ImageView menuPic = null;
     private static final int CAPTURE_IMAGE = 1;
@@ -101,6 +105,8 @@ public class Create_simple_menu1 extends Fragment {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_create_simple_menu1, container, false);
         data=sData.getdata();
+        name=(EditText)v.findViewById(R.id.cmed_1_1);
+        description=(EditText)v.findViewById(R.id.cmed_1_2);
         ImageView restaurantImg = (ImageView) v.findViewById(R.id.cmiw_1_1);
         restaurantImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +126,8 @@ public class Create_simple_menu1 extends Fragment {
                 next.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        data.getMenu().setName(name.getText().toString());
+                        data.getMenu().setDescription(description.getText().toString());
                         Create_simple_menu2 csm2= new Create_simple_menu2();
                         getFragmentManager().beginTransaction().replace(R.id.fragment_holder,csm2).commit();
                     }

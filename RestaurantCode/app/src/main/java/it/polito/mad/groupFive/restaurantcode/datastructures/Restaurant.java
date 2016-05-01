@@ -1,6 +1,8 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -316,6 +318,7 @@ public class Restaurant {
     public Drawable getImageDrawable() throws RestaurantException {
         final String METHOD_NAME = this.getClass().getName()+" - getImageDrawable";
         try {
+
             InputStream is = this.appContext.getContentResolver().openInputStream(this.image);
             return Drawable.createFromStream(is,this.image.toString());
         } catch (FileNotFoundException e) {
@@ -633,9 +636,6 @@ public class Restaurant {
     public void setOrders(ArrayList<Order> orders) {
         this.orders = orders;
     }
-    public void addOrder(Order order) {
-        orders.add(order);
-    }
 
     /**
      *
@@ -789,4 +789,5 @@ public class Restaurant {
      * @param reviews An ArrayList of Review(s) to assign to this restaurant object.
      */
     public void setReviews(ArrayList<Review> reviews){ this.reviews = reviews; }
+
 }
