@@ -41,6 +41,12 @@
             android:name=".CreateRestaurant.CreateRestaurant"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Menu_details"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MakeOrder"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".Menu_view_edit"
             android:screenOrientation="portrait" />
         <activity

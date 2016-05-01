@@ -1,29 +1,27 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.*;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Option;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
@@ -33,27 +31,60 @@ public class Menu_details extends NavigationDrawer {
 
     private Restaurant restaurant;
     private it.polito.mad.groupFive.restaurantcode.datastructures.Menu menu;
-    private SharedPreferences sharedPreferences;
-    private int rid;
-    private int uid;
-    private int mid;
+    int mid;
+    int rid;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
-        int uid=sharedPreferences.getInt("uid",-1);
-        //TODO: retrieve rid and mid from intent
-        //TODO: get restaurant by rid
+        mid=getIntent().getExtras().getInt("mid");
+        rid=getIntent().getExtras().getInt("rid");
         try {
+            restaurant=new Restaurant(getBaseContext(),rid);
             restaurant.getData();
-            menu = restaurant.getMenuByID(mid);
+            generamenufittizio();
+            menu=restaurant.getMenuByID(mid);
         } catch (RestaurantException e) {
             e.printStackTrace();
         }
+        super.onCreate(savedInstanceState);
+        sharedPreferences=this.getSharedPreferences("RestaurantCode.Userdata",this.MODE_PRIVATE);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.menu_details, mlay);
         showmenu();
+    }
+
+    private void generamenufittizio(){
+        try {
+            Course c1 = new Course(restaurant,1);
+            c1.setName("Pane");
+            c1.setDescription("Pane azzimo 100g");
+            Course c2 = new Course(restaurant,2);
+            c2.setName("Patatine");
+            c2.setDescription("Molli e insipide");
+            Course c3 = new Course(restaurant,3);
+            c3.setName("Cipolle");
+            c3.setDescription("Cipolle crude scondite. Abababbabba\nqualcosa qualcosa descrizione lunga.\nancora qualcosa :P");
+            ArrayList<Course> courses1 = new ArrayList<>();
+            courses1.add(c1);
+            courses1.add(c2);
+            courses1.add(c3);
+            courses1.add(c1);
+            it.polito.mad.groupFive.restaurantcode.datastructures.Menu m = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(restaurant,mid);
+            m.setCourses(courses1);
+            m.setName("Verdure a gogo");
+            m.setPrice((float)13.99);
+            m.setBeverage(Boolean.TRUE);
+            m.setServiceFee(Boolean.FALSE);
+            restaurant.addMenu(m);
+            restaurant.saveData();
+        } catch (CourseException e) {
+            e.printStackTrace();
+        } catch (RestaurantException e) {
+            e.printStackTrace();
+        } catch (MenuException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -63,27 +94,57 @@ public class Menu_details extends NavigationDrawer {
     }
 
     private void showmenu(){
-        ListView listView = (ListView) findViewById(R.id.lView);
-        ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options = menu.getOptions();
+        TextView name = (TextView) findViewById(R.id.menu_name);
+        TextView beverage = (TextView) findViewById(R.id.beverage);
+        TextView servicefee = (TextView) findViewById(R.id.servicefee);
+        TextView price = (TextView) findViewById(R.id.menu_price);
+        ImageView pic = (ImageView) findViewById(R.id.menu_image);
+        ListView listView = (ListView) findViewById(R.id.courseList);
+        final Button ordernow = (Button) findViewById(R.id.orderButton);
+        ordernow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int uid = sharedPreferences.getInt("uid",-1);
+                Log.e("UID",sharedPreferences.getInt("uid",-1)+" ");
+                if(uid!=-1) {
+                    Intent ordernow = new Intent(getBaseContext(), MakeOrder.class);
+                    ordernow.putExtra("rid", rid);
+                    ordernow.putExtra("mid", mid);
+                    ordernow.putExtra("uid", uid);
+                    startActivity(ordernow);
+                }
+                else {
+                    Toast.makeText(getBaseContext(), "You need to login first!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         ArrayList<Course> courses = menu.getCourses();
-        OptionAdapter optionAdapter = new OptionAdapter(this,options);
-        listView.setAdapter(optionAdapter);
+        name.setText(menu.getName());
+        if(menu.isBeverage()) beverage.setText("Beverage included");
+        else beverage.setText("Beverage not included");
+        if(menu.isServiceFee()) servicefee.setText("Service fee included");
+        else servicefee.setText("Service fee not included");
+        price.setText(String.format("%.2f", menu.getPrice())+"€");
+        pic.setImageURI(menu.getImageUri());
+        Log.e("numero di courses",courses.size()+" ");
+        CourseAdapter courseAdapter = new CourseAdapter(this,courses);
+        listView.setAdapter(courseAdapter);
     }
 
-    public class OptionAdapter extends BaseAdapter {
-        ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options;
+    public class CourseAdapter extends BaseAdapter {
+        ArrayList<Course> courses;
         Context context;
-        public OptionAdapter(Context context,ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Option> options){
-            this.options=options;
+        public CourseAdapter(Context context,ArrayList<Course> courses){
+            this.courses=courses;
             this.context=context;
         }
 
         @Override
-        public int getCount() { return options.size(); }
+        public int getCount() { return courses.size(); }
 
         @Override
         public Object getItem(int position) {
-            return options.get(position);
+            return courses.get(position);
         }
 
         @Override
@@ -93,23 +154,15 @@ public class Menu_details extends NavigationDrawer {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.menu_details_option, null);
-            TextView option_number = (TextView) findViewById(R.id.option_number);
-            TextView course_name = (TextView) findViewById(R.id.course_name);
-            TextView course_description = (TextView) findViewById(R.id.course_description);
-            ImageView course_image = (ImageView) findViewById(R.id.course_image);
-            option_number.setText(position);
-            Spinner spinner=(Spinner)findViewById(R.id.spinner2);
-            //TODO: spinner.setAdapter(new SpinnerAdapter());
-            int selected=spinner.getSelectedItemPosition();
-            Option option = options.get(position);
-            Course course = option.getCourses().get(selected);
+            convertView = LayoutInflater.from(context).inflate(R.layout.menu_details_course, null);
+            Course course = courses.get(position);
+            TextView course_name = (TextView) convertView.findViewById(R.id.course_name);
+
             course_name.setText(course.getName());
-            course_description.setText(course.getDescription());
-            //TODO: set image
 
             return convertView;
         }
     }
+
 }
 

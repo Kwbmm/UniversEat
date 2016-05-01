@@ -25,6 +25,8 @@ public class Order {
     private int mid;
     private int rid;
     private Date date=null;
+    private String notes;
+    private String name;
 
     /**
      * Create an instance of Order: requires, as parameter, its restaurant object.
@@ -97,6 +99,8 @@ public class Order {
         this.mid = dummy.getMid();
         this.rid = dummy.getRid();
         this.date = dummy.getDate();
+        this.notes = dummy.getNotes();
+        this.name = dummy.getName();
     }
 
     /**
@@ -178,4 +182,11 @@ public class Order {
      * @param d Date of the order
      */
     public void setDate(Date d){ this.date = d;}
+    public String getNotes(){
+        if(notes==null) return " ";
+        else return notes;
+    }
+    public void setNotes(String notes){this.notes=notes;}
+    public String getName(){return name;}
+    public void setName(String name){this.name=name;}
 }
