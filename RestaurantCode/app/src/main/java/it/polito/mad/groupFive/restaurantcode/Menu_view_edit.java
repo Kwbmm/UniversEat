@@ -23,6 +23,7 @@ import java.util.Comparator;
 
 
 import it.polito.mad.groupFive.restaurantcode.CreateMenu.Create_menu;
+import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Create_simple_menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -100,12 +101,12 @@ public class Menu_view_edit extends NavigationDrawer {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nfpm: {
-                        Intent intent = new Intent(getBaseContext(), Create_menu.class);
+                        Intent intent = new Intent(getBaseContext(), Create_simple_menu.class);
                         startActivityForResult(intent,1);
                         break;
                     }
                     case R.id.ndm: {
-                        Intent intent = new Intent(getBaseContext(), Create_menu.class);
+                        Intent intent = new Intent(getBaseContext(), Create_simple_menu.class);
                         startActivityForResult(intent,2);
 
                         break;
