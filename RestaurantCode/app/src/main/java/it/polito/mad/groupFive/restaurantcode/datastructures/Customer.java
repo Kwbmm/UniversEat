@@ -20,8 +20,8 @@ import java.io.Writer;
 import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
-import it.polito.mad.groupFive.restaurantcode.libs.CustomUriDeserializer;
-import it.polito.mad.groupFive.restaurantcode.libs.CustomUriSerializer;
+import it.polito.mad.groupFive.restaurantcode.libs.CustomByteArrayAdapter;
+import it.polito.mad.groupFive.restaurantcode.libs.CustomUriAdapter;
 
 /**
  * @author Marco Ardizzone
@@ -101,7 +101,8 @@ public class Customer extends User {
 
             is.close();
             Gson root = new GsonBuilder()
-                    .registerTypeAdapter(Uri.class, new CustomUriDeserializer())
+                    .registerTypeAdapter(Uri.class, new CustomUriAdapter())
+                    .registerTypeHierarchyAdapter(byte[].class, new CustomByteArrayAdapter())
                     .create();
             Log.i(METHOD_NAME, "Loading data into structure...");
             return root.fromJson(stringBuilder.toString(), Customer.class);
@@ -149,7 +150,7 @@ public class Customer extends User {
         this.password = dummy.getPassword();
         this.address = dummy.getAddress();
         this.email = dummy.getEmail();
-        this.image = dummy.getImageUri();
+        this.image = dummy.getImageByteArray();
         this.reviews = dummy.getReviews();
         this.favourites = ((Customer) dummy).getFavourites();
     }
@@ -167,7 +168,8 @@ public class Customer extends User {
         final String METHOD_NAME = this.getClass().getName()+" - saveData";
 
         Gson root = new GsonBuilder()
-                .registerTypeAdapter(Uri.class, new CustomUriSerializer())
+                .registerTypeAdapter(Uri.class, new CustomUriAdapter())
+                .registerTypeHierarchyAdapter(byte[].class, new CustomByteArrayAdapter())
                 .serializeNulls()
                 .setPrettyPrinting()
                 .create();
@@ -204,7 +206,8 @@ public class Customer extends User {
             }
             String json = sb.toString();
             Gson root = new GsonBuilder()
-                    .registerTypeAdapter(Uri.class, new CustomUriDeserializer())
+                    .registerTypeAdapter(Uri.class, new CustomUriAdapter())
+                    .registerTypeHierarchyAdapter(byte[].class, new CustomByteArrayAdapter())
                     .create();
             Customer dummy = root.fromJson(json,Customer.class);
             this.copyData(dummy);

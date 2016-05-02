@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
@@ -23,6 +24,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.DataManagerException;
 import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
+import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
 
 public class SearchResult extends NavigationDrawer {
     public static final String RESTAURANT_SEARCH = "restaurant";
@@ -42,7 +44,7 @@ public class SearchResult extends NavigationDrawer {
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             boolean isRestaurant = intent.getBooleanExtra(SearchResult.RESTAURANT_SEARCH,false);
-            this.query = intent.getStringExtra(SearchManager.QUERY);
+            this.query = intent.getStringExtra(SearchManager.QUERY).trim().toLowerCase();
             try {
                 this.dm = new DataManager(getApplicationContext());
                 if(isRestaurant) //Restaurant search
@@ -68,11 +70,17 @@ public class SearchResult extends NavigationDrawer {
                     Toast.LENGTH_LONG)
                     .show();
         else{
-            for (Restaurant r : dm.getRestaurants()){
-                if(r.getName().equals(query)){
-                    //TODO Show this restaurant
-                    Log.i(METHOD_NAME,"Matched restaurant "+r.getName());
-                }
+            this.restaurants = new ArrayList<>();
+            for(Restaurant r : this.dm.getRestaurants()){
+                if(r.getName().toLowerCase().contains(this.query))
+                    this.restaurants.add(r);
+            }
+            RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
+            if (rv != null){
+                rv.setAdapter(new RestaurantAdapter(this.restaurants));
+                LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+                llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+                rv.setLayoutManager(llmVertical);
             }
         }
     }
@@ -87,16 +95,46 @@ public class SearchResult extends NavigationDrawer {
         else{
             this.menus = new ArrayList<>();
             for(Menu m : this.dm.getMenus()){
-                if(m.getName().toLowerCase().contains(this.query.toLowerCase()))
+                if(m.getName().toLowerCase().contains(this.query))
                     this.menus.add(m);
             }
-            RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerView_MenusView);
+            RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
             if (rv != null){
                 rv.setAdapter(new MenuAdapter(this.menus));
                 LinearLayoutManager llmVertical = new LinearLayoutManager(this);
                 llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
                 rv.setLayoutManager(llmVertical);
             }
+        }
+    }
+
+    public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder>{
+        private ArrayList<Restaurant> restaurants;
+
+        public RestaurantAdapter(ArrayList<Restaurant> r){
+            this.restaurants = r;
+        }
+
+        @Override
+        public RestaurantViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View restaurant_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.restaurant_view,null);
+            return new RestaurantViewHolder(restaurant_view);
+        }
+
+        @Override
+        public void onBindViewHolder(RestaurantViewHolder holder, int position) {
+            Restaurant restaurant = restaurants.get(position);
+            holder.restaurant_name.setText(restaurant.getName());
+            holder.restaurant_address.setText(restaurant.getAddress());
+            holder.restaurant_rating.setRating(restaurant.getRating());
+            holder.restaurant_image.setImageBitmap(restaurant.getImageBitmap());
+            int rid = restaurants.get(position).getRid();
+            holder.card.setOnClickListener(new onCardClick(position,rid));
+        }
+
+        @Override
+        public int getItemCount() {
+            return this.restaurants.size();
         }
     }
 
@@ -125,6 +163,7 @@ public class SearchResult extends NavigationDrawer {
         @Override
         public void onBindViewHolder(final MenuViewHolder holder, int position) {
             Menu menu = menus.get(position);
+            //TODO set image
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -92,7 +93,7 @@ public class CreateRestaurant_1 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final String METHOD_NAME = this.getClass().getName()+"onCreate";
+        final String METHOD_NAME = this.getClass().getName()+" onCreate";
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -172,7 +173,7 @@ public class CreateRestaurant_1 extends Fragment {
                 return false;
             }
 
-            restaurant.setImageUri(this.restaurantPicUri);
+            restaurant.setImageFromDrawable(this.restaurantPic.getDrawable());
 
             TextView telephone = (TextView) parentView.findViewById(R.id.editText_Telephone);
             if(telephone.getText().toString().equals("") || telephone.getText() == null){

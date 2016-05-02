@@ -7,8 +7,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/checkBox_searchByRestaurant"
-
-
         android:text="@string/checkbox_searchByRestaurant"
         />
     <CheckBox
@@ -23,5 +21,4 @@
         android:text="Generate example data"
         android:layout_gravity="center"
         android:id="@+id/fake_data"/>
-
 </LinearLayout>

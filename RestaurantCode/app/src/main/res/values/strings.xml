@@ -36,6 +36,7 @@
     <!-- restaurant_view.xml -->
     <string name="restaurantView_textViewRestaurantName">Restaurant Name</string>
     <string name="restaurantView_textViewRestaurantDescription">Description:</string>
+    <string name="restaurantView_textViewRestaurantAddress">Address</string>
     <!-- END restaurant_view.xml -->
 
     <string name="fragment_restaurant_view_imageViewIwr_contentDesc">Image of the restaurant.</string>

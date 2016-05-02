@@ -9,10 +9,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="it.polito.mad.groupFive.restaurantcode.SearchResult">
 
+    <!-- Shows either Menus or Restaurants -->
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/recyclerView_MenusView"
+        android:id="@+id/recyclerView_DataView"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

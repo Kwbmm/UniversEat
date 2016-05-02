@@ -6,16 +6,24 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
 /**
  * @author Marco Ardizzone
- * @class CustomUriDeserializer
+ * @class CustomUriAdapter
  * @date 2016-04-19
- * @brief Custom Uri deserializer class for GSon
+ * @brief Custom Uri deserializer/serializer class for GSon
  */
-public class CustomUriDeserializer implements JsonDeserializer<Uri> {
+public class CustomUriAdapter implements JsonSerializer<Uri>, JsonDeserializer<Uri> {
+    @Override
+    public JsonElement serialize(Uri src, Type typeOfSrc, JsonSerializationContext context) {
+        return new JsonPrimitive(src.toString());
+    }
+
     @Override
     public Uri deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         return Uri.parse(json.getAsString());
