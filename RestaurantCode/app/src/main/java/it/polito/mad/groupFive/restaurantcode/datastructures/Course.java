@@ -1,10 +1,15 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Random;
@@ -29,7 +34,7 @@ public class Course {
     private String name;
     private String description;
     private float price;
-    private Uri image;
+    private byte[] image;
     private boolean glutenFree;
     private boolean vegan;
     private boolean vegetarian;
@@ -110,7 +115,7 @@ public class Course {
         this.name = d.getName();
         this.description = d.getDescription();
         this.price = d.getPrice();
-        this.image = d.getImageUri();
+        this.image = d.getImageByteArray();
         this.glutenFree = d.isGlutenFree();
         this.vegan = d.isVegan();
         this.vegetarian = d.isVegetarian();
@@ -149,25 +154,21 @@ public class Course {
 
     /**
      *
-     * @return The Uri of the course image
+     * @return The byte representation of the image
      */
-    public Uri getImageUri(){ return this.image; }
+    public byte[] getImageByteArray() {
+        return this.image;
+    }
 
     /**
-     * Get the Drawable representing the image stored in this object.
+     * Returns the Bitmap of the image.
+     * If you can, use getImageByteArray instead of this one as it is more efficient.
      *
-     * @return Drawable of the image
-     * @throws CourseException If URI stream fails
+     * @return The Bitmap representing the image.
      */
-    public Drawable getImageDrawable() throws CourseException {
-        final String METHOD_NAME = this.getClass().getName()+" - getImageDrawable";
-        try {
-            InputStream is = this.r.getAppContext().getContentResolver().openInputStream(this.image);
-            return Drawable.createFromStream(is,this.image.toString());
-        } catch (FileNotFoundException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            throw new CourseException(e.getMessage());
-        }
+    public Bitmap getImageBitmap(){
+        final String METHOD_NAME = this.getClass().getName()+" - getImageBitmap";
+        return BitmapFactory.decodeByteArray(this.image,0,this.image.length);
     }
 
     /**
@@ -235,16 +236,52 @@ public class Course {
     public void setPrice(float price){ this.price = price;}
 
     /**
-     * Sets the Uri of the image.
-     * @param image Uri of the image.
+     *
+     * @param image Byte array representing the image
      */
-    public void setImageUri(Uri image){ this.image = image;}
+    public void setImageFromByteArray(byte[] image){ this.image = image; }
 
     /**
+     * Sets the byte array representation of the image from a given input Bitmap.
+     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
      *
-     * @param uri A string representing the Uri of the image
+     * @param image Bitmap representing the image
      */
-    public void setImageUriFromString(String uri){ this.image = Uri.parse(uri); }
+    public void setImageFromBitmap(Bitmap image){
+        final String METHOD_NAME = this.getClass().getName()+" - setImageFromBitmap";
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, output);
+        this.image = output.toByteArray();
+    }
+
+    /**
+     * Sets the byte array representation of the image from a given input Drawable. The drawable
+     * is first converted to a Bitmap and then setImageFromBitmap is called.
+     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
+     *
+     * @param image Drawable representing the image
+     */
+    public void setImageFromDrawable(Drawable image){
+        Bitmap bitmap = null;
+
+        if (image instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) image;
+            if(bitmapDrawable.getBitmap() != null) {
+                this.setImageFromBitmap(bitmapDrawable.getBitmap());
+            }
+        }
+
+        if(image.getIntrinsicWidth() <= 0 || image.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(image.getIntrinsicWidth(), image.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        image.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        image.draw(canvas);
+        this.setImageFromBitmap(bitmap);
+    }
 
     /**
      * Sets if the course is gluten-free

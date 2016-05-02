@@ -36,7 +36,7 @@ public class CreateRestaurant
         }
         this.restaurant.setName(r.getName());
         this.restaurant.setDescription(r.getDescription());
-        this.restaurant.setImageUri(r.getImageUri());
+        this.restaurant.setImageFromByteArray(r.getImageByteArray());
 
         this.restaurant.setTelephone(r.getTelephone());
         this.restaurant.setWebsite(r.getWebsite());

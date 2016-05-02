@@ -127,7 +127,7 @@ public class SearchResult extends NavigationDrawer {
             holder.restaurant_name.setText(restaurant.getName());
             holder.restaurant_address.setText(restaurant.getAddress());
             holder.restaurant_rating.setRating(restaurant.getRating());
-            //TODO set image
+            holder.restaurant_image.setImageBitmap(restaurant.getImageBitmap());
             int rid = restaurants.get(position).getRid();
             holder.card.setOnClickListener(new onCardClick(position,rid));
         }

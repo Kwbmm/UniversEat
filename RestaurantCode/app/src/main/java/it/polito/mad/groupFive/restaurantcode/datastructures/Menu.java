@@ -1,10 +1,15 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,7 +33,7 @@ public class Menu {
     private String name=null;
     private String description=null;
     private float price;
-    private Uri image;
+    private byte[] image;
     private int type;
     private int choiceAmount;
     private ArrayList<Course> courses = new ArrayList<>();
@@ -116,12 +121,11 @@ public class Menu {
      * @param dummy A dummy Menu object, on which the JSON data is written to.
      */
     private void copyData(Menu dummy) {
-
         this.mid = dummy.getMid();
         this.name = dummy.getName();
         this.description = dummy.getDescription();
         this.price = dummy.getPrice();
-        this.image = dummy.getImageUri();
+        this.image = dummy.getImageByteArray();
         this.type = dummy.getType();
         this.choiceAmount = dummy.getChoiceAmount();
         this.courses = dummy.getCourses();
@@ -157,27 +161,23 @@ public class Menu {
     public float getPrice(){ return this.price; }
 
     /**
-     * Get the Drawable representing the image stored in this object.
      *
-     * @return Drawable of the image
-     * @throws MenuException If URI stream fails
+     * @return The byte representation of the image
      */
-    public Drawable getImageDrawable() throws MenuException {
-        final String METHOD_NAME = this.getClass().getName()+" - getImageDrawable";
-        try {
-            InputStream is = r.getAppContext().getContentResolver().openInputStream(this.image);
-            return Drawable.createFromStream(is,this.image.toString());
-        } catch (FileNotFoundException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            throw new MenuException(e.getMessage());
-        }
+    public byte[] getImageByteArray() {
+        return this.image;
     }
 
     /**
+     * Returns the Bitmap of the image.
+     * If you can, use getImageByteArray instead of this one as it is more efficient.
      *
-     * @return The image Uri of the menu
+     * @return The Bitmap representing the image.
      */
-    public Uri getImageUri(){ return this.image; }
+    public Bitmap getImageBitmap(){
+        final String METHOD_NAME = this.getClass().getName()+" - getImageBitmap";
+        return BitmapFactory.decodeByteArray(this.image,0,this.image.length);
+    }
 
     /**
      * This method returns a textual representation of the type of menu. It can be:
@@ -387,16 +387,52 @@ public class Menu {
     public void setPrice(float price){ this.price = price; }
 
     /**
-     * Sets the Uri of the image.
-     * @param image Uri of the image.
+     *
+     * @param image Byte array representing the image
      */
-    public void setImageUri(Uri image){ this.image = image;}
+    public void setImageFromByteArray(byte[] image){ this.image = image; }
 
     /**
+     * Sets the byte array representation of the image from a given input Bitmap.
+     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
      *
-     * @param uri A string representing the Uri of the image
+     * @param image Bitmap representing the image
      */
-    public void setImageUriFromString(String uri){ this.image = Uri.parse(uri); }
+    public void setImageFromBitmap(Bitmap image){
+        final String METHOD_NAME = this.getClass().getName()+" - setImageFromBitmap";
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, output);
+        this.image = output.toByteArray();
+    }
+
+    /**
+     * Sets the byte array representation of the image from a given input Drawable. The drawable
+     * is first converted to a Bitmap and then setImageFromBitmap is called.
+     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
+     *
+     * @param image Drawable representing the image
+     */
+    public void setImageFromDrawable(Drawable image){
+        Bitmap bitmap = null;
+
+        if (image instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) image;
+            if(bitmapDrawable.getBitmap() != null) {
+                this.setImageFromBitmap(bitmapDrawable.getBitmap());
+            }
+        }
+
+        if(image.getIntrinsicWidth() <= 0 || image.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(image.getIntrinsicWidth(), image.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        image.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        image.draw(canvas);
+        this.setImageFromBitmap(bitmap);
+    }
 
     /**
      * This method sets the type of the menu. The type can be:

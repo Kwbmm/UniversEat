@@ -50,18 +50,11 @@ public class Restaurant_management extends NavigationDrawer {
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.restaurant_view_edit, mlay);
         showresturant();
-
-
-
-
-
-
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-
     }
 
 
@@ -97,19 +90,8 @@ public class Restaurant_management extends NavigationDrawer {
             }
 
             LinearLayout rview= (LinearLayout) findViewById(R.id.fl_redit);
-            //View nrest = LayoutInflater.from(this).inflate(R.layout.resturant_view_edit_fragment,null);
-            //rview.addView(nrest);
             rview.inflate(this,R.layout.resturant_view_edit_fragment,rview);
             ImageButton modify = (ImageButton) findViewById(R.id.restaurant_edit);
-            /*modify.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("rid",-1);
-                    editor.commit();
-
-                }
-            });*/
             visible=true;
             RelativeLayout rl=(RelativeLayout) findViewById(R.id.restaurant_view_layout);
             rl.setOnClickListener(new View.OnClickListener() {
@@ -119,8 +101,6 @@ public class Restaurant_management extends NavigationDrawer {
                     startActivity(menuview);
                 }
             });
-
-
             getResaurantdata();
             return true;
         }
@@ -157,11 +137,8 @@ public class Restaurant_management extends NavigationDrawer {
         rname.setText(restaurant.getName());
         raddress.setText(restaurant.getAddress());
         rbar.setRating(restaurant.getRating());
-        try {
-            rmimw.setImageDrawable(restaurant.getImageDrawable());
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-        }
+        rmimw.setImageBitmap(restaurant.getImageBitmap());
+//            rmimw.setImageDrawable(restaurant.getImageDrawable());
 
 
         return true;

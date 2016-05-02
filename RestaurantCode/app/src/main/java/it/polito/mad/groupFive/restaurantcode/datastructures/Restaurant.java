@@ -1,6 +1,10 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -10,7 +14,9 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,8 +36,8 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.libs.CustomUriDeserializer;
-import it.polito.mad.groupFive.restaurantcode.libs.CustomUriSerializer;
+import it.polito.mad.groupFive.restaurantcode.libs.CustomByteArrayAdapter;
+import it.polito.mad.groupFive.restaurantcode.libs.CustomUriAdapter;
 
 /**
  * @author Marco Ardizzone
@@ -53,7 +59,7 @@ public class Restaurant {
     private String website;
     private String telephone;
     private String ZIPCode;
-    private Uri image;
+    private byte[] image;
     private float rating;
     private double xcoord;
     private double ycoord;
@@ -116,7 +122,7 @@ public class Restaurant {
         this.website = dummy.getWebsite();
         this.telephone = dummy.getTelephone();
         this.ZIPCode = dummy.getZIPCode();
-        this.image = dummy.getImageUri();
+        this.image = dummy.getImageByteArray();
         this.xcoord = dummy.getXcoord();
         this.ycoord = dummy.getYcoord();
         this.menus = dummy.getMenus();
@@ -154,7 +160,10 @@ public class Restaurant {
             }
 
             is.close();
-            Gson root = new GsonBuilder().registerTypeAdapter(Uri.class, new CustomUriDeserializer()).create();
+            Gson root = new GsonBuilder()
+                    .registerTypeAdapter(Uri.class, new CustomUriAdapter())
+                    .registerTypeHierarchyAdapter(byte[].class, new CustomByteArrayAdapter())
+                    .create();
             return root.fromJson(stringBuilder.toString(), Restaurant.class);
         } catch (FileNotFoundException e) {
             this.createJSONFile();
@@ -222,7 +231,8 @@ public class Restaurant {
             }
             String json = sb.toString();
             Gson root = new GsonBuilder()
-                    .registerTypeAdapter(Uri.class, new CustomUriDeserializer())
+                    .registerTypeAdapter(Uri.class, new CustomUriAdapter())
+                    .registerTypeHierarchyAdapter(byte[].class, new CustomByteArrayAdapter())
                     .create();
             Restaurant dummy = root.fromJson(json,Restaurant.class);
             this.copyData(dummy);
@@ -244,7 +254,8 @@ public class Restaurant {
         final String METHOD_NAME = this.getClass().getName()+" - saveData";
 
         Gson root = new GsonBuilder()
-                .registerTypeAdapter(Uri.class, new CustomUriSerializer())
+                .registerTypeAdapter(Uri.class, new CustomUriAdapter())
+                .registerTypeHierarchyAdapter(byte[].class, new CustomByteArrayAdapter())
                 .serializeNulls()
                 .setPrettyPrinting()
                 .create();
@@ -252,7 +263,9 @@ public class Restaurant {
 
         try {
             FileOutputStream fos = this.appContext.openFileOutput("r"+this.rid+".json",Context.MODE_PRIVATE);
-            fos.write(output.getBytes());
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            bos.write(output.getBytes());
+            bos.close();
             fos.close();
         } catch (IOException e) {
             Log.e(METHOD_NAME,e.getMessage());
@@ -303,25 +316,21 @@ public class Restaurant {
 
     /**
      *
-     * @return Uri of the image
+     * @return The byte representation of the image
      */
-    public Uri getImageUri(){ return this.image;}
+    public byte[] getImageByteArray() {
+        return this.image;
+    }
 
     /**
-     * Get the Drawable representing the image stored in this object.
+     * Returns the Bitmap of the image.
+     * If you can, use getImageByteArray instead of this one as it is more efficient.
      *
-     * @return Drawable of the image
-     * @throws RestaurantException If URI stream fails
+     * @return The Bitmap representing the image.
      */
-    public Drawable getImageDrawable() throws RestaurantException {
-        final String METHOD_NAME = this.getClass().getName()+" - getImageDrawable";
-        try {
-            InputStream is = this.appContext.getContentResolver().openInputStream(this.image);
-            return Drawable.createFromStream(is,this.image.toString());
-        } catch (FileNotFoundException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            throw new RestaurantException(e.getMessage());
-        }
+    public Bitmap getImageBitmap(){
+        final String METHOD_NAME = this.getClass().getName()+" - getImageBitmap";
+        return BitmapFactory.decodeByteArray(this.image,0,this.image.length);
     }
 
     /**
@@ -563,15 +572,51 @@ public class Restaurant {
 
     /**
      *
-     * @param uri Uri of the image
+     * @param image Byte array representing the image
      */
-    public void setImageUri(Uri uri){ this.image = uri; }
+    public void setImageFromByteArray(byte[] image){ this.image = image; }
 
     /**
+     * Sets the byte array representation of the image from a given input Bitmap.
+     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
      *
-     * @param uri A string representing the Uri of the image
+     * @param image Bitmap representing the image
      */
-    public void setImageUriFromString(String uri){ this.image = Uri.parse(uri); }
+    public void setImageFromBitmap(Bitmap image){
+        final String METHOD_NAME = this.getClass().getName()+" - setImageFromBitmap";
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, output);
+        this.image = output.toByteArray();
+    }
+
+    /**
+     * Sets the byte array representation of the image from a given input Drawable. The drawable
+     * is first converted to a Bitmap and then setImageFromBitmap is called.
+     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
+     *
+     * @param image Drawable representing the image
+     */
+    public void setImageFromDrawable(Drawable image){
+        Bitmap bitmap = null;
+
+        if (image instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) image;
+            if(bitmapDrawable.getBitmap() != null) {
+                this.setImageFromBitmap(bitmapDrawable.getBitmap());
+            }
+        }
+
+        if(image.getIntrinsicWidth() <= 0 || image.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(image.getIntrinsicWidth(), image.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        image.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        image.draw(canvas);
+        this.setImageFromBitmap(bitmap);
+    }
 
     /**
      *
