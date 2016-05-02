@@ -125,7 +125,7 @@ public class Menu_details extends NavigationDrawer {
         if(menu.isServiceFee()) servicefee.setText("Service fee included");
         else servicefee.setText("Service fee not included");
         price.setText(String.format("%.2f", menu.getPrice())+"€");
-        pic.setImageURI(menu.getImageUri());
+        pic.setImageBitmap(menu.getImageBitmap());
         Log.e("numero di courses",courses.size()+" ");
         CourseAdapter courseAdapter = new CourseAdapter(this,courses);
         listView.setAdapter(courseAdapter);

@@ -11,6 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -38,6 +43,7 @@ public class Add_simple_dish extends Fragment {
     CheckBox vegetarian;
     CheckBox glutenFree;
     CheckBox hot;
+    TextView price;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -91,6 +97,44 @@ public class Add_simple_dish extends Fragment {
         vegetarian=(CheckBox)v.findViewById(R.id.nd_ck_2);
         hot=(CheckBox)v.findViewById(R.id.nd_ck_3);
         glutenFree=(CheckBox)v.findViewById(R.id.nd_ck_4);
+
+        ImageButton add_tags= (ImageButton) v.findViewById(R.id.add_tags_but);
+        add_tags.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Simple_menu_add_tags tags_frag=new Simple_menu_add_tags();
+                getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fragment_holder,tags_frag).commit();
+
+            }
+        });
+
+        ScrollView scrollView= (ScrollView) v.findViewById(R.id.tag_list);
+        LinearLayout verlay=(LinearLayout) v.findViewById(R.id.tag_list_vert);
+        LinearLayout horlay=new LinearLayout(getContext());
+        horlay.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        horlay.setLayoutParams(LLParams);
+        verlay.addView(horlay);
+        String res[];
+        res=getContext().getResources().getStringArray(R.array.tags);
+        int count=0,lng=0;
+        while (count<res.length){
+            View child=LayoutInflater.from(getContext()).inflate(R.layout.tag_card_frag,null);
+            TextView tag_name=(TextView)child.findViewById(R.id.tag_name);
+            //lng+=res[count].length();
+            tag_name.setText(res[count]);
+            if(lng+res[count].length()>20){
+
+                horlay=new LinearLayout(getContext());
+                horlay.setOrientation(LinearLayout.HORIZONTAL);
+                horlay.setLayoutParams(LLParams);
+                verlay.addView(horlay);
+                lng=0;
+            }
+            lng+=res[count].length();
+            horlay.addView(child);
+            count++;
+        }
 
         Button add= (Button)v.findViewById(R.id.ad_add);
         add.setOnClickListener(new View.OnClickListener() {

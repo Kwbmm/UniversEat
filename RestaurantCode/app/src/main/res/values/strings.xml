@@ -202,5 +202,30 @@
 
     <string name="toastloginFail">These passwords don\'t match.</string>
 
-
+    <array name="tags">
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Cocktail</item>
+        <item>Cake</item>
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Cocktail</item>
+        <item>Cake</item>
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Cocktail</item>
+        <item>Cake</item>
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Cocktail</item>
+        <item>Cake</item>
+    </array>
 </resources>

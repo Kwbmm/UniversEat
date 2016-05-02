@@ -14,7 +14,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
-public class Create_simple_menu extends NavigationDrawer implements Create_simple_menu1.OnFragmentInteractionListener,Create_simple_menu2.OnFragmentInteractionListener,Create_simple_menu1.shareData,Create_simple_menu2.shareData,Add_simple_dish.OnFragmentInteractionListener,Add_simple_dish.shareData {
+public class Create_simple_menu extends NavigationDrawer implements Create_simple_menu1.OnFragmentInteractionListener,Create_simple_menu2.OnFragmentInteractionListener,Create_simple_menu1.shareData,Create_simple_menu2.shareData,Add_simple_dish.OnFragmentInteractionListener,Add_simple_dish.shareData,Simple_menu_add_tags.OnFragmentInteractionListener,Simple_menu_add_tags.shareData {
 
     Restaurant rest;
     MenuData menuData;
