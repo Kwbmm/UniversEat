@@ -10,10 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -95,8 +93,15 @@ public class SearchResult extends NavigationDrawer {
         else{
             this.menus = new ArrayList<>();
             for(Menu m : this.dm.getMenus()){
-                if(m.getName().toLowerCase().contains(this.query))
-                    this.menus.add(m);
+                for(String s : m.getTags().values()){
+                    if(s.equalsIgnoreCase(this.query)){
+                        this.menus.add(m);
+                        break; //Go to next menu
+                    }
+                }
+                //TODO Look also by name??
+//                if(m.getName().toLowerCase().contains(this.query))
+//                    this.menus.add(m);
             }
             RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
             if (rv != null){
@@ -163,11 +168,12 @@ public class SearchResult extends NavigationDrawer {
         @Override
         public void onBindViewHolder(final MenuViewHolder holder, int position) {
             Menu menu = menus.get(position);
-            //TODO set image
+
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
-            int rid =menus.get(position).getRid();
+            holder.menu_image.setImageBitmap(menu.getImageBitmap());
+            int rid = menus.get(position).getRid();
             holder.card.setOnClickListener(new onCardClick(position,rid));
         }
 

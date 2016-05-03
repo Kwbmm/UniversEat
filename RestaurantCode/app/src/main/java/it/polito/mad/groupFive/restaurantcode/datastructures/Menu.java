@@ -7,6 +7,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.util.ArrayMap;
+import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -345,6 +347,21 @@ public class Menu {
             if(o.getOptID() == optID)
                 return o;
         return null;
+    }
+
+    /**
+     * Returns the tags associated to all the Courses in this menu. If no tags are added to the
+     * Course objects of this Menu object, the returned ArrayMap is empty.
+     *
+     * @return An ArrayMap where the key is an unique Integer and the value is a String representing
+     * the tag.
+     */
+    public ArrayMap<Integer, String> getTags(){
+        ArrayMap<Integer, String> output = new ArrayMap<>();
+        for(Course c : this.courses)
+            if(c.getTags().size() != 0)
+                output.putAll((SimpleArrayMap<? extends Integer, ? extends String>) c.getTags());
+        return output;
     }
 
     /**

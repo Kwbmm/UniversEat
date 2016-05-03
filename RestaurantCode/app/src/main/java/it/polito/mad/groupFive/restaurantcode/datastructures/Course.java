@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -39,6 +40,7 @@ public class Course {
     private boolean vegan;
     private boolean vegetarian;
     private boolean spicy;
+    private ArrayMap<Integer, String> tags = new ArrayMap<>();
 
     /**
      * Create an instance of Course: requires, as parameter, its restaurant object.
@@ -120,6 +122,7 @@ public class Course {
         this.vegan = d.isVegan();
         this.vegetarian = d.isVegetarian();
         this.spicy = d.isSpicy();
+        this.tags = d.getTags();
     }
 
     /**
@@ -194,6 +197,14 @@ public class Course {
      * @return true or false
      */
     public boolean isSpicy(){ return this.spicy; }
+
+    /**
+     * Returns the tags assigned to this Course object.
+     *
+     * @return An ArrayMap where the key is a unique Integer and the value is a String representing
+     * the tag.
+     */
+    public ArrayMap<Integer, String> getTags(){ return this.tags; }
 
     /**
      * Sets the Course ID
@@ -306,4 +317,13 @@ public class Course {
      * @param spicy true or false
      */
     public void setSpicy(boolean spicy){ this.spicy = spicy;}
+
+    /**
+     * Sets the tags of the Course object.
+     *
+     * @param tags An ArrayMap where the key is an integer and the value is the String representing
+     *             the tag.
+     */
+    public void setTags(ArrayMap<Integer,String> tags){ this.tags = tags; }
+
 }
