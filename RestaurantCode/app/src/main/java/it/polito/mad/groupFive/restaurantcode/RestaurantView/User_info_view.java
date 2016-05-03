@@ -41,6 +41,11 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                     rest_i.getDrawable().setTint(Color.parseColor("#ffffff"));
                     rest_r.getDrawable().setTint(Color.parseColor("#000000"));
                     rest_m.getDrawable().setTint(Color.parseColor("#000000"));}
+                else{
+                    rest_i.setBackgroundColor(Color.parseColor("#ffffff"));
+                    rest_r.setBackgroundColor(Color.parseColor("#f95053"));
+                    rest_m.setBackgroundColor(Color.parseColor("#f95053"));
+                }
                     Restaurant_info_user rest_view = new Restaurant_info_user();
                     getSupportFragmentManager()
                             .beginTransaction().addToBackStack(null)
@@ -58,6 +63,11 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                     rest_m.getDrawable().setTint(Color.parseColor("#ffffff"));
                     rest_i.getDrawable().setTint(Color.parseColor("#000000"));
                     rest_r.getDrawable().setTint(Color.parseColor("#000000"));}
+                else{
+                    rest_i.setBackgroundColor(Color.parseColor("#f95053"));
+                    rest_r.setBackgroundColor(Color.parseColor("#f95053"));
+                    rest_m.setBackgroundColor(Color.parseColor("#ffffff"));
+                }
                     Restaurant_menu_user rest_view = new Restaurant_menu_user();
                     getSupportFragmentManager()
                             .beginTransaction()
@@ -75,6 +85,11 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                     rest_r.getDrawable().setTint(Color.parseColor("#ffffff"));
                     rest_m.getDrawable().setTint(Color.parseColor("#000000"));
                     rest_i.getDrawable().setTint(Color.parseColor("#000000"));}
+                else{
+                    rest_i.setBackgroundColor(Color.parseColor("#f95053"));
+                    rest_r.setBackgroundColor(Color.parseColor("#ffffff"));
+                    rest_m.setBackgroundColor(Color.parseColor("#f95053"));
+                }
 
                     Review_user_view review_user_view=new Review_user_view();
                     getSupportFragmentManager()
@@ -89,6 +104,11 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
             rest_i.getDrawable().setTint(Color.parseColor("#ffffff"));
             rest_r.getDrawable().setTint(Color.parseColor("#000000"));
             rest_m.getDrawable().setTint(Color.parseColor("#000000"));
+        }
+        else{
+            rest_i.setBackgroundColor(Color.parseColor("#ffffff"));
+            rest_r.setBackgroundColor(Color.parseColor("#f95053"));
+            rest_m.setBackgroundColor(Color.parseColor("#f95053"));
         }
 
         Restaurant_info_user rest_view = new Restaurant_info_user();
