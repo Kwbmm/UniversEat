@@ -7,8 +7,8 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
  * Created by MacBookRetina on 30/04/16.
  */
 public class MenuData {
-    Restaurant rest;
-    Menu menu;
+    private Restaurant rest;
+    private Menu menu;
 
     public Menu getMenu() {
         return menu;

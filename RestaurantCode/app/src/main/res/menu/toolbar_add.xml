@@ -4,6 +4,7 @@
     <item android:id="@+id/add_ab"
         android:icon="@drawable/ic_add_white"
         app:showAsAction="always"
-        android:title="Search"/>
+        android:title="Add"
+        />
 
 </menu>

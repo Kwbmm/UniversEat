@@ -56,7 +56,9 @@
         <activity
             android:name=".CreateMenu.Create_menu"
             android:screenOrientation="portrait" />
-        <activity android:name=".RestaurantView.User_info_view" />
+        <activity android:name=".RestaurantView.User_info_view"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
         <activity android:name=".SearchResult">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

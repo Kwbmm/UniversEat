@@ -8,12 +8,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -37,19 +39,13 @@ public class Menu_view_edit extends NavigationDrawer {
     private MenuAdapter adp;
     private Restaurant rest;
     private SharedPreferences sharedPreferences;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         readdata();
-        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-        mlay.inflate(this, R.layout.menulist, mlay);
-        adp= new MenuAdapter(menusshared);
-        RecyclerView recyclerView=(RecyclerView)findViewById(R.id.my_recycler_view);
-        recyclerView.setAdapter(adp);
-        LinearLayoutManager llm=new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
+
 
 
     }
@@ -67,10 +63,10 @@ public class Menu_view_edit extends NavigationDrawer {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        readdata();
+
         adp.update();
-        adp.notifyItemInserted(menusshared.size());
-        adp.notifyDataSetChanged();
+
+
     }
 
     public void readdata() {
@@ -87,6 +83,14 @@ public class Menu_view_edit extends NavigationDrawer {
         }
 
         menusshared = rest.getMenus();
+        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
+        mlay.inflate(this, R.layout.menulist, mlay);
+        adp= new MenuAdapter(menusshared);
+        recyclerView=(RecyclerView)findViewById(R.id.my_recycler_view);
+        recyclerView.setAdapter(adp);
+        LinearLayoutManager llm=new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
 
 
     }
@@ -124,6 +128,8 @@ public class Menu_view_edit extends NavigationDrawer {
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_add, menu);
+        MenuItem add=menu.findItem(R.id.add_ab);
+
         return true;
     }
 
@@ -142,6 +148,7 @@ public class Menu_view_edit extends NavigationDrawer {
         protected TextView menu_price;
         protected ImageButton edit;
         protected CardView card;
+        protected ImageView menu_image;
 
         public MenuViewHoder(View itemView) {
             super(itemView);
@@ -150,6 +157,7 @@ public class Menu_view_edit extends NavigationDrawer {
             this.menu_price=(TextView)itemView.findViewById(R.id.menu_price);
             this.edit=(ImageButton) itemView.findViewById(R.id.menu_edit);
             this.card= (CardView) itemView.findViewById(R.id.menu_card);
+            this.menu_image=(ImageView)itemView.findViewById(R.id.menu_image);
         }
     }
 
@@ -170,9 +178,15 @@ public class Menu_view_edit extends NavigationDrawer {
                 }});
         }
         public void update(){
+            try {
+                rest.getData();
+            } catch (RestaurantException e) {
+                e.printStackTrace();
+            }
+            menusshared=rest.getMenus();
             menus=menusshared;
             sort();
-
+            adp.notifyDataSetChanged();
         }
 
         @Override
@@ -188,6 +202,8 @@ public class Menu_view_edit extends NavigationDrawer {
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
             holder.edit.setOnClickListener(new onEditclick(position));
+            holder.menu_image.setImageBitmap(menu.getImageBitmap());
+            //Log.v("image",menu.getImageByteArray().toString());
 
 
         }

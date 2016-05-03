@@ -193,4 +193,29 @@
     <string name="SearchResult_toastNoMenus">Non ci sono menù da mostrare.</string>
     <string name="SearchResult_toastNoRestaurants">Non ci sono ristoranti da mostrare.</string>
 
+    <array name="tags">
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Carne</item>
+        <item>Pesce</item>
+        <item>Vino</item>
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Carne</item>
+        <item>Pesce</item>
+        <item>Vino</item>
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Carne</item>
+        <item>Pesce</item>
+        <item>Vino</item>
+        <item>Cake</item>
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Cocktail</item>
+
+    </array>
+
 </resources>

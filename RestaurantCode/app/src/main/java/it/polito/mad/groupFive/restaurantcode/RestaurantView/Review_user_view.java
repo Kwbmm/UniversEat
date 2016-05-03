@@ -83,8 +83,6 @@ public class Review_user_view extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItem glass =menu.findItem(R.id.search_ab);
-        glass.setVisible(false);
         inflater.inflate(R.menu.toolbar_add,menu);
         MenuItem item=menu.findItem(R.id.add_ab);
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -111,7 +109,6 @@ public class Review_user_view extends Fragment {
             e.printStackTrace();
         }
         alreviews=rest.getReviews();
-        Log.v("rid",alreviews.get(0).getReviewText());
         adp= new ReviewAdapter(alreviews);
         recyclerView=(RecyclerView)v.findViewById(R.id.review_list);
         recyclerView.setAdapter(adp);

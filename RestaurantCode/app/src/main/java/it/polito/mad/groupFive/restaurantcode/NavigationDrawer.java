@@ -22,6 +22,7 @@ public class NavigationDrawer extends AppCompatActivity {
     private int phase;//0 Logged out 1 logged in
     private int usertype;// 0 user 1 restaurant manager
     private ArrayAdapter<String> adapter;
+    private DrawerLayout drawerLayout;
 
     ActionBarDrawerToggle mDrawerToggle;
     ListView dList;
@@ -48,10 +49,35 @@ public class NavigationDrawer extends AppCompatActivity {
         return adp;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    protected void onStop() {
+        drawerLayout.closeDrawers();
+        super.onStop();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+
+    }
+
     public void createDrawer() {
         adapter = createAdapter();
         setContentView(R.layout.drawer);
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         ImageView imageView = (ImageView) findViewById(R.id.iw);

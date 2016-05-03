@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 
@@ -43,11 +44,12 @@ public class Create_simple_menu2 extends Fragment {
         MenuData getdata();
     }
     shareData sData;
-
+    it.polito.mad.groupFive.restaurantcode.datastructures.Menu menu;
     Restaurant rest;
     MenuData data;
     DishAdapter adp;
     RecyclerView recyclerView;
+    EditText price;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -105,21 +107,29 @@ public class Create_simple_menu2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         data=sData.getdata();
-        rest=sData.getdata().rest;
+        rest=sData.getdata().getRest();
+        menu=sData.getdata().getMenu();
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_create_simple_menu2, container, false);
-        //if(!data.getMenu().getCourses().isEmpty()){
+        setUpData(v);
+
+        return v;
+    }
+
+    public void setUpData(View v){
         adp= new DishAdapter(data.getMenu().getCourses());
         recyclerView=(RecyclerView)v.findViewById(R.id.my_recycler_view);
         recyclerView.setAdapter(adp);
         LinearLayoutManager llm=new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);//}
+        recyclerView.setLayoutManager(llm);
+        price= (EditText) v.findViewById(R.id.fcm2_price);
         Button end =(Button)v.findViewById(R.id.fin);
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
+                    menu.setPrice(Float.valueOf(price.getText().toString()));
                     rest.saveData();
                     getActivity().finish();
                 } catch (RestaurantException e) {
@@ -127,7 +137,8 @@ public class Create_simple_menu2 extends Fragment {
                 }
             }
         });
-        return v;
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
@@ -76,6 +77,10 @@ public class Simple_menu_add_tags extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.fragment_simple_menu_add_tags, container, false);
+        setUpData(v);
+        return v;
+    }
+    public void setUpData(View v){
         TagAdapter adp;
         adp= new TagAdapter(convertStringArrayToArraylist(getResources().getStringArray(R.array.tags)));
         RecyclerView recyclerView;
@@ -84,7 +89,13 @@ public class Simple_menu_add_tags extends Fragment {
         LinearLayoutManager llm=new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        return v;
+        Button create=(Button)v.findViewById(R.id.add_tags);
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().popBackStack();
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

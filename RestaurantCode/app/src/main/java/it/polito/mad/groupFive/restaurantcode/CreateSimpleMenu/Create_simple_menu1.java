@@ -33,8 +33,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import it.polito.mad.groupFive.restaurantcode.CreateRestaurant.CreateRestaurant;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.libs.RealPathUtil;
 
 /**
@@ -57,6 +59,7 @@ public class Create_simple_menu1 extends Fragment {
     private EditText description;
     private Uri menuPicUri = null;
     private ImageView menuPic = null;
+    private Bitmap imageBitmap;
     private static final int CAPTURE_IMAGE = 1;
     private static final int SELECT_PICTURE = 2;
     private static final String ARG_PARAM1 = "param1";
@@ -128,6 +131,12 @@ public class Create_simple_menu1 extends Fragment {
                     public void onClick(View v) {
                         data.getMenu().setName(name.getText().toString());
                         data.getMenu().setDescription(description.getText().toString());
+                        data.getMenu().setImageFromDrawable(menuPic.getDrawable());
+                        try {
+                            data.getRest().saveData();
+                        } catch (RestaurantException e) {
+                            e.printStackTrace();
+                        }
                         Create_simple_menu2 csm2= new Create_simple_menu2();
                         getFragmentManager().beginTransaction().replace(R.id.fragment_holder,csm2).commit();
                     }
@@ -270,6 +279,8 @@ public class Create_simple_menu1 extends Fragment {
             try{
                 Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(menuPicUri));
                 String imgPath;
+                ((ImageView)getActivity().findViewById(R.id.cmiw_1_1)).setImageBitmap(imageBitmap);
+
                 if(Build.VERSION.SDK_INT < 11)
                     imgPath = RealPathUtil.getRealPathFromURI_BelowAPI11(getActivity(), menuPicUri);
                 else if(Build.VERSION.SDK_INT < 19)
@@ -280,10 +291,10 @@ public class Create_simple_menu1 extends Fragment {
                 this.menuPic.setImageDrawable(resize(imageBitmap));
             } catch(FileNotFoundException fnfe) { Log.e(METHOD_NAME,fnfe.getMessage());}
         }
-        if(resultCode == getActivity().RESULT_OK && requestCode == CAPTURE_IMAGE){
+        if(resultCode == CreateRestaurant.RESULT_OK && requestCode == CAPTURE_IMAGE){
             this.menuPic = (ImageView) getActivity().findViewById(R.id.cmiw_1_1);
             try{
-                Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(menuPicUri));
+                imageBitmap= BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(menuPicUri));
                 imageBitmap = detectOrientation(menuPicUri.getPath(),imageBitmap);
                 this.menuPic.setImageDrawable(resize(imageBitmap));
             } catch(FileNotFoundException ffe){Log.e(METHOD_NAME,ffe.getMessage());}
