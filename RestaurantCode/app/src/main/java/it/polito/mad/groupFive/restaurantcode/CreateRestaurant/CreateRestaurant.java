@@ -30,7 +30,7 @@ public class CreateRestaurant
             SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),CreateRestaurant.MODE_PRIVATE);
             SharedPreferences.Editor editor= sharedPreferences.edit();
             editor.putInt("rid",this.restaurant.getRid());
-            editor.commit();
+            editor.apply();
         } catch (RestaurantException e) {
             Log.e(METHOD_NAME,e.getMessage());
         }
