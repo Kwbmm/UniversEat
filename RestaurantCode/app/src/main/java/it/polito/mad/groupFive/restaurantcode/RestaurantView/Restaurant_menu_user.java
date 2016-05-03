@@ -2,6 +2,7 @@ package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import it.polito.mad.groupFive.restaurantcode.Menu_details;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -194,6 +196,7 @@ public class Restaurant_menu_user extends Fragment {
             holder.menu_desctiprion.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
+            holder.card.setOnClickListener(new OnCardClick(menu));
 
 
         }
@@ -253,6 +256,22 @@ public class Restaurant_menu_user extends Fragment {
                     }
                 }
 
+            }
+        }
+
+        private class OnCardClick implements View.OnClickListener {
+            Menu menu;
+            public OnCardClick(Menu menu) {
+                this.menu=menu;
+
+            }
+
+            @Override
+            public void onClick(View v) {
+                Intent menu_info=new Intent(getContext(), Menu_details.class);
+                menu_info.putExtra("rid",menu.getRid());
+                menu_info.putExtra("mid",menu.getMid());
+                startActivity(menu_info);
             }
         }
     }
