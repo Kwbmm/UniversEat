@@ -192,8 +192,9 @@ public class NavigationDrawer extends AppCompatActivity {
                     startActivity(home);
                 }
                 if (position == 1) {
+                    SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.user_pref), getBaseContext().MODE_PRIVATE);
                     Intent menu = new Intent(getBaseContext(), Menu_details.class);
-                    menu.putExtra("rid",2);
+                    menu.putExtra("rid",sharedPreferences.getInt("rid", -1));
                     menu.putExtra("mid",69);
                     startActivity(menu);
                 }

@@ -59,6 +59,7 @@ public class Order_management extends NavigationDrawer {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar_refresh,menu);
         return true;
     }
 
@@ -82,6 +83,9 @@ public class Order_management extends NavigationDrawer {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.refresh_ab){
+            showOrders();
+        }
         return super.onOptionsItemSelected(item);
     }
 

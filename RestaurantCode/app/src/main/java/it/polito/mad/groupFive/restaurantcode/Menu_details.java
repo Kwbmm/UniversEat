@@ -39,10 +39,11 @@ public class Menu_details extends NavigationDrawer {
     protected void onCreate(Bundle savedInstanceState) {
         mid=getIntent().getExtras().getInt("mid");
         rid=getIntent().getExtras().getInt("rid");
+        Log.e("RID E MID",""+rid+" "+mid);
         try {
             restaurant=new Restaurant(getBaseContext(),rid);
             restaurant.getData();
-            //generamenufittizio();
+            generamenufittizio();
             menu=restaurant.getMenuByID(mid);
         } catch (RestaurantException e) {
             e.printStackTrace();
@@ -125,7 +126,7 @@ public class Menu_details extends NavigationDrawer {
         if(menu.isServiceFee()) servicefee.setText("Service fee included");
         else servicefee.setText("Service fee not included");
         price.setText(String.format("%.2f", menu.getPrice())+"€");
-        pic.setImageBitmap(menu.getImageBitmap());
+        //TODO pic.setImageBitmap(menu.getImageBitmap());
         Log.e("numero di courses",courses.size()+" ");
         CourseAdapter courseAdapter = new CourseAdapter(this,courses);
         listView.setAdapter(courseAdapter);

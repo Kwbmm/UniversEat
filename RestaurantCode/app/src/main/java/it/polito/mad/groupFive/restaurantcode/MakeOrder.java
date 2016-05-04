@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,8 +58,44 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar_pay,menu);
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(item.getItemId()==R.id.pay_ab){
+            final EditText nameTextBox = (EditText) findViewById(R.id.reservation_name);
+            final EditText notesTextBox = (EditText) findViewById(R.id.reservation_notes);
+            name=nameTextBox.getText().toString();
+            notes=notesTextBox.getText().toString();
+            if(name.equalsIgnoreCase("")){
+                Toast.makeText(getBaseContext(), "Please insert a name", Toast.LENGTH_SHORT).show();
+            }
+            else if(date.before(Calendar.getInstance())){
+                Toast.makeText(getBaseContext(), "You can't order in the past!", Toast.LENGTH_SHORT).show();
+            }
+            else try {
+                    Order order = new Order(restaurant);
+                    order.setRid(rid);
+                    order.setMid(mid);
+                    order.setDate(date.getTime());
+                    order.setName(name);
+                    order.setNotes(notes);
+                    order.setUid(uid);
+                    restaurant.getOrders().add(order);
+                    restaurant.saveData();
+                    Toast.makeText(getBaseContext(), "Order successful", Toast.LENGTH_SHORT).show();
+                    finish();
+                } catch (OrderException e) {
+                    e.printStackTrace();
+                } catch (RestaurantException e) {
+                    e.printStackTrace();
+                }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public void setTime(int hourOfDay, int minute) {
         TextView setHour = (TextView) findViewById(R.id.setHour);
         setHour.setText(hourOfDay+":"+String.format("%02d",minute));
@@ -74,46 +111,13 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
 
     }
     private void setupview(){
-        final EditText nameTextBox = (EditText) findViewById(R.id.reservation_name);
-        final EditText notesTextBox = (EditText) findViewById(R.id.reservation_notes);
-        final
-        CardView dateCard = (CardView) findViewById(R.id.dateCard);
-        CardView hourCard = (CardView) findViewById(R.id.hourCard);
-        Button paymentbutton = (Button) findViewById(R.id.paymentbutton);
-        paymentbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                name=nameTextBox.getText().toString();
-                notes=notesTextBox.getText().toString();
-                if(name.equalsIgnoreCase("")){
-                    Toast.makeText(getBaseContext(), "Please insert a name", Toast.LENGTH_SHORT).show();
-                }
-                else if(date.before(Calendar.getInstance())){
-                    Toast.makeText(getBaseContext(), "You can't order in the past!", Toast.LENGTH_SHORT).show();
-                }
-                else try {
-                        Order order = new Order(restaurant);
-                        order.setRid(rid);
-                        order.setMid(mid);
-                        order.setDate(date.getTime());
-                        order.setName(name);
-                        order.setNotes(notes);
-                        order.setUid(uid);
-                        restaurant.getOrders().add(order);
-                        restaurant.saveData();
-                        Toast.makeText(getBaseContext(), "Order successful", Toast.LENGTH_SHORT).show();
-                        finish();
-                    } catch (OrderException e) {
-                        e.printStackTrace();
-                    } catch (RestaurantException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+
         final TimePickerFragment timePickerFragment = new TimePickerFragment();
         final DatePickerFragment datePickerFragment = new DatePickerFragment();
         timePickerFragment.setListener(this);
         datePickerFragment.setListener(this);
+        CardView dateCard = (CardView) findViewById(R.id.dateCard);
+        CardView hourCard = (CardView) findViewById(R.id.hourCard);
         hourCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
