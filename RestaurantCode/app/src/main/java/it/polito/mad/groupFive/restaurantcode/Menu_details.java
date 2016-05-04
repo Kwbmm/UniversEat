@@ -43,7 +43,7 @@ public class Menu_details extends NavigationDrawer {
         try {
             restaurant=new Restaurant(getBaseContext(),rid);
             restaurant.getData();
-            generamenufittizio();
+            //generamenufittizio();
             menu=restaurant.getMenuByID(mid);
         } catch (RestaurantException e) {
             e.printStackTrace();
