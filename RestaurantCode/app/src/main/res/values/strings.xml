@@ -35,11 +35,11 @@
 
     <!-- restaurant_view.xml -->
     <string name="restaurantView_textViewRestaurantName">Restaurant Name</string>
-    <string name="restaurantView_textViewRestaurantDescription">Description:</string>
+    <string name="restaurantView_textViewRestaurantDescription">Description</string>
     <string name="restaurantView_textViewRestaurantAddress">Address</string>
     <!-- END restaurant_view.xml -->
 
-    <string name="fragment_restaurant_view_imageViewIwr_contentDesc">Image of the restaurant.</string>
+    <string name="fragment_restaurant_view_imageViewIwr_contentDesc">Image of the restaurant</string>
 
     <string name="menu_imageViewIwr_contentDesc">Image of the menu.</string>
 
@@ -100,22 +100,22 @@
 
 
     <!-- fragment_create_restaurant_1.xml -->
-    <string name="frg_create_restaurant_1_textView_RestaurantName">Restaurant name:</string>
+    <string name="frg_create_restaurant_1_textView_RestaurantName">Restaurant name</string>
     <string name="frg_create_restaurant_1_imageView_ContentDesc">Image of the restaurant</string>
-    <string name="frg_create_restaurant_1_textView_Description">Description:</string>
-    <string name="frg_create_restaurant_1_textView_Telephone">Telephone number:</string>
-    <string name="frg_create_restaurant_1_textView_Website">Website:</string>
+    <string name="frg_create_restaurant_1_textView_Description">Description</string>
+    <string name="frg_create_restaurant_1_textView_Telephone">Telephone number</string>
+    <string name="frg_create_restaurant_1_textView_Website">Website</string>
     <!-- END fragment_create_restaurant_1.xml -->
 
     <!-- fragment_create_restaurant_2.xml -->
-    <string name="frg_create_restaurant_1_textView_Address">Address:</string>
+    <string name="frg_create_restaurant_1_textView_Address">Address</string>
     <!-- END fragment_create_restaurant_2.xml -->
 
 
-    <string name="frg_create_restaurant_2_textView_Address">Address:</string>
-    <string name="frg_create_restaurant_2_textView_City">City:</string>
-    <string name="frg_create_restaurant_2_textView_ZIPCode">ZIP Code:</string>
-    <string name="frg_create_restaurant_2_textView_State">State:</string>
+    <string name="frg_create_restaurant_2_textView_Address">Address</string>
+    <string name="frg_create_restaurant_2_textView_City">City</string>
+    <string name="frg_create_restaurant_2_textView_ZIPCode">ZIP Code</string>
+    <string name="frg_create_restaurant_2_textView_State">State</string>
     <!-- END fragment_create_restaurant_2.xml -->
 
     <!-- fragment_create_restaurant_3.xml -->
@@ -160,7 +160,7 @@
     <!-- END Class Create_menu_frag -->
 
     <string-array name="months">
-        <item>Jen</item>
+        <item>Jan</item>
         <item>Feb</item>
         <item>Mar</item>
         <item>Apr</item>
@@ -174,7 +174,7 @@
         <item>Dec</item>
     </string-array>
 
-    <string name="jen">Jen</string>
+    <string name="jan">Jan</string>
     <string name="feb">Feb</string>
     <string name="mar">Mar</string>
     <string name="apr">Apr</string>

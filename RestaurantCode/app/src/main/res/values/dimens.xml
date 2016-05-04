@@ -18,6 +18,7 @@
     <!-- fragment_create_restaurant_1.xml -->
     <dimen name="frg_imageView_maxWidth">130dp</dimen>
     <dimen name="frg_imageView_maxHeight">130dp</dimen>
+    <dimen name="frg_imageView_containerHeight">80dp</dimen>
     <dimen name="frg_textView_textSize">20sp</dimen>
     <!-- END fragment_create_restaurant_1.xml -->
 

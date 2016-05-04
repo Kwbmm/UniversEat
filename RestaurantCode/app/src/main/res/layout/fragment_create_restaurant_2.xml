@@ -14,7 +14,7 @@
             android:id="@+id/textView_Address"
             android:text="@string/frg_create_restaurant_2_textView_Address"
             android:textSize="@dimen/frg_textView_textSize"
-            android:layout_below="@id/LL_imageAndRestaurantName"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             />

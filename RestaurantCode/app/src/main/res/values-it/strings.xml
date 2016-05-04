@@ -87,22 +87,18 @@
 
 
     <!-- fragment_create_restaurant_1.xml -->
-    <string name="frg_create_restaurant_1_textView_RestaurantName">Nome del ristorante:</string>
+    <string name="frg_create_restaurant_1_textView_RestaurantName">Nome del ristorante</string>
     <string name="frg_create_restaurant_1_imageView_ContentDesc">Immagine del ristorante</string>
-    <string name="frg_create_restaurant_1_textView_Description">Descrizione:</string>
-    <string name="frg_create_restaurant_1_textView_Telephone">Numero di telefono:</string>
-    <string name="frg_create_restaurant_1_textView_Website">Sito web:</string>
+    <string name="frg_create_restaurant_1_textView_Description">Descrizione</string>
+    <string name="frg_create_restaurant_1_textView_Telephone">Numero di telefono</string>
+    <string name="frg_create_restaurant_1_textView_Website">Sito web</string>
     <!-- END fragment_create_restaurant_1.xml -->
 
     <!-- fragment_create_restaurant_2.xml -->
-    <string name="frg_create_restaurant_1_textView_Address">Indirizzo:</string>
-    <!-- END fragment_create_restaurant_2.xml -->
-
-
-    <string name="frg_create_restaurant_2_textView_Address">Indirizzo:</string>
-    <string name="frg_create_restaurant_2_textView_City">Città:</string>
-    <string name="frg_create_restaurant_2_textView_ZIPCode">CAP:</string>
-    <string name="frg_create_restaurant_2_textView_State">Stato:</string>
+    <string name="frg_create_restaurant_2_textView_Address">Indirizzo</string>
+    <string name="frg_create_restaurant_2_textView_City">Città</string>
+    <string name="frg_create_restaurant_2_textView_ZIPCode">CAP</string>
+    <string name="frg_create_restaurant_2_textView_State">Stato</string>
     <!-- END fragment_create_restaurant_2.xml -->
 
     <!-- fragment_create_restaurant_3.xml -->
@@ -162,7 +158,7 @@
         <item>Dic</item>
     </string-array>
 
-    <string name="jen">Gen</string>
+    <string name="jan">Gen</string>
     <string name="feb">Feb</string>
     <string name="mar">Mar</string>
     <string name="apr">Apr</string>
@@ -215,7 +211,9 @@
         <item>Meat</item>
         <item>Fish</item>
         <item>Cocktail</item>
-
     </array>
+    <string name="restaurantView_textViewRestaurantAddress">Indirizzo</string>
+    <string name="restaurantView_textViewRestaurantName">Nome del Ristorante</string>
+    <string name="restaurantView_textViewRestaurantDescription">Descrizione</string>
 
 </resources>

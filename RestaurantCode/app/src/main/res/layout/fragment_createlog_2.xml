@@ -14,7 +14,7 @@
             android:id="@+id/textView_Password"
             android:text="@string/password"
             android:textSize="@dimen/frg_textView_textSize"
-            android:layout_below="@id/LL_imageAndRestaurantName"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             />
