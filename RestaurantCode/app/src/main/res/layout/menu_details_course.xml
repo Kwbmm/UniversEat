@@ -9,8 +9,55 @@
         <TextView
             android:id="@+id/course_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:text="Course Name"
-            android:textSize="20dp" />
-    </RelativeLayout>
+            android:textSize="20dp"
+            android:layout_toLeftOf="@+id/img_hot"
+            android:layout_toStartOf="@+id/img_hot"
+            android:gravity="center_vertical" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_hot"
+        android:src="@drawable/ic_hot_black"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/img_nogluten"
+        android:layout_toStartOf="@+id/img_nogluten"
+        android:tint="#a60101"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_nogluten"
+        android:src="@drawable/ic_nogluten_black"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/img_vgt"
+        android:layout_toStartOf="@+id/img_vgt"
+        android:tint="#c8a004"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_vgn"
+        android:src="@drawable/ic_vegan_black"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:tint="#007f24"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_vgt"
+        android:src="@drawable/ic_vegetarian_black"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/img_vgn"
+        android:layout_toStartOf="@+id/img_vgn"
+        android:tint="#951f9b"
+        android:visibility="invisible" />
+</RelativeLayout>
 

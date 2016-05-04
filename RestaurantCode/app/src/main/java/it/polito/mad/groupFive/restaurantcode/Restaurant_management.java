@@ -137,7 +137,11 @@ public class Restaurant_management extends NavigationDrawer {
         rname.setText(restaurant.getName());
         raddress.setText(restaurant.getAddress());
         rbar.setRating(restaurant.getRating());
-        rmimw.setImageBitmap(restaurant.getImageBitmap());
+        try {
+            rmimw.setImageBitmap(restaurant.getImageBitmap());
+        } catch (NullPointerException e){
+            Log.e("immagine non caricata"," ");
+        }
 //            rmimw.setImageDrawable(restaurant.getImageDrawable());
 
 

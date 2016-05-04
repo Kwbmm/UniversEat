@@ -43,6 +43,7 @@ public class Menu_details extends NavigationDrawer {
         try {
             restaurant=new Restaurant(getBaseContext(),rid);
             restaurant.getData();
+            generamenufittizio();
             menu=restaurant.getMenuByID(mid);
         } catch (RestaurantException e) {
             e.printStackTrace();
@@ -58,21 +59,27 @@ public class Menu_details extends NavigationDrawer {
         try {
             Course c1 = new Course(restaurant,1);
             c1.setName("Pane");
-            c1.setDescription("Pane azzimo 100g");
+            c1.setVegetarian(Boolean.TRUE);
             Course c2 = new Course(restaurant,2);
             c2.setName("Patatine");
-            c2.setDescription("Molli e insipide");
+            c2.setVegetarian(Boolean.TRUE);
+            c2.setVegan(Boolean.TRUE);
             Course c3 = new Course(restaurant,3);
-            c3.setName("Cipolle");
-            c3.setDescription("Cipolle crude scondite. Abababbabba\nqualcosa qualcosa descrizione lunga.\nancora qualcosa :P");
+            c3.setName("Jalapenos");
+            c3.setSpicy(Boolean.TRUE);
+            c3.setVegetarian(Boolean.TRUE);
+            c3.setVegan(Boolean.TRUE);
+            Course c4 = new Course(restaurant,4);
+            c4.setName("Bistecca");
+            c4.setGlutenFree(Boolean.TRUE);
             ArrayList<Course> courses1 = new ArrayList<>();
             courses1.add(c1);
             courses1.add(c2);
             courses1.add(c3);
-            courses1.add(c1);
+            courses1.add(c4);
             it.polito.mad.groupFive.restaurantcode.datastructures.Menu m = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(restaurant,mid);
             m.setCourses(courses1);
-            m.setName("Verdure a gogo");
+            m.setName("Menu buonissimo");
             m.setPrice((float)13.99);
             m.setBeverage(Boolean.TRUE);
             m.setServiceFee(Boolean.FALSE);
@@ -125,7 +132,11 @@ public class Menu_details extends NavigationDrawer {
         if(menu.isServiceFee()) servicefee.setText("Service fee included");
         else servicefee.setText("Service fee not included");
         price.setText(String.format("%.2f", menu.getPrice())+"€");
-        //TODO pic.setImageBitmap(menu.getImageBitmap());
+        try {
+            pic.setImageBitmap(menu.getImageBitmap());
+        } catch (NullPointerException e){
+            Log.e("immagine non caricata"," ");
+        }
         Log.e("numero di courses",courses.size()+" ");
         CourseAdapter courseAdapter = new CourseAdapter(this,courses);
         listView.setAdapter(courseAdapter);
@@ -157,9 +168,15 @@ public class Menu_details extends NavigationDrawer {
             convertView = LayoutInflater.from(context).inflate(R.layout.menu_details_course, null);
             Course course = courses.get(position);
             TextView course_name = (TextView) convertView.findViewById(R.id.course_name);
-
+            ImageView img_hot = (ImageView) convertView.findViewById(R.id.img_hot);
+            ImageView img_nogluten = (ImageView) convertView.findViewById(R.id.img_nogluten);
+            ImageView img_vgt = (ImageView) convertView.findViewById(R.id.img_vgt);
+            ImageView img_vgn = (ImageView) convertView.findViewById(R.id.img_vgn);
             course_name.setText(course.getName());
-
+            if(course.isSpicy()) img_hot.setVisibility(View.VISIBLE);
+            if(course.isGlutenFree()) img_nogluten.setVisibility(View.VISIBLE);
+            if(course.isVegetarian()) img_vgt.setVisibility(View.VISIBLE);
+            if(course.isVegan()) img_vgn.setVisibility(View.VISIBLE);
             return convertView;
         }
     }

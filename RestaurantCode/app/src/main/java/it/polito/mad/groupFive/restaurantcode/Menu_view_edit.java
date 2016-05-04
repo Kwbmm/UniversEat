@@ -202,10 +202,12 @@ public class Menu_view_edit extends NavigationDrawer {
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
             holder.edit.setOnClickListener(new onEditclick(position));
-            holder.menu_image.setImageBitmap(menu.getImageBitmap());
+            try {
+                holder.menu_image.setImageBitmap(menu.getImageBitmap());
+            } catch (NullPointerException e){
+                Log.e("immagine non caricata"," ");
+            }
             //Log.v("image",menu.getImageByteArray().toString());
-
-
         }
 
         @Override
