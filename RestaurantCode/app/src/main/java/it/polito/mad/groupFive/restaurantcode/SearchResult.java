@@ -93,7 +93,7 @@ public class SearchResult extends NavigationDrawer {
         else{
             this.menus = new ArrayList<>();
             for(Menu m : this.dm.getMenus()){
-                for(String s : m.getTags().values()){
+                for(String s : m.getTags()){
                     if(s.equalsIgnoreCase(this.query)){
                         this.menus.add(m);
                         break; //Go to next menu

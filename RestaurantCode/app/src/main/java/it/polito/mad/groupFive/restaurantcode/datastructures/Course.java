@@ -5,19 +5,15 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
-import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
@@ -40,7 +36,7 @@ public class Course {
     private boolean vegan;
     private boolean vegetarian;
     private boolean spicy;
-    private ArrayMap<Integer, String> tags = new ArrayMap<>();
+    private ArrayList<String> tags = new ArrayList<>();
 
     /**
      * Create an instance of Course: requires, as parameter, its restaurant object.
@@ -201,10 +197,9 @@ public class Course {
     /**
      * Returns the tags assigned to this Course object.
      *
-     * @return An ArrayMap where the key is a unique Integer and the value is a String representing
-     * the tag.
+     * @return An ArrayList of Strings representing the tag.
      */
-    public ArrayMap<Integer, String> getTags(){ return this.tags; }
+    public ArrayList<String> getTags(){ return this.tags; }
 
     /**
      * Sets the Course ID
@@ -321,9 +316,8 @@ public class Course {
     /**
      * Sets the tags of the Course object.
      *
-     * @param tags An ArrayMap where the key is an integer and the value is the String representing
-     *             the tag.
+     * @param tags An ArrayList of Strings representing the tag.
      */
-    public void setTags(ArrayMap<Integer,String> tags){ this.tags = tags; }
+    public void setTags(ArrayList<String> tags){ this.tags = tags; }
 
 }

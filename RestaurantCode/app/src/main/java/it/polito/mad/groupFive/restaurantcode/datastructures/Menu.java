@@ -5,15 +5,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
-import android.support.v4.util.ArrayMap;
-import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -353,14 +348,13 @@ public class Menu {
      * Returns the tags associated to all the Courses in this menu. If no tags are added to the
      * Course objects of this Menu object, the returned ArrayMap is empty.
      *
-     * @return An ArrayMap where the key is an unique Integer and the value is a String representing
-     * the tag.
+     * @return An ArrayList of Strings representing the tag.
      */
-    public ArrayMap<Integer, String> getTags(){
-        ArrayMap<Integer, String> output = new ArrayMap<>();
+    public ArrayList<String> getTags(){
+        ArrayList<String> output = new ArrayList<>();
         for(Course c : this.courses)
             if(c.getTags().size() != 0)
-                output.putAll((SimpleArrayMap<? extends Integer, ? extends String>) c.getTags());
+                output.addAll(c.getTags());
         return output;
     }
 
