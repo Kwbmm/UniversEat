@@ -247,6 +247,8 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     startActivity(home);
                 }
                 if (position == 1) {
+                    Intent profile = new Intent(getBaseContext(), Profile.class);
+                    startActivity(profile);
 
                 }
                 if (position == 3) {
@@ -271,6 +273,9 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                         startActivity(home);
                     }
                     if (position == 1) {
+
+                        Intent profile = new Intent(getBaseContext(), Profile.class);
+                        startActivity(profile);
 
                     }
 
