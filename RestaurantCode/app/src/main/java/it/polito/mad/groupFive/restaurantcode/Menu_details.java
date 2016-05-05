@@ -101,6 +101,7 @@ public class Menu_details extends NavigationDrawer {
 
     private void showmenu(){
         TextView name = (TextView) findViewById(R.id.menu_name);
+        TextView description = (TextView) findViewById(R.id.menu_description);
         TextView beverage = (TextView) findViewById(R.id.beverage);
         TextView servicefee = (TextView) findViewById(R.id.servicefee);
         TextView price = (TextView) findViewById(R.id.menu_price);
@@ -126,6 +127,7 @@ public class Menu_details extends NavigationDrawer {
         });
         ArrayList<Course> courses = menu.getCourses();
         name.setText(menu.getName());
+        description.setText(menu.getDescription());
         if(menu.isBeverage()) beverage.setText("Beverage included");
         else beverage.setText("Beverage not included");
         if(menu.isServiceFee()) servicefee.setText("Service fee included");

@@ -31,11 +31,10 @@
                 android:padding="5dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/menu_image"
-                android:layout_marginTop="5dp"
                 android:drawSelectorOnTop="false"
                 android:scrollIndicators="none"
-                android:layout_above="@+id/beverage" />
+                android:layout_above="@+id/beverage"
+                android:layout_below="@+id/menu_description" />
 
             <ImageView
                 android:layout_width="100dp"
@@ -45,18 +44,17 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:text="Menu Name"
                 android:id="@+id/menu_name"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/menu_image"
-                android:layout_above="@+id/courseList"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:gravity="center_vertical"
                 android:paddingLeft="10dp"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:gravity="bottom" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,7 +64,9 @@
                 android:id="@+id/beverage"
                 android:layout_above="@+id/servicefee"
                 android:layout_alignLeft="@+id/courseList"
-                android:layout_alignStart="@+id/courseList" />
+                android:layout_alignStart="@+id/courseList"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -76,7 +76,9 @@
                 android:id="@+id/servicefee"
                 android:layout_alignParentBottom="true"
                 android:layout_alignLeft="@+id/beverage"
-                android:layout_alignStart="@+id/beverage" />
+                android:layout_alignStart="@+id/beverage"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -88,6 +90,20 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:textSize="30dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Menu description"
+                android:id="@+id/menu_description"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_below="@+id/menu_name"
+                android:layout_toRightOf="@+id/menu_image"
+                android:layout_alignRight="@+id/courseList"
+                android:layout_alignEnd="@+id/courseList"
+                android:gravity="top" />
 
         </RelativeLayout>
 
