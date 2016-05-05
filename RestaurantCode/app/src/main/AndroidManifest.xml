@@ -52,6 +52,9 @@
             android:name=".Menu_view_edit"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Profile"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".Order_management"
             android:noHistory="true"
             android:screenOrientation="portrait" />

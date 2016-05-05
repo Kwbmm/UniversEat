@@ -212,11 +212,8 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     startActivity(home);
                 }
                 if (position == 1) {
-                    SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.user_pref), getBaseContext().MODE_PRIVATE);
-                    Intent menu = new Intent(getBaseContext(), Menu_details.class);
-                    menu.putExtra("rid",sharedPreferences.getInt("rid", -1));
-                    menu.putExtra("mid",17);
-                    startActivity(menu);
+                    Intent profile = new Intent(getBaseContext(), Profile.class);
+                    startActivity(profile);
                 }
                 if (position == 3) {
                     Intent intent = new Intent(view.getContext(), Restaurant_management.class);
