@@ -4,13 +4,21 @@
     <string name="close">Close</string>
     <string name="user_pref">RestaurantCode.Userdata</string>
     <string-array name="drawer_option_login">
+        <item>Search</item>
         <item>Login</item>
+        <item>Register</item>
     </string-array>
     <string-array name="drawer_option_logged_manager">
         <item>Search</item>
         <item>Profile</item>
         <item>Orders</item>
         <item>Manage Restaurant</item>
+        <item>Logout</item>
+    </string-array>
+    <string-array name="drawer_option_logged_user">
+        <item>Search</item>
+        <item>Profile</item>
+        <item>Orders</item>
         <item>Logout</item>
     </string-array>
     <string-array name="week">

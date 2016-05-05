@@ -82,7 +82,7 @@ public class Createlog_frag extends Fragment{
         });
 
 
-        Button btnNext = (Button) v.findViewById(R.id.Button_Next);
+        Button btnNext = (Button) v.findViewById(R.id.Button_Next_login);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

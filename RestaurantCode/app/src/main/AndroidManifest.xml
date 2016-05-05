@@ -20,7 +20,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Home"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".SearchResult" />
@@ -33,7 +34,8 @@
         </activity>
         <activity
             android:name=".NavigationDrawer"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".Restaurant_management"
             android:screenOrientation="portrait" />
@@ -59,6 +61,9 @@
         <activity android:name=".RestaurantView.User_info_view"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
+        <activity android:name=".Login.CreateLogin"
+            android:screenOrientation="portrait">
+        </activity>
         <activity android:name=".SearchResult">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

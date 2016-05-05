@@ -5,7 +5,9 @@
     <string name="close">Chiuso</string>
     <string name="user_pref">RestaurantCode.Userdata</string>
     <string-array name="drawer_option_login">
+        <item>Ricerca</item>
         <item>Login</item>
+        <item>Registra</item>
     </string-array>
     <string-array name="drawer_option_logged_manager">
         <item>Ricerca</item>

@@ -3,6 +3,7 @@ package it.polito.mad.groupFive.restaurantcode;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +16,13 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-public class NavigationDrawer extends AppCompatActivity {
+import it.polito.mad.groupFive.restaurantcode.Login.Login_view;
+
+public class NavigationDrawer extends AppCompatActivity implements Login_view.OnFragmentInteractionListener {
     private int phase;//0 Logged out 1 logged in
     private int usertype;// 0 user 1 restaurant manager
     private ArrayAdapter<String> adapter;
@@ -173,6 +177,11 @@ public class NavigationDrawer extends AppCompatActivity {
         inputMethodManager.showSoftInput(view, 0);
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
     private class DrawerListener implements ListView.OnItemClickListener {
 
 
@@ -180,10 +189,21 @@ public class NavigationDrawer extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (phase == 0) {
                 if (position == 0) {
+                    Intent home = new Intent(getBaseContext(), Home.class);
+                    startActivity(home);
+                }
+                if (position == 1) {
                     phase = 1;
                     dList.setAdapter(createAdapter());
                     dList.deferNotifyDataSetChanged();
+                    drawerLayout.closeDrawers();
+                    Login_view lw=new Login_view();
+                   // FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
+                    getSupportFragmentManager().beginTransaction().add(R.id.frame,lw).commit();
                     //Todo intent create profile
+                }
+                if (position==2){
+                    //Todo registration intent
                 }
 
             } else {
