@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 
@@ -29,6 +30,7 @@ public class Login_view extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private LinearLayout incorrect_log;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,7 +66,7 @@ public class Login_view extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_login_view, container, false);
@@ -74,6 +76,16 @@ public class Login_view extends Fragment {
             public void onClick(View v) {
                 Intent register=new Intent(getContext(),CreateLogin.class);
                 startActivity(register);
+            }
+        });
+        incorrect_log= (LinearLayout) v.findViewById(R.id.ll_incorrect);
+        Button login=(Button)v.findViewById(R.id.login);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                incorrect_log.removeAllViewsInLayout();
+                View view=inflater.inflate(R.layout.incorrect_login,null);
+                incorrect_log.addView(view);
             }
         });
         return v;
