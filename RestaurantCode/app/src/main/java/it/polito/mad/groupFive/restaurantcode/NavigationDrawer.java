@@ -20,22 +20,27 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import it.polito.mad.groupFive.restaurantcode.Login.CreateLogin;
 import it.polito.mad.groupFive.restaurantcode.Login.Login_view;
 
 public class NavigationDrawer extends AppCompatActivity implements Login_view.OnFragmentInteractionListener {
     private int phase;//0 Logged out 1 logged in
-    private int usertype;// 0 user 1 restaurant manager
+    private boolean usertype;// false user true restaurant manager
     private ArrayAdapter<String> adapter;
     private DrawerLayout drawerLayout;
+    private static int REGISTRATION=1;
+    SharedPreferences sharedPreferences;
 
-    ActionBarDrawerToggle mDrawerToggle;
-    ListView dList;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private ListView dList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // not a real activity, it's used to extend toolbar and navigation drawer to all activity created
         super.onCreate(savedInstanceState);
         getUserinfo();
+        checkUser();
         createDrawer();
     }
 
@@ -43,7 +48,11 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         ArrayAdapter<String> adp;
         String[] options;
         if (phase != 0) {
-            options = getResources().getStringArray(R.array.drawer_option_logged_manager);
+            if (usertype){
+            options = getResources().getStringArray(R.array.drawer_option_logged_manager);}
+            else{
+                options=getResources().getStringArray(R.array.drawer_option_logged_user);
+            }
 
         } else {
             options = getResources().getStringArray(R.array.drawer_option_login);
@@ -75,6 +84,24 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     protected void onRestart() {
         super.onRestart();
 
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==REGISTRATION){
+            checkUser();
+            //TODO set user parameters
+        }
+    }
+
+    private void checkUser() {
+        getUserinfo();
+        if(phase==1){
+            SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
+            usertype=sharedPreferences.getBoolean("owner",false);
+        }
 
     }
 
@@ -121,8 +148,8 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     }
 
     public void getUserinfo() {
-        SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
-        if (sharedPreferences.getInt("uid", -1) > 0) {
+        sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
+        if (sharedPreferences.getBoolean("logged", false)) {
             phase = 1;
         } else {
             phase = 0;
@@ -178,7 +205,14 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentInteraction() {
+        getUserinfo();
+        checkUser();
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putBoolean("logged",true);
+        adapter.notifyDataSetChanged();
+        dList.setAdapter(createAdapter());
+        dList.deferNotifyDataSetChanged();
 
     }
 
@@ -193,30 +227,27 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     startActivity(home);
                 }
                 if (position == 1) {
-                    phase = 1;
                     dList.setAdapter(createAdapter());
                     dList.deferNotifyDataSetChanged();
                     drawerLayout.closeDrawers();
                     Login_view lw=new Login_view();
                    // FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-                    getSupportFragmentManager().beginTransaction().add(R.id.frame,lw).commit();
+                    getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.frame,lw).commit();
                     //Todo intent create profile
                 }
                 if (position==2){
-                    //Todo registration intent
+                    Intent registration=new Intent(getBaseContext(), CreateLogin.class);
+                    startActivityForResult(registration,REGISTRATION);
                 }
 
             } else {
+                if(usertype){
                 if (position == 0) {
                     Intent home = new Intent(getBaseContext(), Home.class);
                     startActivity(home);
                 }
                 if (position == 1) {
-                    SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.user_pref), getBaseContext().MODE_PRIVATE);
-                    Intent menu = new Intent(getBaseContext(), Menu_details.class);
-                    menu.putExtra("rid",sharedPreferences.getInt("rid", -1));
-                    menu.putExtra("mid",17);
-                    startActivity(menu);
+
                 }
                 if (position == 3) {
                     Intent intent = new Intent(view.getContext(), Restaurant_management.class);
@@ -228,9 +259,29 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                 }
                 if (position == 4) {
                     phase = 0;
+                    SharedPreferences.Editor editor=sharedPreferences.edit();
+                    editor.putBoolean("logged",false);
                     dList.setAdapter(createAdapter());
                     dList.deferNotifyDataSetChanged();
                     //todo remove user from preferences
+                }
+            }else{
+                    if (position == 0) {
+                        Intent home = new Intent(getBaseContext(), Home.class);
+                        startActivity(home);
+                    }
+                    if (position == 1) {
+
+                    }
+
+                    if (position == 2) {
+                        phase = 0;
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putBoolean("logged",false);
+                        dList.setAdapter(createAdapter());
+                        dList.deferNotifyDataSetChanged();
+                        //todo remove user from preferences
+                    }
                 }
             }
         }

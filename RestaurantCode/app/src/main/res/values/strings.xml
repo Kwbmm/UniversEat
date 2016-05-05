@@ -18,7 +18,6 @@
     <string-array name="drawer_option_logged_user">
         <item>Search</item>
         <item>Profile</item>
-        <item>Orders</item>
         <item>Logout</item>
     </string-array>
     <string-array name="week">

@@ -98,9 +98,6 @@ public class Createlog_frag2 extends Fragment {
         v = inflater.inflate(R.layout.fragment_createlog_2, container, false);
         txtpassword = (EditText) v.findViewById(R.id.editText_Password);
         txtrepeat = (EditText) v.findViewById(R.id.editText_Password_repeat);
-        pw1 = txtpassword.getText().toString();
-        pw2 = txtrepeat.getText().toString();
-
 
         Button btnNext = (Button) v.findViewById(R.id.Button_End);
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +108,8 @@ public class Createlog_frag2 extends Fragment {
                 Activity a = getActivity();
                 if(a instanceof OnFragmentInteractionListener) {
                     //// TODO: 22/04/16 confronto se i due campi password sono uguali: if not popup
-
+                    pw1 = txtpassword.getText().toString();
+                    pw2 = txtrepeat.getText().toString();
                     if(pw1.equals(pw2)){
                         setUserData();
                         OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
@@ -136,11 +134,14 @@ public class Createlog_frag2 extends Fragment {
         try {
             if(owner){
                 user_r = new RestaurantOwner(getActivity(),uid);
+                pw1 = txtpassword.getText().toString();
                 user_r.setPassword(pw1);
+                user_r.saveData();
             }
             else {
                 user = new Customer(getActivity(), uid);
                 user.setPassword(pw1);
+                user.saveData();
             }
 
         } catch (RestaurantOwnerException e) {

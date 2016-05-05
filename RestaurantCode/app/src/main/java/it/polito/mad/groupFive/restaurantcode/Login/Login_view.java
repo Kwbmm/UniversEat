@@ -2,16 +2,24 @@ package it.polito.mad.groupFive.restaurantcode.Login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import it.polito.mad.groupFive.restaurantcode.R;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
+import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
+import it.polito.mad.groupFive.restaurantcode.datastructures.User;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +39,12 @@ public class Login_view extends Fragment {
     private String mParam1;
     private String mParam2;
     private LinearLayout incorrect_log;
-
+    private SharedPreferences sharedPreferences;
+    private EditText username;
+    private EditText password;
+    private Customer user;
+    private RestaurantOwner owner;
+    private boolean own;
     private OnFragmentInteractionListener mListener;
 
     public Login_view() {
@@ -70,6 +83,7 @@ public class Login_view extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_login_view, container, false);
+        sharedPreferences=getContext().getSharedPreferences(getString(R.string.user_pref),getContext().MODE_PRIVATE);
         Button create_new= (Button) v.findViewById(R.id.register);
         create_new.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,14 +92,60 @@ public class Login_view extends Fragment {
                 startActivity(register);
             }
         });
+        username=(EditText)v.findViewById(R.id.username);
+        password=(EditText)v.findViewById(R.id.password);
+        if(sharedPreferences.getBoolean("owner",false)){
+            try {
+
+                owner=new RestaurantOwner(getContext(),sharedPreferences.getInt("uid",-1));
+                own=true;
+            } catch (RestaurantOwnerException e) {
+                e.printStackTrace();
+            }
+        }else {
+            try {
+                user=new Customer(getContext(),sharedPreferences.getInt("uid",-1));
+                own=false;
+            } catch (CustomerException e) {
+                e.printStackTrace();
+            }
+        }
         incorrect_log= (LinearLayout) v.findViewById(R.id.ll_incorrect);
         Button login=(Button)v.findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                incorrect_log.removeAllViewsInLayout();
-                View view=inflater.inflate(R.layout.incorrect_login,null);
-                incorrect_log.addView(view);
+
+    if(!own){
+        if ((sharedPreferences.getInt("uid",-1)!=-1)&&username.getText().toString().equals(user.getUserName())&&password.getText().toString().equals(user.getPassword())){
+            SharedPreferences.Editor editor=sharedPreferences.edit();
+            editor.putBoolean("logged",true);
+            editor.putBoolean("owner",true);
+            editor.commit();
+            mListener.onFragmentInteraction();
+            getFragmentManager().popBackStack();
+        }
+        else{
+            incorrect_log.removeAllViewsInLayout();
+            View view=inflater.inflate(R.layout.incorrect_login,null);
+            incorrect_log.addView(view);}
+    }
+                if(own){
+                    if((sharedPreferences.getInt("uid",-1)!=-1)&&username.getText().toString().equals(owner.getUserName())&&password.getText().toString().equals(owner.getPassword())){
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putBoolean("logged",true);
+                        editor.commit();
+                        mListener.onFragmentInteraction();
+                        getFragmentManager().popBackStack();
+                    }else{
+                        incorrect_log.removeAllViewsInLayout();
+                        View view=inflater.inflate(R.layout.incorrect_login,null);
+                        incorrect_log.addView(view);}
+
+                }
+
+
+
             }
         });
         return v;
@@ -94,7 +154,7 @@ public class Login_view extends Fragment {
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onFragmentInteraction();
         }
     }
 
@@ -127,6 +187,6 @@ public class Login_view extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction();
     }
 }

@@ -58,6 +58,9 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
 
         bundle = new Bundle();
         bundle.putBoolean("owner", owner);
+        SharedPreferences.Editor editor=sp.edit();
+        editor.putBoolean("owner",owner);
+        editor.commit();
         Createlog_frag1 frag1 = new Createlog_frag1();
         frag1.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.ac_login,frag1).addToBackStack(null).commit();
@@ -70,12 +73,22 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
             user_r.setSurname(u_r.getSurname());
             user_r.setEmail(u_r.getEmail());
             user_r.setUserName(u_r.getUserName());
+            try {
+                user_r.saveData();
+            } catch (RestaurantOwnerException e) {
+                e.printStackTrace();
+            }
         }
         else {
             user.setName(u.getName());
             user.setSurname(u.getSurname());
             user.setEmail(u.getEmail());
             user.setUserName(u.getUserName());
+            try {
+                user.saveData();
+            } catch (CustomerException e) {
+                e.printStackTrace();
+            }
         }
         Createlog_frag2 frag2 = new Createlog_frag2();
         frag2.setArguments(bundle);
@@ -85,16 +98,18 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
     public void onChangeFrag1(Customer u, RestaurantOwner u_r){
         final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag1";
         if(owner) {
-            user_r.setPassword(u_r.getPassword());
+
             try {
+                user_r.setPassword(u_r.getPassword());
                 user_r.saveData();
             } catch (RestaurantOwnerException e) {
                 e.printStackTrace();
             }
         }
         else {
-            user.setPassword(u.getPassword());
+
             try {
+                user.setPassword(u.getPassword());
                 user.saveData();
             } catch (CustomerException e) {
                 e.printStackTrace();
