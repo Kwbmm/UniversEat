@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -63,6 +62,7 @@ public class CreateRestaurant_1 extends Fragment {
     private String mParam2;
 
     private Uri restaurantPicUri = null;
+    private boolean isImageSet=false;
     private View parentView=null;
 
     private onFragInteractionListener mListener;
@@ -131,7 +131,6 @@ public class CreateRestaurant_1 extends Fragment {
                     if(setRestaurantData()){
                         onFragInteractionListener obs = (onFragInteractionListener) a;
                         obs.onChangeFrag1(restaurant);
-
                     }
                     else{
                         Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
@@ -167,13 +166,13 @@ public class CreateRestaurant_1 extends Fragment {
             }
             restaurant.setDescription(description.getText().toString());
 
-            ImageView restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
-            if(restaurantImg.getDrawable() == null){
+            if(!this.isImageSet){
                 Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
                 return false;
             }
+            ImageView restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
 
-            restaurant.setImageFromDrawable(this.restaurantPic.getDrawable());
+            restaurant.setImageFromDrawable(restaurantImg.getDrawable());
 
             TextView telephone = (TextView) parentView.findViewById(R.id.editText_Telephone);
             if(telephone.getText().toString().equals("") || telephone.getText() == null){
@@ -285,8 +284,8 @@ public class CreateRestaurant_1 extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         final String METHOD_NAME = this.getClass().getName()+" - onActivityResult";
         super.onActivityResult(requestCode, resultCode, data);
+        ImageView restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
         if(resultCode == getActivity().RESULT_OK && requestCode == SELECT_PICTURE){
-            this.restaurantPic = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
             this.restaurantPicUri = data.getData();
             try{
                 Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(restaurantPicUri));
@@ -300,15 +299,16 @@ public class CreateRestaurant_1 extends Fragment {
                 else
                     imgPath = RealPathUtil.getRealPathFromURI_API19(getActivity(), restaurantPicUri);
                 imageBitmap = detectOrientation(imgPath, imageBitmap);
-                this.restaurantPic.setImageDrawable(resize(imageBitmap));
+                restaurantImg.setImageDrawable(resize(imageBitmap));
+                this.isImageSet = true;
             } catch(FileNotFoundException fnfe) { Log.e(METHOD_NAME,fnfe.getMessage());}
         }
         if(resultCode == CreateRestaurant.RESULT_OK && requestCode == CAPTURE_IMAGE){
-            this.restaurantPic = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
             try{
                 Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(restaurantPicUri));
                 imageBitmap = detectOrientation(restaurantPicUri.getPath(),imageBitmap);
-                this.restaurantPic.setImageDrawable(resize(imageBitmap));
+                restaurantImg.setImageDrawable(resize(imageBitmap));
+                this.isImageSet = true;
             } catch(FileNotFoundException ffe){Log.e(METHOD_NAME,ffe.getMessage());}
         }
     }
@@ -360,7 +360,7 @@ public class CreateRestaurant_1 extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+        public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof onFragInteractionListener) {
             mListener = (onFragInteractionListener) context;
