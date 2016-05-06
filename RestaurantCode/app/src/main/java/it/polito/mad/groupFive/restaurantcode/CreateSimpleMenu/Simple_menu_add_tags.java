@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 
 import java.util.ArrayList;
 
@@ -33,6 +35,7 @@ public class Simple_menu_add_tags extends Fragment {
     public interface shareData{
         MenuData getdata();
     }
+
     shareData sData;
 
     // TODO: Rename and change types of parameters
@@ -40,6 +43,7 @@ public class Simple_menu_add_tags extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private ArrayList<String> c_tags;
 
     public Simple_menu_add_tags() {
         // Required empty public constructor
@@ -82,6 +86,7 @@ public class Simple_menu_add_tags extends Fragment {
     }
     public void setUpData(View v){
         TagAdapter adp;
+        c_tags=new ArrayList<String>();
         adp= new TagAdapter(convertStringArrayToArraylist(getResources().getStringArray(R.array.tags)));
         RecyclerView recyclerView;
         recyclerView=(RecyclerView)v.findViewById(R.id.tag_list);
@@ -93,6 +98,9 @@ public class Simple_menu_add_tags extends Fragment {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                sData.getdata().getNewDish().setTags(c_tags);
+                Log.v("vect",c_tags.size()+"");
                 getFragmentManager().popBackStack();
             }
         });
@@ -155,6 +163,7 @@ public class Simple_menu_add_tags extends Fragment {
         @Override
         public void onBindViewHolder(TagsHolder holder, int position) {
             holder.checkBox.setText(tags.get(position));
+            holder.checkBox.setOnCheckedChangeListener( new CheckedManagement(tags.get(position)));
 
         }
 
@@ -169,5 +178,22 @@ public class Simple_menu_add_tags extends Fragment {
             stringList.add(s);
         }
         return stringList;
+    }
+
+    public class CheckedManagement implements CompoundButton.OnCheckedChangeListener {
+        String tag;
+
+        public CheckedManagement(String tag) {
+            this.tag = tag;
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked == true) {
+                c_tags.add(tag);
+            }else{
+                c_tags.remove(tag);
+            }
+        }
     }
 }

@@ -32,18 +32,22 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
  * Use the {@link Add_simple_dish#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Add_simple_dish extends Fragment {
+public class Add_simple_dish extends Fragment{
+
+
     public interface shareData{
         MenuData getdata();
     }
-    shareData sData;
+    private shareData sData;
     private EditText name;
-    MenuData data;
-    CheckBox vegan;
-    CheckBox vegetarian;
-    CheckBox glutenFree;
-    CheckBox hot;
-    TextView price;
+    private MenuData data;
+    private CheckBox vegan;
+    private CheckBox vegetarian;
+    private CheckBox glutenFree;
+    private CheckBox hot;
+    private TextView price;
+    private Course newDish;
+    private View view;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -87,11 +91,25 @@ public class Add_simple_dish extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        showTags(view);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_add_simple_dish, container, false);
         data=sData.getdata();
+
+        newDish=sData.getdata().getNewDish();
         name= (EditText)v.findViewById(R.id.nd_et_1);
         vegan=(CheckBox)v.findViewById(R.id.nd_ck_1);
         vegetarian=(CheckBox)v.findViewById(R.id.nd_ck_2);
@@ -107,41 +125,12 @@ public class Add_simple_dish extends Fragment {
 
             }
         });
-
-        ScrollView scrollView= (ScrollView) v.findViewById(R.id.tag_list);
-        LinearLayout verlay=(LinearLayout) v.findViewById(R.id.tag_list_vert);
-        LinearLayout horlay=new LinearLayout(getContext());
-        horlay.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        horlay.setLayoutParams(LLParams);
-        verlay.addView(horlay);
-        String res[];
-        res=getContext().getResources().getStringArray(R.array.tags);
-        int count=0,lng=0;
-        while (count<res.length){
-            View child=LayoutInflater.from(getContext()).inflate(R.layout.tag_card_frag,null);
-            TextView tag_name=(TextView)child.findViewById(R.id.tag_name);
-            //lng+=res[count].length();
-            tag_name.setText(res[count]);
-            if(lng+res[count].length()>20){
-
-                horlay=new LinearLayout(getContext());
-                horlay.setOrientation(LinearLayout.HORIZONTAL);
-                horlay.setLayoutParams(LLParams);
-                verlay.addView(horlay);
-                lng=0;
-            }
-            lng+=res[count].length();
-            horlay.addView(child);
-            count++;
-        }
-
+        //showTags(v);
         Button add= (Button)v.findViewById(R.id.ad_add);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    Course newDish=new Course(data.getRest());
                     newDish.setName(name.getText().toString());
                     newDish.setVegan(vegan.isChecked());
                     newDish.setGlutenFree(glutenFree.isChecked());
@@ -153,17 +142,51 @@ public class Add_simple_dish extends Fragment {
                     data.getRest().saveData();
                     Log.v("back","back");
                     getFragmentManager().popBackStack();
-                } catch (CourseException e) {
-                    e.printStackTrace();
-                } catch (RestaurantException e) {
+                }  catch (RestaurantException e) {
                     e.printStackTrace();
                 }
 
 
             }
         });
+        view=v;
         return v;
     }
+
+    public void showTags(View v){
+
+        ScrollView scrollView= (ScrollView) v.findViewById(R.id.tag_list);
+        LinearLayout verlay=(LinearLayout) v.findViewById(R.id.tag_list_vert);
+        LinearLayout horlay=new LinearLayout(getContext());
+        horlay.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        horlay.setLayoutParams(LLParams);
+        verlay.addView(horlay);
+
+            ArrayList<String> res;
+
+            res=sData.getdata().getNewDish().getTags();
+            Log.v("count",res.size()+"");
+            int count=0,lng=0;
+            for (String s:res){
+                View child=LayoutInflater.from(getContext()).inflate(R.layout.tag_card_frag,null);
+                TextView tag_name=(TextView)child.findViewById(R.id.tag_name);
+                //lng+=res[count].length();
+                Log.v("count",count+"");
+                tag_name.setText(s);
+                if(lng+s.length()>20){
+                    horlay=new LinearLayout(getContext());
+                    horlay.setOrientation(LinearLayout.HORIZONTAL);
+                    horlay.setLayoutParams(LLParams);
+                    verlay.addView(horlay);
+                    lng=0;
+                }
+                lng+=s.length();
+                horlay.addView(child);
+                count++;
+            }}
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

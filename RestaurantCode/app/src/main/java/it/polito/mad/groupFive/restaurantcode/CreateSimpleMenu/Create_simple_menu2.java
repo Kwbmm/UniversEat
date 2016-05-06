@@ -95,6 +95,14 @@ public class Create_simple_menu2 extends Fragment {
         menu.findItem(R.id.add_ab).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+
+                        Course newDish;
+                try {
+                    newDish=new Course(data.getRest());
+                    data.setNewDish(newDish);
+                } catch (CourseException e) {
+                    e.printStackTrace();
+                }
                 Add_simple_dish add_dish=new Add_simple_dish();
                 getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fragment_holder,add_dish).commit();
                 return true;
