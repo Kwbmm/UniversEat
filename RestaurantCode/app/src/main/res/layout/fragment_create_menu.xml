@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Menu name"
+            android:text="@string/Menu_name"
             android:id="@+id/cmtw_1_1"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="15dp"
@@ -38,7 +38,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description"
+            android:text="@string/motd_textViewDescription"
             android:id="@+id/cmtw_1_2"
             android:layout_below="@id/cmiw_1_1"
             android:textSize="20dp"
@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/cmtw_1_3"
-            android:text="Type"
+            android:text="@string/add_dish_Type"
             android:textSize="20dp"
             android:layout_below="@+id/cmed_1_2"
             android:layout_alignParentLeft="true"
@@ -76,7 +76,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Next"
+            android:text="@string/next"
             android:id="@+id/next"
             android:layout_marginTop="20dp"
             android:layout_alignParentBottom="true"

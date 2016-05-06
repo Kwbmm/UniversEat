@@ -223,4 +223,27 @@
     <string name="restaurantView_textViewRestaurantName">Nome del Ristorante</string>
     <string name="restaurantView_textViewRestaurantDescription">Descrizione</string>
 
+    <!-- activity_create_review.xml -->
+    <string name="Review_Title">Titolo recenzione</string>
+    <string name="Review">Recenzione:</string>
+    <string name="Create">Crea</string>
+
+    <!-- add_dish.xml -->
+    <string name="add_dish_Name">Nome</string>
+    <string name="add_dish_Type">Tipo</string>
+    <string name="add_dish_Cuisine">Cucina</string>
+    <string name="add_dish_Vegan">Vegano</string>
+    <string name="add_dish_Vegetarian">Vegetariano</string>
+    <string name="add_dish_Hot">Piccante</string>
+    <string name="add_dish_Add">Aggiungi</string>
+    <string name="add_dish_Gluten_free">Senza glutine</string>
+
+    <!-- fragment_create_menu.xml -->
+    <string name="Menu_name">Nome menu</string>
+
+    <!-- fragment_create_simple_menu1.xml -->
+    <string name="fragment_create_simple_menu1_Menu_Image">Immagine del menu</string>
+    <string name="fragment_create_simple_menu1_Send_notification">Abilita notifica</string>
+    <string name="fragment_create_simple_menu1_Dishes">Piatti</string>
+
 </resources>

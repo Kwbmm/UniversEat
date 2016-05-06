@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Menu name"
+            android:text="@string/Menu_name"
             android:id="@+id/cmtw_1_1"
             android:layout_alignParentTop="true"
             android:textSize="20dp"
@@ -33,7 +33,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Menu Image"
+            android:text="@string/fragment_create_simple_menu1_Menu_Image"
             android:layout_below="@id/cmed_1_1"
             android:id="@+id/image_label"
             android:textSize="20dp"
@@ -50,7 +50,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description"
+            android:text="@string/frg_create_restaurant_1_textView_Description"
             android:id="@+id/cmtw_1_2"
             android:layout_below="@id/cmiw_1_1"
             android:textSize="20dp"
@@ -68,11 +68,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:text="Send notification"/>
+                android:text="@string/fragment_create_simple_menu1_Send_notification"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Next"
+                android:text="@string/next"
                 android:id="@+id/next"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"
