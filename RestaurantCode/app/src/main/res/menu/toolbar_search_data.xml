@@ -1,17 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- Restaurant Icons -->
     <item
-        android:id="@+id/filter"
+        android:id="@+id/filterRestaurant"
         app:showAsAction="ifRoom"
         android:title="@string/filterTitle"
         android:icon="@drawable/ic_filter_list_white_24px"
+        android:visible="false"
         />
     <item
-        android:id="@+id/sort"
+        android:id="@+id/sortRestaurant"
         app:showAsAction="always"
         android:title="@string/sortTitle"
         android:icon="@drawable/ic_sort_white_24px"
+        android:visible="false"
+        />
+
+    <!-- Menu Icons -->
+    <item
+        android:id="@+id/filterMenu"
+        app:showAsAction="ifRoom"
+        android:title="@string/filterTitle"
+        android:icon="@drawable/ic_filter_list_white_24px"
+        android:visible="false"
+        />
+    <item
+        android:id="@+id/sortMenu"
+        app:showAsAction="always"
+        android:title="@string/sortTitle"
+        android:icon="@drawable/ic_sort_white_24px"
+        android:visible="false"
         />
 
 </menu>

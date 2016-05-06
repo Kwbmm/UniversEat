@@ -34,6 +34,7 @@ public class SearchResult extends NavigationDrawer {
     private ArrayList<Restaurant> restaurants;
     private String query;
     private RecyclerView rv;
+    private boolean isRestaurant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class SearchResult extends NavigationDrawer {
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            boolean isRestaurant = intent.getBooleanExtra(SearchResult.RESTAURANT_SEARCH,false);
+            this.isRestaurant = intent.getBooleanExtra(SearchResult.RESTAURANT_SEARCH,false);
             this.query = intent.getStringExtra(SearchManager.QUERY).trim().toLowerCase();
             try {
                 this.dm = new DataManager(getApplicationContext());
@@ -67,48 +68,84 @@ public class SearchResult extends NavigationDrawer {
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_search_data, menu);
-        final MenuItem filterButton = menu.findItem(R.id.filter);
-        final MenuItem sortButton = menu.findItem(R.id.sort);
+        if(isRestaurant){ //Setup the buttons of the toolbar for the restaurant
+            final MenuItem filterRestaurantButton = menu.findItem(R.id.filterRestaurant);
+            final MenuItem sortRestaurantButton = menu.findItem(R.id.sortRestaurant);
 
-        //Setup sortButton
-        sortButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
-                String[] items = getResources().getStringArray(R.array.sortCurtainItems);
-                AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchResult.this);
-                sortCurtain.setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case 0:
-                                ((MenuAdapter)rv.getAdapter()).sortByName(true);
-                                break;
-                            case 1:
-                                ((MenuAdapter)rv.getAdapter()).sortByName(false);
-                                break;
-                            case 2:
-                                ((MenuAdapter)rv.getAdapter()).sortByPrice(true);
-                                break;
-                            case 3:
-                                ((MenuAdapter)rv.getAdapter()).sortByPrice(false);
-                                break;
+            sortRestaurantButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
+                    String[] items = getResources().getStringArray(R.array.sortCurtainItems);
+                    AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchResult.this);
+                    sortCurtain.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case 0:
+                                    ((RestaurantAdapter)rv.getAdapter()).sortByName(true);
+                                    break;
+                                case 1:
+                                    ((RestaurantAdapter)rv.getAdapter()).sortByName(false);
+                                    break;
+                                case 2:
+                                    ((RestaurantAdapter)rv.getAdapter()).sortByRating(true);
+                                    break;
+                                case 3:
+                                    ((RestaurantAdapter)rv.getAdapter()).sortByRating(false);
+                                    break;
+                            }
                         }
-                    }
-                })
-                .show();
-                return true;
-            }
-        });
+                    }).show();
+                    return true;
+                }
+            }).setVisible(true);
+            filterRestaurantButton.setVisible(true);
 
 
-        filterButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
-                return true;
-            }
-        });
+        }
+        else{ //Setup the buttons of the toolbar for the menu
+            final MenuItem filterMenuButton = menu.findItem(R.id.filterMenu);
+            final MenuItem sortMenuButton = menu.findItem(R.id.sortMenu);
+
+            //Setup sortMenuButton
+            sortMenuButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
+                    String[] items = getResources().getStringArray(R.array.sortCurtainItems);
+                    AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchResult.this);
+                    sortCurtain.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case 0:
+                                    ((MenuAdapter)rv.getAdapter()).sortByName(true);
+                                    break;
+                                case 1:
+                                    ((MenuAdapter)rv.getAdapter()).sortByName(false);
+                                    break;
+                                case 2:
+                                    ((MenuAdapter)rv.getAdapter()).sortByPrice(true);
+                                    break;
+                                case 3:
+                                    ((MenuAdapter)rv.getAdapter()).sortByPrice(false);
+                                    break;
+                            }
+                        }
+                    }).show();
+                    return true;
+                }
+            }).setVisible(true);
+
+            filterMenuButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
+                    return true;
+                }
+            }).setVisible(true);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -152,8 +189,8 @@ public class SearchResult extends NavigationDrawer {
                     }
                 }
                 //TODO Look also by name??
-//                if(m.getName().toLowerCase().contains(this.query))
-//                    this.menus.add(m);
+                if(m.getName().toLowerCase().contains(this.query))
+                    this.menus.add(m);
             }
             this.rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
             if (rv != null){
@@ -170,6 +207,53 @@ public class SearchResult extends NavigationDrawer {
 
         public RestaurantAdapter(ArrayList<Restaurant> r){
             this.restaurants = r;
+        }
+        public void sortByName(boolean asc){
+            final String METHOD_NAME = this.getClass().getName()+" - sortByName";
+            if(asc){ //A-Z sorting
+                Collections.sort(this.restaurants, new Comparator<Restaurant>() {
+                    @Override
+                    public int compare(Restaurant lhs, Restaurant rhs) {
+                        return lhs.getName().compareToIgnoreCase(rhs.getName());
+                    }
+                });
+            }
+            else{ //Z-A sorting
+                Collections.sort(this.restaurants, new Comparator<Restaurant>() {
+                    @Override
+                    public int compare(Restaurant lhs, Restaurant rhs) {
+                        return rhs.getName().compareToIgnoreCase(lhs.getName());
+                    }
+                });
+            }
+            notifyDataSetChanged();
+        }
+
+        public void sortByRating(boolean asc){
+            final String METHOD_NAME = this.getClass().getName()+" - sortByRating";
+            if(asc){ //Sort by less expensive to most expensive
+                Collections.sort(this.restaurants, new Comparator<Restaurant>() {
+                    @Override
+                    public int compare(Restaurant lhs, Restaurant rhs) {
+                        if(rhs.getRating() - lhs.getRating() >= 0)
+                            return -1;
+                        else
+                            return 1;
+                    }
+                });
+            }
+            else{
+                Collections.sort(this.restaurants, new Comparator<Restaurant>() {
+                    @Override
+                    public int compare(Restaurant lhs, Restaurant rhs) {
+                        if(rhs.getRating() - lhs.getRating() >= 0)
+                            return 1;
+                        else
+                            return -1;
+                    }
+                });
+            }
+            notifyDataSetChanged();
         }
 
         @Override
