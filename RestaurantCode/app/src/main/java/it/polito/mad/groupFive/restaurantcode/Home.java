@@ -118,7 +118,7 @@ public class Home extends NavigationDrawer {
                                             it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
                                             mn.setName("Menu " +i);
                                             mn.setDescription("Description");
-                                            mn.setPrice(1.5f);
+                                            mn.setPrice((float)(1.5/(Math.log(i+2))));
                                             mn.setTicket(true);
                                             mn.setType(1);
                                             rest.getMenus().add(mn);

@@ -1,12 +1,15 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.app.SearchManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -30,6 +33,7 @@ public class SearchResult extends NavigationDrawer {
     private ArrayList<Menu> menus;
     private ArrayList<Restaurant> restaurants;
     private String query;
+    private RecyclerView rv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,54 @@ public class SearchResult extends NavigationDrawer {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_search_data, menu);
+        final MenuItem filterButton = menu.findItem(R.id.filter);
+        final MenuItem sortButton = menu.findItem(R.id.sort);
+
+        //Setup sortButton
+        sortButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
+                String[] items = getResources().getStringArray(R.array.sortCurtainItems);
+                AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchResult.this);
+                sortCurtain.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case 0:
+                                ((MenuAdapter)rv.getAdapter()).sortByName(true);
+                                break;
+                            case 1:
+                                ((MenuAdapter)rv.getAdapter()).sortByName(false);
+                                break;
+                            case 2:
+                                ((MenuAdapter)rv.getAdapter()).sortByPrice(true);
+                                break;
+                            case 3:
+                                ((MenuAdapter)rv.getAdapter()).sortByPrice(false);
+                                break;
+                        }
+                    }
+                })
+                .show();
+                return true;
+            }
+        });
+
+
+        filterButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
+                return true;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
     private void showRestaurants(){
         final String METHOD_NAME = this.getClass().getName()+" - showRestaurants";
         if(dm.getRestaurants().size() == 0)
@@ -73,7 +125,7 @@ public class SearchResult extends NavigationDrawer {
                 if(r.getName().toLowerCase().contains(this.query))
                     this.restaurants.add(r);
             }
-            RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
+            this.rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
             if (rv != null){
                 rv.setAdapter(new RestaurantAdapter(this.restaurants));
                 LinearLayoutManager llmVertical = new LinearLayoutManager(this);
@@ -103,7 +155,7 @@ public class SearchResult extends NavigationDrawer {
 //                if(m.getName().toLowerCase().contains(this.query))
 //                    this.menus.add(m);
             }
-            RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
+            this.rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
             if (rv != null){
                 rv.setAdapter(new MenuAdapter(this.menus));
                 LinearLayoutManager llmVertical = new LinearLayoutManager(this);
@@ -148,10 +200,58 @@ public class SearchResult extends NavigationDrawer {
 
         public MenuAdapter(ArrayList<Menu> menus){
             this.menus=menus;
-            sort();
+            sortByType();
         }
 
-        public void sort(){
+        public void sortByName(boolean asc){
+            final String METHOD_NAME = this.getClass().getName()+" - sortByName";
+            if(asc){ //A-Z sorting
+                Collections.sort(this.menus, new Comparator<Menu>() {
+                    @Override
+                    public int compare(Menu lhs, Menu rhs) {
+                        return lhs.getName().compareToIgnoreCase(rhs.getName());
+                    }
+                });
+            }
+            else{ //Z-A sorting
+                Collections.sort(this.menus, new Comparator<Menu>() {
+                    @Override
+                    public int compare(Menu lhs, Menu rhs) {
+                        return rhs.getName().compareToIgnoreCase(lhs.getName());
+                    }
+                });
+            }
+            notifyDataSetChanged();
+        }
+
+        public void sortByPrice(boolean asc){
+            final String METHOD_NAME = this.getClass().getName()+" - sortByPrice";
+            if(asc){ //Sort by less expensive to most expensive
+                Collections.sort(this.menus, new Comparator<Menu>() {
+                    @Override
+                    public int compare(Menu lhs, Menu rhs) {
+                        if(rhs.getPrice() - lhs.getPrice() >= 0)
+                            return -1;
+                        else
+                            return 1;
+                    }
+                });
+            }
+            else{
+                Collections.sort(this.menus, new Comparator<Menu>() {
+                    @Override
+                    public int compare(Menu lhs, Menu rhs) {
+                        if(rhs.getPrice() - lhs.getPrice() >= 0)
+                            return 1;
+                        else
+                            return -1;
+                    }
+                });
+            }
+            notifyDataSetChanged();
+        }
+
+        public void sortByType(){
             Collections.sort(this.menus, new Comparator<Menu>() {
                 @Override
                 public int compare(Menu lhs, Menu rhs) {
@@ -172,7 +272,8 @@ public class SearchResult extends NavigationDrawer {
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
-            holder.menu_image.setImageBitmap(menu.getImageBitmap());
+            //TODO remove comment here
+//            holder.menu_image.setImageBitmap(menu.getImageBitmap());
             int rid = menus.get(position).getRid();
             holder.card.setOnClickListener(new onCardClick(position,rid));
         }
