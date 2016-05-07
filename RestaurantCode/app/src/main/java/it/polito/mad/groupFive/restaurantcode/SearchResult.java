@@ -66,7 +66,7 @@ public class SearchResult extends NavigationDrawer {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+    public boolean onCreateOptionsMenu(final android.view.Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_search_data, menu);
         if(isRestaurant){ //Setup the buttons of the toolbar for the restaurant
             final MenuItem filterRestaurantButton = menu.findItem(R.id.filterRestaurant);
@@ -76,7 +76,7 @@ public class SearchResult extends NavigationDrawer {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
-                    String[] items = getResources().getStringArray(R.array.sortCurtainItems);
+                    String[] items = getResources().getStringArray(R.array.sortCurtainRestaurantItems);
                     AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchResult.this);
                     sortCurtain.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
@@ -93,6 +93,14 @@ public class SearchResult extends NavigationDrawer {
                                     break;
                                 case 3:
                                     ((RestaurantAdapter)rv.getAdapter()).sortByRating(false);
+                                    break;
+                                case 4:
+                                    //TODO Uncomment when GMaps API are implemented
+                                    //((RestaurantAdapter)rv.getAdapter()).sortByNearest();
+                                    Toast.makeText(getApplicationContext(),
+                                            getString(R.string.featureUnavail),
+                                            Toast.LENGTH_LONG)
+                                            .show();
                                     break;
                             }
                         }
@@ -113,7 +121,7 @@ public class SearchResult extends NavigationDrawer {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
-                    String[] items = getResources().getStringArray(R.array.sortCurtainItems);
+                    String[] items = getResources().getStringArray(R.array.sortCurtainMenuItems);
                     AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchResult.this);
                     sortCurtain.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
@@ -142,6 +150,33 @@ public class SearchResult extends NavigationDrawer {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
+                    String[] items = getResources().getStringArray(R.array.filterCurtainMenuItems);
+                    final AlertDialog.Builder filterCurtain = new AlertDialog.Builder(SearchResult.this);
+                    filterCurtain.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case 0:
+                                    ((MenuAdapter)rv.getAdapter()).filterByTicket(true);
+                                    break;
+                                case 1:
+                                    ((MenuAdapter)rv.getAdapter()).filterByTicket(false);
+                                    break;
+                                case 2:
+                                    ((MenuAdapter)rv.getAdapter()).filterByBeverage(true);
+                                    break;
+                                case 3:
+                                    ((MenuAdapter)rv.getAdapter()).filterByBeverage(false);
+                                    break;
+                                case 4:
+                                    ((MenuAdapter)rv.getAdapter()).filterByServiceFee(true);
+                                    break;
+                                case 5:
+                                    ((MenuAdapter)rv.getAdapter()).filterByServiceFee(false);
+                                    break;
+                            }
+                        }
+                    }).show();
                     return true;
                 }
             }).setVisible(true);
@@ -256,6 +291,10 @@ public class SearchResult extends NavigationDrawer {
             notifyDataSetChanged();
         }
 
+        public void sortByNearest() {
+            //TODO Implement GMaps API
+        }
+
         @Override
         public RestaurantViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View restaurant_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.restaurant_view,null);
@@ -277,13 +316,14 @@ public class SearchResult extends NavigationDrawer {
         public int getItemCount() {
             return this.restaurants.size();
         }
+
     }
 
     public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
         private ArrayList<Menu> menus;
 
         public MenuAdapter(ArrayList<Menu> menus){
-            this.menus=menus;
+            this.menus = menus;
             sortByType();
         }
 
@@ -343,6 +383,76 @@ public class SearchResult extends NavigationDrawer {
                 }});
         }
 
+        public void filterByTicket(boolean ticket){
+            final String METHOD_NAME = this.getClass().getName()+" - filterByTicket";
+            if(ticket){
+                for(int i = 0; i < this.getItemCount(); i++){
+                    Menu m = this.menus.get(i);
+                    if(!m.acceptTicket()){
+                        this.menus.remove(i);
+                        notifyItemRemoved(i);
+                        i--;
+                    }
+                }
+            }
+            else{
+                for(int i = 0; i < this.getItemCount(); i++){
+                    Menu m = this.menus.get(i);
+                    if(m.acceptTicket()){
+                        this.menus.remove(i);
+                        notifyItemRemoved(i);
+                        i--;
+                    }
+                }
+            }
+        }
+
+        public void filterByBeverage(boolean beverageIncluded) {
+            if(beverageIncluded){
+                for(int i = 0; i < this.getItemCount(); i++){
+                    Menu m = this.menus.get(i);
+                    if(!m.isBeverage()){
+                        this.menus.remove(i);
+                        notifyItemRemoved(i);
+                        i--;
+                    }
+                }
+            }
+            else {
+                for(int i = 0; i < this.getItemCount(); i++){
+                    Menu m = this.menus.get(i);
+                    if(m.isBeverage()){
+                        this.menus.remove(i);
+                        notifyItemRemoved(i);
+                        i--;
+                    }
+                }
+            }
+        }
+
+        public void filterByServiceFee(boolean fee) {
+            if(fee){
+                for(int i = 0; i < this.getItemCount(); i++){
+                    Menu m = this.menus.get(i);
+                    if(!m.isServiceFee()){
+                        this.menus.remove(i);
+                        notifyItemRemoved(i);
+                        i--;
+                    }
+                }
+            }
+            else {
+                for(int i = 0; i < this.getItemCount(); i++){
+                    Menu m = this.menus.get(i);
+                    if(m.isServiceFee()){
+                        this.menus.remove(i);
+                        notifyItemRemoved(i);
+                        i--;
+                    }
+                }
+            }
+        }
+
         @Override
         public MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View menu_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_view,null);
@@ -352,7 +462,6 @@ public class SearchResult extends NavigationDrawer {
         @Override
         public void onBindViewHolder(final MenuViewHolder holder, int position) {
             Menu menu = menus.get(position);
-
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
@@ -364,7 +473,7 @@ public class SearchResult extends NavigationDrawer {
 
         @Override
         public int getItemCount() {
-            return menus.size();
+            return this.menus.size();
         }
     }
 
