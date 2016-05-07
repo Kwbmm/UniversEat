@@ -26,6 +26,7 @@ import java.util.Comparator;
 
 import it.polito.mad.groupFive.restaurantcode.CreateMenu.Create_menu;
 import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Create_simple_menu;
+import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Simple_menu_add_tags;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -106,11 +107,13 @@ public class Menu_view_edit extends NavigationDrawer {
                 switch (item.getItemId()) {
                     case R.id.nfpm: {
                         Intent intent = new Intent(getBaseContext(), Create_simple_menu.class);
+                        intent.putExtra("mid",-1);
                         startActivityForResult(intent,1);
                         break;
                     }
                     case R.id.ndm: {
                         Intent intent = new Intent(getBaseContext(), Create_simple_menu.class);
+                        intent.putExtra("mid",-1);
                         startActivityForResult(intent,2);
 
                         break;
@@ -257,6 +260,9 @@ public class Menu_view_edit extends NavigationDrawer {
                 switch (which){
                     case 0:{
                         //TODO:edit intent
+                        Intent edit_menu=new Intent(getBaseContext(),Create_simple_menu.class);
+                        edit_menu.putExtra("mid",menusshared.get(position).getMid());
+                        startActivityForResult(edit_menu,3);
                         break;
                     }
                     case 1:{

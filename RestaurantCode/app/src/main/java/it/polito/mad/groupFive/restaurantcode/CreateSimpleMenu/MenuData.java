@@ -11,13 +11,23 @@ public class MenuData {
     private Restaurant rest;
     private Menu menu;
     private Course newDish;
+    private boolean edit;
 
     public Menu getMenu() {
         return menu;
     }
 
+    public boolean isEdit() {
+        return edit;
+    }
+
+    public void setEdit(boolean edit) {
+        this.edit = edit;
+    }
+
     public Course getNewDish() {
         return newDish;
+
     }
 
     public void setNewDish(Course newDish) {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import it.polito.mad.groupFive.restaurantcode.CreateMenu.Create_menu;
@@ -18,12 +19,17 @@ public class Create_simple_menu extends NavigationDrawer implements Create_simpl
 
     Restaurant rest;
     MenuData menuData;
+    int mid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_create_simple_menu, mlay);
-        getData();
+        if (getIntent().getExtras().getInt("mid",-1)!=-1){
+            mid=getIntent().getExtras().getInt("mid",-1);
+           fetchData();
+        }else{
+        getData();}
         Create_simple_menu1 csm1=new Create_simple_menu1();
         getSupportFragmentManager().
                 beginTransaction().
@@ -46,6 +52,24 @@ public class Create_simple_menu extends NavigationDrawer implements Create_simpl
         } catch (RestaurantException e) {
             e.printStackTrace();
         } catch (MenuException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void fetchData(){
+
+        SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
+        int rid=sp.getInt("rid",-1);
+        try {
+            rest=new Restaurant(this,rid);
+            rest.getData();
+            menuData=new MenuData(rest);
+            Menu menu=rest.getMenuByID(mid);
+            Log.v("mid",menu.getName()+"");
+            menuData.setEdit(true);
+            menuData.setMenu(menu);
+        } catch (RestaurantException e) {
             e.printStackTrace();
         }
 

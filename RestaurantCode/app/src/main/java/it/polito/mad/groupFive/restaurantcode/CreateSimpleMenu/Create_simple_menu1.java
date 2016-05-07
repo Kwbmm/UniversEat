@@ -55,6 +55,7 @@ public class Create_simple_menu1 extends Fragment {
     }
     shareData sData;
     MenuData data;
+    private ImageView restaurantImg;
     private EditText name;
     private EditText description;
     private Uri menuPicUri = null;
@@ -110,7 +111,7 @@ public class Create_simple_menu1 extends Fragment {
         data=sData.getdata();
         name=(EditText)v.findViewById(R.id.cmed_1_1);
         description=(EditText)v.findViewById(R.id.cmed_1_2);
-        ImageView restaurantImg = (ImageView) v.findViewById(R.id.cmiw_1_1);
+        restaurantImg = (ImageView) v.findViewById(R.id.cmiw_1_1);
         restaurantImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,7 +132,11 @@ public class Create_simple_menu1 extends Fragment {
                     public void onClick(View v) {
                         data.getMenu().setName(name.getText().toString());
                         data.getMenu().setDescription(description.getText().toString());
-                        data.getMenu().setImageFromDrawable(menuPic.getDrawable());
+                        if(!sData.getdata().isEdit()){
+                        data.getMenu().setImageFromDrawable(menuPic.getDrawable());}
+                        else {
+                            data.getMenu().setImageFromDrawable(restaurantImg.getDrawable());
+                        }
                         try {
                             data.getRest().saveData();
                         } catch (RestaurantException e) {
@@ -141,7 +146,7 @@ public class Create_simple_menu1 extends Fragment {
                         getFragmentManager().beginTransaction().replace(R.id.fragment_holder,csm2).commit();
                     }
                 });
-
+        fetchData();
         return v;
     }
 
@@ -152,6 +157,14 @@ public class Create_simple_menu1 extends Fragment {
         }
     }
 
+    public void fetchData(){
+        if(sData.getdata().isEdit()){
+            restaurantImg.setImageBitmap(sData.getdata().getMenu().getImageBitmap());
+            description.setText(sData.getdata().getMenu().getDescription());
+            name.setText(sData.getdata().getMenu().getName());
+        }
+
+    }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

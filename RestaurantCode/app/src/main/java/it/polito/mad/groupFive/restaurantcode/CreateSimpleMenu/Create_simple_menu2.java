@@ -43,13 +43,13 @@ public class Create_simple_menu2 extends Fragment {
     public interface shareData{
         MenuData getdata();
     }
-    shareData sData;
-    it.polito.mad.groupFive.restaurantcode.datastructures.Menu menu;
-    Restaurant rest;
-    MenuData data;
-    DishAdapter adp;
-    RecyclerView recyclerView;
-    EditText price;
+    private shareData sData;
+    private it.polito.mad.groupFive.restaurantcode.datastructures.Menu menu;
+    private Restaurant rest;
+    private MenuData data;
+    private DishAdapter adp;
+    private RecyclerView recyclerView;
+    private EditText price;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -77,6 +77,11 @@ public class Create_simple_menu2 extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+    private void fetchData(){
+        if (sData.getdata().isEdit()){
+            price.setText(String.valueOf(sData.getdata().getMenu().getPrice()));
+        }
     }
 
     @Override
@@ -120,6 +125,7 @@ public class Create_simple_menu2 extends Fragment {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_create_simple_menu2, container, false);
         setUpData(v);
+        fetchData();
 
         return v;
     }
