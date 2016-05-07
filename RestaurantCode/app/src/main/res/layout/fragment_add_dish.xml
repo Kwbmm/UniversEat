@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/nd_tw_1"
         android:textSize="20dp"
-        android:text="Name" />
+        android:text="@string/add_dish_Name" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/nd_tw_2"
-        android:text="Type"
+        android:text="@string/add_dish_Type"
         android:layout_below="@id/nd_et_1"/>
     <Spinner
         android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/nd_tw_3"
-        android:text="Cuisine"
+        android:text="@string/add_dish_Cuisine"
         android:textSize="20dp"
         android:layout_below="@id/nd_type"/>
     <Spinner
@@ -44,19 +44,19 @@
         android:layout_height="wrap_content"
         android:id="@+id/nd_ck_1"
         android:layout_below="@id/nd_type_2"
-        android:text="Vegan"/>
+        android:text="@string/add_dish_Vegan"/>
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/nd_ck_2"
         android:layout_below="@id/nd_ck_1"
-        android:text="Vegetarian"/>
+        android:text="@string/add_dish_Vegetarian"/>
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/nd_ck_3"
         android:layout_below="@id/nd_ck_2"
-        android:text="Hot"/>
+        android:text="@string/add_dish_Hot"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -65,6 +65,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
         android:id="@+id/ad_add"
-        android:text="Add"/>
+        android:text="@string/add_dish_Add"/>
 
 </RelativeLayout>

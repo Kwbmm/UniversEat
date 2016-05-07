@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/rev_rest_name"
-        android:text="Restaurant name"
+        android:text="@string/restaurantView_textViewRestaurantName"
         android:textAlignment="center"
         android:textSize="25dp"/>
     <RatingBar
@@ -36,7 +36,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Review Title"
+        android:text="@string/Review_Title"
         android:textSize="20dp"
         android:id="@+id/review_title_label"
         />
@@ -51,7 +51,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Review:"
+        android:text="@string/Review"
         android:layout_below="@id/review_title"
         android:id="@+id/review_label"
         android:textSize="20dp"

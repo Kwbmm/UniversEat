@@ -209,6 +209,40 @@
 
     <string name="toastloginFail">These passwords don\'t match.</string>
 
+    <!-- activity_create_review.xml -->
+    <string name="Review_Title">Review Title</string>
+    <string name="Review">Review:</string>
+    <string name="Create">Create</string>
+
+    <!-- add_dish.xml -->
+    <string name="add_dish_Name">Name</string>
+    <string name="add_dish_Type">Type</string>
+    <string name="add_dish_Cuisine">Cuisine</string>
+    <string name="add_dish_Vegan">Vegan</string>
+    <string name="add_dish_Vegetarian">Vegetarian</string>
+    <string name="add_dish_Hot">Hot</string>
+    <string name="add_dish_Add">Add</string>
+    <string name="add_dish_Gluten_free">Gluten free</string>
+
+    <!-- fragment_create_menu.xml -->
+    <string name="Menu_name">Menu name</string>
+
+    <!-- fragment_create_restaurant_5.xml -->
+    <string name="BuonChef">BuonChef</string>
+    <string name="Ticket_Restaurant">Ticket Restaurant</string>
+    <string name="BluTicket">BluTicket</string>
+    <string name="City_Time">City Time</string>
+
+
+    <!-- fragment_create_simple_menu1.xml -->
+    <string name="fragment_create_simple_menu1_Menu_Image">Menu Image</string>
+    <string name="fragment_create_simple_menu1_Send_notification">Send notification</string>
+    <string name="fragment_create_simple_menu1_Dishes">Dishes</string>
+    <string name="fragment_create_simple_menu1_"></string>
+
+
+
+
     <array name="tags">
         <item>Pizza</item>
         <item>Pasta</item>

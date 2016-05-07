@@ -13,25 +13,25 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="BuonChef"
+        android:text="@string/BuonChef"
         android:id="@+id/ticket_1"
         />
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ticket Restaurant"
+        android:text="@string/Ticket_Restaurant"
         android:id="@+id/ticket_2"
         />
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="BluTicket"
+        android:text="@string/BluTicket"
         android:id="@+id/ticket_3"
         />
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="City Time"
+        android:text="@string/City_Time"
         android:id="@+id/ticket_4"
         />
     <Button
