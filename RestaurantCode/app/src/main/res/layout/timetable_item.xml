@@ -12,6 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:visibility="invisible"
         />
 
     <TextView
@@ -22,6 +23,7 @@
         android:layout_toLeftOf="@id/textClockTo"
         android:layout_toStartOf="@id/textClockTo"
         android:text="@string/workingHItem_textViewTo"
+        android:visibility="invisible"
         />
 
     <Button
@@ -31,6 +33,7 @@
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@id/to"
         android:layout_toStartOf="@id/to"
+        android:visibility="invisible"
         />
 
     <TextView
@@ -41,6 +44,7 @@
         android:layout_toStartOf="@id/textClockFrom"
         android:layout_alignBaseline="@id/textClockFrom"
         android:text="@string/workingHItem_textViewFrom"
+        android:visibility="invisible"
         />
 
     <CheckBox

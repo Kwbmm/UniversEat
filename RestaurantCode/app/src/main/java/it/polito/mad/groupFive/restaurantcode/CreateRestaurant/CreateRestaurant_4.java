@@ -98,9 +98,26 @@ public class CreateRestaurant_4 extends Fragment {
 
         for(String weekday : this.weekDays){
             LayoutInflater li = LayoutInflater.from(this.parentView.getContext());
-            View timetableItem = li.inflate(R.layout.timetable_item,null);
-            ((CheckBox)timetableItem.findViewById(R.id.checkBox)).setText(weekday);
-
+            final View timetableItem = li.inflate(R.layout.timetable_item,null);
+            CheckBox cb = (CheckBox)timetableItem.findViewById(R.id.checkBox);
+            cb.setText(weekday);
+            cb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(((CheckBox)v).isChecked()){
+                        timetableItem.findViewById(R.id.from).setVisibility(View.VISIBLE);
+                        timetableItem.findViewById(R.id.textClockFrom).setVisibility(View.VISIBLE);
+                        timetableItem.findViewById(R.id.to).setVisibility(View.VISIBLE);
+                        timetableItem.findViewById(R.id.textClockTo).setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        timetableItem.findViewById(R.id.from).setVisibility(View.INVISIBLE);
+                        timetableItem.findViewById(R.id.textClockFrom).setVisibility(View.INVISIBLE);
+                        timetableItem.findViewById(R.id.to).setVisibility(View.INVISIBLE);
+                        timetableItem.findViewById(R.id.textClockTo).setVisibility(View.INVISIBLE);
+                    }
+                }
+            });
             weekdayToRL_IDs.put(weekday,Restaurant.randInt());
 
             //Set the clock popup for both buttons (to and from)
