@@ -305,6 +305,25 @@
     <!-- timetable_view.xml-->
     <string name="timetable_view_DayOfWeek">GiornoDellaSettimana</string>
 
+    <!-- Create_menu_frag2.java-->
+    <string name="Create_menu_frag2_option">Opzione </string>
+
+    <!-- MakeOrder.java-->
+    <string name="MakeOrder_name">Per favore inserire un nome</string>
+    <string name="MakeOrder_past">Non puoi ordinare nel passato!</string>
+    <string name="MakeOrder_successful">Ordine completato con successo</string>
+
+    <!-- Menu_details.java-->
+    <string name="Menu_details_beverage_incl">Bevande incluse</string>
+    <string name="Menu_details_beverage_not">Bevande non incluse</string>
+    <string name="Menu_details_service_fee_incl">Coperto incluso</string>
+    <string name="Menu_details_service_fee_not">Coperto non incluso</string>
+
+    <!-- Menu_view_edit.java-->
+    <string name="Menu_view_edit_Edit">Modifica</string>
+    <string name="Menu_view_edit_Delete">Elimina</string>
+    <string name="Menu_view_edit_Cancel">Cancella</string>
+    <string name="Menu_view_edit_options">Opzioni modifica</string>
 
 
 

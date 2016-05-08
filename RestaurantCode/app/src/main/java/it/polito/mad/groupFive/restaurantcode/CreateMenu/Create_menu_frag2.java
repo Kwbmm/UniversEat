@@ -227,7 +227,7 @@ public class Create_menu_frag2 extends Fragment {
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(context).inflate(R.layout.menu_choice, null);
             TextView opt_title= (TextView) convertView.findViewById(R.id.twch);
-            opt_title.setText("Option "+(position+1));
+            opt_title.setText(getString(R.string.Create_menu_frag2_option)+(position+1));
             LinearLayout ll= (LinearLayout) convertView.findViewById(R.id.ll_mc);
 
 

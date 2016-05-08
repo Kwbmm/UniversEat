@@ -294,6 +294,28 @@
     <!-- timetable_view.xml-->
     <string name="timetable_view_DayOfWeek">DayOfWeek</string>
 
+    <!-- Create_menu_frag2.java-->
+    <string name="Create_menu_frag2_option">Option </string>
+
+    <!-- MakeOrder.java-->
+    <string name="MakeOrder_name">Please insert a name</string>
+    <string name="MakeOrder_past">You can\'t order in the past!</string>
+    <string name="MakeOrder_successful">Order successful</string>
+
+    <!-- Menu_details.java-->
+    <string name="Menu_details_beverage_incl">Beverage included</string>
+    <string name="Menu_details_beverage_not">Beverage not included</string>
+    <string name="Menu_details_service_fee_incl">Service fee included</string>
+    <string name="Menu_details_service_fee_not">Service fee not included</string>
+
+    <!-- Menu_view_edit.java-->
+    <string name="Menu_view_edit_Edit">Edit</string>
+    <string name="Menu_view_edit_Delete">Delete</string>
+    <string name="Menu_view_edit_Cancel">Cancel</string>
+    <string name="Menu_view_edit_options">Edit Options</string>
+
+
+
     <array name="tags">
         <item>Pizza</item>
         <item>Pasta</item>
