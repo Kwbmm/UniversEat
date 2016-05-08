@@ -29,7 +29,9 @@ import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
@@ -65,7 +67,7 @@ public class Restaurant {
     private double ycoord;
     private ArrayList<Menu> menus=new ArrayList<>();
     private ArrayList<Order> orders=new ArrayList<>();
-    private ArrayMap<Integer, String> tickets = new ArrayMap<>();
+    private HashSet<String> tickets = new HashSet<>();
     private ArrayMap<Integer, Date[]> timetableLunch = new ArrayMap<>();
     private ArrayMap<Integer, Date[]> timetableDinner = new ArrayMap<>();
     private ArrayList<Review> reviews = new ArrayList<>();
@@ -454,27 +456,11 @@ public class Restaurant {
     }
 
     /**
-     * Returns an array map where the Integer ID of the ticket is used as key. The value is the
-     * name of the ticket type.
-     * @return An ArrayMap<Integer, String> of tickets.
-     */
-    public ArrayMap<Integer,String> getTickets(){ return this.tickets; }
-
-    /**
-     * This methods takes as input an integer ID, representing the key to look for. If the key is
-     * found in the map, it returns the corresponding value name of the ticket type.
-     * If the search produces no results, it returns null.
+     * Returns HashSet of the strings representing the ticket name.
      *
-     * @param key The key to look for
-     * @return String representing a ticket type, or null if not found.
+     * @return A HashSet of Strings representing the tickets' names.
      */
-    public String getTicketNameByKey(Integer key){
-        for(Integer i : this.tickets.keySet()){
-            if(i.equals(key))
-                return this.tickets.get(i);
-        }
-        return null;
-    }
+    public HashSet<String> getTickets(){ return this.tickets; }
 
     /**
      * Returns an ArrayMap with keys the number of the day of the week (from 0 [Monday] to 6
@@ -531,6 +517,100 @@ public class Restaurant {
             if(r.getUid() == uid)
                 returnRes.add(r);
         return returnRes;
+    }
+
+    /**
+     * Returns true if the restaurant is open at the current time, false otherwise.
+     * In case of error, a warning is logged and the method returns false.
+     *
+     * @return True if restaurant is open, false otherewise.
+     */
+    public boolean isOpen(){
+        final String METHOD_NAME = this.getClass().getName()+" - isOpen";
+        Calendar now = Calendar.getInstance();
+        long nowMS = now.getTimeInMillis();
+        int dow = now.get(Calendar.DAY_OF_WEEK);
+        switch (dow){
+            case 1:{ //Sunday
+                Date startLunch = this.timetableLunch.get(6)[0];
+                Date endLunch = this.timetableLunch.get(6)[1];
+                Date startDinner = this.timetableDinner.get(6)[0];
+                Date endDinner = this.timetableDinner.get(6)[1];
+                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                    return true;
+                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    return true;
+                return false;
+            }
+            case 2:{ //Monday
+            Date startLunch = this.timetableLunch.get(0)[0];
+                Date endLunch = this.timetableLunch.get(0)[1];
+                Date startDinner = this.timetableDinner.get(0)[0];
+                Date endDinner = this.timetableDinner.get(0)[1];
+                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                    return true;
+                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    return true;
+                return false;
+            }
+            case 3:{ //Tuesday
+            Date startLunch = this.timetableLunch.get(1)[0];
+                Date endLunch = this.timetableLunch.get(1)[1];
+                Date startDinner = this.timetableDinner.get(1)[0];
+                Date endDinner = this.timetableDinner.get(1)[1];
+                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                    return true;
+                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    return true;
+                return false;
+            }
+            case 4:{ //Wednesday
+            Date startLunch = this.timetableLunch.get(2)[0];
+                Date endLunch = this.timetableLunch.get(2)[1];
+                Date startDinner = this.timetableDinner.get(2)[0];
+                Date endDinner = this.timetableDinner.get(2)[1];
+                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                    return true;
+                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    return true;
+                return false;
+            }
+            case 5:{ //Thursday
+            Date startLunch = this.timetableLunch.get(3)[0];
+                Date endLunch = this.timetableLunch.get(3)[1];
+                Date startDinner = this.timetableDinner.get(3)[0];
+                Date endDinner = this.timetableDinner.get(3)[1];
+                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                    return true;
+                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    return true;
+                return false;
+            }
+            case 6:{ //Friday
+            Date startLunch = this.timetableLunch.get(4)[0];
+                Date endLunch = this.timetableLunch.get(4)[1];
+                Date startDinner = this.timetableDinner.get(4)[0];
+                Date endDinner = this.timetableDinner.get(4)[1];
+                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                    return true;
+                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    return true;
+                return false;
+            }
+            case 7:{ //Saturday
+            Date startLunch = this.timetableLunch.get(5)[0];
+                Date endLunch = this.timetableLunch.get(5)[1];
+                Date startDinner = this.timetableDinner.get(5)[0];
+                Date endDinner = this.timetableDinner.get(5)[1];
+                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                    return true;
+                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    return true;
+                return false;
+            }
+        }
+        Log.w(METHOD_NAME,"Switch case not entered, returning wrong value");
+        return false;
     }
 
     /**
@@ -714,10 +794,9 @@ public class Restaurant {
 
     /**
      *
-     * @param tickets An ArrayMap where the Integer representing the ticket is the key, while the
-     *                string is the name of the ticket.
+     * @param tickets A HashSet containing the names of the tickets.
      */
-    public void setTickets(ArrayMap<Integer, String> tickets){ this.tickets = tickets; }
+    public void setTickets(HashSet<String> tickets){ this.tickets = tickets; }
 
     /**
      * Sets the amount of time during which the restaurant is open AT LUNCH.
