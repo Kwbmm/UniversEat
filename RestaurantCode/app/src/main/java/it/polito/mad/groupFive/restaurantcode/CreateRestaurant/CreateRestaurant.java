@@ -16,9 +16,15 @@ public class CreateRestaurant
             CreateRestaurant_2.onFragInteractionListener,
             CreateRestaurant_3.onFragInteractionListener,
             CreateRestaurant_4.onFragInteractionListener,
-            CreateRestaurant_5.onFragInteractionListener{
+            CreateRestaurant_5.onFragInteractionListener,
+            CreateRestaurant_1.getRestaurant,
+            CreateRestaurant_2.getRestaurant,
+            CreateRestaurant_3.getRestaurant,
+            CreateRestaurant_4.getRestaurant,
+            CreateRestaurant_5.getRestaurant{
 
     private Restaurant restaurant = null;
+    private boolean edit=false;
 
 
     @Override
@@ -118,6 +124,18 @@ public class CreateRestaurant
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_create_restaurant, mlay);
+
+        //Fetch data -> edit mode
+        int rid;
+        if((rid=this.getIntent().getExtras().getInt("rid",-1))!=-1){
+            try {
+                this.restaurant=new Restaurant(getBaseContext(),rid);
+                edit=true;
+            } catch (RestaurantException e) {
+                e.printStackTrace();
+            }
+
+        }
         if(findViewById(R.id.fragment_CreateRestaurant) != null){
             //For more info see: http://developer.android.com/training/basics/fragments/fragment-ui.html
             if(savedInstanceState != null)
@@ -129,5 +147,15 @@ public class CreateRestaurant
                     .add(R.id.fragment_CreateRestaurant,cr1)
                     .commit();
         }
+    }
+
+    @Override
+    public Restaurant getRest() {
+        return this.restaurant;
+    }
+
+    @Override
+    public Boolean editmode() {
+        return this.edit;
     }
 }

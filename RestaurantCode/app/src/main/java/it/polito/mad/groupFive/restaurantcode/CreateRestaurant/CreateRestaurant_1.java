@@ -69,10 +69,22 @@ public class CreateRestaurant_1 extends Fragment {
     private ImageView restaurantPic = null;
 
     private Restaurant restaurant = null;
+    /*view items*/
+    private ImageView restaurantImg;
+    private TextView description;
+    private TextView name;
+    private TextView telephone;
+    private TextView website;
 
     public CreateRestaurant_1() {
     }
 
+    public interface getRestaurant{
+        public Restaurant getRest();
+        public Boolean editmode();
+
+    }
+    public getRestaurant getR;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -105,7 +117,15 @@ public class CreateRestaurant_1 extends Fragment {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
 
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_1, container, false);
-        ImageView restaurantImg = (ImageView) this.parentView.findViewById(R.id.imageView_RestaurantImage);
+
+        restaurantImg = (ImageView) this.parentView.findViewById(R.id.imageView_RestaurantImage);
+        name = (TextView) parentView.findViewById(R.id.editText_RestaurantName);
+        description=(TextView) parentView.findViewById(R.id.editText_Description);
+        restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
+        telephone= (TextView) parentView.findViewById(R.id.editText_Telephone);
+        website= (TextView) parentView.findViewById(R.id.editText_Website);
+        if(getR.editmode()){
+        fetchData();}
         restaurantImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,45 +164,58 @@ public class CreateRestaurant_1 extends Fragment {
         return this.parentView;
     }
 
+    private void fetchData(){
+        restaurant=getR.getRest();
+        name.setText(restaurant.getName());
+        description.setText(restaurant.getDescription());
+        telephone.setText(restaurant.getTelephone());
+        website.setText(restaurant.getWebsite());
+        restaurantImg.setImageBitmap(restaurant.getImageBitmap());
+    }
+
     private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
+
         try {
+            if(getR.editmode()){
+            }else {
             restaurant=new Restaurant(getContext());
             SharedPreferences.Editor editor = sp.edit();
             editor.putInt("rid",restaurant.getRid());
-            editor.apply();
-            TextView name = (TextView) parentView.findViewById(R.id.editText_RestaurantName);
+            editor.apply();}
+
+
             if(name.getText().toString().equals("") || name.getText() == null){
                 Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
                 return false;
             }
             restaurant.setName(name.getText().toString());
 
-            TextView description = (TextView) parentView.findViewById(R.id.editText_Description);
+
             if(description.getText().toString().equals("") || description.getText() == null){
                 Log.w(METHOD_NAME,"TextView Description is either empty or null");
                 return false;
             }
             restaurant.setDescription(description.getText().toString());
 
-            ImageView restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
+
             if(restaurantImg.getDrawable() == null){
                 Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
                 return false;
             }
+            if(!getR.editmode()){
+            restaurant.setImageFromDrawable(this.restaurantPic.getDrawable());}
 
-            restaurant.setImageFromDrawable(this.restaurantPic.getDrawable());
 
-            TextView telephone = (TextView) parentView.findViewById(R.id.editText_Telephone);
             if(telephone.getText().toString().equals("") || telephone.getText() == null){
                 Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
                 return false;
             }
             restaurant.setTelephone(telephone.getText().toString());
 
-            TextView website = (TextView) parentView.findViewById(R.id.editText_Website);
+
             if(website.getText().toString().equals("") || website.getText() == null){
                 Log.w(METHOD_NAME,"TextView Website is either empty or null");
                 return false;
@@ -364,6 +397,7 @@ public class CreateRestaurant_1 extends Fragment {
         super.onAttach(context);
         if (context instanceof onFragInteractionListener) {
             mListener = (onFragInteractionListener) context;
+            getR=(getRestaurant)context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement onFragInteractionListener");

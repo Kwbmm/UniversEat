@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -53,6 +54,12 @@ public class CreateRestaurant_3 extends Fragment {
         // Required empty public constructor
     }
 
+    public interface getRestaurant{
+        public Restaurant getRest();
+        public Boolean editmode();
+
+    }
+    public getRestaurant getR;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -92,17 +99,22 @@ public class CreateRestaurant_3 extends Fragment {
         weekDays[5] = getResources().getString(R.string.saturday);
         weekDays[6] = getResources().getString(R.string.sunday);
         this.weekdayToRL_IDs = new ArrayMap<>();
+        if (getR.editmode()){
+            restaurant=getR.getRest();
+        }
 
         LinearLayout ll = (LinearLayout) this.parentView.findViewById(R.id.FL_timetableLunch);
-
+        int count=0;
         for(String weekday : this.weekDays){
             LayoutInflater li = LayoutInflater.from(this.parentView.getContext());
             View timetableItem = li.inflate(R.layout.timetable_item,null);
-            ((CheckBox)timetableItem.findViewById(R.id.checkBox)).setText(weekday);
+            CheckBox cb=(CheckBox)timetableItem.findViewById(R.id.checkBox);
+            cb.setText(weekday);
 
             weekdayToRL_IDs.put(weekday,Restaurant.randInt());
             //Set the clock popup for both buttons (to and from)
             final Button btnFrom = (Button) timetableItem.findViewById(R.id.textClockFrom);
+
             btnFrom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -156,9 +168,20 @@ public class CreateRestaurant_3 extends Fragment {
                 }
             });
 
+            if (getR.editmode()){
+                if(!restaurant.getTimetableLunch().isEmpty()){
+                    if (restaurant.getTimetableLunch().containsKey(count)){
+                        SimpleDateFormat dateFormat=new SimpleDateFormat("hh:mm");
+                        cb.setChecked(true);
+                btnFrom.setText(dateFormat.format(restaurant.getTimetableLunch().get(count)[1]));
+                btnTo.setText(dateFormat.format(restaurant.getTimetableLunch().get(count)[1]));
+                        Log.v("count",count+"");}}
+            }
 
             timetableItem.findViewById(R.id.RL_timeTableItem).setId(weekdayToRL_IDs.get(weekday));
             ll.addView(timetableItem);
+
+            count++;
         }
         Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +209,8 @@ public class CreateRestaurant_3 extends Fragment {
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
         try {
-            restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));
+            if(!getR.editmode()){
+            restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));}
             for(int i = 0; i < this.weekDays.length; i++) {
                 CheckBox cb = (CheckBox) this.parentView.findViewById(this.weekdayToRL_IDs.get(this.weekDays[i])).findViewById(R.id.checkBox);
                 if(cb.isChecked()){
@@ -208,6 +232,7 @@ public class CreateRestaurant_3 extends Fragment {
         super.onAttach(context);
         if (context instanceof onFragInteractionListener) {
             mListener = (onFragInteractionListener) context;
+            getR=(getRestaurant)context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement onFragInteractionListener");

@@ -1,8 +1,10 @@
 package it.polito.mad.groupFive.restaurantcode;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import it.polito.mad.groupFive.restaurantcode.CreateRestaurant.CreateRestaurant;
+import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Create_simple_menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -43,12 +46,14 @@ public class Restaurant_management extends NavigationDrawer {
     private Restaurant restaurant;
     private SharedPreferences sharedPreferences;
     private Boolean visible=false;
+    private View v;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-        mlay.inflate(this, R.layout.restaurant_view_edit, mlay);
+        v=mlay.inflate(this, R.layout.restaurant_view_edit, mlay);
+
         showresturant();
     }
 
@@ -63,6 +68,9 @@ public class Restaurant_management extends NavigationDrawer {
         super.onActivityResult(requestCode, resultCode, data);
         if(visible==false){
             showresturant();}
+        if (requestCode==3){
+            update();
+        }
     }
 
     @Override
@@ -113,8 +121,7 @@ public class Restaurant_management extends NavigationDrawer {
         if(item.getItemId()==R.id.add_ab){
             Log.v("intent","newRest");
             Intent intent=new Intent(getApplicationContext(),CreateRestaurant.class);
-            editor.putInt("uid",1);
-            editor.commit();
+            intent.putExtra("rid",-1);
             item.setVisible(false);
             startActivityForResult(intent,CREATE_RESTAURANT);
 
@@ -134,9 +141,12 @@ public class Restaurant_management extends NavigationDrawer {
         TextView raddress= (TextView)findViewById(R.id.restaurant_address);
         RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
         ImageView rmimw = (ImageView) findViewById(R.id.restaurant_image);
+        ImageButton edit =(ImageButton) findViewById(R.id.restaurant_edit);
         rname.setText(restaurant.getName());
         raddress.setText(restaurant.getAddress());
         rbar.setRating(restaurant.getRating());
+        edit.setOnClickListener( new onEditclick(1));
+
         try {
             rmimw.setImageBitmap(restaurant.getImageBitmap());
         } catch (NullPointerException e){
@@ -148,4 +158,64 @@ public class Restaurant_management extends NavigationDrawer {
         return true;
 
     }
-}
+    private void update()  {
+
+        try {
+            this.restaurant.getData();
+        } catch (RestaurantException e) {
+            e.printStackTrace();
+        }
+        TextView rname= (TextView)findViewById(R.id.restaurant_name);
+        TextView raddress= (TextView)findViewById(R.id.restaurant_address);
+        RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
+        ImageView rmimw = (ImageView) findViewById(R.id.restaurant_image);
+        rname.setText(restaurant.getName());
+        raddress.setText(restaurant.getAddress());
+        rbar.setRating(restaurant.getRating());
+        rmimw.setImageBitmap(restaurant.getImageBitmap());
+
+    }
+
+    public class onEditclick implements View.OnClickListener{
+        private int position;
+        public onEditclick(int position){
+            this.position=position;
+        }
+
+        @Override
+        public void onClick(View v) {
+            AlertDialog.Builder dialog=new AlertDialog.Builder(Restaurant_management.this);
+            final CharSequence[] items = { "Edit", "Delete","Cancel" };
+            dialog.setTitle("Edit Options");
+            dialog.setItems(items,new onPositionClickDialog(position));
+            dialog.show();
+
+        }
+    }
+
+    public class onPositionClickDialog implements DialogInterface.OnClickListener{
+        private int position;
+
+        public onPositionClickDialog(int position){
+            this.position=position;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case 0:{
+                    //TODO:edit intent
+                    Intent edit_menu=new Intent(getBaseContext(),CreateRestaurant.class);
+                    edit_menu.putExtra("rid",restaurant.getRid());
+                    startActivityForResult(edit_menu,3);
+                    break;
+                }
+                case 1:{
+                    //TODO:delete item
+                    break;
+                }
+                default:{
+                    dialog.cancel();
+                }
+            }}
+}}

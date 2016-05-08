@@ -37,12 +37,22 @@ public class CreateRestaurant_2 extends Fragment {
 
     private onFragInteractionListener mListener;
     private View parentView=null;
+    private TextView address;
+    private TextView city;
+    private TextView ZIPCode;
+    private TextView state;
 
     private Restaurant restaurant=null;
 
     public CreateRestaurant_2() {
         // Required empty public constructor
     }
+    public interface getRestaurant{
+        public Restaurant getRest();
+        public Boolean editmode();
+
+    }
+    public getRestaurant getR;
 
     /**
      * Use this factory method to create a new instance of
@@ -75,6 +85,12 @@ public class CreateRestaurant_2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_2, container, false);
+        address = (TextView) parentView.findViewById(R.id.editText_Address);
+        city = (TextView) parentView.findViewById(R.id.editText_City);
+        ZIPCode = (TextView) parentView.findViewById(R.id.editText_ZIPCode);
+        state = (TextView) parentView.findViewById(R.id.editText_State);
+        if(getR.editmode()){
+        fetchData();}
         Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,35 +113,45 @@ public class CreateRestaurant_2 extends Fragment {
         return this.parentView;
     }
 
+    private void fetchData(){
+        this.restaurant=getR.getRest();
+        address.setText(restaurant.getAddress());
+        state.setText(restaurant.getState());
+        ZIPCode.setText(restaurant.getZIPCode());
+        city.setText(restaurant.getCity());
+    }
+
     private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
 
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
         try {
-            restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));
-            TextView address = (TextView) parentView.findViewById(R.id.editText_Address);
+
+
+            if(!getR.editmode())restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));
+
             if(address.getText().toString().equals("") || address.getText() == null){
                 Log.w(METHOD_NAME,"TextView Address is either empty or null");
                 return false;
             }
             restaurant.setAddress(address.getText().toString());
 
-            TextView city = (TextView) parentView.findViewById(R.id.editText_City);
+
             if(city.getText().toString().equals("") || city.getText() == null){
                 Log.w(METHOD_NAME,"TextView City is either empty or null");
                 return false;
             }
             restaurant.setCity(city.getText().toString());
 
-            TextView ZIPCode = (TextView) parentView.findViewById(R.id.editText_ZIPCode);
+
             if(ZIPCode.getText().toString().equals("") || ZIPCode.getText() == null){
                 Log.w(METHOD_NAME,"TextView ZIPCode is either empty or null");
                 return false;
             }
             restaurant.setZIPCode(ZIPCode.getText().toString());
 
-            TextView state = (TextView) parentView.findViewById(R.id.editText_State);
+
             if(state.getText().toString().equals("") || state.getText() == null){
                 Log.w(METHOD_NAME,"TextView State is either empty or null");
                 return false;
@@ -147,6 +173,7 @@ public class CreateRestaurant_2 extends Fragment {
         super.onAttach(context);
         if (context instanceof onFragInteractionListener) {
             mListener = (onFragInteractionListener) context;
+            getR=(getRestaurant)context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement onFragInteractionListener");

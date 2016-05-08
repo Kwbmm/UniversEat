@@ -48,6 +48,12 @@ public class CreateRestaurant_5 extends Fragment {
         // Required empty public constructor
     }
 
+    public interface getRestaurant{
+        public Restaurant getRest();
+        public Boolean editmode();
+
+    }
+    public getRestaurant getR;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
