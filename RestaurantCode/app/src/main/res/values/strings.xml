@@ -294,8 +294,6 @@
     <!-- timetable_view.xml-->
     <string name="timetable_view_DayOfWeek">DayOfWeek</string>
 
-
-
     <array name="tags">
         <item>Pizza</item>
         <item>Pasta</item>

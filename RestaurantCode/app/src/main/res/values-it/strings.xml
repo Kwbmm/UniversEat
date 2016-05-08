@@ -52,7 +52,7 @@
     <string name="reservation_textViewUsername">Customer Details</string>
     <string name="reservation_textViewLunchtime">Orari del pranzo</string>
     <string name="reservation_textViewOrder">Pasto ordinato</string>
-    <string name="reservation_textViewNotes">Note dell'ordine</string>
+    <string name="reservation_textViewNotes">Note dell\'ordine</string>
     <string name="reservation_month">25 mag</string>
 
     <string name="restaurantInfo_imageButtonImg">Immagine del ristorante</string>
@@ -285,7 +285,7 @@
     <string name="menu_details_Menu_description">Descrizione del menu</string>
     <string name="menu_details_order">Ordina ora!</string>
     <string name="menu_details_course">Nome del piatto</string>
-    <string name="menu_details_option">Nome dell'opzione</string>
+    <string name="menu_details_option">Nome dell\'opzione</string>
 
     <!-- menu_dish_frag.xml-->
     <string name="menu_dish_frag_DishName">NomePiatto</string>
@@ -304,6 +304,8 @@
 
     <!-- timetable_view.xml-->
     <string name="timetable_view_DayOfWeek">GiornoDellaSettimana</string>
+
+
 
 
 </resources>
