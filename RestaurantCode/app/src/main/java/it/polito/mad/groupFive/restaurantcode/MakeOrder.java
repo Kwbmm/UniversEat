@@ -70,10 +70,10 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
             name=nameTextBox.getText().toString();
             notes=notesTextBox.getText().toString();
             if(name.equalsIgnoreCase("")){
-                Toast.makeText(getBaseContext(), "Please insert a name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), getString(R.string.MakeOrder_name), Toast.LENGTH_SHORT).show();
             }
             else if(date.before(Calendar.getInstance())){
-                Toast.makeText(getBaseContext(), "You can't order in the past!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), getString(R.string.MakeOrder_past), Toast.LENGTH_SHORT).show();
             }
             else try {
                     Order order = new Order(restaurant);
@@ -85,7 +85,7 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
                     order.setUid(uid);
                     restaurant.getOrders().add(order);
                     restaurant.saveData();
-                    Toast.makeText(getBaseContext(), "Order successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), getString(R.string.MakeOrder_successful), Toast.LENGTH_SHORT).show();
                     finish();
                 } catch (OrderException e) {
                     e.printStackTrace();

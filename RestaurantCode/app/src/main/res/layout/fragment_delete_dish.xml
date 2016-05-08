@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Complete"
+            android:text="@string/fragment_delete_dish_complete"
             android:id="@+id/dd_compl"/>
     </RelativeLayout>
     <RelativeLayout

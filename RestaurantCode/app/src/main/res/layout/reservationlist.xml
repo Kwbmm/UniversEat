@@ -20,7 +20,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="No items to display."
+        android:text="@string/reservationlist_noitems"
         android:id="@+id/noItemsTextView"
         android:gravity="center_horizontal"
         android:visibility="invisible"

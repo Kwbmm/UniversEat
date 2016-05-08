@@ -240,8 +240,8 @@ public class Menu_view_edit extends NavigationDrawer {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder dialog=new AlertDialog.Builder(Menu_view_edit.this);
-                final CharSequence[] items = { "Edit", "Delete","Cancel" };
-                dialog.setTitle("Edit Options");
+                final CharSequence[] items = { getString(R.string.Menu_view_edit_Edit), getString(R.string.Menu_view_edit_Delete),getString(R.string.Menu_view_edit_Cancel) };
+                dialog.setTitle(getString(R.string.Menu_view_edit_options));
                 dialog.setItems(items,new onPositionClickDialog(position));
                 dialog.show();
 

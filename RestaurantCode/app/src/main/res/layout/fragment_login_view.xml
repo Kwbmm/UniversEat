@@ -30,7 +30,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Username"
+        android:hint="@string/fragment_login_view_Username"
         android:id="@+id/username"
         android:layout_margin="5dp"
         android:layout_below="@id/app_logo"
@@ -40,7 +40,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:hint="@string/fragment_login_view_Password"
             android:id="@+id/password"
             android:layout_margin="5dp"
             android:layout_below="@id/username"
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/login"
-            android:text="Login"
+            android:text="@string/fragment_login_view_Login"
             android:layout_alignParentRight="true"
             android:layout_below="@id/ll_incorrect"
 
@@ -69,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/register"
-            android:text="Register"
+            android:text="@string/fragment_login_view_Register"
             android:layout_below="@id/ll_incorrect"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>

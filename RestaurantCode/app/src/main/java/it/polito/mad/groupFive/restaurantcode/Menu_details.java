@@ -128,10 +128,10 @@ public class Menu_details extends NavigationDrawer {
         ArrayList<Course> courses = menu.getCourses();
         name.setText(menu.getName());
         description.setText(menu.getDescription());
-        if(menu.isBeverage()) beverage.setText("Beverage included");
-        else beverage.setText("Beverage not included");
-        if(menu.isServiceFee()) servicefee.setText("Service fee included");
-        else servicefee.setText("Service fee not included");
+        if(menu.isBeverage()) beverage.setText(getString(R.string.Menu_details_beverage_incl));
+        else beverage.setText(getString(R.string.Menu_details_beverage_not));
+        if(menu.isServiceFee()) servicefee.setText(getString(R.string.Menu_details_service_fee_incl));
+        else servicefee.setText(getString(R.string.Menu_details_service_fee_not));
         price.setText(String.format("%.2f", menu.getPrice())+"€");
         try {
             pic.setImageBitmap(menu.getImageBitmap());

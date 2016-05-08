@@ -25,7 +25,7 @@
             android:id="@+id/restaurant_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Restaurant name"
+            android:text="@string/restaurantView_textViewRestaurantName"
             android:textSize="25dp"
             android:layout_toRightOf="@id/restaurant_image"
             android:textStyle="bold" />
@@ -49,7 +49,7 @@
             android:layout_below="@id/restaurant_rating"
             android:textSize="18dp"
             android:layout_toRightOf="@id/restaurant_image"
-            android:text="Street Address"/>
+            android:text="@string/restaurantView_textViewRestaurantAddress"/>
         <ImageView
             android:id="@+id/restaurant_icon1"
             android:layout_width="30dp"

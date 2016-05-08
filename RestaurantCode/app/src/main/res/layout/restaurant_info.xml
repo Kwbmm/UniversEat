@@ -32,7 +32,7 @@
             android:id="@+id/restaurant_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Restaurant name"
+            android:text="@string/restaurantView_textViewRestaurantName"
             android:textSize="25dp"
             android:layout_toRightOf="@id/restaurant_image"
             android:textStyle="bold" />
@@ -94,7 +94,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Address"
+            android:text="@string/restaurantView_textViewRestaurantAddress"
             android:textAlignment="center"
             android:id="@+id/restaurant_address"
             android:layout_below="@id/restaurant_map"
@@ -104,7 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/restaurant_tel"
-            android:text="Telephone"
+            android:text="@string/frg_create_restaurant_1_textView_Telephone"
             android:textSize="20dp"
             android:layout_below="@id/restaurant_address"
             android:textAlignment="center"/>
