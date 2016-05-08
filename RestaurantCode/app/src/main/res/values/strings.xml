@@ -135,27 +135,30 @@
     <string name="saturday">Sat</string>
     <string name="sunday">Sun</string>
     <string name="next">Next</string>
-
     <!-- END timetable_restaurant_item.xml-->
 
 
     <!-- fragment_create_restaurant_1.xml -->
     <string name="frg_create_restaurant_1_textView_RestaurantName">Restaurant name</string>
+    <string name="frg_create_restaurant_1_editView_RestaurantNameHint">Name of your restaurant</string>
     <string name="frg_create_restaurant_1_imageView_ContentDesc">Image of the restaurant</string>
     <string name="frg_create_restaurant_1_textView_Description">Description</string>
+    <string name="frg_create_restaurant_1_editView_DescriptionHint">Brief description</string>
     <string name="frg_create_restaurant_1_textView_Telephone">Telephone number</string>
+    <string name="frg_create_restaurant_1_editView_TelephoneHint">Restaurant\'s telephone number</string>
     <string name="frg_create_restaurant_1_textView_Website">Website</string>
+    <string name="frg_create_restaurant_1_editView_WebsiteHint">Restaurant\'s website</string>
     <!-- END fragment_create_restaurant_1.xml -->
 
     <!-- fragment_create_restaurant_2.xml -->
-    <string name="frg_create_restaurant_1_textView_Address">Address</string>
-    <!-- END fragment_create_restaurant_2.xml -->
-
-
     <string name="frg_create_restaurant_2_textView_Address">Address</string>
+    <string name="frg_create_restaurant_2_editView_AddressHint">Address of your restaurant</string>
     <string name="frg_create_restaurant_2_textView_City">City</string>
+    <string name="frg_create_restaurant_2_editView_CityHint">City of your restaurant</string>
     <string name="frg_create_restaurant_2_textView_ZIPCode">ZIP Code</string>
+    <string name="frg_create_restaurant_2_editView_ZIPCodeHint">ZIP Code of the restaurant\'s city</string>
     <string name="frg_create_restaurant_2_textView_State">State</string>
+    <string name="frg_create_restaurant_2_editView_StateHint">Restaurant\'s state</string>
     <!-- END fragment_create_restaurant_2.xml -->
 
     <!-- fragment_create_restaurant_3.xml -->

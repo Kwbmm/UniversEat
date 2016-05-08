@@ -27,6 +27,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:inputType="text"
+            android:hint="@string/frg_create_restaurant_2_editView_AddressHint"
             />
 
         <!--
@@ -62,6 +63,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:inputType="text"
+            android:hint="@string/frg_create_restaurant_2_editView_CityHint"
             />
 
         <!-- Restaurant ZIP Code -->
@@ -83,6 +85,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:inputType="number"
+            android:hint="@string/frg_create_restaurant_2_editView_ZIPCodeHint"
             />
 
         <!-- Restaurant State -->
@@ -104,6 +107,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:inputType="text"
+            android:hint="@string/frg_create_restaurant_2_editView_StateHint"
             />
 
         <Button
