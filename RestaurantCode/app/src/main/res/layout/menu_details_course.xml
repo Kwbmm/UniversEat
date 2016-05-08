@@ -10,7 +10,7 @@
             android:id="@+id/course_name"
             android:layout_width="match_parent"
             android:layout_height="32dp"
-            android:text="Course Name"
+            android:text="@string/menu_details_course"
             android:textSize="20dp"
             android:layout_toLeftOf="@+id/img_hot"
             android:layout_toStartOf="@+id/img_hot"

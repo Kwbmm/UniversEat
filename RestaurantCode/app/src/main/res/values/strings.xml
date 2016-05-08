@@ -59,6 +59,7 @@
     <string name="reservation_textViewLunchtime">Lunch Time</string>
     <string name="reservation_textViewOrder">Ordered Meal</string>
     <string name="reservation_textViewNotes">Reservation Notes</string>
+    <string name="reservation_month">25 may</string>
 
     <string name="restaurantInfo_imageButtonImg">Restaurant Image</string>
     <string name="restaurantInfo_textViewName">Restaurant Name</string>
@@ -238,8 +239,60 @@
     <string name="fragment_create_simple_menu1_Menu_Image">Menu Image</string>
     <string name="fragment_create_simple_menu1_Send_notification">Send notification</string>
     <string name="fragment_create_simple_menu1_Dishes">Dishes</string>
-    <string name="fragment_create_simple_menu1_"></string>
 
+    <!-- fragment_delete_dish.xml-->
+    <string name="fragment_delete_dish_complete">Complete</string>
+
+    <!-- fragment_login_view.xml-->
+    <string name="fragment_login_view_Username">Username</string>
+    <string name="fragment_login_view_Password">Password</string>
+    <string name="fragment_login_view_Login">Login</string>
+    <string name="fragment_login_view_Register">Register</string>
+
+    <!-- fragment_restaurant_menu_user.xml-->
+    <string name="fragment_restaurant_menu_user_Complete_Menu">Complete Menu</string>
+
+    <!-- fragment_simple_menu_add_tags.xml-->
+    <string name="fragment_simple_menu_add_tags_Add_new_tags">Add new tags</string>
+
+    <!-- incorrect_login.xml-->
+    <string name="incorrect_login">Incorrect username or password</string>
+
+    <!-- make_order.xml-->
+    <string name="make_order_Reservation_Name">Reservation Name</string>
+    <string name="make_order_date">Pick a date</string>
+    <string name="make_order_time">Pick a time</string>
+    <string name="make_order_notes">Any notes?</string>
+
+    <!-- menu_choice.xml-->
+    <string name="menu_choice_Option">Option</string>
+
+    <!-- menu_details.xml-->
+    <string name="menu_details_Menu_Name">Menu Name</string>
+    <string name="menu_details_beverage">Beverage not included</string>
+    <string name="menu_details_service">Service fee not included</string>
+    <string name="menu_details_Menu_description">Menu description</string>
+    <string name="menu_details_order">Order now!</string>
+    <string name="menu_details_course">Course Name</string>
+    <string name="menu_details_option">Option Name</string>
+
+    <!-- menu_dish_frag.xml-->
+    <string name="menu_dish_frag_DishName">DishName</string>
+
+    <!-- profile.xml-->
+    <string name="profile_Name">Name</string>
+    <string name="profile_username">username</string>
+    <string name="profile_My_List">My List</string>
+    <string name="profile_email">email</string>
+
+    <!-- reservationlist.xml-->
+    <string name="reservationlist_noitems">No items to display.</string>
+
+    <!-- review.xml-->
+    <string name="review_title">Review Title</string>
+
+    <!-- timetable_view.xml-->
+    <string name="timetable_view_DayOfWeek">DayOfWeek</string>
 
 
 

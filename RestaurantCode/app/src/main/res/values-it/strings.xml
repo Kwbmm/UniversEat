@@ -7,7 +7,7 @@
     <string-array name="drawer_option_login">
         <item>Ricerca</item>
         <item>Login</item>
-        <item>Registra</item>
+        <item>Registrati</item>
     </string-array>
     <string-array name="drawer_option_logged_user">
         <item>Search</item>
@@ -35,6 +35,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="search_hello">Che cosa vorresti mangiare?</string>
+    <string name="checkbox_searchByRestaurant">Ricerca per ristorante</string>
+    <string name="checkbox_searchByDish">Ricerca per piatto</string>
 
     <string name="home_imageButtonOpt_contentDesc">Questo bottone può cambiare il tipo di ricerca.</string>
 
@@ -48,9 +50,10 @@
     <string name="motd_textViewPrice">Prezzo</string>
 
     <string name="reservation_textViewUsername">Customer Details</string>
-    <string name="reservation_textViewLunchtime">Orarii del pranzo</string>
+    <string name="reservation_textViewLunchtime">Orari del pranzo</string>
     <string name="reservation_textViewOrder">Pasto ordinato</string>
-    <string name="reservation_textViewNotes">Reservation Notes</string>
+    <string name="reservation_textViewNotes">Note dell'ordine</string>
+    <string name="reservation_month">25 mag</string>
 
     <string name="restaurantInfo_imageButtonImg">Immagine del ristorante</string>
     <string name="restaurantInfo_textViewName">Nome del ristorante</string>
@@ -91,7 +94,9 @@
     <string name="next">Prossimo</string>
 
     <!-- END timetable_restaurant_item.xml-->
-
+    <!-- fragment_create_restaurant_2.xml -->
+    <string name="frg_create_restaurant_1_textView_Address">Indirizzo</string>
+    <!-- END fragment_create_restaurant_2.xml -->
 
     <!-- fragment_create_restaurant_1.xml -->
     <string name="frg_create_restaurant_1_textView_RestaurantName">Nome del ristorante</string>
@@ -245,5 +250,60 @@
     <string name="fragment_create_simple_menu1_Menu_Image">Immagine del menu</string>
     <string name="fragment_create_simple_menu1_Send_notification">Abilita notifica</string>
     <string name="fragment_create_simple_menu1_Dishes">Piatti</string>
+
+    <!-- fragment_delete_dish.xml-->
+    <string name="fragment_delete_dish_complete">Completa</string>
+
+    <!-- fragment_login_view.xml-->
+    <string name="fragment_login_view_Username">Username</string>
+    <string name="fragment_login_view_Password">Password</string>
+    <string name="fragment_login_view_Login">Login</string>
+    <string name="fragment_login_view_Register">Registrati</string>
+
+    <!-- fragment_restaurant_menu_user.xml-->
+    <string name="fragment_restaurant_menu_user_Complete_Menu">Completa il menu</string>
+
+    <!-- fragment_simple_menu_add_tags.xml-->
+    <string name="fragment_simple_menu_add_tags_Add_new_tags">Aggiungi nuovi tag</string>
+
+    <!-- incorrect_login.xml-->
+    <string name="incorrect_login">Username o password non corretta</string>
+
+    <!-- make_order.xml-->
+    <string name="make_order_Reservation_Name">Nome prenotazione</string>
+    <string name="make_order_date">Seleziona una data</string>
+    <string name="make_order_time">Seleziona un orario</string>
+    <string name="make_order_notes">Qualcosa da segnalare?</string>
+
+    <!-- menu_choice.xml-->
+    <string name="menu_choice_Option">Opzioni</string>
+
+    <!-- menu_details.xml-->
+    <string name="menu_details_Menu_Name">Nome del menu</string>
+    <string name="menu_details_beverage">Bevande non incluse</string>
+    <string name="menu_details_service">Coperto non incluso</string>
+    <string name="menu_details_Menu_description">Descrizione del menu</string>
+    <string name="menu_details_order">Ordina ora!</string>
+    <string name="menu_details_course">Nome del piatto</string>
+    <string name="menu_details_option">Nome dell'opzione</string>
+
+    <!-- menu_dish_frag.xml-->
+    <string name="menu_dish_frag_DishName">NomePiatto</string>
+
+    <!-- profile.xml-->
+    <string name="profile_Name">Nome</string>
+    <string name="profile_username">username</string>
+    <string name="profile_My_List">La mia lista</string>
+    <string name="profile_email">email</string>
+
+    <!-- reservationlist.xml-->
+    <string name="reservationlist_noitems">Nessun elemento da mostrare.</string>
+
+    <!-- review.xml-->
+    <string name="review_title">Titolo recenzione</string>
+
+    <!-- timetable_view.xml-->
+    <string name="timetable_view_DayOfWeek">GiornoDellaSettimana</string>
+
 
 </resources>

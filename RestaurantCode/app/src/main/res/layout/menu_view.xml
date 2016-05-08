@@ -26,7 +26,7 @@
             android:id="@+id/menu_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Menu Name"
+            android:text="@string/menu_details_Menu_Name"
             android:layout_toRightOf="@id/menu_image"
             android:textSize="25dp"
             android:textStyle="bold"
@@ -42,7 +42,7 @@
             android:layout_below="@id/menu_name"
             android:layout_toRightOf="@id/menu_image"
             android:textSize="18dp"
-            android:text="Description:"
+            android:text="@string/menu_details_Menu_description"
             android:maxLength="150"
             />
         <TextView

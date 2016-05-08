@@ -22,7 +22,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Complete Menu"
+        android:text="@string/fragment_restaurant_menu_user_Complete_Menu"
         android:id="@+id/button"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentBottom="true"
