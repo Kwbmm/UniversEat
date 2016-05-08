@@ -1,15 +1,12 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".CreateRestaurant.CreateRestaurant_1">
-    <ScrollView
+    android:layout_height="wrap_content"
+    android:id="@+id/create_r_1">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/create_r_1">
+        android:layout_height="wrap_content">
             <!-- Restaurant Name -->
             <TextView
                 android:layout_width="wrap_content"
@@ -125,6 +122,5 @@
                 android:layout_marginRight="@dimen/btn_marginRight"
                 android:layout_marginEnd="@dimen/btn_marginRight"
                 />
-        </RelativeLayout>
-    </ScrollView>
-</FrameLayout>
+    </RelativeLayout>
+</ScrollView>
