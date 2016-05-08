@@ -96,6 +96,16 @@
         <item>Service Fee: yes</item>
         <item>Service Fee: no</item>
     </string-array>
+
+    <string-array name="filterCurtainRestaurantItems">
+        <item>Ticket only</item>
+        <item>No ticket</item>
+        <item>Beverage included</item>
+        <item>Beverage not included</item>
+        <item>Service Fee: yes</item>
+        <item>Service Fee: no</item>
+        <item>Open now</item>
+    </string-array>
     <!-- END SearchResult.java -->
 
     <!-- toolbar_search_data.xml -->

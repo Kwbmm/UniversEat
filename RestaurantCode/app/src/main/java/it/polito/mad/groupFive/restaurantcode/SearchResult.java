@@ -108,9 +108,43 @@ public class SearchResult extends NavigationDrawer {
                     return true;
                 }
             }).setVisible(true);
-            filterRestaurantButton.setVisible(true);
-
-
+            filterRestaurantButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
+                    String[] items = getResources().getStringArray(R.array.filterCurtainRestaurantItems);
+                    AlertDialog.Builder filterCurtain = new AlertDialog.Builder(SearchResult.this);
+                    filterCurtain.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case 0:
+                                    ((RestaurantAdapter)rv.getAdapter()).filterByTicket(true);
+                                    break;
+                                case 1:
+                                    ((RestaurantAdapter)rv.getAdapter()).filterByTicket(false);
+                                    break;
+                                case 2:
+                                    ((RestaurantAdapter)rv.getAdapter()).filterByBeverage(true);
+                                    break;
+                                case 3:
+                                    ((RestaurantAdapter)rv.getAdapter()).filterByBeverage(false);
+                                    break;
+                                case 4:
+                                    ((RestaurantAdapter)rv.getAdapter()).filterByServiceFee(true);
+                                    break;
+                                case 5:
+                                    ((RestaurantAdapter)rv.getAdapter()).filterByServiceFee(false);
+                                    break;
+                                case 6:
+                                    ((RestaurantAdapter)rv.getAdapter()).filterByOpenNow();
+                                    break;
+                            }
+                        }
+                    }).show();
+                    return true;
+                }
+            }).setVisible(true);
         }
         else{ //Setup the buttons of the toolbar for the menu
             final MenuItem filterMenuButton = menu.findItem(R.id.filterMenu);
@@ -239,10 +273,13 @@ public class SearchResult extends NavigationDrawer {
 
     public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder>{
         private ArrayList<Restaurant> restaurants;
+        private ArrayList<Restaurant> queryResult;
 
         public RestaurantAdapter(ArrayList<Restaurant> r){
-            this.restaurants = r;
+            this.queryResult = r;
+            this.restaurants = new ArrayList<>(this.queryResult);
         }
+
         public void sortByName(boolean asc){
             final String METHOD_NAME = this.getClass().getName()+" - sortByName";
             if(asc){ //A-Z sorting
@@ -295,6 +332,139 @@ public class SearchResult extends NavigationDrawer {
             //TODO Implement GMaps API
         }
 
+        public void filterByTicket(boolean ticket){
+            final String METHOD_NAME = this.getClass().getName()+" - filterByTicket";
+            this.restaurants = new ArrayList<>(this.queryResult);
+            if(ticket){
+                for(int i = 0; i < this.getItemCount(); i++){
+                    boolean hasMenusWithTicket = false;
+                    ArrayList<Menu> menus = this.restaurants.get(i).getMenus();
+                    for(int j = 0; j < menus.size(); j++){
+                        Menu m = menus.get(j);
+                        if(m.acceptTicket()){
+                            hasMenusWithTicket = true;
+                            break; //Go to next restaurant
+                        }
+                        else hasMenusWithTicket = false;
+                    }
+                    if(!hasMenusWithTicket){
+                        this.restaurants.remove(i);
+                        i--;
+                    }
+                }
+            }
+            else {
+                for (int i = 0; i < this.getItemCount(); i++) {
+                    boolean hasMenusWithTicket = false;
+                    ArrayList<Menu> menus = this.restaurants.get(i).getMenus();
+                    for (int j = 0; j < menus.size(); j++) {
+                        Menu m = menus.get(j);
+                        if (!m.acceptTicket()) {
+                            hasMenusWithTicket = false;
+                            break; //Go to next restaurant
+                        } else hasMenusWithTicket = true;
+                    }
+                    if (hasMenusWithTicket) {
+                        this.restaurants.remove(i);
+                        i--;
+                    }
+                }
+            }
+            notifyDataSetChanged();
+        }
+
+        public void filterByBeverage(boolean beverageIncluded) {
+            this.restaurants = new ArrayList<>(this.queryResult);
+            if(beverageIncluded){
+                for(int i = 0; i < this.getItemCount(); i++){
+                    boolean hasMenuWithBeverageIncl = false;
+                    ArrayList<Menu> menus = this.restaurants.get(i).getMenus();
+                    for(int j = 0; j < menus.size(); j++){
+                        Menu m = menus.get(j);
+                        if(m.isBeverage()){
+                            hasMenuWithBeverageIncl = true;
+                            break; //Go to next restaurant
+                        }
+                        else hasMenuWithBeverageIncl = false;
+                    }
+                    if(!hasMenuWithBeverageIncl){
+                        this.restaurants.remove(i);
+                        i--;
+                    }
+                }
+            }
+            else {
+                for (int i = 0; i < this.getItemCount(); i++) {
+                    boolean hasMenuWithBeverageIncl = false;
+                    ArrayList<Menu> menus = this.restaurants.get(i).getMenus();
+                    for (int j = 0; j < menus.size(); j++) {
+                        Menu m = menus.get(j);
+                        if (!m.isBeverage()) {
+                            hasMenuWithBeverageIncl = false;
+                            break; //Go to next restaurant
+                        } else hasMenuWithBeverageIncl = true;
+                    }
+                    if (hasMenuWithBeverageIncl) {
+                        this.restaurants.remove(i);
+                        i--;
+                    }
+                }
+            }
+            notifyDataSetChanged();
+        }
+
+        public void filterByServiceFee(boolean fee) {
+            this.restaurants = new ArrayList<>(this.queryResult);
+            if(fee){
+                for(int i = 0; i < this.getItemCount(); i++){
+                    boolean hasMenuWithFee = false;
+                    ArrayList<Menu> menus = this.restaurants.get(i).getMenus();
+                    for(int j = 0; j < menus.size(); j++){
+                        Menu m = menus.get(j);
+                        if(m.isServiceFee()){
+                            hasMenuWithFee = true;
+                            break; //Go to next restaurant
+                        }
+                        else hasMenuWithFee = false;
+                    }
+                    if(!hasMenuWithFee){
+                        this.restaurants.remove(i);
+                        i--;
+                    }
+                }
+            }
+            else {
+                for (int i = 0; i < this.getItemCount(); i++) {
+                    boolean hasMenuWithFee = false;
+                    ArrayList<Menu> menus = this.restaurants.get(i).getMenus();
+                    for (int j = 0; j < menus.size(); j++) {
+                        Menu m = menus.get(j);
+                        if (!m.isServiceFee()) {
+                            hasMenuWithFee = false;
+                            break; //Go to next restaurant
+                        } else hasMenuWithFee = true;
+                    }
+                    if (hasMenuWithFee) {
+                        this.restaurants.remove(i);
+                        i--;
+                    }
+                }
+            }
+            notifyDataSetChanged();
+        }
+
+        public void filterByOpenNow(){
+            this.restaurants = new ArrayList<>(this.queryResult);
+            for(int i = 0; i < this.getItemCount(); i++){
+                Restaurant r = this.restaurants.get(i);
+                if(!r.isOpen()){
+                    this.restaurants.remove(i);
+                    i--;
+                }
+            }
+            notifyDataSetChanged();
+        }
+
         @Override
         public RestaurantViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View restaurant_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.restaurant_view,null);
@@ -321,9 +491,11 @@ public class SearchResult extends NavigationDrawer {
 
     public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
         private ArrayList<Menu> menus;
+        private ArrayList<Menu> queryResult;
 
         public MenuAdapter(ArrayList<Menu> menus){
-            this.menus = menus;
+            this.queryResult = menus;
+            this.menus = new ArrayList<>(this.queryResult);
             sortByType();
         }
 
@@ -385,12 +557,12 @@ public class SearchResult extends NavigationDrawer {
 
         public void filterByTicket(boolean ticket){
             final String METHOD_NAME = this.getClass().getName()+" - filterByTicket";
+            this.menus = new ArrayList<>(this.queryResult);
             if(ticket){
                 for(int i = 0; i < this.getItemCount(); i++){
                     Menu m = this.menus.get(i);
                     if(!m.acceptTicket()){
                         this.menus.remove(i);
-                        notifyItemRemoved(i);
                         i--;
                     }
                 }
@@ -400,20 +572,20 @@ public class SearchResult extends NavigationDrawer {
                     Menu m = this.menus.get(i);
                     if(m.acceptTicket()){
                         this.menus.remove(i);
-                        notifyItemRemoved(i);
                         i--;
                     }
                 }
             }
+            notifyDataSetChanged();
         }
 
         public void filterByBeverage(boolean beverageIncluded) {
+            this.menus = new ArrayList<>(this.queryResult);
             if(beverageIncluded){
                 for(int i = 0; i < this.getItemCount(); i++){
                     Menu m = this.menus.get(i);
                     if(!m.isBeverage()){
                         this.menus.remove(i);
-                        notifyItemRemoved(i);
                         i--;
                     }
                 }
@@ -423,20 +595,20 @@ public class SearchResult extends NavigationDrawer {
                     Menu m = this.menus.get(i);
                     if(m.isBeverage()){
                         this.menus.remove(i);
-                        notifyItemRemoved(i);
                         i--;
                     }
                 }
             }
+            notifyDataSetChanged();
         }
 
         public void filterByServiceFee(boolean fee) {
+            this.menus = new ArrayList<>(this.queryResult);
             if(fee){
                 for(int i = 0; i < this.getItemCount(); i++){
                     Menu m = this.menus.get(i);
                     if(!m.isServiceFee()){
                         this.menus.remove(i);
-                        notifyItemRemoved(i);
                         i--;
                     }
                 }
@@ -446,11 +618,11 @@ public class SearchResult extends NavigationDrawer {
                     Menu m = this.menus.get(i);
                     if(m.isServiceFee()){
                         this.menus.remove(i);
-                        notifyItemRemoved(i);
                         i--;
                     }
                 }
             }
+            notifyDataSetChanged();
         }
 
         @Override
