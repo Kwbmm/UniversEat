@@ -67,6 +67,7 @@ public class CreateRestaurant_1 extends Fragment {
 
     private onFragInteractionListener mListener;
     private ImageView restaurantPic = null;
+    private boolean isImageSet=false;
 
     private Restaurant restaurant = null;
     /*view items*/
@@ -180,6 +181,7 @@ public class CreateRestaurant_1 extends Fragment {
 
         try {
             if(getR.editmode()){
+                isImageSet=true;
             }else {
             restaurant=new Restaurant(getContext());
             SharedPreferences.Editor editor = sp.edit();
@@ -201,12 +203,12 @@ public class CreateRestaurant_1 extends Fragment {
             restaurant.setDescription(description.getText().toString());
 
 
-            if(restaurantImg.getDrawable() == null){
+            if(!isImageSet){
                 Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
                 return false;
             }
             if(!getR.editmode()){
-            restaurant.setImageFromDrawable(this.restaurantPic.getDrawable());}
+            restaurant.setImageFromDrawable(restaurantImg.getDrawable());}
 
 
             if(telephone.getText().toString().equals("") || telephone.getText() == null){
@@ -318,6 +320,7 @@ public class CreateRestaurant_1 extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         final String METHOD_NAME = this.getClass().getName()+" - onActivityResult";
         super.onActivityResult(requestCode, resultCode, data);
+        ImageView restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
         if(resultCode == getActivity().RESULT_OK && requestCode == SELECT_PICTURE){
             this.restaurantPic = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
             this.restaurantPicUri = data.getData();
@@ -333,7 +336,9 @@ public class CreateRestaurant_1 extends Fragment {
                 else
                     imgPath = RealPathUtil.getRealPathFromURI_API19(getActivity(), restaurantPicUri);
                 imageBitmap = detectOrientation(imgPath, imageBitmap);
-                this.restaurantPic.setImageDrawable(resize(imageBitmap));
+                restaurantImg.setImageDrawable(resize(imageBitmap));
+                this.isImageSet = true;
+
             } catch(FileNotFoundException fnfe) { Log.e(METHOD_NAME,fnfe.getMessage());}
         }
         if(resultCode == CreateRestaurant.RESULT_OK && requestCode == CAPTURE_IMAGE){
@@ -341,7 +346,8 @@ public class CreateRestaurant_1 extends Fragment {
             try{
                 Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(restaurantPicUri));
                 imageBitmap = detectOrientation(restaurantPicUri.getPath(),imageBitmap);
-                this.restaurantPic.setImageDrawable(resize(imageBitmap));
+                restaurantImg.setImageDrawable(resize(imageBitmap));
+                this.isImageSet = true;
             } catch(FileNotFoundException ffe){Log.e(METHOD_NAME,ffe.getMessage());}
         }
     }
@@ -410,16 +416,6 @@ public class CreateRestaurant_1 extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface onFragInteractionListener {
         void onChangeFrag1(Restaurant r);
     }
