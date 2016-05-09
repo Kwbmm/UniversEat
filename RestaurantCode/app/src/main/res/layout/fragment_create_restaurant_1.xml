@@ -1,126 +1,130 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".CreateRestaurant.CreateRestaurant_1">
+    android:layout_height="wrap_content"
+    android:id="@+id/create_r_1">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/create_r_1">
-        <!-- Restaurant Name -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_RestaurantName"
-            android:text="@string/frg_create_restaurant_1_textView_RestaurantName"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText_RestaurantName"
-            android:layout_below="@id/textView_RestaurantName"
-            android:inputType="text"
-            />
+        android:layout_height="wrap_content">
+            <!-- Restaurant Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_RestaurantName"
+                android:text="@string/frg_create_restaurant_1_textView_RestaurantName"
+                android:textSize="@dimen/frg_textView_textSize"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText_RestaurantName"
+                android:layout_below="@id/textView_RestaurantName"
+                android:inputType="text"
+                android:hint="@string/frg_create_restaurant_1_editView_RestaurantNameHint"
+                />
 
-        <!-- Restaurant Image -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_image"
-            android:layout_below="@id/editText_RestaurantName"
-            android:text="@string/frg_create_restaurant_1_imageView_ContentDesc"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            />
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/frg_imageView_containerHeight"
-            android:layout_below="@id/textView_image"
-            android:maxWidth="@dimen/frg_imageView_maxWidth"
-            android:maxHeight="@dimen/frg_imageView_maxHeight"
-            android:id="@+id/imageView_RestaurantImage"
-            android:src="@drawable/ic_add_a_photo_black_24dp"
-            android:background="#fefeff"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="10dp"
-            android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc"
-            />
+            <!-- Restaurant Image -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_image"
+                android:layout_below="@id/editText_RestaurantName"
+                android:text="@string/frg_create_restaurant_1_imageView_ContentDesc"
+                android:textSize="@dimen/frg_textView_textSize"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/frg_imageView_containerHeight"
+                android:layout_below="@id/textView_image"
+                android:maxWidth="@dimen/frg_imageView_maxWidth"
+                android:maxHeight="@dimen/frg_imageView_maxHeight"
+                android:id="@+id/imageView_RestaurantImage"
+                android:src="@drawable/ic_add_a_photo_black_24dp"
+                android:background="#fefeff"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginBottom="10dp"
+                android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc"
+                />
 
-        <!-- Restaurant Description -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_Description"
-            android:layout_below="@id/imageView_RestaurantImage"
-            android:text="@string/frg_create_restaurant_1_textView_Description"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText_Description"
-            android:layout_below="@id/textView_Description"
-            android:inputType="text"
-            />
+            <!-- Restaurant Description -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_Description"
+                android:layout_below="@id/imageView_RestaurantImage"
+                android:text="@string/frg_create_restaurant_1_textView_Description"
+                android:textSize="@dimen/frg_textView_textSize"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText_Description"
+                android:layout_below="@id/textView_Description"
+                android:inputType="text"
+                android:hint="@string/frg_create_restaurant_1_editView_DescriptionHint"
+                />
 
-        <!-- Restaurant Telephone -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_Telephone"
-            android:text="@string/frg_create_restaurant_1_textView_Telephone"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:layout_below="@id/editText_Description"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText_Telephone"
-            android:layout_below="@id/textView_Telephone"
-            android:inputType="phone"
-            />
+            <!-- Restaurant Telephone -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_Telephone"
+                android:text="@string/frg_create_restaurant_1_textView_Telephone"
+                android:textSize="@dimen/frg_textView_textSize"
+                android:layout_below="@id/editText_Description"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText_Telephone"
+                android:layout_below="@id/textView_Telephone"
+                android:inputType="phone"
+                android:hint="@string/frg_create_restaurant_1_editView_TelephoneHint"
+                />
 
-        <!-- Restaurant Website -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/frg_create_restaurant_1_textView_Website"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:id="@+id/textView_Website"
-            android:layout_below="@id/editText_Telephone"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText_Website"
-            android:layout_below="@id/textView_Website"
-            android:inputType="textUri"
-            />
+            <!-- Restaurant Website -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/frg_create_restaurant_1_textView_Website"
+                android:textSize="@dimen/frg_textView_textSize"
+                android:id="@+id/textView_Website"
+                android:layout_below="@id/editText_Telephone"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText_Website"
+                android:layout_below="@id/textView_Website"
+                android:inputType="textUri"
+                android:hint="@string/frg_create_restaurant_1_editView_WebsiteHint"
+                />
 
-        <!-- Next button -->
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/Button_Next"
-            android:layout_below="@id/editText_Website"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:text="@string/next"
-            android:layout_marginTop="@dimen/btn_marginTop"
-            android:layout_marginRight="@dimen/btn_marginRight"
-            android:layout_marginEnd="@dimen/btn_marginRight"
-            />
+            <!-- Next button -->
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Button_Next"
+                android:layout_below="@id/editText_Website"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:text="@string/next"
+                android:layout_marginTop="@dimen/btn_marginTop"
+                android:layout_marginRight="@dimen/btn_marginRight"
+                android:layout_marginEnd="@dimen/btn_marginRight"
+                />
     </RelativeLayout>
-</FrameLayout>
+</ScrollView>

@@ -118,8 +118,10 @@ public class Home extends NavigationDrawer {
                                             it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
                                             mn.setName("Menu " +i);
                                             mn.setDescription("Description");
-                                            mn.setPrice(1.5f);
+                                            mn.setPrice((float)(1.5/(Math.log(i+2))));
                                             mn.setTicket(true);
+                                            mn.setServiceFee(true);
+                                            mn.setBeverage(false);
                                             mn.setType(1);
                                             rest.getMenus().add(mn);
                                             User user =new RestaurantOwner(v.getContext());
@@ -133,8 +135,10 @@ public class Home extends NavigationDrawer {
                                         mn.setName("Orecchiette tris");
                                         mn.setDescription("orecchiette, patate, pollo");
                                         mn.setPrice(1.5f);
-                                        mn.setTicket(true);
+                                        mn.setTicket(false);
                                         mn.setType(2);
+                                        mn.setBeverage(true);
+                                        mn.setServiceFee(false);
                                         rest.getMenus().add(mn);
                                         rest.saveData();
                                         SharedPreferences sharedPreferences=v.getContext().getSharedPreferences(getString(R.string.user_pref),v.getContext().MODE_PRIVATE);

@@ -125,7 +125,7 @@
     <!-- END CreateRestaurant_3.java CreateRestaurant_4.java -->
 
     <!-- fragment_create_restaurant_5.xml -->
-    <string name="frg_create_restaurant_5_textView_AcceptedTickets">Seleziona quali ticket il tuo ristorante accetta:</string>
+    <string name="frg_create_restaurant_5_textView_AcceptedTickets">Ticket Accettati</string>
     <!-- END fragment_create_restaurant_5.xml -->
 
     <!-- activity_create_menu_frag2.xml -->

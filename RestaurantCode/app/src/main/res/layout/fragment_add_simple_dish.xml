@@ -134,7 +134,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/tag_list_vert">
-
     </LinearLayout>
 </ScrollView>
 </RelativeLayout>

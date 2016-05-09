@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -121,11 +122,11 @@ public class CreateRestaurant_5 extends Fragment {
             ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_2));
             ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_3));
             ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_4));
-            ArrayMap<Integer,String> ticketMap = new ArrayMap<>();
+            HashSet<String> ticketSet = new HashSet<>();
             for(CheckBox cb : ticketCBs){
-                if(cb.isChecked()) ticketMap.put(cb.getId(),cb.getText().toString());
+                if(cb.isChecked()) ticketSet.add(cb.getText().toString());
             }
-            restaurant.setTickets(ticketMap);
+            restaurant.setTickets(ticketSet);
             return true;
         } catch (RestaurantException e) {
             Log.e(METHOD_NAME, e.getMessage());

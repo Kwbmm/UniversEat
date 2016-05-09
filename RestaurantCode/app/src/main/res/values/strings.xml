@@ -2,6 +2,7 @@
     <string name="app_name">Restaurant App n5</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="featureUnavail">This feature is still under development…</string>
     <string name="user_pref">RestaurantCode.Userdata</string>
     <string-array name="drawer_option_login">
         <item>Search</item>
@@ -79,7 +80,46 @@
     <string name="SearchResult_toastFailLoadDM">Data Manager failed loading files.. :(</string>
     <string name="SearchResult_toastNoRestaurants">There are no restaurants to show.</string>
     <string name="SearchResult_toastNoMenus">There are no menus to show.</string>
+
+    <string-array name="sortCurtainMenuItems">
+        <item>A-Z</item>
+        <item>Z-A</item>
+        <item>Price lower first</item>
+        <item>Price higher first</item>
+    </string-array>
+
+    <string-array name="sortCurtainRestaurantItems">
+        <item>A-Z</item>
+        <item>Z-A</item>
+        <item>Price lower first</item>
+        <item>Price higher first</item>
+        <item>Nearest first</item>
+    </string-array>
+
+    <string-array name="filterCurtainMenuItems">
+        <item>Ticket only</item>
+        <item>No ticket</item>
+        <item>Beverage included</item>
+        <item>Beverage not included</item>
+        <item>Service Fee: yes</item>
+        <item>Service Fee: no</item>
+    </string-array>
+
+    <string-array name="filterCurtainRestaurantItems">
+        <item>Ticket only</item>
+        <item>No ticket</item>
+        <item>Beverage included</item>
+        <item>Beverage not included</item>
+        <item>Service Fee: yes</item>
+        <item>Service Fee: no</item>
+        <item>Open now</item>
+    </string-array>
     <!-- END SearchResult.java -->
+
+    <!-- toolbar_search_data.xml -->
+    <string name="sortTitle">Sort by</string>
+    <string name="filterTitle">Filter by…</string>
+    <!-- END toolbar_search_data.xml -->
 
     <!-- Create_menu_frag.java -->
     <string name="pick_gallery">Pick from Gallery</string>
@@ -103,27 +143,30 @@
     <string name="saturday">Sat</string>
     <string name="sunday">Sun</string>
     <string name="next">Next</string>
-
     <!-- END timetable_restaurant_item.xml-->
 
 
     <!-- fragment_create_restaurant_1.xml -->
     <string name="frg_create_restaurant_1_textView_RestaurantName">Restaurant name</string>
+    <string name="frg_create_restaurant_1_editView_RestaurantNameHint">Name of your restaurant</string>
     <string name="frg_create_restaurant_1_imageView_ContentDesc">Image of the restaurant</string>
     <string name="frg_create_restaurant_1_textView_Description">Description</string>
+    <string name="frg_create_restaurant_1_editView_DescriptionHint">Brief description</string>
     <string name="frg_create_restaurant_1_textView_Telephone">Telephone number</string>
+    <string name="frg_create_restaurant_1_editView_TelephoneHint">Restaurant\'s telephone number</string>
     <string name="frg_create_restaurant_1_textView_Website">Website</string>
+    <string name="frg_create_restaurant_1_editView_WebsiteHint">Restaurant\'s website</string>
     <!-- END fragment_create_restaurant_1.xml -->
 
     <!-- fragment_create_restaurant_2.xml -->
-    <string name="frg_create_restaurant_1_textView_Address">Address</string>
-    <!-- END fragment_create_restaurant_2.xml -->
-
-
     <string name="frg_create_restaurant_2_textView_Address">Address</string>
+    <string name="frg_create_restaurant_2_editView_AddressHint">Address of your restaurant</string>
     <string name="frg_create_restaurant_2_textView_City">City</string>
+    <string name="frg_create_restaurant_2_editView_CityHint">City of your restaurant</string>
     <string name="frg_create_restaurant_2_textView_ZIPCode">ZIP Code</string>
+    <string name="frg_create_restaurant_2_editView_ZIPCodeHint">ZIP Code of the restaurant\'s city</string>
     <string name="frg_create_restaurant_2_textView_State">State</string>
+    <string name="frg_create_restaurant_2_editView_StateHint">Restaurant\'s state</string>
     <!-- END fragment_create_restaurant_2.xml -->
 
     <!-- fragment_create_restaurant_3.xml -->
@@ -138,7 +181,7 @@
     <!-- END CreateRestaurant_3.java CreateRestaurant_4.java -->
 
     <!-- fragment_create_restaurant_5.xml -->
-    <string name="frg_create_restaurant_5_textView_AcceptedTickets">Check the tickets your restaurant accepts:</string>
+    <string name="frg_create_restaurant_5_textView_AcceptedTickets">Accepted Tickets</string>
     <!-- END fragment_create_restaurant_5.xml -->
 
     <!-- activity_create_menu_frag2.xml -->
