@@ -1,14 +1,37 @@
-##ToDo##
-* Tag management #Fede
-* Implementation Login & Drawer improvement #Fede
-* Menu data function to recover menu icons & tags
-* Profile visualization page #Cristiano
-* Cuisine & type Implementation #Fede
-* Filters creation #Marco
+##TODO
 
-**Fix list**
+  + Menu data function to recover menu icons & tags
+  
+##Fix list
 
-***Fix***
-* Create menu data insert check #Fede
-* Fetch data #Fede
-* Strings export and translation #Gio
+  + Check if activity selected from drawer is the same of the one currently displayed. If so, don't load it again.
+  + **Register page**:
+
+      + Put switch instead checkbox for restaurant owner.
+      + Adjust layout of second page by vertical aligning all the fields.
+      + Add checks for empty fields.
+      + Change text views as single-line texts
+      + Change email field as email address field type.
+      + Change password field as password field type.
+      + Do we want 2 fragments? One not enough?
+
+  + **Login page**:
+
+      + Change password field as password field type.
+      + Once you press login, close window and update drawer. Display also a toast like "You are now logged in".
+
+  + **Edit Restaurant Information**:
+
+     + Freeze due to low memory... Can this be solved??
+
+  + **List of all restaurant in restauranta owner page**:
+
+    + Gear icon -> Delete doesn't work.
+
+  + **Create restaurant**:
+
+    + Add range limit for timetables (extend timepicker properly).
+
+  + **Create Menu**:
+
+    + Crash on creation of daily menu: Add name of menu, add description, do NOT add image, press next, crash due to NullPointerException.
