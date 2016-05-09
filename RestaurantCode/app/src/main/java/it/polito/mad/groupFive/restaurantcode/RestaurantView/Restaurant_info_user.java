@@ -7,9 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -101,17 +104,31 @@ public class Restaurant_info_user extends Fragment {
         resttel.setText(restaurant.getTelephone());
         RatingBar restrating= (RatingBar) v.findViewById(R.id.restaurant_rating);
         restrating.setRating(restaurant.getRating());
+        ImageView restImage=(ImageView)v.findViewById(R.id.restaurant_image);
+        restImage.setImageBitmap(restaurant.getImageBitmap());
 
         LinearLayout ll = (LinearLayout) v.findViewById(R.id.restaurant_time_t);
-
+        int count=0;
         for(String weekday : getResources().getStringArray(R.array.week)){
             LayoutInflater li = LayoutInflater.from(v.getContext());
             View timetableItem = li.inflate(R.layout.timetable_view,null);
             TextView dow= (TextView) timetableItem.findViewById(R.id.dow);
             dow.setText(weekday);
             TextView dinner= (TextView) timetableItem.findViewById(R.id.time_dinner);
-            dinner.setText("09.00-18.00");
+            SimpleDateFormat sd=new SimpleDateFormat("HH:mm");
+            if (restaurant.getTimetableDinner().containsKey(count)){
+            dinner.setText(sd.format(restaurant.getTimetableDinner().get(count)[0])+"-"+sd.format(restaurant.getTimetableDinner().get(count)[1]));}
+            else {
+                dinner.setText(getResources().getString(R.string.closed));
+            }
+            TextView lunch=(TextView)timetableItem.findViewById(R.id.time_lunch);
+            if (restaurant.getTimetableLunch().containsKey(count)){
+                lunch.setText(sd.format(restaurant.getTimetableLunch().get(count)[0])+"-"+sd.format(restaurant.getTimetableLunch().get(count)[1]));}
+            else {
+                lunch.setText(getResources().getString(R.string.closed));
+            }
             ll.addView(timetableItem);
+            count++;
         }
 
 

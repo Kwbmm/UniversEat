@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
 
 
 /**
@@ -162,7 +164,7 @@ public class Restaurant_menu_user extends Fragment {
         }
     }
 
-    public class MenuAdapter extends RecyclerView.Adapter<MenuViewHoder>{
+    public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
         private ArrayList<Menu> menus;
 
         public MenuAdapter(ArrayList<Menu> menus){
@@ -185,18 +187,24 @@ public class Restaurant_menu_user extends Fragment {
         }
 
         @Override
-        public MenuViewHoder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View menu_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_view,null);
-            return new MenuViewHoder(menu_view);
+            return new MenuViewHolder(menu_view);
         }
 
         @Override
-        public void onBindViewHolder(MenuViewHoder holder,int position) {
+        public void onBindViewHolder(MenuViewHolder holder, int position) {
             Menu menu =menus.get(position);
-            holder.menu_desctiprion.setText(menu.getDescription());
+            holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
+            try {
+                holder.menu_image.setImageBitmap(menu.getImageBitmap());
+            } catch (NullPointerException e){
+                Log.e("immagine non caricata"," ");
+            }
             holder.card.setOnClickListener(new OnCardClick(menu));
+
 
 
         }

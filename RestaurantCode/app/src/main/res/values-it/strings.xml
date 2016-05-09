@@ -201,6 +201,9 @@
     <string name="SearchResult_toastNoMenus">Non ci sono menù da mostrare.</string>
     <string name="SearchResult_toastNoRestaurants">Non ci sono ristoranti da mostrare.</string>
 
+    <!--Restaurant_info_user-->
+    <string name="closed">Chiuso</string>
+
     <array name="tags">
         <item>Pizza</item>
         <item>Pasta</item>

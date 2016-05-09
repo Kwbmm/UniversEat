@@ -94,11 +94,18 @@ public class Home extends NavigationDrawer {
                                     int count=1;
                                     try {
                                         Restaurant rest = new Restaurant(v.getContext());
+                                        RestaurantOwner ro= new RestaurantOwner(getBaseContext(),2);
+                                        ro.setName("Owner");
+                                        ro.setEmail("owner@rest.com");
+                                        ro.setImageFromDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
+                                        ro.setUserName("1");
+                                        ro.setPassword("1");
+                                        ro.saveData();
                                         Order order =new Order(rest,2);
                                         order.setDate(new Date());
                                         order.setMid(14);
                                         order.setUid(22);
-
+                                        rest.setImageFromDrawable(getResources().getDrawable(R.drawable.ic_account_circle_black_24dp));
                                         rest.setUid(2);
                                         rest.setXcoord(0.0f);
                                         rest.setYcoord(0.0f);
@@ -118,6 +125,7 @@ public class Home extends NavigationDrawer {
                                             it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
                                             mn.setName("Menu " +i);
                                             mn.setDescription("Description");
+                                            mn.setImageFromDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
                                             mn.setPrice((float)(1.5/(Math.log(i+2))));
                                             mn.setTicket(true);
                                             mn.setServiceFee(true);
@@ -242,6 +250,11 @@ public class Home extends NavigationDrawer {
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
+            try {
+                holder.menu_image.setImageBitmap(menu.getImageBitmap());
+            } catch (NullPointerException e){
+                Log.e("immagine non caricata"," ");
+            }
             int rid =menus.get(position).getRid();
             holder.card.setOnClickListener(new onCardClick(position,rid));
         }

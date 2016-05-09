@@ -357,6 +357,8 @@
     <string name="Menu_view_edit_Cancel">Cancel</string>
     <string name="Menu_view_edit_options">Edit Options</string>
 
+    <!--Restaurant_info_user-->
+    <string name="closed">Closed</string>
 
 
     <array name="tags">
