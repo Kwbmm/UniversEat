@@ -35,3 +35,6 @@
   + **Create Menu**:
 
     + Crash on creation of daily menu: Add name of menu, add description, do NOT add image, press next, crash due to NullPointerException.
+    + Create menu is not usable on low-end devices due to high-memory consumption
+    + Translation of "Complete Menu" should be "Menu Completo" and not "Completa il Menu"
+    + Crash on Create_simple_menu1.java:293 when adding image.
