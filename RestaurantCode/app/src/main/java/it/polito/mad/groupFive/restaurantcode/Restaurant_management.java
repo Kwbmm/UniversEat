@@ -47,6 +47,7 @@ public class Restaurant_management extends NavigationDrawer {
     private SharedPreferences sharedPreferences;
     private Boolean visible=false;
     private View v;
+    private MenuItem plus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
@@ -79,6 +80,7 @@ public class Restaurant_management extends NavigationDrawer {
         getMenuInflater().inflate(R.menu.toolbar_add, menu);
         int rid;
         MenuItem item=menu.findItem(R.id.add_ab);
+        plus=item;
         if ((rid=sharedPreferences.getInt("rid",-1))!=-1){
             item.setEnabled(false);
             item.setVisible(false);
@@ -98,7 +100,7 @@ public class Restaurant_management extends NavigationDrawer {
             }
 
             LinearLayout rview= (LinearLayout) findViewById(R.id.fl_redit);
-            rview.inflate(this,R.layout.resturant_view_edit_fragment,rview);
+            v=rview.inflate(this,R.layout.resturant_view_edit_fragment,rview);
             ImageButton modify = (ImageButton) findViewById(R.id.restaurant_edit);
             visible=true;
             RelativeLayout rl=(RelativeLayout) findViewById(R.id.restaurant_view_layout);
@@ -211,7 +213,11 @@ public class Restaurant_management extends NavigationDrawer {
                     break;
                 }
                 case 1:{
-                    //TODO:delete item
+                    SharedPreferences.Editor editor=sharedPreferences.edit();
+                    editor.remove("rid");
+                    editor.commit();
+                    v.setVisibility(View.INVISIBLE);
+                    plus.setVisible(true);
                     break;
                 }
                 default:{

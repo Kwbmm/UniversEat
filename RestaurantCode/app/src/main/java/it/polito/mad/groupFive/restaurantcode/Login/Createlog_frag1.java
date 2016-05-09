@@ -178,13 +178,14 @@ public class Createlog_frag1 extends Fragment{
                 user_r.setSurname(txtsurname.getText().toString());
                 user_r.setEmail(txtmail.getText().toString());
                 user_r.setUserName(nickname.getText().toString());
+                user_r.setImageFromDrawable(userImg.getDrawable());
                 try {
                     user_r.saveData();
                 } catch (RestaurantOwnerException e) {
                     e.printStackTrace();
                 }
 
-                // user_r.setImage64FromDrawable(userImg.getDrawable());
+
 
             }
             else {
@@ -197,12 +198,13 @@ public class Createlog_frag1 extends Fragment{
                 user.setSurname(txtsurname.getText().toString());
                 user.setEmail(txtmail.getText().toString());
                 user.setUserName(nickname.getText().toString());
+                user.setImageFromDrawable(userImg.getDrawable());
                 try {
                     user.saveData();
                 } catch (CustomerException e) {
                     e.printStackTrace();
                 }
-                // user.setImage64FromDrawable(userImg.getDrawable());
+
             }
 
 

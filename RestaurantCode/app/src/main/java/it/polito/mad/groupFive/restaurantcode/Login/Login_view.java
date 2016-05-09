@@ -89,7 +89,7 @@ public class Login_view extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent register=new Intent(getContext(),CreateLogin.class);
-                startActivity(register);
+                startActivityForResult(register,5);
             }
         });
         username=(EditText)v.findViewById(R.id.username);
@@ -135,6 +135,7 @@ public class Login_view extends Fragment {
                         SharedPreferences.Editor editor=sharedPreferences.edit();
                         editor.putBoolean("logged",true);
                         editor.commit();
+                        Log.v("pws",password.getText().toString());
                         mListener.onFragmentInteraction();
                         getFragmentManager().popBackStack();
                     }else{
@@ -155,6 +156,33 @@ public class Login_view extends Fragment {
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        update();
+    }
+
+    public void update(){
+        sharedPreferences=getContext().getSharedPreferences(getString(R.string.user_pref),getContext().MODE_PRIVATE);
+        if(sharedPreferences.getBoolean("owner",false)){
+            try {
+                Log.v("owner", "tr");
+                owner=new RestaurantOwner(getContext(),sharedPreferences.getInt("uid",-1));
+                own=true;
+            } catch (RestaurantOwnerException e) {
+                e.printStackTrace();
+            }
+        }else {
+            try {
+                Log.v("owner", "fl");
+                user=new Customer(getContext(),sharedPreferences.getInt("uid",-1));
+                own=false;
+            } catch (CustomerException e) {
+                e.printStackTrace();
+            }
         }
     }
 

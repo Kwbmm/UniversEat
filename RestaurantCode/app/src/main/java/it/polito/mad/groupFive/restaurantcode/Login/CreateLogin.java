@@ -73,6 +73,7 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
             user_r.setSurname(u_r.getSurname());
             user_r.setEmail(u_r.getEmail());
             user_r.setUserName(u_r.getUserName());
+            user_r.setImageFromBitmap(u_r.getImageBitmap());
             try {
                 user_r.saveData();
             } catch (RestaurantOwnerException e) {
@@ -84,6 +85,7 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
             user.setSurname(u.getSurname());
             user.setEmail(u.getEmail());
             user.setUserName(u.getUserName());
+            user.setImageFromBitmap(u.getImageBitmap());
             try {
                 user.saveData();
             } catch (CustomerException e) {

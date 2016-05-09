@@ -19,16 +19,24 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import it.polito.mad.groupFive.restaurantcode.Login.CreateLogin;
 import it.polito.mad.groupFive.restaurantcode.Login.Login_view;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
+import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
 
 public class NavigationDrawer extends AppCompatActivity implements Login_view.OnFragmentInteractionListener {
     private int phase;//0 Logged out 1 logged in
     private boolean usertype;// false user true restaurant manager
+    private RestaurantOwner rowner;
+    private Customer user;
     private ArrayAdapter<String> adapter;
     private DrawerLayout drawerLayout;
     private static int REGISTRATION=1;
+    private ImageView imageView;
     SharedPreferences sharedPreferences;
 
     private ActionBarDrawerToggle mDrawerToggle;
@@ -42,7 +50,29 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         getUserinfo();
         checkUser();
         createDrawer();
+        checkPic();
     }
+
+    private void checkPic(){
+        if(phase==1){
+        if (usertype){
+            try {
+                rowner= new RestaurantOwner(getBaseContext(),sharedPreferences.getInt("uid",-1));
+                imageView.setImageBitmap(rowner.getImageBitmap());
+            } catch (RestaurantOwnerException e) {
+                e.printStackTrace();
+            }
+        }else{
+            try {
+                user=new Customer(getBaseContext(),sharedPreferences.getInt("uid",-1));
+                imageView.setImageBitmap(user.getImageBitmap());
+            } catch (CustomerException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }}
+
 
     public ArrayAdapter<String> createAdapter() {
         ArrayAdapter<String> adp;
@@ -108,7 +138,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        ImageView imageView = (ImageView) findViewById(R.id.iw);
+        imageView= (ImageView) findViewById(R.id.iw);
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
         imageView.setOnClickListener(new OnClickListener() {
             @Override
@@ -207,9 +237,13 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         checkUser();
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putBoolean("logged",true);
+        editor.commit();
         adapter.notifyDataSetChanged();
         dList.setAdapter(createAdapter());
         dList.deferNotifyDataSetChanged();
+        Toast toast = Toast.makeText(getBaseContext(), "Login Completed", Toast.LENGTH_SHORT);
+        toast.show();
+        checkPic();
 
     }
 
@@ -260,6 +294,9 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     phase = 0;
                     SharedPreferences.Editor editor=sharedPreferences.edit();
                     editor.putBoolean("logged",false);
+                    editor.commit();
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
+                    imageView.invalidate();
                     dList.setAdapter(createAdapter());
                     dList.deferNotifyDataSetChanged();
                     //todo remove user from preferences
@@ -280,6 +317,9 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                         phase = 0;
                         SharedPreferences.Editor editor=sharedPreferences.edit();
                         editor.putBoolean("logged",false);
+                        editor.commit();
+                        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
+                        imageView.invalidate();
                         dList.setAdapter(createAdapter());
                         dList.deferNotifyDataSetChanged();
                         //todo remove user from preferences
