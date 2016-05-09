@@ -387,4 +387,20 @@
         <item>Cocktail</item>
         <item>Cake</item>
     </array>
+
+    <array name="cuisine">
+        <item>Italian</item>
+        <item>Chinese</item>
+        <item>Japanese</item>
+        <item>Indian</item>
+        <item>Mexican</item>
+        <item>American</item>
+    </array>
+    <array name="type">
+        <item>Starter</item>
+        <item>Main Dish</item>
+        <item>Drink</item>
+        <item>Dessert</item>
+        <item>Side Dish</item>
+    </array>
 </resources>

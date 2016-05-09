@@ -328,6 +328,21 @@
     <string name="Menu_view_edit_Cancel">Cancella</string>
     <string name="Menu_view_edit_options">Opzioni modifica</string>
 
-
+    <array name="cuisine">
+        <item>Italiana</item>
+        <item>Cinese</item>
+        <item>Giapponese</item>
+        <item>Indiana</item>
+        <item>Messicana</item>
+        <item>Americana</item>
+    </array>
+    <array name="type">
+        <item>Antipasto</item>
+        <item>Primo</item>
+        <item>Bevanda</item>
+        <item>Dessert</item>
+        <item>Contorno</item>
+        <item>Secondo</item>
+    </array>
 
 </resources>

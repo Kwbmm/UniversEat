@@ -7,7 +7,7 @@
     >
   <android.support.v7.widget.CardView
       android:layout_width="0dp"
-      android:layout_height="50dp"
+      android:layout_height="wrap_content"
       android:layout_weight="1"
       app:cardElevation="3dp"
       app:cardUseCompatPadding="true"
@@ -15,55 +15,58 @@
       <RelativeLayout
           android:layout_width="match_parent"
           android:layout_height="match_parent">
+          <ImageView
+              android:layout_width="20dp"
+              android:layout_height="20dp"
+              android:id="@+id/vegan"
+              android:layout_gravity="right"
+              android:src="@drawable/ic_vegan_black"
+              android:tint="#007f24"
+              android:layout_alignParentRight="true"/>
+          <ImageView
+              android:layout_width="20dp"
+              android:layout_height="20dp"
+              android:id="@+id/vegetarian"
+              android:src="@drawable/ic_vegetarian_black"
+              android:tint="#951f9b"
+              android:layout_toLeftOf="@id/vegan"
+              />
+          <ImageView
+              android:layout_width="20dp"
+              android:layout_height="20dp"
+              android:id="@+id/gluten_free"
+              android:layout_toLeftOf="@id/vegetarian"
+              android:src="@drawable/ic_nogluten_black"
+              android:tint="#c8a004"
+              />
+          <ImageView
+              android:layout_width="20dp"
+              android:layout_height="20dp"
+              android:id="@+id/hot"
+              android:layout_toLeftOf="@id/gluten_free"
+              android:src="@drawable/ic_hot_black"
+              android:tint="#a60101"
+              />
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/menu_dish_frag_DishName"
-          android:textSize="25dp"
+          android:textSize="20dp"
           android:layout_alignParentLeft="true"
           android:layout_centerVertical="true"
+          android:layout_toLeftOf="@id/hot"
           android:id="@+id/dishName"
-          android:layout_marginLeft="3dp"/>
+          android:layout_marginLeft="3dp"
+          android:layout_margin="2dp"/>
 
-      <ImageView
-          android:layout_width="40dp"
-          android:layout_height="40dp"
-          android:id="@+id/vegan"
-          android:layout_gravity="right"
-          android:src="@drawable/ic_vegan_black"
-          android:tint="#007f24"
-          android:layout_alignParentRight="true"/>
-      <ImageView
-          android:layout_width="40dp"
-          android:layout_height="40dp"
-          android:id="@+id/vegetarian"
-          android:src="@drawable/ic_vegetarian_black"
-          android:tint="#951f9b"
-          android:layout_toLeftOf="@id/vegan"
-          />
-      <ImageView
-          android:layout_width="40dp"
-          android:layout_height="40dp"
-          android:id="@+id/gluten_free"
-          android:layout_toLeftOf="@id/vegetarian"
-          android:src="@drawable/ic_nogluten_black"
-          android:tint="#c8a004"
-          />
-      <ImageView
-          android:layout_width="40dp"
-          android:layout_height="40dp"
-          android:id="@+id/hot"
-          android:layout_toLeftOf="@id/gluten_free"
-          android:src="@drawable/ic_hot_black"
-          android:tint="#a60101"
-          />
+
       </RelativeLayout>
 
   </android.support.v7.widget.CardView>
 
 <ImageButton
-    android:layout_width="50dp"
-    android:layout_height="50dp"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
     android:src="@drawable/ic_delete_black_24px"
     android:layout_marginRight="3dp"
     android:layout_marginLeft="3dp"
