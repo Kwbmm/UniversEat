@@ -38,6 +38,7 @@ import java.util.Date;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.UserPicture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.libs.RealPathUtil;
 
@@ -55,6 +56,7 @@ public class CreateRestaurant_1 extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     //Codes for intents
+    private static final String IMAGE_TYPE = "image/*";
     private static final int CAPTURE_IMAGE = 1;
     private static final int SELECT_PICTURE = 2;
 
@@ -66,7 +68,7 @@ public class CreateRestaurant_1 extends Fragment {
     private View parentView=null;
 
     private onFragInteractionListener mListener;
-    private ImageView restaurantPic = null;
+    private ImageView restaurantPicView = null;
     private boolean isImageSet=false;
 
     private Restaurant restaurant = null;
@@ -261,7 +263,7 @@ public class CreateRestaurant_1 extends Fragment {
                 } else if (choices[which].equals(getResources().getString(R.string.pick_gallery))) {
                     //Choose from gallery
                     Intent intent = new Intent();
-                    intent.setType("image/*");
+                    intent.setType(IMAGE_TYPE);
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.intentChooser_select_image)), SELECT_PICTURE);
                 }
@@ -320,81 +322,20 @@ public class CreateRestaurant_1 extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         final String METHOD_NAME = this.getClass().getName()+" - onActivityResult";
         super.onActivityResult(requestCode, resultCode, data);
-        ImageView restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
         if(resultCode == getActivity().RESULT_OK && requestCode == SELECT_PICTURE){
-            this.restaurantPic = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
+            this.restaurantPicView = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
             this.restaurantPicUri = data.getData();
             try{
-                Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(restaurantPicUri));
-                String imgPath;
-                ((ImageView)getActivity().findViewById(R.id.imageView_RestaurantImage)).setImageBitmap(imageBitmap);
-
-                if(Build.VERSION.SDK_INT < 11)
-                    imgPath = RealPathUtil.getRealPathFromURI_BelowAPI11(getActivity(), restaurantPicUri);
-                else if(Build.VERSION.SDK_INT < 19)
-                    imgPath = RealPathUtil.getRealPathFromURI_API11to18(getActivity(), restaurantPicUri);
-                else
-                    imgPath = RealPathUtil.getRealPathFromURI_API19(getActivity(), restaurantPicUri);
-                imageBitmap = detectOrientation(imgPath, imageBitmap);
-                restaurantImg.setImageDrawable(resize(imageBitmap));
+                this.restaurantImg.setImageBitmap(new UserPicture(this.restaurantPicUri,getActivity().getContentResolver(),600,600).getBitmap());
                 this.isImageSet = true;
-
-            } catch(FileNotFoundException fnfe) { Log.e(METHOD_NAME,fnfe.getMessage());}
+            } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
         if(resultCode == CreateRestaurant.RESULT_OK && requestCode == CAPTURE_IMAGE){
-            this.restaurantPic = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
+            this.restaurantPicView = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
             try{
-                Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(restaurantPicUri));
-                imageBitmap = detectOrientation(restaurantPicUri.getPath(),imageBitmap);
-                restaurantImg.setImageDrawable(resize(imageBitmap));
+                this.restaurantImg.setImageBitmap(new UserPicture(this.restaurantPicUri,getActivity().getContentResolver(),600,600).getBitmap());
                 this.isImageSet = true;
-            } catch(FileNotFoundException ffe){Log.e(METHOD_NAME,ffe.getMessage());}
-        }
-    }
-
-    private Bitmap detectOrientation(String pathToImg, Bitmap bitmap){
-        try{
-            ExifInterface ei = new ExifInterface(pathToImg);
-            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-            switch(orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    return rotateImage(bitmap, 90);
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    return rotateImage(bitmap, 180);
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    return rotateImage(bitmap,270);
-            }
-        } catch(IOException ioe){ Log.e("detectOrientation", ioe.getMessage());}
-        return bitmap;
-    }
-
-    private Bitmap rotateImage(Bitmap source, float angle){
-        Bitmap retVal;
-
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        retVal = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-
-        return retVal;
-    }
-
-    private Drawable resize(Bitmap img){
-
-        if (img.getHeight() <= 512 && img.getWidth() <= 512)
-            return new BitmapDrawable(getResources(),img);
-        if(img.getHeight() > img.getWidth()){
-            //Width:Height = x : 512
-            Bitmap bitmapResized = Bitmap.createScaledBitmap(img, img.getWidth()*512/img.getHeight(), 512, false);
-            return new BitmapDrawable(getResources(),bitmapResized);
-        }
-        else if(img.getHeight() < img.getWidth()){
-            //Width:Height = 512 : x
-            Bitmap bitmapResized = Bitmap.createScaledBitmap(img, 512, img.getHeight()*512/img.getWidth(), false);
-            return new BitmapDrawable(getResources(),bitmapResized);
-        }
-        else{
-            Bitmap bitmapResized = Bitmap.createScaledBitmap(img, 512, 512, false);
-            return new BitmapDrawable(getResources(),bitmapResized);
+            } catch(IOException ioe){Log.e(METHOD_NAME,ioe.getMessage());}
         }
     }
 
