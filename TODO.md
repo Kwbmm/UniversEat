@@ -17,8 +17,7 @@
 
   + **Login page**:
 
-      + Change password field as password field type.
-      + Once you press login, close window and update drawer. Display also a toast like "You are now logged in".
+      + Close the keyboard after you login. Currently, it remains open.
 
   + **Edit Restaurant Information**:
 
