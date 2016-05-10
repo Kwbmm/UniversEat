@@ -8,13 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,16 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.UserPicture;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.libs.RealPathUtil;
 
 
 /**
@@ -322,18 +313,20 @@ public class CreateRestaurant_1 extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         final String METHOD_NAME = this.getClass().getName()+" - onActivityResult";
         super.onActivityResult(requestCode, resultCode, data);
+        int imageWidth = 600;
+        int imageHeight = 600;
         if(resultCode == getActivity().RESULT_OK && requestCode == SELECT_PICTURE){
             this.restaurantPicView = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
             this.restaurantPicUri = data.getData();
             try{
-                this.restaurantImg.setImageBitmap(new UserPicture(this.restaurantPicUri,getActivity().getContentResolver(),600,600).getBitmap());
+                this.restaurantImg.setImageBitmap(new Picture(this.restaurantPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
                 this.isImageSet = true;
             } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
         if(resultCode == CreateRestaurant.RESULT_OK && requestCode == CAPTURE_IMAGE){
             this.restaurantPicView = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
             try{
-                this.restaurantImg.setImageBitmap(new UserPicture(this.restaurantPicUri,getActivity().getContentResolver(),600,600).getBitmap());
+                this.restaurantImg.setImageBitmap(new Picture(this.restaurantPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
                 this.isImageSet = true;
             } catch(IOException ioe){Log.e(METHOD_NAME,ioe.getMessage());}
         }

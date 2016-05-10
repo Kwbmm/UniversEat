@@ -36,6 +36,7 @@ import java.util.Date;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
@@ -49,6 +50,7 @@ public class Createlog_frag1 extends Fragment{
     private static final String ARG_PARAM2 = "param2";
 
     //Codes for intents
+    private static final String IMAGE_TYPE = "image/*";
     private static final int CAPTURE_IMAGE = 1;
     private static final int SELECT_PICTURE = 2;
 
@@ -63,7 +65,7 @@ public class Createlog_frag1 extends Fragment{
     private Uri userPicUri = null;
     private Customer user=null;
     private RestaurantOwner user_r=null;
-    private ImageView userPic = null;
+    private ImageView userPicView = null;
     private EditText txtname;
     private EditText txtsurname;
     private EditText nickname;
@@ -167,50 +169,40 @@ public class Createlog_frag1 extends Fragment{
         int uid = sp.getInt("uid",-1);
         ImageView userImg = (ImageView) v.findViewById(R.id.imageView_UserImage);
 
-
-            if(owner){
-                try {
-                    user_r = new RestaurantOwner(getActivity(), uid);
-                } catch (RestaurantOwnerException e) {
-                    e.printStackTrace();
-                }
-                user_r.setName(txtname.getText().toString());
-                user_r.setSurname(txtsurname.getText().toString());
-                user_r.setEmail(txtmail.getText().toString());
-                user_r.setUserName(nickname.getText().toString());
-                user_r.setImageFromDrawable(userImg.getDrawable());
-                try {
-                    user_r.saveData();
-                } catch (RestaurantOwnerException e) {
-                    e.printStackTrace();
-                }
-
-
-
+        if(owner){
+            try {
+                user_r = new RestaurantOwner(getActivity(), uid);
+            } catch (RestaurantOwnerException e) {
+                e.printStackTrace();
             }
-            else {
-                try {
-                    user = new Customer(getActivity(), uid);
-                } catch (CustomerException e) {
-                    e.printStackTrace();
-                }
-                user.setName(txtname.getText().toString());
-                user.setSurname(txtsurname.getText().toString());
-                user.setEmail(txtmail.getText().toString());
-                user.setUserName(nickname.getText().toString());
-                user.setImageFromDrawable(userImg.getDrawable());
-                try {
-                    user.saveData();
-                } catch (CustomerException e) {
-                    e.printStackTrace();
-                }
-
+            user_r.setName(txtname.getText().toString());
+            user_r.setSurname(txtsurname.getText().toString());
+            user_r.setEmail(txtmail.getText().toString());
+            user_r.setUserName(nickname.getText().toString());
+            user_r.setImageFromDrawable(userImg.getDrawable());
+            try {
+                user_r.saveData();
+            } catch (RestaurantOwnerException e) {
+                e.printStackTrace();
             }
-
-
-
-
-
+        }
+        else {
+            try {
+                user = new Customer(getActivity(), uid);
+            } catch (CustomerException e) {
+                e.printStackTrace();
+            }
+            user.setName(txtname.getText().toString());
+            user.setSurname(txtsurname.getText().toString());
+            user.setEmail(txtmail.getText().toString());
+            user.setUserName(nickname.getText().toString());
+            user.setImageFromDrawable(userImg.getDrawable());
+            try {
+                user.saveData();
+            } catch (CustomerException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void pickImage(){
@@ -243,7 +235,7 @@ public class Createlog_frag1 extends Fragment{
                 } else if (choices[which].equals(getResources().getString(R.string.pick_gallery))) {
                     //Choose from gallery
                     Intent intent = new Intent();
-                    intent.setType("image/*");
+                    intent.setType(IMAGE_TYPE);
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.intentChooser_select_image)), SELECT_PICTURE);
                 }
@@ -297,80 +289,25 @@ public class Createlog_frag1 extends Fragment{
                 storageDir      /* directory */
         );
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         final String METHOD_NAME = this.getClass().getName()+" - onActivityResult";
         super.onActivityResult(requestCode, resultCode, data);
+        int imageWidth = 600;
+        int imageHeight = 600;
         if(resultCode == getActivity().RESULT_OK && requestCode == SELECT_PICTURE){
-            this.userPic = (ImageView) getActivity().findViewById(R.id.imageView_UserImage);
+            this.userPicView = (ImageView) getActivity().findViewById(R.id.imageView_UserImage);
             this.userPicUri = data.getData();
             try{
-                Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(userPicUri));
-                String imgPath;
-                if(Build.VERSION.SDK_INT < 11)
-                    imgPath = RealPathUtil.getRealPathFromURI_BelowAPI11(getActivity(), userPicUri);
-                else if(Build.VERSION.SDK_INT < 19)
-                    imgPath = RealPathUtil.getRealPathFromURI_API11to18(getActivity(), userPicUri);
-                else
-                    imgPath = RealPathUtil.getRealPathFromURI_API19(getActivity(), userPicUri);
-                imageBitmap = detectOrientation(imgPath, imageBitmap);
-                this.userPic.setImageDrawable(resize(imageBitmap));
-            } catch(FileNotFoundException fnfe) { Log.e(METHOD_NAME,fnfe.getMessage());}
+                this.userPicView.setImageBitmap(new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
+            } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
         if(resultCode == getActivity().RESULT_OK && requestCode == CAPTURE_IMAGE){
-            this.userPic = (ImageView) getActivity().findViewById(R.id.imageView_UserImage);
+            this.userPicView = (ImageView) getActivity().findViewById(R.id.imageView_UserImage);
             try{
-                Bitmap imageBitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(userPicUri));
-                imageBitmap = detectOrientation(userPicUri.getPath(),imageBitmap);
-                this.userPic.setImageDrawable(resize(imageBitmap));
-            } catch(FileNotFoundException ffe){Log.e(METHOD_NAME,ffe.getMessage());}
+                this.userPicView.setImageBitmap(new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
+            } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
     }
-
-    private Bitmap detectOrientation(String pathToImg, Bitmap bitmap){
-        try{
-            ExifInterface ei = new ExifInterface(pathToImg);
-            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-            switch(orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    return rotateImage(bitmap, 90);
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    return rotateImage(bitmap, 180);
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    return rotateImage(bitmap,270);
-            }
-        } catch(IOException ioe){ Log.e("detectOrientation", ioe.getMessage());}
-        return bitmap;
-    }
-
-    private Bitmap rotateImage(Bitmap source, float angle){
-        Bitmap retVal;
-
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        retVal = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-
-        return retVal;
-    }
-
-    private Drawable resize(Bitmap img){
-
-        if (img.getHeight() <= 512 && img.getWidth() <= 512)
-            return new BitmapDrawable(getResources(),img);
-        if(img.getHeight() > img.getWidth()){
-            //Width:Height = x : 512
-            Bitmap bitmapResized = Bitmap.createScaledBitmap(img, img.getWidth()*512/img.getHeight(), 512, false);
-            return new BitmapDrawable(getResources(),bitmapResized);
-        }
-        else if(img.getHeight() < img.getWidth()){
-            //Width:Height = 512 : x
-            Bitmap bitmapResized = Bitmap.createScaledBitmap(img, 512, img.getHeight()*512/img.getWidth(), false);
-            return new BitmapDrawable(getResources(),bitmapResized);
-        }
-        else{
-            Bitmap bitmapResized = Bitmap.createScaledBitmap(img, 512, 512, false);
-            return new BitmapDrawable(getResources(),bitmapResized);
-        }
-    }
-
 }

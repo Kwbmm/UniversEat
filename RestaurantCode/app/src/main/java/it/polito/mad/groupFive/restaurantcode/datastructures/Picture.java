@@ -26,7 +26,7 @@ import java.io.InvalidObjectException;
  * http://stackoverflow.com/users/1797000/hdante
  */
 
-public class UserPicture {
+public class Picture {
 
     private static int MAX_WIDTH = 600;
     private static int MAX_HEIGHT = 800;
@@ -37,11 +37,11 @@ public class UserPicture {
     private int storedHeight;
     private int storedWidth;
 
-    public UserPicture(Uri uri, ContentResolver resolver){
-        this(uri,resolver,UserPicture.MAX_WIDTH,UserPicture.MAX_HEIGHT);
+    public Picture(Uri uri, ContentResolver resolver){
+        this(uri,resolver, Picture.MAX_WIDTH, Picture.MAX_HEIGHT);
     }
 
-    public UserPicture(Uri uri, ContentResolver resolver, int widthMax, int heightMax) {
+    public Picture(Uri uri, ContentResolver resolver, int widthMax, int heightMax) {
         this.uri = uri;
         this.resolver = resolver;
     }
