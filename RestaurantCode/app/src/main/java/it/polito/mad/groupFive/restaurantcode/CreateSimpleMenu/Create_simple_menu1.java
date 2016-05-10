@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,6 +64,8 @@ public class Create_simple_menu1 extends Fragment {
     private Uri menuPicUri = null;
     private ImageView menuPic = null;
     private Bitmap imageBitmap;
+    private boolean boolean_name=false;
+    private boolean boolean_descr=false;
     private static final int CAPTURE_IMAGE = 1;
     private static final int SELECT_PICTURE = 2;
     private static final String ARG_PARAM1 = "param1";
@@ -132,20 +135,33 @@ public class Create_simple_menu1 extends Fragment {
                 next.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        data.getMenu().setName(name.getText().toString());
-                        data.getMenu().setDescription(description.getText().toString());
-                        if(!sData.getdata().isEdit()){
-                        data.getMenu().setImageFromDrawable(menuPic.getDrawable());}
-                        else {
-                            data.getMenu().setImageFromDrawable(restaurantImg.getDrawable());
+                        if(name.getText().toString().length()>0)
+                            boolean_name=true;
+                        if(description.getText().toString().length()>0)
+                            boolean_descr=true;
+                        if(boolean_name && boolean_descr) {
+                            data.getMenu().setName(name.getText().toString());
+                            data.getMenu().setDescription(description.getText().toString());
+
+                            if (!sData.getdata().isEdit()) {
+                                data.getMenu().setImageFromDrawable(menuPic.getDrawable());
+                            } else {
+                                data.getMenu().setImageFromDrawable(restaurantImg.getDrawable());
+                            }
+                            try {
+                                data.getRest().saveData();
+                            } catch (RestaurantException e) {
+                                e.printStackTrace();
+                            }
+                            Create_simple_menu2 csm2 = new Create_simple_menu2();
+                            getFragmentManager().beginTransaction().replace(R.id.fragment_holder, csm2).commit();
                         }
-                        try {
-                            data.getRest().saveData();
-                        } catch (RestaurantException e) {
-                            e.printStackTrace();
+                        else
+                        {
+                            Toast.makeText(getContext(),getResources().getString(R.string.toast_empty_field),Toast.LENGTH_LONG)
+                                    .show();
+
                         }
-                        Create_simple_menu2 csm2= new Create_simple_menu2();
-                        getFragmentManager().beginTransaction().replace(R.id.fragment_holder,csm2).commit();
                     }
                 });
         fetchData();

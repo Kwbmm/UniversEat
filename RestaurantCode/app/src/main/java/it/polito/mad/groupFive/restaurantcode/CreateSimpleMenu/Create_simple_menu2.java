@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -143,9 +144,14 @@ public class Create_simple_menu2 extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    menu.setPrice(Float.valueOf(price.getText().toString()));
-                    rest.saveData();
-                    getActivity().finish();
+                    if(price.getText().toString().length()>0) {
+                        menu.setPrice(Float.valueOf(price.getText().toString()));
+                        rest.saveData();
+                        getActivity().finish();
+                    }
+                    else
+                        Toast.makeText(getContext(),getResources().getString(R.string.toast_empty_price),Toast.LENGTH_LONG)
+                                .show();
                 } catch (RestaurantException e) {
                     e.printStackTrace();
                 }

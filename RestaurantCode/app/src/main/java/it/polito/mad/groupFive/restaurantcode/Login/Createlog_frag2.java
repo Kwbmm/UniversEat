@@ -107,7 +107,6 @@ public class Createlog_frag2 extends Fragment {
 
                 Activity a = getActivity();
                 if(a instanceof OnFragmentInteractionListener) {
-                    //// TODO: 22/04/16 confronto se i due campi password sono uguali: if not popup
                     pw1 = txtpassword.getText().toString();
                     pw2 = txtrepeat.getText().toString();
                     if(pw1.equals(pw2)){
