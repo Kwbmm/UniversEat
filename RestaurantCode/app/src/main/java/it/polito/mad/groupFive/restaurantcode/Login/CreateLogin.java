@@ -19,7 +19,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
 /**
  * Created by Giovanni on 22/04/16.
  */
-public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFragmentInteractionListener, Createlog_frag2.OnFragmentInteractionListener,Createlog_frag1.OnFragmentInteractionListener{
+public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFragmentInteractionListener, Createlog_frag1.OnFragmentInteractionListener{
     private int uid;
     private boolean owner;
     private RestaurantOwner user_r=null;
@@ -68,6 +68,12 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
             user_r.setEmail(u_r.getEmail());
             user_r.setUserName(u_r.getUserName());
             user_r.setImageFromBitmap(u_r.getImageBitmap());
+            user_r.setPassword(u_r.getPassword());
+            try {
+                user_r.saveData();
+            } catch (RestaurantOwnerException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+            }
         }
         else {
             user.setName(u.getName());
@@ -75,25 +81,8 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
             user.setEmail(u.getEmail());
             user.setUserName(u.getUserName());
             user.setImageFromBitmap(u.getImageBitmap());
-        }
-        Createlog_frag2 frag2 = new Createlog_frag2();
-        frag2.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.ac_login,frag2).addToBackStack(null).commit();
-    }
-
-    public void onChangeFrag1(Customer u, RestaurantOwner u_r){
-        final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag1";
-        if(owner) {
+            user.setPassword(u.getPassword());
             try {
-                user_r.setPassword(u_r.getPassword());
-                user_r.saveData();
-            } catch (RestaurantOwnerException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-            }
-        }
-        else {
-            try {
-                user.setPassword(u.getPassword());
                 user.saveData();
             } catch (CustomerException e) {
                 Log.e(METHOD_NAME,e.getMessage());

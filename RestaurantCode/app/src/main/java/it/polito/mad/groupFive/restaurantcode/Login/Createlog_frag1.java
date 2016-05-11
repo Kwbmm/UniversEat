@@ -70,6 +70,8 @@ public class Createlog_frag1 extends Fragment{
     private EditText txtsurname;
     private EditText nickname;
     private EditText txtmail;
+    private EditText txtpassword;
+    private EditText txtrepeat;
     private boolean owner;
 
     public Createlog_frag1(){
@@ -105,6 +107,8 @@ public class Createlog_frag1 extends Fragment{
         txtmail = (EditText) v.findViewById(R.id.editText_Mail);
         nickname = (EditText) v.findViewById(R.id.editText_Nickname);
         txtsurname = (EditText) v.findViewById(R.id.editText_surname);
+        txtpassword = (EditText) v.findViewById(R.id.editText_Password);
+        txtrepeat = (EditText) v.findViewById(R.id.editText_Password_repeat);
 
         this.userPicView = (ImageView) v.findViewById(R.id.imageView_UserImage);
         this.userPicView.setOnClickListener(new View.OnClickListener() {
@@ -176,6 +180,7 @@ public class Createlog_frag1 extends Fragment{
             user_r.setEmail(txtmail.getText().toString());
             user_r.setUserName(nickname.getText().toString());
             user_r.setImageFromDrawable(userPicView.getDrawable());
+            user_r.setPassword(txtpassword.getText().toString());
         }
         else {
             try {
@@ -188,6 +193,7 @@ public class Createlog_frag1 extends Fragment{
             user.setEmail(txtmail.getText().toString());
             user.setUserName(nickname.getText().toString());
             user.setImageFromDrawable(userPicView.getDrawable());
+            user.setPassword(txtpassword.getText().toString());
         }
     }
 

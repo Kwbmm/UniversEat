@@ -68,7 +68,7 @@
             android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc"
             />
 
-        <!-- User Telephone -->
+        <!-- User Nickname -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,6 +87,46 @@
             android:inputType="text"
             />
 
+        <!-- User Password -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_Password"
+            android:layout_below="@id/editText_Nickname"
+            android:text="@string/password"
+            android:textSize="@dimen/frg_textView_textSize"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText_Password"
+            android:layout_below="@id/textView_Password"
+            android:inputType="textPassword"
+            />
+
+        <!-- User Password repeat -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_Password_repeat"
+            android:textSize="@dimen/frg_textView_textSize"
+            android:layout_below="@id/editText_Password"
+            android:text="@string/password_repeat"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText_Password_repeat"
+            android:layout_below="@id/textView_Password_repeat"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:inputType="textPassword"
+            />
+
         <!-- User mail -->
         <TextView
             android:layout_width="wrap_content"
@@ -94,7 +134,7 @@
             android:text="@string/emailaddress"
             android:textSize="@dimen/frg_textView_textSize"
             android:id="@+id/textView_Mailaddress"
-            android:layout_below="@id/editText_Nickname"
+            android:layout_below="@id/editText_Password_repeat"
             android:textStyle="bold"
             android:layout_centerHorizontal="true"
             />
@@ -114,7 +154,7 @@
             android:layout_below="@id/editText_Mail"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:text="@string/next"
+            android:text="@string/finish"
             android:layout_marginTop="@dimen/btn_marginTop"
             android:layout_marginRight="@dimen/btn_marginRight"
             android:layout_marginEnd="@dimen/btn_marginRight"
