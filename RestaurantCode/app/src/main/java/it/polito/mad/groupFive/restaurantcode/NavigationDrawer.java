@@ -3,20 +3,16 @@ package it.polito.mad.groupFive.restaurantcode;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -54,32 +50,32 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     }
 
     private void checkPic(){
+        final String METHOD_NAME = this.getClass().getName()+" - checkPic";
         if(phase==1){
-        if (usertype){
-            try {
-                rowner= new RestaurantOwner(getBaseContext(),sharedPreferences.getInt("uid",-1));
-                imageView.setImageBitmap(rowner.getImageBitmap());
-            } catch (RestaurantOwnerException e) {
-                e.printStackTrace();
+            if (usertype){
+                try {
+                    rowner= new RestaurantOwner(getBaseContext(),sharedPreferences.getInt("uid",-1));
+                    this.imageView.setImageBitmap(rowner.getImageBitmap());
+                } catch (RestaurantOwnerException e) {
+                    Log.e(METHOD_NAME,e.getMessage());
+                }
+            }else{
+                try {
+                    user=new Customer(getBaseContext(),sharedPreferences.getInt("uid",-1));
+                    this.imageView.setImageBitmap(user.getImageBitmap());
+                } catch (CustomerException e) {
+                    Log.e(METHOD_NAME,e.getMessage());
+                }
             }
-        }else{
-            try {
-                user=new Customer(getBaseContext(),sharedPreferences.getInt("uid",-1));
-                imageView.setImageBitmap(user.getImageBitmap());
-            } catch (CustomerException e) {
-                e.printStackTrace();
-            }
-        }
 
-    }}
-
+        }}
 
     public ArrayAdapter<String> createAdapter() {
         ArrayAdapter<String> adp;
         String[] options;
         if (phase != 0) {
             if (usertype){
-            options = getResources().getStringArray(R.array.drawer_option_logged_manager);}
+                options = getResources().getStringArray(R.array.drawer_option_logged_manager);}
             else{
                 options=getResources().getStringArray(R.array.drawer_option_logged_user);
             }
@@ -93,34 +89,9 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
     protected void onStop() {
         drawerLayout.closeDrawers();
         super.onStop();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
     }
 
     private void checkUser() {
@@ -129,7 +100,6 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
             SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
             usertype=sharedPreferences.getBoolean("owner",false);
         }
-
     }
 
     public void createDrawer() {
@@ -138,15 +108,8 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        imageView= (ImageView) findViewById(R.id.iw);
-        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
-        imageView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivity(intent);
-            }
-        });
+        this.imageView = (ImageView) findViewById(R.id.iw);
+        this.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
         dList = (ListView) findViewById(R.id.left_drawer);
         dList.setAdapter(adapter);
         dList.setOnItemClickListener(new DrawerListener());
@@ -158,11 +121,9 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                 view.bringToFront();
                 hideSoftKeyboard();
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-
             }
 
             public void onDrawerOpened(View drawerView) {
-
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
                 hideSoftKeyboard();
@@ -170,8 +131,6 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
             }
         };
         drawerLayout.addDrawerListener(mDrawerToggle);
-
-
     }
 
     public void getUserinfo() {
@@ -182,13 +141,6 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
             phase = 0;
         }
     }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        return super.onPrepareOptionsMenu(menu);
-    }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -206,7 +158,6 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-        Log.v("click", "here");
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
@@ -237,18 +188,16 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         checkUser();
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putBoolean("logged",true);
-        editor.commit();
+        editor.apply();
         adapter.notifyDataSetChanged();
         dList.setAdapter(createAdapter());
         dList.deferNotifyDataSetChanged();
         Toast toast = Toast.makeText(getBaseContext(), "Login Completed", Toast.LENGTH_SHORT);
         toast.show();
         checkPic();
-
     }
 
     private class DrawerListener implements ListView.OnItemClickListener {
-
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -262,7 +211,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     dList.deferNotifyDataSetChanged();
                     drawerLayout.closeDrawers();
                     Login_view lw=new Login_view();
-                   // FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
+                    // FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
                     getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.frame,lw).commit();
                     //Todo intent create profile
                 }
@@ -273,35 +222,35 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
 
             } else {
                 if(usertype){
-                if (position == 0) {
-                    Intent home = new Intent(getBaseContext(), Home.class);
-                    startActivity(home);
-                }
-                if (position == 1) {
-                    Intent profile = new Intent(getBaseContext(), Profile.class);
-                    startActivity(profile);
+                    if (position == 0) {
+                        Intent home = new Intent(getBaseContext(), Home.class);
+                        startActivity(home);
+                    }
+                    if (position == 1) {
+                        Intent profile = new Intent(getBaseContext(), Profile.class);
+                        startActivity(profile);
 
-                }
-                if (position == 3) {
-                    Intent intent = new Intent(view.getContext(), Restaurant_management.class);
-                    startActivity(intent);
-                }
-                if (position == 2) {
-                    Intent intent = new Intent(view.getContext(), Order_management.class);
-                    startActivity(intent);
-                }
-                if (position == 4) {
-                    phase = 0;
-                    SharedPreferences.Editor editor=sharedPreferences.edit();
-                    editor.putBoolean("logged",false);
-                    editor.commit();
-                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
-                    imageView.invalidate();
-                    dList.setAdapter(createAdapter());
-                    dList.deferNotifyDataSetChanged();
-                    //todo remove user from preferences
-                }
-            }else{
+                    }
+                    if (position == 3) {
+                        Intent intent = new Intent(view.getContext(), Restaurant_management.class);
+                        startActivity(intent);
+                    }
+                    if (position == 2) {
+                        Intent intent = new Intent(view.getContext(), Order_management.class);
+                        startActivity(intent);
+                    }
+                    if (position == 4) {
+                        phase = 0;
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putBoolean("logged",false);
+                        editor.commit();
+                        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
+                        imageView.invalidate();
+                        dList.setAdapter(createAdapter());
+                        dList.deferNotifyDataSetChanged();
+                        //todo remove user from preferences
+                    }
+                }else{
                     if (position == 0) {
                         Intent home = new Intent(getBaseContext(), Home.class);
                         startActivity(home);

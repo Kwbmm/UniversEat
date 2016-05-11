@@ -106,8 +106,8 @@ public class Createlog_frag1 extends Fragment{
         nickname = (EditText) v.findViewById(R.id.editText_Nickname);
         txtsurname = (EditText) v.findViewById(R.id.editText_surname);
 
-        ImageView userImg = (ImageView) v.findViewById(R.id.imageView_UserImage);
-        userImg.setOnClickListener(new View.OnClickListener() {
+        this.userPicView = (ImageView) v.findViewById(R.id.imageView_UserImage);
+        this.userPicView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isStoragePermissionGranted()){
@@ -128,8 +128,6 @@ public class Createlog_frag1 extends Fragment{
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(METHOD_NAME,"Press Next: OK");
-
                 Activity a = getActivity();
                 if(a instanceof OnFragmentInteractionListener) {
                     setUserData();
@@ -157,8 +155,8 @@ public class Createlog_frag1 extends Fragment{
         super.onDetach();
         mListener = null;
     }
+
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onChangeFrag(Customer u, RestaurantOwner u_r);
     }
 
@@ -167,41 +165,29 @@ public class Createlog_frag1 extends Fragment{
         final String METHOD_NAME = this.getClass().getName()+" - setUserData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
         int uid = sp.getInt("uid",-1);
-        ImageView userImg = (ImageView) v.findViewById(R.id.imageView_UserImage);
-
         if(owner){
             try {
                 user_r = new RestaurantOwner(getActivity(), uid);
             } catch (RestaurantOwnerException e) {
-                e.printStackTrace();
+                Log.e(METHOD_NAME,e.getMessage());
             }
             user_r.setName(txtname.getText().toString());
             user_r.setSurname(txtsurname.getText().toString());
             user_r.setEmail(txtmail.getText().toString());
             user_r.setUserName(nickname.getText().toString());
-            user_r.setImageFromDrawable(userImg.getDrawable());
-            try {
-                user_r.saveData();
-            } catch (RestaurantOwnerException e) {
-                e.printStackTrace();
-            }
+            user_r.setImageFromDrawable(userPicView.getDrawable());
         }
         else {
             try {
                 user = new Customer(getActivity(), uid);
             } catch (CustomerException e) {
-                e.printStackTrace();
+                Log.e(METHOD_NAME,e.getMessage());
             }
             user.setName(txtname.getText().toString());
             user.setSurname(txtsurname.getText().toString());
             user.setEmail(txtmail.getText().toString());
             user.setUserName(nickname.getText().toString());
-            user.setImageFromDrawable(userImg.getDrawable());
-            try {
-                user.saveData();
-            } catch (CustomerException e) {
-                e.printStackTrace();
-            }
+            user.setImageFromDrawable(userPicView.getDrawable());
         }
     }
 
@@ -294,17 +280,15 @@ public class Createlog_frag1 extends Fragment{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         final String METHOD_NAME = this.getClass().getName()+" - onActivityResult";
         super.onActivityResult(requestCode, resultCode, data);
-        int imageWidth = 600;
-        int imageHeight = 600;
+        int imageWidth = 400;
+        int imageHeight = 400;
         if(resultCode == getActivity().RESULT_OK && requestCode == SELECT_PICTURE){
-            this.userPicView = (ImageView) getActivity().findViewById(R.id.imageView_UserImage);
             this.userPicUri = data.getData();
             try{
                 this.userPicView.setImageBitmap(new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
             } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
         if(resultCode == getActivity().RESULT_OK && requestCode == CAPTURE_IMAGE){
-            this.userPicView = (ImageView) getActivity().findViewById(R.id.imageView_UserImage);
             try{
                 this.userPicView.setImageBitmap(new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
             } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}

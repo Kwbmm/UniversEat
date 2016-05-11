@@ -35,10 +35,10 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
         mlay.inflate(this, R.layout.activity_createlogin, mlay);
         Createlog_frag fragment= new Createlog_frag();
         getSupportFragmentManager().beginTransaction().add(R.id.ac_login,fragment).commit();
-
-
     }
+
     public void onChangeFrag0(boolean o){
+        final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag0";
         SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
         uid=sp.getInt("uid",-1);
         this.owner=o;
@@ -47,25 +47,19 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
                 user_r = new RestaurantOwner(getApplicationContext(),uid);
             else
                 user = new Customer(getApplicationContext(),uid);
-
-
-        } catch (RestaurantOwnerException e) {
-            e.printStackTrace();
-        } catch (CustomerException e) {
-            e.printStackTrace();
+        } catch (RestaurantOwnerException | CustomerException e) {
+            Log.e(METHOD_NAME,e.getMessage());
         }
-
-
         bundle = new Bundle();
         bundle.putBoolean("owner", owner);
         SharedPreferences.Editor editor=sp.edit();
         editor.putBoolean("owner",owner);
-        editor.commit();
+        editor.apply();
         Createlog_frag1 frag1 = new Createlog_frag1();
         frag1.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.ac_login,frag1).addToBackStack(null).commit();
-
     }
+
     public void onChangeFrag(Customer u, RestaurantOwner u_r) {
         final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag";
         if(owner){
@@ -74,11 +68,6 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
             user_r.setEmail(u_r.getEmail());
             user_r.setUserName(u_r.getUserName());
             user_r.setImageFromBitmap(u_r.getImageBitmap());
-            try {
-                user_r.saveData();
-            } catch (RestaurantOwnerException e) {
-                e.printStackTrace();
-            }
         }
         else {
             user.setName(u.getName());
@@ -86,44 +75,31 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
             user.setEmail(u.getEmail());
             user.setUserName(u.getUserName());
             user.setImageFromBitmap(u.getImageBitmap());
-            try {
-                user.saveData();
-            } catch (CustomerException e) {
-                e.printStackTrace();
-            }
         }
         Createlog_frag2 frag2 = new Createlog_frag2();
         frag2.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.ac_login,frag2).addToBackStack(null).commit();
-
     }
+
     public void onChangeFrag1(Customer u, RestaurantOwner u_r){
         final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag1";
         if(owner) {
-
             try {
                 user_r.setPassword(u_r.getPassword());
                 user_r.saveData();
             } catch (RestaurantOwnerException e) {
-                e.printStackTrace();
+                Log.e(METHOD_NAME,e.getMessage());
             }
         }
         else {
-
             try {
                 user.setPassword(u.getPassword());
                 user.saveData();
             } catch (CustomerException e) {
-                e.printStackTrace();
+                Log.e(METHOD_NAME,e.getMessage());
             }
         }
-
         finish();
-    }
-
-
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
     @Override
@@ -137,10 +113,4 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
             super.onBackPressed();
         }
     }
-    public static int randInt() {
-        Random rand= new Random();
-
-        return rand.nextInt(Integer.MAX_VALUE -1 );
-    }
-
 }

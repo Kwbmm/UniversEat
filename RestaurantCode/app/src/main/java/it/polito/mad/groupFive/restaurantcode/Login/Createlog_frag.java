@@ -97,8 +97,8 @@ public class Createlog_frag extends Fragment{
                 }}});
 
         return v;
-
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -115,8 +115,8 @@ public class Createlog_frag extends Fragment{
         super.onDetach();
         mListener = null;
     }
+
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onChangeFrag0(boolean owner);
     }
 
@@ -129,23 +129,15 @@ public class Createlog_frag extends Fragment{
             if(owner) {
                 user_r = new RestaurantOwner(getActivity());
                 editor.putInt("uid",user_r.getUid());
-                editor.commit();
-
+                editor.apply();
             }
             else{
                 user = new Customer(getActivity());
                 editor.putInt("uid",user.getUid());
-                editor.commit();
+                editor.apply();
             }
-
-
         } catch (UserException e) {
-            e.printStackTrace();
+            Log.e(METHOD_NAME,e.getMessage());
         }
-
-
     }
-
-
-
 }

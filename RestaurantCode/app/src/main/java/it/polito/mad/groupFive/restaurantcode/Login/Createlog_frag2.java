@@ -144,10 +144,8 @@ public class Createlog_frag2 extends Fragment {
                 user.saveData();
             }
 
-        } catch (RestaurantOwnerException e) {
-            e.printStackTrace();
-        } catch (CustomerException e) {
-            e.printStackTrace();
+        } catch (RestaurantOwnerException | CustomerException e) {
+            Log.e(METHOD_NAME,e.getMessage());
         }
 
 
