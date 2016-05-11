@@ -4,7 +4,7 @@
   
 ##Fix list
 
-  + Check if activity selected from drawer is the same of the one currently displayed. If so, don't load it again.
+  + ~~Check if activity selected from drawer is the same of the one currently displayed. If so, don't load it again.~~
   + **Register page**:
 
       + Put switch instead checkbox for restaurant owner.
