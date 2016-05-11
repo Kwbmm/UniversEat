@@ -47,8 +47,6 @@
                 android:id="@+id/imageView_RestaurantImage"
                 android:src="@drawable/ic_add_a_photo_black_24dp"
                 android:background="#fefeff"
-                android:layout_marginLeft="5dp"
-                android:layout_marginStart="5dp"
                 android:layout_marginBottom="10dp"
                 android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc"
                 />

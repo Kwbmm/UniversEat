@@ -31,15 +31,16 @@
         <item>Sunday</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!-- activity_home.xml -->
     <string name="search_hello">What do you want to eat?</string>
     <string name="home_imageButtonOpt_contentDesc">This button can change the search type.</string>
     <string name="checkbox_searchByRestaurant">Search by Restaurant</string>
     <string name="checkbox_searchByDish">Search by Dish</string>
     <!-- END activity_home.xml -->
+
+    <!-- fragment_creatlog_1.xml -->
+    <string name="frg_creatLog1_textViewImageText">Profile Image</string>
+    <!-- END fragment_creatlog_1.xml -->
 
     <!-- restaurant_view.xml -->
     <string name="restaurantView_textViewRestaurantName">Restaurant Name</string>
@@ -238,12 +239,12 @@
     <string name="nov">Nov</string>
     <string name="dec">Dec</string>
 
-    <string name="username">Name:</string>
-    <string name="mailaddress">Mail address:</string>
-    <string name="surname">Surname:</string>
-    <string name="nickname">Username:</string>
-    <string name="password">Password:</string>
-    <string name="password_repeat">Repeat password:</string>
+    <string name="username">Name</string>
+    <string name="emailaddress">Email address</string>
+    <string name="surname">Surname</string>
+    <string name="nickname">Username</string>
+    <string name="password">Password</string>
+    <string name="password_repeat">Repeat password</string>
     <string name="button_end">END</string>
     <string name="restaurantowner">Restaurant owner</string>
 
