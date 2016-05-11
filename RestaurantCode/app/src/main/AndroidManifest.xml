@@ -21,7 +21,8 @@
         <activity
             android:name=".Home"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
+            android:launchMode="singleTop"
+            >
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".SearchResult" />
@@ -38,7 +39,9 @@
             />
         <activity
             android:name=".Restaurant_management"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".CreateRestaurant.CreateRestaurant"
             android:screenOrientation="portrait" />
@@ -53,11 +56,15 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Profile"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".Order_management"
             android:noHistory="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".CreateMenu.Create_menu"
             android:screenOrientation="portrait" />
@@ -65,8 +72,9 @@
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
         <activity android:name=".Login.CreateLogin"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity android:name=".SearchResult">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -77,7 +85,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity android:name=".RestaurantView.Create_review" />
-        <activity android:name=".CreateSimpleMenu.Create_simple_menu"></activity>
+        <activity android:name=".CreateSimpleMenu.Create_simple_menu" />
     </application>
 
 </manifest>
