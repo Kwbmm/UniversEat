@@ -8,12 +8,12 @@
   + **Register page**:
 
       + Put switch instead checkbox for restaurant owner.
-      + Adjust layout of second page by vertical aligning all the fields.
+      + ~~Adjust layout of second page by vertical aligning all the fields.~~
       + Add checks for empty fields.
-      + Change text views as single-line texts
-      + Change email field as email address field type.
-      + Change password field as password field type.
-      + Do we want 2 fragments? One not enough?
+      + ~~Change text views as single-line texts~~
+      + ~~Change email field as email address field type.~~
+      + ~~Change password field as password field type.~~
+      + ~~Do we want 2 fragments? One not enough?~~
 
   + **Login page**:
 
