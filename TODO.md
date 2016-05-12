@@ -29,7 +29,7 @@
 
   + **Create restaurant**:
 
-    + Add range limit for timetables (extend timepicker properly).
+    + ~~Add range limit for timetables (extend timepicker properly).~~
 
   + **Create Menu**:
 
