@@ -125,8 +125,8 @@ public class Home extends NavigationDrawer {
                                             it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
                                             mn.setName("Menu " +i);
                                             mn.setDescription("Description");
-                                            mn.setImageFromDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
-                                            mn.setPrice((float)(1.5/(Math.log(i+2))));
+                                            mn.setImageFromDrawable(getResources().getDrawable(R.mipmap.ic_pizza));
+                                            mn.setPrice((float)(3*(i+1)));
                                             mn.setTicket(true);
                                             mn.setServiceFee(true);
                                             mn.setBeverage(false);
@@ -153,6 +153,7 @@ public class Home extends NavigationDrawer {
                                         SharedPreferences.Editor editor= sharedPreferences.edit();
                                         editor.putInt("uid",2);
                                         editor.putInt("rid",rest.getRid());
+                                        editor.putBoolean("owner",true);
                                         editor.apply();
                                     } catch (RestaurantException |
                                             MenuException |

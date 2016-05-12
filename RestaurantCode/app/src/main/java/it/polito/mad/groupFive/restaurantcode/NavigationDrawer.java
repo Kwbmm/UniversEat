@@ -195,6 +195,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         Toast toast = Toast.makeText(getBaseContext(), "Login Completed", Toast.LENGTH_SHORT);
         toast.show();
         checkPic();
+        hideSoftKeyboard();
     }
 
     private class DrawerListener implements ListView.OnItemClickListener {

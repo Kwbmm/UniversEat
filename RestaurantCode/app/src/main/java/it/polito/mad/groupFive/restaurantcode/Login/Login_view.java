@@ -120,7 +120,6 @@ public class Login_view extends Fragment {
         if ((sharedPreferences.getInt("uid",-1)!=-1)&&username.getText().toString().equals(user.getUserName())&&password.getText().toString().equals(user.getPassword())){
             SharedPreferences.Editor editor=sharedPreferences.edit();
             editor.putBoolean("logged",true);
-            editor.putBoolean("owner",true);
             editor.commit();
             mListener.onFragmentInteraction();
             getFragmentManager().popBackStack();
