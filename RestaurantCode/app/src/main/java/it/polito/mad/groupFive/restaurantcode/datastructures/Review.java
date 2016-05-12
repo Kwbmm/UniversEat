@@ -4,6 +4,7 @@ import android.os.Build;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -25,6 +26,7 @@ public class Review {
     private int rid;
     private String reviewText;
     private String title;
+    private Date date;
 
     public String getTitle() {
         return title;
@@ -72,6 +74,7 @@ public class Review {
         this.rid = r.getRid();
         this.reviewer = u;
         this.uid = u.getUid();
+        this.date = new Date();
     }
 
     /**
@@ -127,6 +130,7 @@ public class Review {
         this.replies = dummy.getReplies();
         this.rating = dummy.getRating();
         this.title=dummy.getTitle();
+        this.date=dummy.getDate();
     }
 
     /**
@@ -227,4 +231,7 @@ public class Review {
      * @param r The rating given by the user for the reviewed restaurant.
      */
     public void setRating(float r){ this.rating = r; }
+
+    public Date getDate(){return this.date;}
+    public void setDate(Date d){this.date=d;}
 }

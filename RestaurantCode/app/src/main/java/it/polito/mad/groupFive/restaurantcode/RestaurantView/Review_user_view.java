@@ -18,7 +18,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -47,6 +49,7 @@ public class Review_user_view extends Fragment {
     ReviewAdapter adp;
     ArrayList<Review> alreviews;
     RecyclerView recyclerView;
+    private String[] months;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -128,6 +131,7 @@ public class Review_user_view extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        months=getResources().getStringArray(R.array.months);
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -202,7 +206,14 @@ public class Review_user_view extends Fragment {
             holder.rating.setRating(rev.getRating());
             holder.title.setText(rev.getTitle());
             holder.review.setText(rev.getReviewText());
-            holder.dat.setText(new Date().toString());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(rev.getDate());
+            String time = String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.HOUR_OF_DAY))+":"+
+                    String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MINUTE));
+            String date = String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.DAY_OF_MONTH))+"/"+
+                    String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MONTH))+"/"+
+                    String.format(Locale.getDefault(),"%04d",calendar.get(Calendar.YEAR));
+            holder.dat.setText(time+" "+date);
 
         }
 
