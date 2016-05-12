@@ -7,9 +7,9 @@
   + ~~Check if activity selected from drawer is the same of the one currently displayed. If so, don't load it again.~~
   + **Register page**:
 
-      + Put switch instead checkbox for restaurant owner.
+      + (??? Maybe not a good idea)Put switch instead checkbox for restaurant owner.
       + ~~Adjust layout of second page by vertical aligning all the fields.~~
-      + Add checks for empty fields.
+      + ~~Add checks for empty fields.~~
       + ~~Change text views as single-line texts~~
       + ~~Change email field as email address field type.~~
       + ~~Change password field as password field type.~~
@@ -35,5 +35,5 @@
 
     + Crash on creation of daily menu: Add name of menu, add description, do NOT add image, press next, crash due to NullPointerException.
     + Create menu is not usable on low-end devices due to high-memory consumption
-    + Translation of "Complete Menu" should be "Menu Completo" and not "Completa il Menu"
+    + ~~Translation of "Complete Menu" should be "Menu Completo" and not "Completa il Menu"~~
     + Crash on Create_simple_menu1.java:293 when adding image.
