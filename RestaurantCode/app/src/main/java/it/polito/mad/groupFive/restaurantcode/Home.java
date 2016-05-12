@@ -135,6 +135,7 @@ public class Home extends NavigationDrawer {
                                             User user =new RestaurantOwner(v.getContext());
                                             Review review=new Review(rest,user);
                                             review.setRating(4.3f);
+                                            review.setDate(new Date());
                                             review.setReviewText("Molto Buonissimo");
                                             review.setTitle("Il Massimo della Pizza");
                                             rest.addReview(review);

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -50,6 +51,8 @@ public class Create_simple_menu2 extends Fragment {
     private DishAdapter adp;
     private RecyclerView recyclerView;
     private EditText price;
+    private CheckBox fee;
+    private CheckBox drink;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -138,12 +141,16 @@ public class Create_simple_menu2 extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         price= (EditText) v.findViewById(R.id.fcm2_price);
+        drink= (CheckBox) v.findViewById(R.id.cbch_2_1);
+        fee=(CheckBox)v.findViewById(R.id.cbch_2_2);
         Button end =(Button)v.findViewById(R.id.fin);
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     menu.setPrice(Float.valueOf(price.getText().toString()));
+                    menu.setServiceFee(fee.isChecked());
+                    menu.setBeverage(drink.isChecked());
                     rest.saveData();
                     getActivity().finish();
                 } catch (RestaurantException e) {
