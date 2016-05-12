@@ -182,14 +182,14 @@ public class CreateRestaurant_1 extends Fragment {
             editor.apply();}
 
 
-            if(name.getText().toString().equals("") || name.getText() == null){
+            if(name.getText().toString().trim().equals("") || name.getText() == null){
                 Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
                 return false;
             }
             restaurant.setName(name.getText().toString());
 
 
-            if(description.getText().toString().equals("") || description.getText() == null){
+            if(description.getText().toString().trim().equals("") || description.getText() == null){
                 Log.w(METHOD_NAME,"TextView Description is either empty or null");
                 return false;
             }
@@ -204,14 +204,14 @@ public class CreateRestaurant_1 extends Fragment {
             restaurant.setImageFromDrawable(restaurantImg.getDrawable());}
 
 
-            if(telephone.getText().toString().equals("") || telephone.getText() == null){
+            if(telephone.getText().toString().trim().equals("") || telephone.getText() == null){
                 Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
                 return false;
             }
             restaurant.setTelephone(telephone.getText().toString());
 
 
-            if(website.getText().toString().equals("") || website.getText() == null){
+            if(website.getText().toString().trim().equals("") || website.getText() == null){
                 Log.w(METHOD_NAME,"TextView Website is either empty or null");
                 return false;
             }

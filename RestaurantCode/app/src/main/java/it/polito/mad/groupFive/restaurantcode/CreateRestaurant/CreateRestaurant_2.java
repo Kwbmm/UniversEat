@@ -131,28 +131,28 @@ public class CreateRestaurant_2 extends Fragment {
 
             if(!getR.editmode())restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));
 
-            if(address.getText().toString().equals("") || address.getText() == null){
+            if(address.getText().toString().trim().equals("") || address.getText() == null){
                 Log.w(METHOD_NAME,"TextView Address is either empty or null");
                 return false;
             }
             restaurant.setAddress(address.getText().toString());
 
 
-            if(city.getText().toString().equals("") || city.getText() == null){
+            if(city.getText().toString().trim().equals("") || city.getText() == null){
                 Log.w(METHOD_NAME,"TextView City is either empty or null");
                 return false;
             }
             restaurant.setCity(city.getText().toString());
 
 
-            if(ZIPCode.getText().toString().equals("") || ZIPCode.getText() == null){
+            if(ZIPCode.getText().toString().trim().equals("") || ZIPCode.getText() == null){
                 Log.w(METHOD_NAME,"TextView ZIPCode is either empty or null");
                 return false;
             }
             restaurant.setZIPCode(ZIPCode.getText().toString());
 
 
-            if(state.getText().toString().equals("") || state.getText() == null){
+            if(state.getText().toString().trim().equals("") || state.getText() == null){
                 Log.w(METHOD_NAME,"TextView State is either empty or null");
                 return false;
             }
