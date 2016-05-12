@@ -235,31 +235,31 @@ public class Createlog_frag1 extends Fragment{
                 Log.w(METHOD_NAME,"TextView Name is either empty or null");
                 return false;
             }
-            user_r.setName(txtname.getText().toString());
+            user.setName(txtname.getText().toString());
 
             if(txtsurname.getText().toString().trim().equals("") || txtsurname.getText() == null){
                 Log.w(METHOD_NAME,"TextView Surname is either empty or null");
                 return false;
             }
-            user_r.setSurname(txtsurname.getText().toString());
+            user.setSurname(txtsurname.getText().toString());
 
             if(txtmail.getText().toString().trim().equals("") || txtmail.getText() == null){
                 Log.w(METHOD_NAME,"TextView Email is either empty or null");
                 return false;
             }
-            user_r.setEmail(txtmail.getText().toString());
+            user.setEmail(txtmail.getText().toString());
 
             if(nickname.getText().toString().trim().equals("") || nickname.getText() == null){
                 Log.w(METHOD_NAME, "TextView Username is either empty or null");
                 return false;
             }
-            user_r.setUserName(nickname.getText().toString());
+            user.setUserName(nickname.getText().toString());
 
             if(!isImageSet){
                 Log.w(METHOD_NAME,"ImageView Profile Picture is not set");
                 return false;
             }
-            user_r.setImageFromDrawable(userPicView.getDrawable());
+            user.setImageFromDrawable(userPicView.getDrawable());
 
             if(txtpassword.getText().toString().trim().equals("") || txtpassword.getText() == null){
                 Log.w(METHOD_NAME, "TextView Password is either empty or null");
@@ -270,7 +270,7 @@ public class Createlog_frag1 extends Fragment{
                         .show();
                 return false;
             }
-            user_r.setPassword(txtpassword.getText().toString());
+            user.setPassword(txtpassword.getText().toString());
             return true;
         }
     }
