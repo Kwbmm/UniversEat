@@ -258,8 +258,8 @@ public class SearchResult extends NavigationDrawer {
                     }
                 }
                 //TODO Look also by name??
-                if(m.getName().toLowerCase().contains(this.query))
-                    this.menus.add(m);
+                //if(m.getName().toLowerCase().contains(this.query))
+                //    this.menus.add(m);
             }
             this.rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
             if (rv != null){
@@ -637,8 +637,7 @@ public class SearchResult extends NavigationDrawer {
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
-            //TODO remove comment here
-//            holder.menu_image.setImageBitmap(menu.getImageBitmap());
+            holder.menu_image.setImageBitmap(menu.getImageBitmap());
             int rid = menus.get(position).getRid();
             holder.card.setOnClickListener(new onCardClick(position,rid));
         }
