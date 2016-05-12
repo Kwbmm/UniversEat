@@ -47,6 +47,7 @@
         android:layout_below="@id/review_title_label"
         android:id="@+id/review_title"
         android:layout_marginTop="5dp"
+        android:inputType="text"
         />
     <TextView
         android:layout_width="match_parent"
