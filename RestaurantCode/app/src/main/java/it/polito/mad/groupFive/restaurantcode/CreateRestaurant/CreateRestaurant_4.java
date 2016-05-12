@@ -24,6 +24,7 @@ import java.util.Locale;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.libs.CustomTimePickerDialog;
 
 
 /**
@@ -138,11 +139,9 @@ public class CreateRestaurant_4 extends Fragment {
             btnFrom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Calendar mcurrentTime = Calendar.getInstance();
-                    int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                    int minute = mcurrentTime.get(Calendar.MINUTE);
-                    TimePickerDialog tpd = new TimePickerDialog(
-                            getContext(),
+                    int startHour = 17;
+                    int startMinute = 0;
+                    CustomTimePickerDialog ctpd = new CustomTimePickerDialog(getContext(),
                             new TimePickerDialog.OnTimeSetListener() {
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -152,12 +151,12 @@ public class CreateRestaurant_4 extends Fragment {
                                                     String.format(Locale.getDefault(),"%02d",minute));
                                 }
                             },
-                            hour,
-                            minute,
-                            true
-                    );
-                    tpd.setTitle(getResources().getString(R.string.titleTimePickerFrom));
-                    tpd.show();
+                            startHour,
+                            startMinute, true);
+                    ctpd.setTitle(getResources().getString(R.string.titleTimePickerFrom));
+                    ctpd.setMin(startHour,startMinute);
+                    ctpd.setMax(18,59);
+                    ctpd.show();
                 }
             });
 
@@ -165,11 +164,9 @@ public class CreateRestaurant_4 extends Fragment {
             btnTo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Calendar mcurrentTime = Calendar.getInstance();
-                    int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                    int minute = mcurrentTime.get(Calendar.MINUTE);
-                    TimePickerDialog tpd = new TimePickerDialog(
-                            getContext(),
+                    int startHour = 0;
+                    int startMinute = 0;
+                    CustomTimePickerDialog ctpd = new CustomTimePickerDialog(getContext(),
                             new TimePickerDialog.OnTimeSetListener() {
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -179,12 +176,12 @@ public class CreateRestaurant_4 extends Fragment {
                                                     String.format(Locale.getDefault(),"%02d",minute));
                                 }
                             },
-                            hour,
-                            minute,
-                            true
-                    );
-                    tpd.setTitle(getResources().getString(R.string.titleTimePickerTo));
-                    tpd.show();
+                            startHour,
+                            startMinute, true);
+                    ctpd.setTitle(getResources().getString(R.string.titleTimePickerFrom));
+                    ctpd.setMin(startHour,startMinute);
+                    ctpd.setMax(7,59);
+                    ctpd.show();
                 }
             });
             if (getR.editmode()){

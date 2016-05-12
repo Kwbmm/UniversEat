@@ -24,6 +24,7 @@ import java.util.Locale;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.libs.CustomTimePickerDialog;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -136,11 +137,9 @@ public class CreateRestaurant_3 extends Fragment {
             btnFrom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Calendar mcurrentTime = Calendar.getInstance();
-                    int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                    int minute = mcurrentTime.get(Calendar.MINUTE);
-                    TimePickerDialog tpd = new TimePickerDialog(
-                            getContext(),
+                    int startHour = 10;
+                    int startMinute = 0;
+                    CustomTimePickerDialog ctpd = new CustomTimePickerDialog(getContext(),
                             new TimePickerDialog.OnTimeSetListener() {
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -150,12 +149,12 @@ public class CreateRestaurant_3 extends Fragment {
                                                     String.format(Locale.getDefault(),"%02d",minute));
                                 }
                             },
-                            hour,
-                            minute,
-                            true
-                    );
-                    tpd.setTitle(getResources().getString(R.string.titleTimePickerFrom));
-                    tpd.show();
+                            startHour,
+                            startMinute, true);
+                    ctpd.setTitle(getResources().getString(R.string.titleTimePickerFrom));
+                    ctpd.setMin(startHour,startMinute);
+                    ctpd.setMax(12,59);
+                    ctpd.show();
                 }
             });
 
@@ -163,11 +162,9 @@ public class CreateRestaurant_3 extends Fragment {
             btnTo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Calendar mcurrentTime = Calendar.getInstance();
-                    int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                    int minute = mcurrentTime.get(Calendar.MINUTE);
-                    TimePickerDialog tpd = new TimePickerDialog(
-                            getContext(),
+                    int startHour = 15;
+                    int startMinute = 0;
+                    CustomTimePickerDialog ctpd = new CustomTimePickerDialog(getContext(),
                             new TimePickerDialog.OnTimeSetListener() {
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -177,12 +174,12 @@ public class CreateRestaurant_3 extends Fragment {
                                                     String.format(Locale.getDefault(),"%02d",minute));
                                 }
                             },
-                            hour,
-                            minute,
-                            true
-                    );
-                    tpd.setTitle(getResources().getString(R.string.titleTimePickerTo));
-                    tpd.show();
+                            startHour,
+                            startMinute, true);
+                    ctpd.setTitle(getResources().getString(R.string.titleTimePickerFrom));
+                    ctpd.setMin(startHour,startMinute);
+                    ctpd.setMax(16,59);
+                    ctpd.show();
                 }
             });
 
@@ -191,12 +188,12 @@ public class CreateRestaurant_3 extends Fragment {
                     if (restaurant.getTimetableLunch().containsKey(count)){
                         SimpleDateFormat dateFormat=new SimpleDateFormat("hh:mm");
                         cb.setChecked(true);
-                            timetableItem.findViewById(R.id.from).setVisibility(View.VISIBLE);
-                            timetableItem.findViewById(R.id.textClockFrom).setVisibility(View.VISIBLE);
-                            timetableItem.findViewById(R.id.to).setVisibility(View.VISIBLE);
-                            timetableItem.findViewById(R.id.textClockTo).setVisibility(View.VISIBLE);
-                btnFrom.setText(dateFormat.format(restaurant.getTimetableLunch().get(count)[1]));
-                btnTo.setText(dateFormat.format(restaurant.getTimetableLunch().get(count)[1]));
+                        timetableItem.findViewById(R.id.from).setVisibility(View.VISIBLE);
+                        timetableItem.findViewById(R.id.textClockFrom).setVisibility(View.VISIBLE);
+                        timetableItem.findViewById(R.id.to).setVisibility(View.VISIBLE);
+                        timetableItem.findViewById(R.id.textClockTo).setVisibility(View.VISIBLE);
+                        btnFrom.setText(dateFormat.format(restaurant.getTimetableLunch().get(count)[1]));
+                        btnTo.setText(dateFormat.format(restaurant.getTimetableLunch().get(count)[1]));
                         Log.v("count",count+"");}}
             }
 
@@ -232,7 +229,7 @@ public class CreateRestaurant_3 extends Fragment {
 
         try {
             if(!getR.editmode()){
-            restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));}
+                restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));}
             for(int i = 0; i < this.weekDays.length; i++) {
                 CheckBox cb = (CheckBox) this.parentView.findViewById(this.weekdayToRL_IDs.get(this.weekDays[i])).findViewById(R.id.checkBox);
                 if(cb.isChecked()){
