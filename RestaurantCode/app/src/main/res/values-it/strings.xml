@@ -225,8 +225,8 @@
     <string name="restaurantView_textViewRestaurantDescription">Descrizione</string>
 
     <!-- activity_create_review.xml -->
-    <string name="Review_Title">Titolo recenzione</string>
-    <string name="Review">Recenzione:</string>
+    <string name="Review_Title">Titolo recensione</string>
+    <string name="Review">Recensione:</string>
     <string name="Create">Crea</string>
 
     <!-- add_dish.xml -->
@@ -296,7 +296,7 @@
     <string name="reservationlist_noitems">Nessun elemento da mostrare.</string>
 
     <!-- review.xml-->
-    <string name="review_title">Titolo recenzione</string>
+    <string name="review_title">Titolo recensione</string>
 
     <!-- timetable_view.xml-->
     <string name="timetable_view_DayOfWeek">GiornoDellaSettimana</string>
