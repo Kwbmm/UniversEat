@@ -49,7 +49,6 @@ public class Review_user_view extends Fragment {
     ReviewAdapter adp;
     ArrayList<Review> alreviews;
     RecyclerView recyclerView;
-    private String[] months;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -131,7 +130,6 @@ public class Review_user_view extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        months=getResources().getStringArray(R.array.months);
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
