@@ -29,7 +29,7 @@
 
   + **Create restaurant**:
 
-    + ~~Add range limit for timetables (extend timepicker properly).~~
+    + ~~Add range limit for timetables (extend timepicker properly).~~ FIXED only for android <5
 
   + **Create Menu**:
 
