@@ -67,6 +67,7 @@ public class Create_simple_menu1 extends Fragment {
     private Bitmap imageBitmap;
     private boolean boolean_name=false;
     private boolean boolean_descr=false;
+    private boolean isImageSet = false;
 
     private static final String IMAGE_TYPE = "image/*";
     private static final int CAPTURE_IMAGE = 1;
@@ -142,7 +143,7 @@ public class Create_simple_menu1 extends Fragment {
                             boolean_name=true;
                         if(description.getText().toString().length()>0)
                             boolean_descr=true;
-                        if(boolean_name && boolean_descr) {
+                        if(boolean_name && boolean_descr && isImageSet) {
                             data.getMenu().setName(name.getText().toString());
                             data.getMenu().setDescription(description.getText().toString());
 
@@ -316,12 +317,14 @@ public class Create_simple_menu1 extends Fragment {
             this.menuPicUri = data.getData();
             try{
                 this.menuPicView.setImageBitmap(new Picture(this.menuPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
+                this.isImageSet=true;
             } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
         if(resultCode == CreateRestaurant.RESULT_OK && requestCode == CAPTURE_IMAGE){
             this.menuPicView = (ImageView) getActivity().findViewById(R.id.cmiw_1_1);
             try{
                 this.menuPicView.setImageBitmap(new Picture(this.menuPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
+                this.isImageSet = true;
             } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
     }
