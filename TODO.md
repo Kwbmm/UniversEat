@@ -17,7 +17,7 @@
 
   + **Login page**:
 
-      + Close the keyboard after you login. Currently, it remains open.
+      + ~~Close the keyboard after you login. Currently, it remains open.~~
 
   + **Edit Restaurant Information**:
 
@@ -25,7 +25,7 @@
 
   + **List of all restaurant in restauranta owner page**:
 
-    + Gear icon -> Delete doesn't work.
+    + ~~Gear icon -> Delete doesn't work.~~
 
   + **Create restaurant**:
 
@@ -33,15 +33,15 @@
 
   + **Create Menu**:
 
-    + Crash on creation of daily menu: Add name of menu, add description, do NOT add image, press next, crash due to NullPointerException.
+    + ~~Crash on creation of daily menu: Add name of menu, add description, do NOT add image, press next, crash due to NullPointerException.~~
     + ~~Create menu is not usable on low-end devices due to high-memory consumption~~ (GONE???)
     + ~~Translation of "Complete Menu" should be "Menu Completo" and not "Completa il Menu"~~
     + ~~Crash on Create_simple_menu1.java:293 when adding image.~~
     
   + **Review page**:
   
-    + When the list of reviews of a restaurant are shown, the date is wrong.
+    + ~~When the list of reviews of a restaurant are shown, the date is wrong.~~
     
   + **Order page**:
   
-    + Text of date and time field are too big, overflow!
+    + ~~Text of date and time field are too big, overflow!~~
