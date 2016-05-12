@@ -252,7 +252,7 @@
     <string name="login1">Check the box if you are a RESTAURANT OWNER:</string>
     <string name="login_rest">RESTAURANT OWNER</string>
 
-    <string name="toastloginFail">These passwords don\'t match.</string>
+    <string name="toastRegisterPasswordFail">Entered passwords do not match!</string>
 
     <!-- activity_create_review.xml -->
     <string name="Review_Title">Review Title</string>
@@ -273,10 +273,10 @@
     <string name="Menu_name">Menu name</string>
 
     <!-- fragment_create_restaurant_5.xml -->
-    <string name="BuonChef">BuonChef</string>
-    <string name="Ticket_Restaurant">Ticket Restaurant</string>
-    <string name="BluTicket">BluTicket</string>
-    <string name="City_Time">City Time</string>
+    <string name="BuonChef" translatable="false">BuonChef</string>
+    <string name="Ticket_Restaurant" translatable="false">Ticket Restaurant</string>
+    <string name="BluTicket" translatable="false">BluTicket</string>
+    <string name="City_Time" translatable="false">City Time</string>
 
 
     <!-- fragment_create_simple_menu1.xml -->

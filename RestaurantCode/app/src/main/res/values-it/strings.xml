@@ -31,9 +31,6 @@
         <item>Domenica</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="search_hello">Che cosa vorresti mangiare?</string>
     <string name="checkbox_searchByRestaurant">Ricerca per ristorante</string>
     <string name="checkbox_searchByDish">Ricerca per piatto</string>
@@ -94,9 +91,6 @@
     <string name="next">Prossimo</string>
 
     <!-- END timetable_restaurant_item.xml-->
-    <!-- fragment_create_restaurant_2.xml -->
-    <string name="frg_create_restaurant_1_textView_Address">Indirizzo</string>
-    <!-- END fragment_create_restaurant_2.xml -->
 
     <!-- fragment_create_restaurant_1.xml -->
     <string name="frg_create_restaurant_1_textView_RestaurantName">Nome del ristorante</string>
@@ -196,8 +190,7 @@
     <string name="login1">Spunta qui se sei un RISTORATORE:</string>
     <string name="login_rest">RISTORATORE</string>
 
-    <string name="toastloginFail">Le password non coincidono.</string>
-    <string name="SearchResult_toastFailLoadDM">Il Data Manager non è riuscito a caricare i file... :(</string>
+    <string name="SearchResult_toastFailLoadDM">Il Data Manager non è riuscito a caricare i file… :(</string>
     <string name="SearchResult_toastNoMenus">Non ci sono menù da mostrare.</string>
     <string name="SearchResult_toastNoRestaurants">Non ci sono ristoranti da mostrare.</string>
 
@@ -264,7 +257,7 @@
     <string name="fragment_login_view_Register">Registrati</string>
 
     <!-- fragment_restaurant_menu_user.xml-->
-    <string name="fragment_restaurant_menu_user_Complete_Menu">Completa il menu</string>
+    <string name="fragment_restaurant_menu_user_Complete_Menu">Menù completo</string>
 
     <!-- fragment_simple_menu_add_tags.xml-->
     <string name="fragment_simple_menu_add_tags_Add_new_tags">Aggiungi nuovi tag</string>
@@ -344,5 +337,19 @@
         <item>Contorno</item>
         <item>Secondo</item>
     </array>
+    <string name="toastRegisterPasswordFail">Le password inserite non coincidono</string>
+    <string name="sortTitle">Ordina per</string>
+    <string name="frg_create_restaurant_2_editView_AddressHint">Indirizzo del ristorante</string>
+    <string name="frg_create_restaurant_2_editView_CityHint">Città del ristorante</string>
+    <string name="frg_create_restaurant_2_editView_StateHint">Stato del ristorante</string>
+    <string name="frg_create_restaurant_2_editView_ZIPCodeHint">CAP del ristorante</string>
+    <string name="frg_creatLog1_textViewImageText">Immagine Profilo</string>
+    <string name="frg_create_restaurant_1_editView_DescriptionHint">Breve Descrizione</string>
+    <string name="frg_create_restaurant_1_editView_RestaurantNameHint">Nome del ristorante</string>
+    <string name="frg_create_restaurant_1_editView_TelephoneHint">Numero di telefono del ristorante</string>
+    <string name="frg_create_restaurant_1_editView_WebsiteHint">Sito web del ristorante</string>
+    <string name="featureUnavail">Questa funzionalità è ancora in fase di sviluppo</string>
+    <string name="filterTitle">Filtra per…</string>
+    <string name="Ticket_Restaurant"></string>
 
 </resources>

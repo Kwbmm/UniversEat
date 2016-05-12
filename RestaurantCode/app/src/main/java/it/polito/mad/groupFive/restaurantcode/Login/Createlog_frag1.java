@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -73,6 +74,7 @@ public class Createlog_frag1 extends Fragment{
     private EditText txtpassword;
     private EditText txtrepeat;
     private boolean owner;
+    private boolean isImageSet=false;
 
     public Createlog_frag1(){
         //void constructor
@@ -134,10 +136,14 @@ public class Createlog_frag1 extends Fragment{
             public void onClick(View v) {
                 Activity a = getActivity();
                 if(a instanceof OnFragmentInteractionListener) {
-                    setUserData();
-
-                    OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
-                    obs.onChangeFrag(user,user_r);
+                    if(setUserData()){
+                        OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
+                        obs.onChangeFrag(user,user_r);
+                    }
+                    else {
+                        Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
+                                .show();
+                    }
                 }}});
 
         return v;
@@ -165,7 +171,7 @@ public class Createlog_frag1 extends Fragment{
     }
 
 
-    public void setUserData() {
+    public boolean setUserData() {
         final String METHOD_NAME = this.getClass().getName()+" - setUserData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
         int uid = sp.getInt("uid",-1);
@@ -174,26 +180,98 @@ public class Createlog_frag1 extends Fragment{
                 user_r = new RestaurantOwner(getActivity(), uid);
             } catch (RestaurantOwnerException e) {
                 Log.e(METHOD_NAME,e.getMessage());
+                return false;
+            }
+            if(txtname.getText().toString().trim().equals("") || txtname.getText() == null){
+                Log.w(METHOD_NAME,"TextView Name is either empty or null");
+                return false;
             }
             user_r.setName(txtname.getText().toString());
+
+            if(txtsurname.getText().toString().trim().equals("") || txtsurname.getText() == null){
+                Log.w(METHOD_NAME,"TextView Surname is either empty or null");
+                return false;
+            }
             user_r.setSurname(txtsurname.getText().toString());
+
+            if(txtmail.getText().toString().trim().equals("") || txtmail.getText() == null){
+                Log.w(METHOD_NAME,"TextView Email is either empty or null");
+                return false;
+            }
             user_r.setEmail(txtmail.getText().toString());
+
+            if(nickname.getText().toString().trim().equals("") || nickname.getText() == null){
+                Log.w(METHOD_NAME, "TextView Username is either empty or null");
+                return false;
+            }
             user_r.setUserName(nickname.getText().toString());
+
+            if(!isImageSet){
+                Log.w(METHOD_NAME,"ImageView Profile Picture is not set");
+                return false;
+            }
             user_r.setImageFromDrawable(userPicView.getDrawable());
+
+            if(txtpassword.getText().toString().trim().equals("") || txtpassword.getText() == null){
+                Log.w(METHOD_NAME, "TextView Password is either empty or null");
+                return false;
+            }
+            if(!txtpassword.getText().toString().equals(txtrepeat.getText().toString())){
+                Toast.makeText(getContext(),getResources().getString(R.string.toastRegisterPasswordFail),Toast.LENGTH_LONG)
+                        .show();
+                return false;
+            }
             user_r.setPassword(txtpassword.getText().toString());
+            return true;
         }
         else {
             try {
                 user = new Customer(getActivity(), uid);
             } catch (CustomerException e) {
                 Log.e(METHOD_NAME,e.getMessage());
+                return false;
             }
-            user.setName(txtname.getText().toString());
-            user.setSurname(txtsurname.getText().toString());
-            user.setEmail(txtmail.getText().toString());
-            user.setUserName(nickname.getText().toString());
-            user.setImageFromDrawable(userPicView.getDrawable());
-            user.setPassword(txtpassword.getText().toString());
+            if(txtname.getText().toString().trim().equals("") || txtname.getText() == null){
+                Log.w(METHOD_NAME,"TextView Name is either empty or null");
+                return false;
+            }
+            user_r.setName(txtname.getText().toString());
+
+            if(txtsurname.getText().toString().trim().equals("") || txtsurname.getText() == null){
+                Log.w(METHOD_NAME,"TextView Surname is either empty or null");
+                return false;
+            }
+            user_r.setSurname(txtsurname.getText().toString());
+
+            if(txtmail.getText().toString().trim().equals("") || txtmail.getText() == null){
+                Log.w(METHOD_NAME,"TextView Email is either empty or null");
+                return false;
+            }
+            user_r.setEmail(txtmail.getText().toString());
+
+            if(nickname.getText().toString().trim().equals("") || nickname.getText() == null){
+                Log.w(METHOD_NAME, "TextView Username is either empty or null");
+                return false;
+            }
+            user_r.setUserName(nickname.getText().toString());
+
+            if(!isImageSet){
+                Log.w(METHOD_NAME,"ImageView Profile Picture is not set");
+                return false;
+            }
+            user_r.setImageFromDrawable(userPicView.getDrawable());
+
+            if(txtpassword.getText().toString().trim().equals("") || txtpassword.getText() == null){
+                Log.w(METHOD_NAME, "TextView Password is either empty or null");
+                return false;
+            }
+            if(!txtpassword.getText().toString().equals(txtrepeat.getText().toString())){
+                Toast.makeText(getContext(),getResources().getString(R.string.toastRegisterPasswordFail),Toast.LENGTH_LONG)
+                        .show();
+                return false;
+            }
+            user_r.setPassword(txtpassword.getText().toString());
+            return true;
         }
     }
 
@@ -292,11 +370,13 @@ public class Createlog_frag1 extends Fragment{
             this.userPicUri = data.getData();
             try{
                 this.userPicView.setImageBitmap(new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
+                this.isImageSet = true;
             } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
         if(resultCode == getActivity().RESULT_OK && requestCode == CAPTURE_IMAGE){
             try{
                 this.userPicView.setImageBitmap(new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
+                this.isImageSet = true;
             } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
     }

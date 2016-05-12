@@ -60,7 +60,7 @@
             android:layout_below="@id/restaurant_rating"
             android:textSize="18dp"
             android:layout_toRightOf="@id/restaurant_image"
-            android:text="@string/frg_create_restaurant_1_textView_Address"/>
+            android:text="@string/frg_create_restaurant_2_textView_Address"/>
         <ImageView
             android:id="@+id/restaurant_icon1"
             android:layout_width="30dp"
