@@ -2,19 +2,28 @@
     <string name="app_name">Restaurant App n5</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="featureUnavail">This feature is still under development…</string>
     <string name="user_pref">RestaurantCode.Userdata</string>
     <string-array name="drawer_option_login">
+        <item>Search</item>
         <item>Login</item>
+        <item>Register</item>
     </string-array>
     <string-array name="drawer_option_logged_manager">
+        <item>Search</item>
         <item>Profile</item>
         <item>Orders</item>
         <item>Manage Restaurant</item>
         <item>Logout</item>
     </string-array>
+    <string-array name="drawer_option_logged_user">
+        <item>Search</item>
+        <item>Profile</item>
+        <item>Logout</item>
+    </string-array>
     <string-array name="week">
-        <item>Monday></item>
-        <item>Tuesday></item>
+        <item>Monday</item>
+        <item>Tuesday</item>
         <item>Wednesday</item>
         <item>Thursday</item>
         <item>Friday</item>
@@ -22,14 +31,24 @@
         <item>Sunday</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <!-- activity_home.xml -->
     <string name="search_hello">What do you want to eat?</string>
-
     <string name="home_imageButtonOpt_contentDesc">This button can change the search type.</string>
+    <string name="checkbox_searchByRestaurant">Search by Restaurant</string>
+    <string name="checkbox_searchByDish">Search by Dish</string>
+    <!-- END activity_home.xml -->
 
-    <string name="fragment_restaurant_view_imageViewIwr_contentDesc">Image of the restaurant.</string>
+    <!-- fragment_creatlog_1.xml -->
+    <string name="frg_creatLog1_textViewImageText">Profile Image</string>
+    <!-- END fragment_creatlog_1.xml -->
+
+    <!-- restaurant_view.xml -->
+    <string name="restaurantView_textViewRestaurantName">Restaurant Name</string>
+    <string name="restaurantView_textViewRestaurantDescription">Description</string>
+    <string name="restaurantView_textViewRestaurantAddress">Address</string>
+    <!-- END restaurant_view.xml -->
+
+    <string name="fragment_restaurant_view_imageViewIwr_contentDesc">Image of the restaurant</string>
 
     <string name="menu_imageViewIwr_contentDesc">Image of the menu.</string>
 
@@ -42,6 +61,7 @@
     <string name="reservation_textViewLunchtime">Lunch Time</string>
     <string name="reservation_textViewOrder">Ordered Meal</string>
     <string name="reservation_textViewNotes">Reservation Notes</string>
+    <string name="reservation_month">25 may</string>
 
     <string name="restaurantInfo_imageButtonImg">Restaurant Image</string>
     <string name="restaurantInfo_textViewName">Restaurant Name</string>
@@ -57,6 +77,50 @@
     <string name="reviewlist_textViewName">Restaurant Name</string>
     <string name="finish">Finish</string>
 
+    <!-- SearchResult.java -->
+    <string name="SearchResult_toastFailLoadDM">Data Manager failed loading files.. :(</string>
+    <string name="SearchResult_toastNoRestaurants">There are no restaurants to show.</string>
+    <string name="SearchResult_toastNoMenus">There are no menus to show.</string>
+
+    <string-array name="sortCurtainMenuItems">
+        <item>A-Z</item>
+        <item>Z-A</item>
+        <item>Price lower first</item>
+        <item>Price higher first</item>
+    </string-array>
+
+    <string-array name="sortCurtainRestaurantItems">
+        <item>A-Z</item>
+        <item>Z-A</item>
+        <item>Price lower first</item>
+        <item>Price higher first</item>
+        <item>Nearest first</item>
+    </string-array>
+
+    <string-array name="filterCurtainMenuItems">
+        <item>Ticket only</item>
+        <item>No ticket</item>
+        <item>Beverage included</item>
+        <item>Beverage not included</item>
+        <item>Service Fee: yes</item>
+        <item>Service Fee: no</item>
+    </string-array>
+
+    <string-array name="filterCurtainRestaurantItems">
+        <item>Ticket only</item>
+        <item>No ticket</item>
+        <item>Beverage included</item>
+        <item>Beverage not included</item>
+        <item>Service Fee: yes</item>
+        <item>Service Fee: no</item>
+        <item>Open now</item>
+    </string-array>
+    <!-- END SearchResult.java -->
+
+    <!-- toolbar_search_data.xml -->
+    <string name="sortTitle">Sort by</string>
+    <string name="filterTitle">Filter by…</string>
+    <!-- END toolbar_search_data.xml -->
 
     <!-- Create_menu_frag.java -->
     <string name="pick_gallery">Pick from Gallery</string>
@@ -80,27 +144,30 @@
     <string name="saturday">Sat</string>
     <string name="sunday">Sun</string>
     <string name="next">Next</string>
-
     <!-- END timetable_restaurant_item.xml-->
 
 
     <!-- fragment_create_restaurant_1.xml -->
-    <string name="frg_create_restaurant_1_textView_RestaurantName">Restaurant name:</string>
+    <string name="frg_create_restaurant_1_textView_RestaurantName">Restaurant name</string>
+    <string name="frg_create_restaurant_1_editView_RestaurantNameHint">Name of your restaurant</string>
     <string name="frg_create_restaurant_1_imageView_ContentDesc">Image of the restaurant</string>
-    <string name="frg_create_restaurant_1_textView_Description">Description:</string>
-    <string name="frg_create_restaurant_1_textView_Telephone">Telephone number:</string>
-    <string name="frg_create_restaurant_1_textView_Website">Website:</string>
+    <string name="frg_create_restaurant_1_textView_Description">Description</string>
+    <string name="frg_create_restaurant_1_editView_DescriptionHint">Brief description</string>
+    <string name="frg_create_restaurant_1_textView_Telephone">Telephone number</string>
+    <string name="frg_create_restaurant_1_editView_TelephoneHint">Restaurant\'s telephone number</string>
+    <string name="frg_create_restaurant_1_textView_Website">Website</string>
+    <string name="frg_create_restaurant_1_editView_WebsiteHint">Restaurant\'s website</string>
     <!-- END fragment_create_restaurant_1.xml -->
 
     <!-- fragment_create_restaurant_2.xml -->
-    <string name="frg_create_restaurant_1_textView_Address">Address:</string>
-    <!-- END fragment_create_restaurant_2.xml -->
-
-
-    <string name="frg_create_restaurant_2_textView_Address">Address:</string>
-    <string name="frg_create_restaurant_2_textView_City">City:</string>
-    <string name="frg_create_restaurant_2_textView_ZIPCode">ZIP Code:</string>
-    <string name="frg_create_restaurant_2_textView_State">State:</string>
+    <string name="frg_create_restaurant_2_textView_Address">Address</string>
+    <string name="frg_create_restaurant_2_editView_AddressHint">Address of your restaurant</string>
+    <string name="frg_create_restaurant_2_textView_City">City</string>
+    <string name="frg_create_restaurant_2_editView_CityHint">City of your restaurant</string>
+    <string name="frg_create_restaurant_2_textView_ZIPCode">ZIP Code</string>
+    <string name="frg_create_restaurant_2_editView_ZIPCodeHint">ZIP Code of the restaurant\'s city</string>
+    <string name="frg_create_restaurant_2_textView_State">State</string>
+    <string name="frg_create_restaurant_2_editView_StateHint">Restaurant\'s state</string>
     <!-- END fragment_create_restaurant_2.xml -->
 
     <!-- fragment_create_restaurant_3.xml -->
@@ -115,7 +182,7 @@
     <!-- END CreateRestaurant_3.java CreateRestaurant_4.java -->
 
     <!-- fragment_create_restaurant_5.xml -->
-    <string name="frg_create_restaurant_5_textView_AcceptedTickets">Check the tickets your restaurant accepts:</string>
+    <string name="frg_create_restaurant_5_textView_AcceptedTickets">Accepted Tickets</string>
     <!-- END fragment_create_restaurant_5.xml -->
 
     <!-- activity_create_menu_frag2.xml -->
@@ -123,4 +190,220 @@
     <string name="checkBox_BeverageIncluded">Beverage included</string>
     <string name="editText_Price">Price</string>
     <!-- END activity_create_menu_frag2.xml -->
+
+    <!-- Class Add_dish -->
+    <string name="add_dish_starter">Starter</string>
+    <string name="add_dish_main_dish">Main dish</string>
+    <string name="add_dish_italian">Italian</string>
+    <string name="add_dish_chinese">Chinese</string>
+    <string name="add_dish_indian">Indian</string>
+    <!-- END Class Add_dish -->
+
+    <!-- Class Create_menu_frag -->
+    <string name="create_menu_frag_fixed">Fixed</string>
+    <string name="create_menu_frag_multiple_choice">Multiple choice</string>
+    <!-- END Class Create_menu_frag -->
+
+    <!-- Class Menu_view_edit -->
+    <string name="menu_view_edit_fixed_price_menu">Fixed Price Menu</string>
+    <string name="menu_view_edit_yes">Yes</string>
+    <string name="menu_view_edit_no">No</string>
+    <string name="menu_view_edit_delete">Delete?</string>
+    <!-- END Class Create_menu_frag -->
+
+    <string-array name="months">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Aug</item>
+        <item>Sep</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
+    </string-array>
+
+    <string name="jan">Jan</string>
+    <string name="feb">Feb</string>
+    <string name="mar">Mar</string>
+    <string name="apr">Apr</string>
+    <string name="may">May</string>
+    <string name="jun">Jun</string>
+    <string name="jul">Jul</string>
+    <string name="aug">Aug</string>
+    <string name="sep">Sep</string>
+    <string name="oct">Oct</string>
+    <string name="nov">Nov</string>
+    <string name="dec">Dec</string>
+
+    <string name="username">Name</string>
+    <string name="emailaddress">Email address</string>
+    <string name="surname">Surname</string>
+    <string name="nickname">Username</string>
+    <string name="password">Password</string>
+    <string name="password_repeat">Repeat password</string>
+    <string name="button_end">END</string>
+    <string name="restaurantowner">Restaurant owner</string>
+
+    <string name="login">Here you create a new account</string>
+    <string name="login1">Check the box if you are a RESTAURANT OWNER:</string>
+    <string name="login_rest">RESTAURANT OWNER</string>
+
+    <string name="toastRegisterPasswordFail">Entered passwords do not match!</string>
+
+    <!-- activity_create_review.xml -->
+    <string name="Review_Title">Review Title</string>
+    <string name="Review">Review:</string>
+    <string name="Create">Create</string>
+
+    <!-- add_dish.xml -->
+    <string name="add_dish_Name">Name</string>
+    <string name="add_dish_Type">Type</string>
+    <string name="add_dish_Cuisine">Cuisine</string>
+    <string name="add_dish_Vegan">Vegan</string>
+    <string name="add_dish_Vegetarian">Vegetarian</string>
+    <string name="add_dish_Hot">Hot</string>
+    <string name="add_dish_Add">Add</string>
+    <string name="add_dish_Gluten_free">Gluten free</string>
+
+    <!-- fragment_create_menu.xml -->
+    <string name="Menu_name">Menu name</string>
+
+    <!-- fragment_create_restaurant_5.xml -->
+    <string name="BuonChef" translatable="false">BuonChef</string>
+    <string name="Ticket_Restaurant" translatable="false">Ticket Restaurant</string>
+    <string name="BluTicket" translatable="false">BluTicket</string>
+    <string name="City_Time" translatable="false">City Time</string>
+
+
+    <!-- fragment_create_simple_menu1.xml -->
+    <string name="fragment_create_simple_menu1_Menu_Image">Menu Image</string>
+    <string name="fragment_create_simple_menu1_Send_notification">Send notification</string>
+    <string name="fragment_create_simple_menu1_Dishes">Dishes</string>
+    <string name="toast_empty_field">Name or description is empty!</string>
+    <string name="toast_empty_price">Price is empty!</string>
+
+    <!-- fragment_delete_dish.xml-->
+    <string name="fragment_delete_dish_complete">Complete</string>
+
+    <!-- fragment_login_view.xml-->
+    <string name="fragment_login_view_Username">Username</string>
+    <string name="fragment_login_view_Password">Password</string>
+    <string name="fragment_login_view_Login">Login</string>
+    <string name="fragment_login_view_Register">Register</string>
+
+    <!-- fragment_restaurant_menu_user.xml-->
+    <string name="fragment_restaurant_menu_user_Complete_Menu">Complete Menu</string>
+
+    <!-- fragment_simple_menu_add_tags.xml-->
+    <string name="fragment_simple_menu_add_tags_Add_new_tags">Add new tags</string>
+
+    <!-- incorrect_login.xml-->
+    <string name="incorrect_login">Incorrect username or password</string>
+
+    <!-- make_order.xml-->
+    <string name="make_order_Reservation_Name">Reservation Name</string>
+    <string name="make_order_date">Pick a date</string>
+    <string name="make_order_time">Pick a time</string>
+    <string name="make_order_notes">Any notes?</string>
+
+    <!-- menu_choice.xml-->
+    <string name="menu_choice_Option">Option</string>
+
+    <!-- menu_details.xml-->
+    <string name="menu_details_Menu_Name">Menu Name</string>
+    <string name="menu_details_beverage">Beverage not included</string>
+    <string name="menu_details_service">Service fee not included</string>
+    <string name="menu_details_Menu_description">Menu description</string>
+    <string name="menu_details_order">Order now!</string>
+    <string name="menu_details_course">Course Name</string>
+    <string name="menu_details_option">Option Name</string>
+
+    <!-- menu_dish_frag.xml-->
+    <string name="menu_dish_frag_DishName">DishName</string>
+
+    <!-- profile.xml-->
+    <string name="profile_Name">Name</string>
+    <string name="profile_username">username</string>
+    <string name="profile_My_List">My List</string>
+    <string name="profile_email">email</string>
+
+    <!-- reservationlist.xml-->
+    <string name="reservationlist_noitems">No items to display.</string>
+
+    <!-- review.xml-->
+    <string name="review_title">Review Title</string>
+
+    <!-- timetable_view.xml-->
+    <string name="timetable_view_DayOfWeek">DayOfWeek</string>
+
+    <!-- Create_menu_frag2.java-->
+    <string name="Create_menu_frag2_option">Option </string>
+
+    <!-- MakeOrder.java-->
+    <string name="MakeOrder_name">Please insert a name</string>
+    <string name="MakeOrder_past">You can\'t order in the past!</string>
+    <string name="MakeOrder_successful">Order successful</string>
+
+    <!-- Menu_details.java-->
+    <string name="Menu_details_beverage_incl">Beverage included</string>
+    <string name="Menu_details_beverage_not">Beverage not included</string>
+    <string name="Menu_details_service_fee_incl">Service fee included</string>
+    <string name="Menu_details_service_fee_not">Service fee not included</string>
+
+    <!-- Menu_view_edit.java-->
+    <string name="Menu_view_edit_Edit">Edit</string>
+    <string name="Menu_view_edit_Delete">Delete</string>
+    <string name="Menu_view_edit_Cancel">Cancel</string>
+    <string name="Menu_view_edit_options">Edit Options</string>
+
+    <!--Restaurant_info_user-->
+    <string name="closed">Closed</string>
+
+
+    <array name="tags">
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Cocktail</item>
+        <item>Cake</item>
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Cocktail</item>
+        <item>Cake</item>
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Cocktail</item>
+        <item>Cake</item>
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Cocktail</item>
+        <item>Cake</item>
+    </array>
+
+    <array name="cuisine">
+        <item>Italian</item>
+        <item>Chinese</item>
+        <item>Japanese</item>
+        <item>Indian</item>
+        <item>Mexican</item>
+        <item>American</item>
+    </array>
+    <array name="type">
+        <item>Starter</item>
+        <item>Main Dish</item>
+        <item>Drink</item>
+        <item>Dessert</item>
+        <item>Side Dish</item>
+    </array>
 </resources>

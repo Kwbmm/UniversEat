@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.polito.mad.groupFive.restaurantcode.Delete_dish">
+    tools:context=".CreateMenu.Delete_dish">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Complete"
+            android:text="@string/fragment_delete_dish_complete"
             android:id="@+id/dd_compl"/>
     </RelativeLayout>
     <RelativeLayout
@@ -26,7 +26,9 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/ll_del"></ListView>
+            android:id="@+id/ll_del"
+            android:divider="@null">
+        </ListView>
     </RelativeLayout>
 
 </RelativeLayout>

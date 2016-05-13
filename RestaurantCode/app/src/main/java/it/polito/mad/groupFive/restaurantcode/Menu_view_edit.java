@@ -1,101 +1,51 @@
 package it.polito.mad.groupFive.restaurantcode;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CursorAdapter;
 import android.widget.FrameLayout;
-import android.widget.ListView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.SimpleAdapter;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.zip.Inflater;
+import java.util.Collections;
+import java.util.Comparator;
 
+
+import it.polito.mad.groupFive.restaurantcode.CreateMenu.Create_menu;
+import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Create_simple_menu;
+import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Simple_menu_add_tags;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.User;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+
 
 /**
  * Created by MacBookRetina on 12/04/16.
  */
 public class Menu_view_edit extends NavigationDrawer {
     private ArrayList<Menu> menusshared;
-    private ArrayList<Menu> motd;
-    private MenuAdpter adp;
+    private MenuAdapter adp;
     private Restaurant rest;
     private SharedPreferences sharedPreferences;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         readdata();
-        showview();
-
-
-    }
-    public void readdata(){
-        sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
-        int rid,uid;
-        uid=sharedPreferences.getInt("uid",-1);
-        rid=sharedPreferences.getInt("rid",-1);
-        try {
-
-            rest = new User(this,rid,uid).getRestaurant();
-            rest.getData();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        menusshared = rest.getMenusByType(1);
-        motd = rest.getMenusByType(2);
-
-
-    }
-    public void showview(){
-        if(menusshared!=null||motd!=null){
-        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-        mlay.inflate(this, R.layout.menulist, mlay);
-        if (menusshared!=null){
-            adp=new MenuAdpter(this,menusshared);
-            ListView lwcm = (ListView) findViewById(R.id.menu_lw);
-            lwcm.setAdapter(adp);}
-            if(motd!=null){
-            TextView motd_name = (TextView) findViewById(R.id.name);
-            motd_name.setText(motd.get(0).getName());
-            TextView motd_desc = (TextView) findViewById(R.id.description);
-            motd_desc.setText(motd.get(0).getDescription());
-            TextView motd_price = (TextView) findViewById(R.id.price);
-            motd_price.setText(motd.get(0).getPrice()+"€");
-                TextView motd_title = (TextView) findViewById(R.id.title);
-                motd_title.setText(R.string.motd_textViewTitle);}}
-        else{
-            FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-            mlay.inflate(this, R.layout.menulist, mlay);
-            TextView motd_title = (TextView) findViewById(R.id.title);
-            motd_title.setText("Your first menu");
-        }
-
-
-
 
 
 
@@ -104,9 +54,48 @@ public class Menu_view_edit extends NavigationDrawer {
     @Override
     protected void onResume() {
         super.onResume();
-        readdata();
-        showview();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        adp.update();
+
+
+    }
+
+    public void readdata() {
+        sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
+        int rid, uid;
+        uid = sharedPreferences.getInt("uid", -1);
+        rid = sharedPreferences.getInt("rid", -1);
+        try {
+
+            rest = new Restaurant(getBaseContext(),rid);
+            rest.getData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        menusshared = rest.getMenus();
+        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
+        mlay.inflate(this, R.layout.menulist, mlay);
+        adp= new MenuAdapter(menusshared);
+        recyclerView=(RecyclerView)findViewById(R.id.my_recycler_view);
+        recyclerView.setAdapter(adp);
+        LinearLayoutManager llm=new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+
+
+    }
+
 
     public void showMenu(View v) {
         PopupMenu popup = new PopupMenu(this, v);
@@ -117,13 +106,15 @@ public class Menu_view_edit extends NavigationDrawer {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nfpm: {
-                        Intent intent = new Intent(getBaseContext(), Create_menu.class);
-                        startActivity(intent);
+                        Intent intent = new Intent(getBaseContext(), Create_simple_menu.class);
+                        intent.putExtra("mid",-1);
+                        startActivityForResult(intent,1);
                         break;
                     }
                     case R.id.ndm: {
-                        Intent intent = new Intent(getBaseContext(), Create_menu.class);
-                        startActivity(intent);
+                        Intent intent = new Intent(getBaseContext(), Create_simple_menu.class);
+                        intent.putExtra("mid",-1);
+                        startActivityForResult(intent,2);
 
                         break;
 
@@ -135,12 +126,16 @@ public class Menu_view_edit extends NavigationDrawer {
         popup.inflate(R.menu.popup);
         popup.show();
     }
+
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_add, menu);
+        MenuItem add=menu.findItem(R.id.add_ab);
+
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
@@ -150,93 +145,139 @@ public class Menu_view_edit extends NavigationDrawer {
         return true;
     }
 
-        public class MenuAdpter extends BaseAdapter{
-        ArrayList<Menu> menus;
-        Context context;
-        public MenuAdpter(Context context,ArrayList<Menu> menus){
+    public static class MenuViewHoder extends RecyclerView.ViewHolder {
+        protected TextView menu_name;
+        protected TextView menu_desctiprion;
+        protected TextView menu_price;
+        protected ImageButton edit;
+        protected CardView card;
+        protected ImageView menu_image;
+
+        public MenuViewHoder(View itemView) {
+            super(itemView);
+            this.menu_name =(TextView)itemView.findViewById(R.id.menu_name);
+            this.menu_desctiprion=(TextView)itemView.findViewById(R.id.menu_description);
+            this.menu_price=(TextView)itemView.findViewById(R.id.menu_price);
+            this.edit=(ImageButton) itemView.findViewById(R.id.menu_edit);
+            this.card= (CardView) itemView.findViewById(R.id.menu_card);
+            this.menu_image=(ImageView)itemView.findViewById(R.id.menu_image);
+        }
+    }
+
+    public class MenuAdapter extends RecyclerView.Adapter<MenuViewHoder>{
+        private ArrayList<Menu> menus;
+
+        public MenuAdapter(ArrayList<Menu> menus){
             this.menus=menus;
-            this.context=context;
+            sort();
+
+        }
+        public void sort(){
+            Collections.sort(this.menus, new Comparator<Menu>() {
+                @Override
+                public int compare(Menu lhs, Menu rhs) {
+
+                    return rhs.getType()-lhs.getType();
+                }});
+        }
+        public void update(){
+            try {
+                rest.getData();
+            } catch (RestaurantException e) {
+                e.printStackTrace();
+            }
+            menusshared=rest.getMenus();
+            menus=menusshared;
+            sort();
+            adp.notifyDataSetChanged();
         }
 
         @Override
-        public int getCount() {
+        public MenuViewHoder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View menu_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_view_edit,null);
+            return new MenuViewHoder(menu_view);
+        }
+
+        @Override
+        public void onBindViewHolder(MenuViewHoder holder,int position) {
+            Menu menu =menus.get(position);
+            holder.menu_desctiprion.setText(menu.getDescription());
+            holder.menu_name.setText(menu.getName());
+            holder.menu_price.setText(menu.getPrice()+"€");
+            holder.edit.setOnClickListener(new onEditclick(position));
+            try {
+                holder.menu_image.setImageBitmap(menu.getImageBitmap());
+            } catch (NullPointerException e){
+                Log.e("immagine non caricata"," ");
+            }
+            //Log.v("image",menu.getImageByteArray().toString());
+        }
+
+        @Override
+        public int getItemCount() {
             return menus.size();
         }
 
-        @Override
-        public Object getItem(int position) {
-            return menus.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return getItem(position).hashCode();
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            convertView=LayoutInflater.from(context).inflate(R.layout.menu_list_item_edit_fragment,null);
-            TextView title= (TextView) convertView.findViewById(R.id.m_title);
-            Menu menu= (Menu) getItem(position);
-            TextView name =(TextView) convertView.findViewById(R.id.m_name);
-            TextView price = (TextView)convertView.findViewById(R.id.m_price);
-            TextView description=(TextView) convertView.findViewById(R.id.m_descrip);
+        public void remove(int position){
+            menus.remove(position);
+            rest.setMenus(menus);
             try {
-                menu.getData();
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (CourseException e) {
+                rest.saveData();
+            } catch (RestaurantException e) {
                 e.printStackTrace();
             }
-            name.setText(menu.getName());
-            title.setText("Fixed Price Menu");
-            price.setText(menu.getPrice()+"€");
-            description.setText(menu.getDescription());
-            Button delete = (Button) convertView.findViewById(R.id.mlf_del);
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(Menu_view_edit.this);
-                    final CharSequence[] items = {"Yes", "No"};
-                    dialog.setTitle("Delete?");
-                    dialog.setItems(items, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (which == 0) {
-                                remove(position);
-                            }
-                        }
-                    });
-                    dialog.show();
-                }});
-
-
-
-
-
-            return convertView;
-
-
+            menusshared=menus;
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, menus.size());
         }
 
-            public void remove(int position) {
-                menusshared.remove(position);
-                if(motd!=null){
-                rest.getMenus().addAll(motd);}
-                try {
-                    rest.setMenus(menusshared);
-                    rest.saveData();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                showview();
+        public class onEditclick implements View.OnClickListener{
+            private int position;
+            public onEditclick(int position){
+                this.position=position;
+            }
+
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog=new AlertDialog.Builder(Menu_view_edit.this);
+                final CharSequence[] items = { getString(R.string.Menu_view_edit_Edit), getString(R.string.Menu_view_edit_Delete),getString(R.string.Menu_view_edit_Cancel) };
+                dialog.setTitle(getString(R.string.Menu_view_edit_options));
+                dialog.setItems(items,new onPositionClickDialog(position));
+                dialog.show();
 
             }
+        }
+
+        public class onPositionClickDialog implements DialogInterface.OnClickListener{
+            private int position;
+
+            public onPositionClickDialog(int position){
+                this.position=position;
+            }
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case 0:{
+                        //TODO:edit intent
+                        Intent edit_menu=new Intent(getBaseContext(),Create_simple_menu.class);
+                        edit_menu.putExtra("mid",menusshared.get(position).getMid());
+                        startActivityForResult(edit_menu,3);
+                        break;
+                    }
+                    case 1:{
+                        //TODO:delete item
+                        remove(position);
+                        break;
+                    }
+                    default:{
+                        dialog.cancel();
+                    }
+                }
+
+            }
+        }
     }
 
 }
-
 

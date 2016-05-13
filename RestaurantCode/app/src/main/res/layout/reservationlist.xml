@@ -11,20 +11,16 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:divider="@color/material_grey_100"
         android:layout_alignParentBottom="true"
         android:headerDividersEnabled="false"
-        android:dividerHeight="16dp"
-        android:paddingLeft="15dp"
-        android:paddingTop="7dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="7dp" />
+        android:divider="@color/material_grey_100"
+        android:padding="10dp" />
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="No items to display."
+        android:text="@string/reservationlist_noitems"
         android:id="@+id/noItemsTextView"
         android:gravity="center_horizontal"
         android:visibility="invisible"

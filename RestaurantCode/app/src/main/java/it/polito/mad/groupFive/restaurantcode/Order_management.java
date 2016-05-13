@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 
@@ -21,49 +20,34 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
-import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 public class Order_management extends NavigationDrawer {
-    private User user;
     private Restaurant restaurant;
     private SharedPreferences sharedPreferences;
     private ArrayList<Order> orders;
-    private String[] months={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+    private String[] months;
     private int deletecheck;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        months=getResources().getStringArray(R.array.months);
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
         int uid=sharedPreferences.getInt("uid",-1);
         int rid=sharedPreferences.getInt("rid",-1);
         Log.e("RID E UID",""+rid+" "+uid);
         try {
-            user=new User(this,rid,uid);
-            restaurant=user.getRestaurant();
+            restaurant=new Restaurant(this,rid);
             restaurant.getData();
-        } catch (JSONException e) {
-            Log.e("Exception",e.toString());
-        } catch (IOException e) {
-            Log.e("Exception",e.toString());
         } catch (RestaurantException e) {
-            Log.e("Exception",e.toString());
-        } catch (UserException e) {
             Log.e("Exception",e.toString());
         }
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
@@ -75,10 +59,7 @@ public class Order_management extends NavigationDrawer {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.toolbar_add, menu);
-        MenuItem item=menu.findItem(R.id.add_ab);
-        item.setVisible(false);
-        item.setEnabled(false);
+        getMenuInflater().inflate(R.menu.toolbar_refresh,menu);
         return true;
     }
 
@@ -102,6 +83,9 @@ public class Order_management extends NavigationDrawer {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.refresh_ab){
+            showOrders();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -129,20 +113,22 @@ public class Order_management extends NavigationDrawer {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView= LayoutInflater.from(context).inflate(R.layout.reservation,null);
-            TextView username= (TextView) convertView.findViewById(R.id.username);
+            TextView username= (TextView) convertView.findViewById(R.id.order_username);
+            TextView userID= (TextView) convertView.findViewById(R.id.order_userID);
             TextView hour=(TextView) convertView.findViewById(R.id.hour);
             TextView minutes = (TextView) convertView.findViewById(R.id.minutes);
             TextView date=(TextView) convertView.findViewById(R.id.date);
-            TextView oid = (TextView)convertView.findViewById(R.id.orderID);
-            TextView meal=(TextView) convertView.findViewById(R.id.meal);
+            TextView oid = (TextView)convertView.findViewById(R.id.order_OID);
+            TextView meal=(TextView) convertView.findViewById(R.id.order_meal);
+            TextView notes = (TextView) convertView.findViewById(R.id.order_notes);
             ImageButton delete= (ImageButton) convertView.findViewById(R.id.imageView);
             deletecheck=position;
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder dialog=new AlertDialog.Builder(Order_management.this);
-                    final CharSequence[] items = { "Yes", "No" };
-                    dialog.setTitle("Delete?");
+                    final CharSequence[] items = { getString(R.string.menu_view_edit_yes), getString(R.string.menu_view_edit_no) };
+                    dialog.setTitle(getString(R.string.menu_view_edit_delete));
                     dialog.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -151,9 +137,7 @@ public class Order_management extends NavigationDrawer {
                                 restaurant.setOrders(orders);
                                 try {
                                     restaurant.saveData();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
+                                } catch (RestaurantException e) {
                                     e.printStackTrace();
                                 }
                                 showOrders();
@@ -169,9 +153,7 @@ public class Order_management extends NavigationDrawer {
                     try {
                         restaurant.saveData();
                         showOrders();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
+                    } catch (RestaurantException e) {
                         e.printStackTrace();
                     }
 
@@ -181,79 +163,23 @@ public class Order_management extends NavigationDrawer {
             Order order= orderlist.get(position);
             Calendar calendar= Calendar.getInstance();
             calendar.setTime(order.getDate());
-            username.setText(String.valueOf(order.getUid()));
+            username.setText(order.getName());
+            userID.setText(" (User #"+String.valueOf(order.getUid())+")");
+            notes.setText(order.getNotes());
             hour.setText(String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.HOUR_OF_DAY)));
             minutes.setText(String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MINUTE)));
             date.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))+" "+months[calendar.get(Calendar.MONTH)]);
-            oid.setText(String.valueOf(order.getOid()));
-            meal.setText(String.valueOf(order.getMid()));
+            oid.setText("Order ID: "+String.valueOf(order.getOid()));
+            String mealID="#"+String.valueOf(order.getMid());
+            try {
+                if(restaurant.getMenuByID(order.getMid())!=null)
+                    mealID=restaurant.getMenuByID(order.getMid()).getName();
+            } catch (RestaurantException e) {
+                e.printStackTrace();
+            }
+            meal.setText("Menu: "+mealID);
             return convertView;
         }
     }
 
-    private void generaordinifittizi(){
-        try{
-            ArrayList<Order> ordini = new ArrayList<Order>();
-            Order o = new Order(restaurant,2234,2);
-            Order e = new Order(restaurant,23454,2);
-            Order i = new Order(restaurant,34545,2);
-            Order a = new Order(restaurant,75672,2);
-            Order u = new Order(restaurant,4532,2);
-            Order og = new Order(restaurant,96782,2);
-            Order eg = new Order(restaurant,12,2);
-            Order ig = new Order(restaurant,2452,2);
-            Order ag = new Order(restaurant,85672,2);
-            Order ug = new Order(restaurant,2222,2);
-            o.setDate(new Date());
-            o.setMid(1);
-            o.setUid(45);
-            o.setRestaurantID(restaurant.getRid());
-            a.setDate(new Date());
-            a.setMid(3);
-            a.setRestaurantID(restaurant.getRid());
-            i.setDate(new Date());
-            i.setMid(4);
-            i.setRestaurantID(restaurant.getRid());
-            u.setDate(new Date());
-            u.setMid(66);
-            u.setRestaurantID(restaurant.getRid());
-            e.setDate(new Date());
-            e.setMid(8);
-            e.setRestaurantID(restaurant.getRid());
-            og.setDate(new Date());
-            og.setMid(1);
-            og.setUid(45);
-            og.setRestaurantID(restaurant.getRid());
-            ag.setDate(new Date());
-            ag.setMid(3);
-            ag.setRestaurantID(restaurant.getRid());
-            ig.setDate(new Date());
-            ig.setMid(4);
-            ig.setRestaurantID(restaurant.getRid());
-            ug.setDate(new Date());
-            ug.setMid(66);
-            ug.setRestaurantID(restaurant.getRid());
-            eg.setDate(new Date());
-            eg.setMid(8);
-            eg.setRestaurantID(restaurant.getRid());
-            ordini.add(o);
-            ordini.add(a);
-            ordini.add(e);
-            ordini.add(i);
-            ordini.add(u);
-            ordini.add(og);
-            ordini.add(ag);
-            ordini.add(eg);
-            ordini.add(ig);
-            ordini.add(ug);
-            restaurant.setOrders(ordini);
-            restaurant.saveData();
-        } catch (OrderException e) {
-            Log.e("Exception",e.toString());
-        } catch (IOException e) {
-            Log.e("Exception",e.toString());
-        } catch (JSONException e) {
-            Log.e("Exception",e.toString());
-        }
-    }
 }

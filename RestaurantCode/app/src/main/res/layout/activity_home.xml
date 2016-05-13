@@ -11,20 +11,41 @@
         android:layout_height="wrap_content"
         android:id="@+id/opt"
         android:contextClickable="true"
-        android:src="@drawable/ic_settings_24dp"
-        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_settings_black"
         android:backgroundTint="#ffffff"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:contentDescription="@string/home_imageButtonOpt_contentDesc"
-        android:layout_alignParentEnd="false"/>
-    <SearchView
+        />
+
+    <android.support.v7.widget.SearchView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/search"
+        android:id="@+id/search_view"
         android:queryHint="@string/search_hello"
         android:divider="#000000"
         android:dividerPadding="1dp"
+        android:layout_marginTop="5dp"
         android:layout_toLeftOf="@id/opt"
         android:layout_toStartOf="@id/opt"
-        android:iconifiedByDefault="false"/>
+        android:focusable="false"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/dropdown_option"
+        android:layout_below="@id/search_view"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/home_menu_rw"
+        android:layout_below="@id/dropdown_option"
+        android:focusable="false">
+    </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

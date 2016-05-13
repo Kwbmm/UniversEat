@@ -1,10 +1,10 @@
 package it.polito.mad.groupFive.restaurantcode;
 
-import android.app.Activity;
-import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,14 +17,11 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-
+import it.polito.mad.groupFive.restaurantcode.CreateRestaurant.CreateRestaurant;
+import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Create_simple_menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.User;
+import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 public class Restaurant_management extends NavigationDrawer {
 
@@ -45,30 +42,36 @@ public class Restaurant_management extends NavigationDrawer {
 
     */
     private static final int CREATE_RESTAURANT = 1;
-    private User user;
+    private RestaurantOwner user;
     private Restaurant restaurant;
     private SharedPreferences sharedPreferences;
     private Boolean visible=false;
+    private View v;
+    private MenuItem plus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-        mlay.inflate(this, R.layout.restaurant_view_edit, mlay);
+        v=mlay.inflate(this, R.layout.restaurant_view_edit, mlay);
+
         showresturant();
-
-
-
-
-
-
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if(visible==false){
-        showresturant();}
+            showresturant();}
+        if (requestCode==3){
+            update();
+        }
     }
 
     @Override
@@ -77,6 +80,7 @@ public class Restaurant_management extends NavigationDrawer {
         getMenuInflater().inflate(R.menu.toolbar_add, menu);
         int rid;
         MenuItem item=menu.findItem(R.id.add_ab);
+        plus=item;
         if ((rid=sharedPreferences.getInt("rid",-1))!=-1){
             item.setEnabled(false);
             item.setVisible(false);
@@ -90,32 +94,16 @@ public class Restaurant_management extends NavigationDrawer {
         if ((rid=sharedPreferences.getInt("rid",-1))!=-1){
             uid=sharedPreferences.getInt("uid",-1);
             try {
-                user=new User(this,rid,uid);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+                restaurant=new Restaurant(getBaseContext(),rid);
             } catch (RestaurantException e) {
                 e.printStackTrace();
-            } catch (UserException e) {
-                e.printStackTrace();
             }
-            restaurant=user.getRestaurant();
 
-            FrameLayout rview= (FrameLayout) findViewById(R.id.fl_redit);
-            rview.inflate(this,R.layout.resturant_view_edit_fragment,rview);
-            ImageButton modify = (ImageButton) findViewById(R.id.rved_modify);
-            /*modify.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("rid",-1);
-                    editor.commit();
-
-                }
-            });*/
+            LinearLayout rview= (LinearLayout) findViewById(R.id.fl_redit);
+            v=rview.inflate(this,R.layout.resturant_view_edit_fragment,rview);
+            ImageButton modify = (ImageButton) findViewById(R.id.restaurant_edit);
             visible=true;
-            RelativeLayout rl=(RelativeLayout) findViewById(R.id.rvef_rectangle);
+            RelativeLayout rl=(RelativeLayout) findViewById(R.id.restaurant_view_layout);
             rl.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -123,8 +111,6 @@ public class Restaurant_management extends NavigationDrawer {
                     startActivity(menuview);
                 }
             });
-
-
             getResaurantdata();
             return true;
         }
@@ -137,8 +123,7 @@ public class Restaurant_management extends NavigationDrawer {
         if(item.getItemId()==R.id.add_ab){
             Log.v("intent","newRest");
             Intent intent=new Intent(getApplicationContext(),CreateRestaurant.class);
-            editor.putInt("uid",1);
-            editor.commit();
+            intent.putExtra("rid",-1);
             item.setVisible(false);
             startActivityForResult(intent,CREATE_RESTAURANT);
 
@@ -147,24 +132,96 @@ public class Restaurant_management extends NavigationDrawer {
     }
 
     private boolean getResaurantdata(){
+        final String METHOD_NAME = this.getClass().getName()+" - readFiles";
 
-        TextView rname= (TextView)findViewById(R.id.rs_name);
-        TextView raddress= (TextView)findViewById(R.id.rwef_address);
-        RatingBar rbar=(RatingBar)findViewById(R.id.rwef_rate);
-        ImageView rmimw = (ImageView) findViewById(R.id.iwr);
         try {
-            restaurant.getData();
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+            this.restaurant.getData();
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME, e.getMessage());
         }
+        TextView rname= (TextView)findViewById(R.id.restaurant_name);
+        TextView raddress= (TextView)findViewById(R.id.restaurant_address);
+        RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
+        ImageView rmimw = (ImageView) findViewById(R.id.restaurant_image);
+        ImageButton edit =(ImageButton) findViewById(R.id.restaurant_edit);
         rname.setText(restaurant.getName());
         raddress.setText(restaurant.getAddress());
         rbar.setRating(restaurant.getRating());
-        //rmimw.setImageBitmap(restaurant.getImageBitmap());
+        edit.setOnClickListener( new onEditclick(1));
+
+        try {
+            rmimw.setImageBitmap(restaurant.getImageBitmap());
+        } catch (NullPointerException e){
+            Log.e("immagine non caricata"," ");
+        }
+//            rmimw.setImageDrawable(restaurant.getImageDrawable());
 
 
         return true;
 
     }
-}
+    private void update()  {
+
+        try {
+            this.restaurant.getData();
+        } catch (RestaurantException e) {
+            e.printStackTrace();
+        }
+        TextView rname= (TextView)findViewById(R.id.restaurant_name);
+        TextView raddress= (TextView)findViewById(R.id.restaurant_address);
+        RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
+        ImageView rmimw = (ImageView) findViewById(R.id.restaurant_image);
+        rname.setText(restaurant.getName());
+        raddress.setText(restaurant.getAddress());
+        rbar.setRating(restaurant.getRating());
+        rmimw.setImageBitmap(restaurant.getImageBitmap());
+
+    }
+
+    public class onEditclick implements View.OnClickListener{
+        private int position;
+        public onEditclick(int position){
+            this.position=position;
+        }
+
+        @Override
+        public void onClick(View v) {
+            AlertDialog.Builder dialog=new AlertDialog.Builder(Restaurant_management.this);
+            final CharSequence[] items = { "Edit", "Delete","Cancel" };
+            dialog.setTitle("Edit Options");
+            dialog.setItems(items,new onPositionClickDialog(position));
+            dialog.show();
+
+        }
+    }
+
+    public class onPositionClickDialog implements DialogInterface.OnClickListener{
+        private int position;
+
+        public onPositionClickDialog(int position){
+            this.position=position;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case 0:{
+                    //TODO:edit intent
+                    Intent edit_menu=new Intent(getBaseContext(),CreateRestaurant.class);
+                    edit_menu.putExtra("rid",restaurant.getRid());
+                    startActivityForResult(edit_menu,3);
+                    break;
+                }
+                case 1:{
+                    SharedPreferences.Editor editor=sharedPreferences.edit();
+                    editor.remove("rid");
+                    editor.commit();
+                    v.setVisibility(View.INVISIBLE);
+                    plus.setVisible(true);
+                    break;
+                }
+                default:{
+                    dialog.cancel();
+                }
+            }}
+}}

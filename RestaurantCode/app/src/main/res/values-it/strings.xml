@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">App Ristoranti n5</string>
+    <string name="open">Aperto</string>
+    <string name="close">Chiuso</string>
+    <string name="user_pref">RestaurantCode.Userdata</string>
+    <string-array name="drawer_option_login">
+        <item>Ricerca</item>
+        <item>Login</item>
+        <item>Registrati</item>
+    </string-array>
+    <string-array name="drawer_option_logged_user">
+        <item>Search</item>
+        <item>Profile</item>
+        <item>Logout</item>
+    </string-array>
+    <string-array name="drawer_option_logged_manager">
+        <item>Ricerca</item>
+        <item>Profilo</item>
+        <item>Ordini</item>
+        <item>Gestione Ristorante</item>
+        <item>Logout</item>
+    </string-array>
+    <string-array name="week">
+        <item>Lunedì</item>
+        <item>Martedì</item>
+        <item>Mercoledì</item>
+        <item>Giovedì</item>
+        <item>Venerdì</item>
+        <item>Sabato</item>
+        <item>Domenica</item>
+    </string-array>
+
+    <string name="search_hello">Che cosa vorresti mangiare?</string>
+    <string name="checkbox_searchByRestaurant">Ricerca per ristorante</string>
+    <string name="checkbox_searchByDish">Ricerca per piatto</string>
+
+    <string name="home_imageButtonOpt_contentDesc">Questo bottone può cambiare il tipo di ricerca.</string>
+
+    <string name="fragment_restaurant_view_imageViewIwr_contentDesc">Immagine del ristorante.</string>
+
+    <string name="menu_imageViewIwr_contentDesc">Immagine del menu.</string>
+
+    <string name="motd_imageViewIwr_contentDesc">Immagine del menu del giorno.</string>
+    <string name="motd_textViewTitle">Menu del giorno</string>
+    <string name="motd_textViewDescription">Descrizione</string>
+    <string name="motd_textViewPrice">Prezzo</string>
+
+    <string name="reservation_textViewUsername">Customer Details</string>
+    <string name="reservation_textViewLunchtime">Orari del pranzo</string>
+    <string name="reservation_textViewOrder">Pasto ordinato</string>
+    <string name="reservation_textViewNotes">Note dell\'ordine</string>
+    <string name="reservation_month">25 mag</string>
+
+    <string name="restaurantInfo_imageButtonImg">Immagine del ristorante</string>
+    <string name="restaurantInfo_textViewName">Nome del ristorante</string>
+    <string name="restaurantInfo_imageViewMaps">Mappa del ristorante</string>
+    <string name="restaurantInfo_textViewAddress">Indirizzo del ristorante</string>
+    <string name="restaurauntInfo_textViewDescription">Breve descrizione del posto.</string>
+    <string name="restaurauntInfo_textViewTimetable">Orari:\nLun: orario\nMar: orario\nMer: orario\nGio: orario\nVen: orario\nSab: orario\nDom: orario</string>
+    <string name="toastFail">Qualcosa è andato storto o qualche campo obbligatorio non è stato riempito!</string>
+
+    <string name="restaurantViewEdit_textViewName">Nome del ristorante</string>
+
+    <string name="reviewlist_imageButtonImg">Immagine del ristorante</string>
+    <string name="reviewlist_textViewName">Nome del ristorante</string>
+    <string name="finish">Fine</string>
+
+
+    <!-- Create_menu_frag.java -->
+    <string name="pick_gallery">Immagine dalla galleria</string>
+    <string name="take_picture">Fai una foto</string>
+    <string name="alertBox_photo_title">Aggiungi immagine</string>
+    <string name="intentChooser_select_image">Seleziona immagine</string>
+    <string-array name="spinner_menu">
+        <item>Fisso</item>
+        <item>Scelta multipla</item>
+    </string-array>
+    <!-- END Create_menu_frag.java -->
+
+    <!-- timetable_restaurant_item.xml-->
+    <string name="workingHItem_textViewFrom">Da</string>
+    <string name="workingHItem_textViewTo">A</string>
+    <string name="monday">Lun</string>
+    <string name="tuesday">Mar</string>
+    <string name="wednesday">Mer</string>
+    <string name="thursday">Gio</string>
+    <string name="friday">Ven</string>
+    <string name="saturday">Sab</string>
+    <string name="sunday">Dom</string>
+    <string name="next">Prossimo</string>
+
+    <!-- END timetable_restaurant_item.xml-->
+
+    <!-- fragment_create_restaurant_1.xml -->
+    <string name="frg_create_restaurant_1_textView_RestaurantName">Nome del ristorante</string>
+    <string name="frg_create_restaurant_1_imageView_ContentDesc">Immagine del ristorante</string>
+    <string name="frg_create_restaurant_1_textView_Description">Descrizione</string>
+    <string name="frg_create_restaurant_1_textView_Telephone">Numero di telefono</string>
+    <string name="frg_create_restaurant_1_textView_Website">Sito web</string>
+    <!-- END fragment_create_restaurant_1.xml -->
+
+    <!-- fragment_create_restaurant_2.xml -->
+    <string name="frg_create_restaurant_2_textView_Address">Indirizzo</string>
+    <string name="frg_create_restaurant_2_textView_City">Città</string>
+    <string name="frg_create_restaurant_2_textView_ZIPCode">CAP</string>
+    <string name="frg_create_restaurant_2_textView_State">Stato</string>
+    <!-- END fragment_create_restaurant_2.xml -->
+
+    <!-- fragment_create_restaurant_3.xml -->
+    <string name="frg_create_restaurant_3_textView_TimetableLunch">Orari - Pranzo</string>
+    <string name="frg_create_restaurant_3_textView_TimetableDinner">Orari - Cena</string>
+    <!-- END fragment_create_restaurant_3.xml -->
+
+
+    <!-- CreateRestaurant_3.java CreateRestaurant_4.java -->
+    <string name="titleTimePickerFrom">Seleziona orario di apertura</string>
+    <string name="titleTimePickerTo">Seleziona orario di chiusura</string>
+    <!-- END CreateRestaurant_3.java CreateRestaurant_4.java -->
+
+    <!-- fragment_create_restaurant_5.xml -->
+    <string name="frg_create_restaurant_5_textView_AcceptedTickets">Ticket Accettati</string>
+    <!-- END fragment_create_restaurant_5.xml -->
+
+    <!-- activity_create_menu_frag2.xml -->
+    <string name="checkBox_ServiceFee">Coperto</string>
+    <string name="checkBox_BeverageIncluded">Bevande incluse</string>
+    <string name="editText_Price">Prezzo</string>
+    <!-- END activity_create_menu_frag2.xml -->
+
+
+    <!-- Class Add_dish -->
+    <string name="add_dish_starter">Antipasto</string>
+    <string name="add_dish_main_dish">Primo piatto</string>
+    <string name="add_dish_italian">Italiano</string>
+    <string name="add_dish_chinese">Cinese</string>
+    <string name="add_dish_indian">Indiano</string>
+    <!-- END Class Add_dish -->
+
+    <!-- Class Create_menu_frag -->
+    <string name="create_menu_frag_fixed">Fisso</string>
+    <string name="create_menu_frag_multiple_choice">Scelta multipla</string>
+    <!-- END Class Create_menu_frag -->
+
+    <!-- Class Menu_view_edit -->
+    <string name="menu_view_edit_fixed_price_menu">Menu prezzo fisso</string>
+    <string name="menu_view_edit_yes">Si</string>
+    <string name="menu_view_edit_no">No</string>
+    <string name="menu_view_edit_delete">Eliminare?</string>
+    <!-- END Class Create_menu_frag -->
+
+    <string-array name="months">
+        <item>Gen</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>Mag</item>
+        <item>Giu</item>
+        <item>Lug</item>
+        <item>Ago</item>
+        <item>Set</item>
+        <item>Ott</item>
+        <item>Nov</item>
+        <item>Dic</item>
+    </string-array>
+
+    <string name="jan">Gen</string>
+    <string name="feb">Feb</string>
+    <string name="mar">Mar</string>
+    <string name="apr">Apr</string>
+    <string name="may">Mag</string>
+    <string name="jun">Giu</string>
+    <string name="jul">Lug</string>
+    <string name="aug">Ago</string>
+    <string name="sep">Set</string>
+    <string name="oct">Ott</string>
+    <string name="nov">Nov</string>
+    <string name="dec">Dic</string>
+
+    <string name="username">Nome</string>
+    <string name="emailaddress">Indirizzo email</string>
+    <string name="surname">Cognome</string>
+    <string name="nickname">Username</string>
+    <string name="password">Password</string>
+    <string name="password_repeat">Ripeti la password</string>
+    <string name="button_end">FINE</string>
+    <string name="restaurantowner">Proprietario di ristorante</string>
+
+    <string name="login">Creazione nuovo account</string>
+    <string name="login1">Spunta qui se sei un RISTORATORE:</string>
+    <string name="login_rest">RISTORATORE</string>
+
+    <string name="SearchResult_toastFailLoadDM">Il Data Manager non è riuscito a caricare i file… :(</string>
+    <string name="SearchResult_toastNoMenus">Non ci sono menù da mostrare.</string>
+    <string name="SearchResult_toastNoRestaurants">Non ci sono ristoranti da mostrare.</string>
+
+    <!--Restaurant_info_user-->
+    <string name="closed">Chiuso</string>
+
+    <array name="tags">
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Carne</item>
+        <item>Pesce</item>
+        <item>Vino</item>
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Carne</item>
+        <item>Pesce</item>
+        <item>Vino</item>
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Carne</item>
+        <item>Pesce</item>
+        <item>Vino</item>
+        <item>Cake</item>
+        <item>Pizza</item>
+        <item>Pasta</item>
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Cocktail</item>
+    </array>
+    <string name="restaurantView_textViewRestaurantAddress">Indirizzo</string>
+    <string name="restaurantView_textViewRestaurantName">Nome del Ristorante</string>
+    <string name="restaurantView_textViewRestaurantDescription">Descrizione</string>
+
+    <!-- activity_create_review.xml -->
+    <string name="Review_Title">Titolo recensione</string>
+    <string name="Review">Recensione:</string>
+    <string name="Create">Crea</string>
+
+    <!-- add_dish.xml -->
+    <string name="add_dish_Name">Nome</string>
+    <string name="add_dish_Type">Tipo</string>
+    <string name="add_dish_Cuisine">Cucina</string>
+    <string name="add_dish_Vegan">Vegano</string>
+    <string name="add_dish_Vegetarian">Vegetariano</string>
+    <string name="add_dish_Hot">Piccante</string>
+    <string name="add_dish_Add">Aggiungi</string>
+    <string name="add_dish_Gluten_free">Senza glutine</string>
+
+    <!-- fragment_create_menu.xml -->
+    <string name="Menu_name">Nome menu</string>
+
+    <!-- fragment_create_simple_menu1.xml -->
+    <string name="fragment_create_simple_menu1_Menu_Image">Immagine del menu</string>
+    <string name="fragment_create_simple_menu1_Send_notification">Abilita notifica</string>
+    <string name="fragment_create_simple_menu1_Dishes">Piatti</string>
+    <string name="toast_empty_field">Nome o descrizione è vuoto!</string>
+    <string name="toast_empty_price">Il prezzo è vuoto!</string>
+
+    <!-- fragment_delete_dish.xml-->
+    <string name="fragment_delete_dish_complete">Completa</string>
+
+    <!-- fragment_login_view.xml-->
+    <string name="fragment_login_view_Username">Username</string>
+    <string name="fragment_login_view_Password">Password</string>
+    <string name="fragment_login_view_Login">Login</string>
+    <string name="fragment_login_view_Register">Registrati</string>
+
+    <!-- fragment_restaurant_menu_user.xml-->
+    <string name="fragment_restaurant_menu_user_Complete_Menu">Menù completo</string>
+
+    <!-- fragment_simple_menu_add_tags.xml-->
+    <string name="fragment_simple_menu_add_tags_Add_new_tags">Aggiungi nuovi tag</string>
+
+    <!-- incorrect_login.xml-->
+    <string name="incorrect_login">Username o password non corretta</string>
+
+    <!-- make_order.xml-->
+    <string name="make_order_Reservation_Name">Nome prenotazione</string>
+    <string name="make_order_date">Seleziona una data</string>
+    <string name="make_order_time">Seleziona un orario</string>
+    <string name="make_order_notes">Qualcosa da segnalare?</string>
+
+    <!-- menu_choice.xml-->
+    <string name="menu_choice_Option">Opzioni</string>
+
+    <!-- menu_details.xml-->
+    <string name="menu_details_Menu_Name">Nome del menu</string>
+    <string name="menu_details_beverage">Bevande non incluse</string>
+    <string name="menu_details_service">Coperto non incluso</string>
+    <string name="menu_details_Menu_description">Descrizione del menu</string>
+    <string name="menu_details_order">Ordina ora!</string>
+    <string name="menu_details_course">Nome del piatto</string>
+    <string name="menu_details_option">Nome dell\'opzione</string>
+
+    <!-- menu_dish_frag.xml-->
+    <string name="menu_dish_frag_DishName">NomePiatto</string>
+
+    <!-- profile.xml-->
+    <string name="profile_Name">Nome</string>
+    <string name="profile_username">username</string>
+    <string name="profile_My_List">La mia lista</string>
+    <string name="profile_email">email</string>
+
+    <!-- reservationlist.xml-->
+    <string name="reservationlist_noitems">Nessun elemento da mostrare.</string>
+
+    <!-- review.xml-->
+    <string name="review_title">Titolo recensione</string>
+
+    <!-- timetable_view.xml-->
+    <string name="timetable_view_DayOfWeek">GiornoDellaSettimana</string>
+
+    <!-- Create_menu_frag2.java-->
+    <string name="Create_menu_frag2_option">Opzione </string>
+
+    <!-- MakeOrder.java-->
+    <string name="MakeOrder_name">Per favore inserire un nome</string>
+    <string name="MakeOrder_past">Non puoi ordinare nel passato!</string>
+    <string name="MakeOrder_successful">Ordine completato con successo</string>
+
+    <!-- Menu_details.java-->
+    <string name="Menu_details_beverage_incl">Bevande incluse</string>
+    <string name="Menu_details_beverage_not">Bevande non incluse</string>
+    <string name="Menu_details_service_fee_incl">Coperto incluso</string>
+    <string name="Menu_details_service_fee_not">Coperto non incluso</string>
+
+    <!-- Menu_view_edit.java-->
+    <string name="Menu_view_edit_Edit">Modifica</string>
+    <string name="Menu_view_edit_Delete">Elimina</string>
+    <string name="Menu_view_edit_Cancel">Cancella</string>
+    <string name="Menu_view_edit_options">Opzioni modifica</string>
+
+    <array name="cuisine">
+        <item>Italiana</item>
+        <item>Cinese</item>
+        <item>Giapponese</item>
+        <item>Indiana</item>
+        <item>Messicana</item>
+        <item>Americana</item>
+    </array>
+    <array name="type">
+        <item>Antipasto</item>
+        <item>Primo</item>
+        <item>Bevanda</item>
+        <item>Dessert</item>
+        <item>Contorno</item>
+        <item>Secondo</item>
+    </array>
+    <string name="toastRegisterPasswordFail">Le password inserite non coincidono</string>
+    <string name="sortTitle">Ordina per</string>
+    <string name="frg_create_restaurant_2_editView_AddressHint">Indirizzo del ristorante</string>
+    <string name="frg_create_restaurant_2_editView_CityHint">Città del ristorante</string>
+    <string name="frg_create_restaurant_2_editView_StateHint">Stato del ristorante</string>
+    <string name="frg_create_restaurant_2_editView_ZIPCodeHint">CAP del ristorante</string>
+    <string name="frg_creatLog1_textViewImageText">Immagine Profilo</string>
+    <string name="frg_create_restaurant_1_editView_DescriptionHint">Breve Descrizione</string>
+    <string name="frg_create_restaurant_1_editView_RestaurantNameHint">Nome del ristorante</string>
+    <string name="frg_create_restaurant_1_editView_TelephoneHint">Numero di telefono del ristorante</string>
+    <string name="frg_create_restaurant_1_editView_WebsiteHint">Sito web del ristorante</string>
+    <string name="featureUnavail">Questa funzionalità è ancora in fase di sviluppo</string>
+    <string name="filterTitle">Filtra per…</string>
+    <string name="Ticket_Restaurant"></string>
+
+</resources>

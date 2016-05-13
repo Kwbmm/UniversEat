@@ -2,160 +2,178 @@ package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
- * @author Marco
+ * @author Marco Ardizzone
  * @class Menu
- * @date 04/04/16
+ * @date 2016-04-18
  * @brief Menu class
  */
 public class Menu {
 
-    private JSONObject JSONFile = null;
+    transient private Restaurant r=null;
 
     private int mid;
     private String name=null;
     private String description=null;
     private float price;
-    private byte[] image=null;
+    private byte[] image;
     private int type;
-    private int numberchoice;
-    private ArrayList<Course> courses=null;
+    private int choiceAmount;
+    private ArrayList<Course> courses = new ArrayList<>();
+    private ArrayList<Option> options = new ArrayList<>();
     private boolean ticket;
-    private Restaurant r=null;
     private boolean beverage;
-    private boolean servicefee;
+    private boolean serviceFee;
+    private int rid;
 
-    public Menu(Restaurant restaurant){
-        this.r = restaurant;
-        this.JSONFile = restaurant.getJSONFile();
-        this.courses = new ArrayList<Course>();
+    /**
+     * Create an instance of Menu: requires, as parameter, its restaurant object.
+     * The ID of the menu is generated automatically.
+     *
+     * @param restaurant The restaurant object whose this menu belongs to.
+     * @throws MenuException If menu id is negative
+     */
+    public Menu(Restaurant restaurant) throws MenuException {
+        this(restaurant, Menu.randInt());
     }
 
     /**
+     * Create an instance of Menu: requires, as parameters, its restaurant object and an integer
+     * positive ID to uniquely identifying this object.
      *
-     * @param restaurant Restaurant instance.
-     * @param mid The ID of the menu.
-     * @throws MenuException Thrown if menu ID is negative.
+     * @param restaurant The restaurant object whose course belongs to
+     * @param mid A positive integer unique identifier.
+     * @throws MenuException If menu id is negative
      */
     public Menu(Restaurant restaurant, int mid) throws MenuException {
         this.r = restaurant;
-        this.JSONFile = restaurant.getJSONFile();
         if(mid < 0)
             throw new MenuException("Menu ID must be positive");
         this.mid = mid;
-        this.courses = new ArrayList<Course>();
+        try {
+            r.getData();
+        } catch (RestaurantException e) {
+            e.printStackTrace();
+        }
+        this.rid=r.getRid();
     }
 
     /**
-     * Reads data from JSON configuration file.
-     * If some field is missing, it throws JSONException.
-     * Please note that course objects read like this are just filled with their
-     * own id. The other data must be filled through the methods provided in the Course class.
-     *
-     * @throws JSONException if some field is missing.
+     * Generate a random integer in the range [1, Integer.MAX_VALUE]
+     * @return In integer in the range [1, Integer.MAX_VALUE]
      */
-    public void getData() throws JSONException, CourseException {
-        JSONArray menus = this.JSONFile.getJSONArray("menus");
-        for (int i = 0; i < menus.length(); i++) {
-            if(menus.getJSONObject(i).getInt("id") == this.mid){
-                JSONObject jsonMenu = menus.getJSONObject(i);
-                this.name = jsonMenu.getString("name");
-                this.description = jsonMenu.getString("description");
-                this.price = (float) jsonMenu.getDouble("price");
-                //this.image = jsonMenu.getString("image").getBytes();
-                this.type = jsonMenu.getInt("type");
-                this.ticket = jsonMenu.getBoolean("ticket");
-                this.numberchoice = jsonMenu.getInt("numberchoice");
-                this.beverage = jsonMenu.getBoolean("beverage");
-                this.servicefee = jsonMenu.getBoolean("servicefee");
-
-                JSONArray courses = jsonMenu.getJSONArray("courses");
-                for (int j = 0; j < courses.length(); j++){
-                    Course c = new Course(this.r, courses.getJSONObject(j).getInt("id"), this.mid);
-                    c.getData();
-                    this.courses.add(c);
-                }
-                break; //Exit from the outer loop
-            }
+    private static int randInt() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
+        else{
+            Random rand= new Random();
+            int result;
+            if((result=rand.nextInt(Integer.MAX_VALUE)) == 0)
+                return Menu.randInt();
+            return result;
         }
     }
 
     /**
-     * THIS METHOD SHOULD NEVER BE CALLED ON IT'S OWN!
-     * Returns a JSONObject to saveData method of Restaurant class.
+     * Fetch the data corresponding to the Menu ID of this object from the JSON file.
+     * Fetch operations are always performed inside the restaurant object, this is just a call to
+     * that method.
      *
-     * @throws JSONException
+     * @throws MenuException If fetch fails
      */
-    public JSONObject saveData() throws JSONException{
-        JSONObject menu = new JSONObject();
-        menu.put("id",this.mid);
-        menu.put("name",this.name);
-        menu.put("description",this.description);
-        menu.put("price",this.price);
-       // menu.put("image",this.image.toString());
-        menu.put("type",this.type);
-        menu.put("ticket",this.ticket);
-        menu.put("numberchoice",this.numberchoice);
-        menu.put("beverage",this.beverage);
-        menu.put("servicefee",this.servicefee);
-        //Add a new array for the courses, and fill it!
-        menu.put("courses",new JSONArray());
-        for(Course c : this.courses)
-            menu.getJSONArray("courses").put(c.saveData());
+    public void getData() throws MenuException {
+        final String METHOD_NAME = this.getClass().getName()+" - getData";
+        try {
+            this.r.getData();
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+            throw new MenuException(e.getMessage());
+        }
+        Menu dummy = null;
+        try {
+            dummy = this.r.getMenuByID(this.mid);
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME, e.getMessage());
+            throw new MenuException(e.getMessage());
+        }
+        this.copyData(dummy);
+    }
 
-        return menu;
+    /**
+     * Copy all the data took from the JSON file on this object.
+     * @param dummy A dummy Menu object, on which the JSON data is written to.
+     */
+    private void copyData(Menu dummy) {
+        this.mid = dummy.getMid();
+        this.name = dummy.getName();
+        this.description = dummy.getDescription();
+        this.price = dummy.getPrice();
+        this.image = dummy.getImageByteArray();
+        this.type = dummy.getType();
+        this.choiceAmount = dummy.getChoiceAmount();
+        this.courses = dummy.getCourses();
+        this.ticket = dummy.acceptTicket();
+        this.beverage = dummy.isBeverage();
+        this.serviceFee = dummy.isServiceFee();
+        this.options = dummy.getOptions();
+
     }
 
     /**
      *
      * @return The ID
      */
-    public int getMid(){ return this.mid;}
+    public int getMid(){ return this.mid; }
 
     /**
      *
      * @return The name of the menu
      */
-    public String getName(){ return this.name;}
+    public String getName(){ return this.name; }
 
     /**
      *
      * @return The description of the menu
      */
-    public String getDescription(){ return this.description;}
+    public String getDescription(){ return this.description; }
 
     /**
      *
      * @return The price of the menu
      */
-    public float getPrice(){ return this.price;}
+    public float getPrice(){ return this.price; }
 
     /**
      *
-     * @return The image of the course, in base 64 format
+     * @return The byte representation of the image
      */
-    public byte[] getImage64(){return this.image;}
+    public byte[] getImageByteArray() {
+        return this.image;
+    }
 
     /**
+     * Returns the Bitmap of the image.
+     * If you can, use getImageByteArray instead of this one as it is more efficient.
      *
-     * @return The image of the course, in Bitmap format
+     * @return The Bitmap representing the image.
      */
     public Bitmap getImageBitmap(){
-        return BitmapFactory.decodeByteArray(this.image, 0, this.image.length);
+        final String METHOD_NAME = this.getClass().getName()+" - getImageBitmap";
+        return BitmapFactory.decodeByteArray(this.image,0,this.image.length);
     }
 
     /**
@@ -166,7 +184,7 @@ public class Menu {
      *  3 = "complete" = Complete menu
      * @return Textual representation of the type of menu
      */
-    public String getTypeString(){
+    public String getTypeAsString(){
         switch(this.type){
             case 0:
                 return "day"; //Menu of the day
@@ -185,16 +203,17 @@ public class Menu {
      *
      * @return The integer associated with the menu type
      */
-    public int getType(){return this.type;}
+    public int getType(){ return this.type; }
 
     /**
      *
      * @return The list of all the courses in the menu
      */
-    public ArrayList<Course> getCourses(){ return this.courses;}
+    public ArrayList<Course> getCourses(){ return this.courses; }
 
     /**
      * This method returns a particular course, given its ID.
+     *
      * @param id The id of the course
      * @return The requested course or null if nothing is found.
      */
@@ -208,6 +227,7 @@ public class Menu {
     /**
      * This method returns a particular course, given its name.
      * If the course is not found, it returns null.
+     *
      * @param name Name of the course to search for.
      * @return The requested course or null if nothing is found.
      */
@@ -219,11 +239,12 @@ public class Menu {
     }
 
     /**
-     * This method returns the list of all gluten-free courses
+     * This method returns the list of all gluten-free courses.
+     *
      * @return The list of gluten-free courses
      */
     public ArrayList<Course> getGlutenFreeCourses(){
-        ArrayList<Course> output = new ArrayList<Course>();
+        ArrayList<Course> output = new ArrayList<>();
         for(Course course: this.courses){
             if(course.isGlutenFree())
                 output.add(course);
@@ -233,10 +254,11 @@ public class Menu {
 
     /**
      * This method returns the list of all the vegan courses.
+     *
      * @return The list of vegan courses
      */
     public ArrayList<Course> getVeganCourses(){
-        ArrayList<Course> output = new ArrayList<Course>();
+        ArrayList<Course> output = new ArrayList<>();
         for(Course course: this.courses){
             if(course.isVegan())
                 output.add(course);
@@ -246,10 +268,11 @@ public class Menu {
 
     /**
      * This method returns the list of all the vegetarian courses.
+     *
      * @return The list of vegetarian courses
      */
     public ArrayList<Course> getVegetarianCourses(){
-        ArrayList<Course> output = new ArrayList<Course>();
+        ArrayList<Course> output = new ArrayList<>();
         for(Course course: this.courses){
             if(course.isVegetarian())
                 output.add(course);
@@ -259,10 +282,11 @@ public class Menu {
 
     /**
      * This method returns the list of all the spicy courses.
+     *
      * @return The list of spicy courses
      */
     public ArrayList<Course> getSpicyCourses(){
-        ArrayList<Course> output = new ArrayList<Course>();
+        ArrayList<Course> output = new ArrayList<>();
         for(Course course: this.courses)
             if(course.isSpicy())
                 output.add(course);
@@ -272,57 +296,153 @@ public class Menu {
 
     /**
      * Returns true if the menu can be bought with tickets. False otherwise.
+     *
      * @return true or false
      */
     public boolean acceptTicket(){ return this.ticket; }
 
     /**
      *
-     * @param mid The ID of the menu
+     * @return The number of multiple choice menu
      */
-    public void setMid(int mid){ this.mid = mid;}
+    public int getChoiceAmount(){ return this.choiceAmount; }
+
+    /**
+     *
+     * @return True if beverage is included, false otherwise.
+     */
+    public boolean isBeverage() {
+        return beverage;
+    }
+
+    /**
+     *
+     * @return True if there is an extra fee to pay for the service, false otherwise.
+     */
+    public boolean isServiceFee() {
+        return serviceFee;
+    }
+
+    /**
+     *
+     * @return An ArrayList with all the options for this menu.
+     */
+    public ArrayList<Option> getOptions(){ return this.options; }
+
+    /**
+     * Looks for an Option object with the given ID in the set of available Options.
+     * If a match is found, the corresponding Option object is returned, otherwise the method returns
+     * null.
+     *
+     * @param optID The ID to look for.
+     * @return Option object if successful, null otherwise
+     */
+    public Option getOptionByID(int optID) {
+        for(Option o : this.options)
+            if(o.getOptID() == optID)
+                return o;
+        return null;
+    }
+
+    /**
+     * Returns the tags associated to all the Courses in this menu. If no tags are added to the
+     * Course objects of this Menu object, the returned ArrayMap is empty.
+     *
+     * @return An ArrayList of Strings representing the tag.
+     */
+    public ArrayList<String> getTags(){
+        ArrayList<String> output = new ArrayList<>();
+        for(Course c : this.courses)
+            if(c.getTags().size() != 0)
+                output.addAll(c.getTags());
+        return output;
+    }
+
+    /**
+     *
+     * @param mid The ID of the menu
+     * @throws MenuException if menu id is negative.
+     */
+    public void setMid(int mid) throws MenuException {
+        if(mid < 0)
+            throw new MenuException("Menu ID must be positive");
+        this.mid = mid;
+    }
 
     /**
      *
      * @param name The name of the menu
      */
-    public void setName(String name){ this.name = name;}
+    public void setName(String name){ this.name = name; }
 
     /**
      *
      * @param description The description of the menu
      */
-    public void setDescription(String description){ this.description = description;}
+    public void setDescription(String description){ this.description = description; }
+
+    /**
+     *
+     * @return Restaurant reference to fetch data
+     */
+
+    public int getRid() {
+        return rid;
+    }
 
     /**
      *
      * @param price The price of the menu
+
      */
-    public void setPrice(float price){ this.price = price;}
+    public void setPrice(float price){ this.price = price; }
 
     /**
-     * Sets the base 64 encoding of the image
-     * @param image Byte array of image, encoded in base 64
+     *
+     * @param image Byte array representing the image
      */
-    public void setImage64(byte[] image){ this.image = image;}
+    public void setImageFromByteArray(byte[] image){ this.image = image; }
 
     /**
-     * Sets the base 64 encoding of the image from an input Bitmap
-     * @param image Bitmap image to save
+     * Sets the byte array representation of the image from a given input Bitmap.
+     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
+     *
+     * @param image Bitmap representing the image
      */
-    public void setImage64FromBitmap(Bitmap image){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        this.image = baos.toByteArray();
+    public void setImageFromBitmap(Bitmap image){
+        final String METHOD_NAME = this.getClass().getName()+" - setImageFromBitmap";
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, output);
+        this.image = output.toByteArray();
     }
 
     /**
-     * Sets the base 64 encoding of the image from an input Drawable
-     * @param image Drawable image to save
+     * Sets the byte array representation of the image from a given input Drawable. The drawable
+     * is first converted to a Bitmap and then setImageFromBitmap is called.
+     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
+     *
+     * @param image Drawable representing the image
      */
-    public void setImage64FromDrawable(Drawable image){
-        Bitmap b = ((BitmapDrawable) image).getBitmap();
-        this.setImage64FromBitmap(b);
+    public void setImageFromDrawable(Drawable image){
+        Bitmap bitmap = null;
+
+        if (image instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) image;
+            if(bitmapDrawable.getBitmap() != null) {
+                this.setImageFromBitmap(bitmapDrawable.getBitmap());
+            }
+        }
+
+        if(image.getIntrinsicWidth() <= 0 || image.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(image.getIntrinsicWidth(), image.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        image.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        image.draw(canvas);
+        this.setImageFromBitmap(bitmap);
     }
 
     /**
@@ -360,39 +480,39 @@ public class Menu {
      *
      * @param courses The list of courses of this menu
      */
-    public void setCourses(ArrayList<Course> courses){ this.courses = courses;}
+    public void setCourses(ArrayList<Course> courses){ this.courses = courses; }
 
     /**
      *
      * @param v true or false.
      */
-    public void setTicket(boolean v){ this.ticket = v;}
+    public void setTicket(boolean v){ this.ticket = v; }
 
     /**
      *
-     * @param numberchoice set the number of multiple choice menu
+     * @param choiceAmount The number of multiple choice menu
      */
-    public void setNumberchoice(int numberchoice){ this.numberchoice=numberchoice; }
+    public void setChoiceAmount(int choiceAmount){ this.choiceAmount=choiceAmount; }
 
     /**
+     * Sets if beverage is included.
      *
-     * @return the number of multiple choice menu
+     * @param beverage true or false
      */
-    public int getNumberchoice(){ return this.numberchoice; }
-
-    public boolean isBeverage() {
-        return beverage;
-    }
-
     public void setBeverage(boolean beverage) {
         this.beverage = beverage;
     }
 
-    public boolean isServicefee() {
-        return servicefee;
-    }
+    /**
+     * Sets if there is an extra fee to pay for the service.
+     *
+     * @param serviceFee true or false
+     */
+    public void setServiceFee(boolean serviceFee) { this.serviceFee = serviceFee; }
 
-    public void setServicefee(boolean servicefee) {
-        this.servicefee = servicefee;
-    }
+    /**
+     *
+     * @param opts An ArrayList of options to set on this menu.
+     */
+    public void setOptions(ArrayList<Option> opts){ this.options = opts; }
 }

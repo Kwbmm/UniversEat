@@ -1,35 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView_TimetableLunch"
-        android:text="@string/frg_create_restaurant_3_textView_TimetableLunch"
-        android:textSize="@dimen/frg_textView_textSize"
-        />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/FL_timetableLunch"
-        android:orientation="vertical"
-        android:layout_below="@id/textView_TimetableLunch"
-        >
-    </LinearLayout>
-
-    <Button
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/Button_Next"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:text="@string/next"
-        android:layout_below="@id/FL_timetableLunch"
-        android:layout_marginTop="@dimen/btn_marginTop"
-        android:layout_marginRight="@dimen/btn_marginRight"
-        android:layout_marginEnd="@dimen/btn_marginRight"
-        />
-</RelativeLayout>
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_TimetableLunch"
+            android:text="@string/frg_create_restaurant_3_textView_TimetableLunch"
+            android:textSize="@dimen/frg_textView_textSize"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/FL_timetableLunch"
+            android:orientation="vertical"
+            android:layout_below="@id/textView_TimetableLunch"
+            >
+        </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Button_Next"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/next"
+            android:layout_below="@id/FL_timetableLunch"
+            android:layout_marginTop="@dimen/btn_marginTop"
+            android:layout_marginRight="@dimen/btn_marginRight"
+            android:layout_marginEnd="@dimen/btn_marginRight"
+            />
+    </RelativeLayout>
+</ScrollView>

@@ -2,27 +2,29 @@ package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.os.Build;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * @author Marco
  * @class Course
- * @date 04/04/16
+ * @date 2016-04-18
  * @brief Course class
  */
 public class Course {
 
-    private JSONObject JSONFile = null;
-    private Restaurant r=null;
+    transient private Restaurant r=null;
 
     private int cid;
     private int mid;
@@ -34,102 +36,137 @@ public class Course {
     private boolean vegan;
     private boolean vegetarian;
     private boolean spicy;
+    private ArrayList<String> tags = new ArrayList<>();
 
-    public Course(Restaurant restaurant){
-        this.r = restaurant;
-        this.JSONFile = restaurant.getJSONFile();
-    }
-
-    public Course(Restaurant restaurant, int cid, int mid) throws CourseException {
-        if(cid < 0)
-            throw new CourseException("Course ID must be positive");
-        this.cid = cid;
-        this.mid = mid;
-        this.r = restaurant;
-        this.JSONFile = restaurant.getJSONFile();
+    /**
+     * Create an instance of Course: requires, as parameter, its restaurant object.
+     * The ID of the course is generated automatically.
+     *
+     * @param restaurant The restaurant object whose this course belongs to.
+     * @throws CourseException If course id is negative.
+     */
+    public Course(Restaurant restaurant) throws CourseException {
+        this(restaurant,Course.randInt());
     }
 
     /**
-     * Reads data from JSON configuration file.
-     * If some field is missing, it throws JSONException.
+     * Create an instance of Course: requires, as parameters, its restaurant object and an integer
+     * positive ID to uniquely identifying this object.
      *
-     * @throws JSONException if some field is missing.
+     * @param restaurant The restaurant object whose course belongs to
+     * @param cid A positive integer unique identifier.
+     * @throws CourseException If course id is negative.
      */
-    public void getData() throws JSONException{
-        JSONArray menus = this.JSONFile.getJSONArray("menus");
-        for (int i = 0; i < menus.length(); i++) {
-            if(menus.getJSONObject(i).getInt("id") == this.mid){
-                JSONArray courses = menus.getJSONObject(i).getJSONArray("courses");
-                for (int j = 0; j < courses.length(); j++) {
-                    if(courses.getJSONObject(j).getInt("id") == this.cid){
-                        JSONObject course = courses.getJSONObject(j);
-                        this.name = course.getString("name");
-                        this.description = course.getString("description");
-                        this.price = (float) course.getDouble("price");
-                        this.image = course.getString("image").getBytes();
-                        this.glutenFree = course.getBoolean("glutenFree");
-                        this.vegan = course.getBoolean("vegan");
-                        this.vegetarian = course.getBoolean("vegetarian");
-                        this.spicy = course.getBoolean("spicy");
-                    }
-                }
+    public Course(Restaurant restaurant, int cid) throws CourseException {
+        if(cid < 0)
+            throw new CourseException("Course ID must be positive");
+        this.cid = cid;
+        this.r = restaurant;
+    }
+
+    /**
+     * Generate a random integer in the range [1, Integer.MAX_VALUE]
+     * @return In integer in the range [1, Integer.MAX_VALUE]
+     */
+    private static int randInt() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
+        else{
+            Random rand= new Random();
+            int result;
+            if((result=rand.nextInt(Integer.MAX_VALUE)) == 0)
+                return Course.randInt();
+            return result;
+        }
+    }
+
+    /**
+     * Fetch the data corresponding to the Course ID of this object from the JSON file.
+     * Fetch operations are always performed inside the restaurant object, this is just a call to
+     * that method.
+     *
+     * @throws CourseException If fetch fails
+     */
+    public void getData() throws CourseException {
+        final String METHOD_NAME = this.getClass().getName()+" - getData";
+        try {
+            this.r.getData();
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+            throw new CourseException(e.getMessage());
+        }
+        for(Menu m :this.r.getMenus()){
+            if(m.getCourseByID(this.cid) != null) {
+                Course dummy = m.getCourseByID(this.cid);
+                this.copyData(dummy);
             }
         }
     }
 
     /**
-     * THIS METHOD SHOULD NEVER BE CALLED ON IT'S OWN!
-     * Returns a JSONObject to saveData method of Restaurant class.
-     *
+     * Copy all the data took from the JSON file on this object.
+     * @param d A dummy Course object, on which the JSON data is written to.
      */
-     public JSONObject saveData() throws JSONException{
-        JSONObject course = new JSONObject();
-        course.put("id",this.cid);
-        course.put("name",this.name);
-        course.put("description",this.description);
-        course.put("price",this.price);
-        course.put("image",this.image.toString());
-        course.put("glutenFree",this.glutenFree);
-        course.put("vegan",this.vegan);
-        course.put("vegetarian",this.vegetarian);
-        course.put("spicy",this.spicy);
-        return course;
+    private void copyData(Course d){
+        this.cid = d.getCid();
+        this.mid = d.getMid();
+        this.name = d.getName();
+        this.description = d.getDescription();
+        this.price = d.getPrice();
+        this.image = d.getImageByteArray();
+        this.glutenFree = d.isGlutenFree();
+        this.vegan = d.isVegan();
+        this.vegetarian = d.isVegetarian();
+        this.spicy = d.isSpicy();
+        this.tags = d.getTags();
     }
+
     /**
      *
      * @return The Course ID
      */
-    public int getCid(){return this.cid;}
+    public int getCid(){ return this.cid;}
+
+    /**
+     *
+     * @return The ID of the menu whose this course belongs to.
+     */
+    public int getMid(){ return this.mid; }
 
     /**
      *
      * @return The name of the course
      */
-    public String getName(){return this.name;}
+    public String getName(){ return this.name; }
 
     /**
      *
      * @return The description of the course
      */
-    public String getDescription(){return this.description;}
+    public String getDescription(){ return this.description; }
 
     /**
      *
      * @return The price of the course
      */
-    public float getPrice(){return this.price;}
+    public float getPrice(){ return this.price; }
 
     /**
      *
-     * @return The image of the course, in base 64 format
+     * @return The byte representation of the image
      */
-    public byte[] getImage64(){return this.image;}
+    public byte[] getImageByteArray() {
+        return this.image;
+    }
 
     /**
+     * Returns the Bitmap of the image.
+     * If you can, use getImageByteArray instead of this one as it is more efficient.
      *
-     * @return The image of the course, in Bitmap format
+     * @return The Bitmap representing the image.
      */
     public Bitmap getImageBitmap(){
+        final String METHOD_NAME = this.getClass().getName()+" - getImageBitmap";
         return BitmapFactory.decodeByteArray(this.image,0,this.image.length);
     }
 
@@ -137,31 +174,55 @@ public class Course {
      * Returns true if course is gluten-free. False otherwise.
      * @return true or false
      */
-    public boolean isGlutenFree(){ return this.glutenFree;}
+    public boolean isGlutenFree(){ return this.glutenFree; }
 
     /**
      * Returns true if course is vegan. False otherwise.
      * @return true or false
      */
-    public boolean isVegan(){ return this.vegan;}
+    public boolean isVegan(){ return this.vegan; }
 
     /**
      * Returns true if course is vegetarian. False otherwise.
      * @return true or false
      */
-    public boolean isVegetarian(){ return this.vegetarian;}
+    public boolean isVegetarian(){ return this.vegetarian; }
 
     /**
      * Returns true if course is spicy. False otherwise.
      * @return true or false
      */
-    public boolean isSpicy(){ return this.spicy;}
+    public boolean isSpicy(){ return this.spicy; }
+
+    /**
+     * Returns the tags assigned to this Course object.
+     *
+     * @return An ArrayList of Strings representing the tag.
+     */
+    public ArrayList<String> getTags(){ return this.tags; }
 
     /**
      * Sets the Course ID
      * @param cid Course ID
+     * @throws CourseException if Course ID is negative.
      */
-    public void setCid(int cid){ this.cid = cid;}
+    public void setCid(int cid) throws CourseException {
+        if(cid < 0)
+            throw new CourseException("Course ID must be positive");
+        this.cid = cid;
+    }
+
+    /**
+     * Sets the Menu ID of the Menu whose this course belongs to.
+     * @param mid Menu ID
+     * @throws CourseException if Menu ID is negative.
+     */
+    public void setMid(int mid) throws CourseException {
+        if(mid < 0)
+            throw new CourseException("Menu ID must be positive");
+        this.mid = mid;
+    }
+
     /**
      * Sets the name of the course
      * @param name Name of the course
@@ -181,28 +242,51 @@ public class Course {
     public void setPrice(float price){ this.price = price;}
 
     /**
-     * Sets the base 64 encoding of the image
-     * @param image byte array of image, encoded in base 64
+     *
+     * @param image Byte array representing the image
      */
-    public void setImage64(byte[] image){ this.image = image;}
+    public void setImageFromByteArray(byte[] image){ this.image = image; }
 
     /**
-     * Sets the base 64 encoding of the image from an input Bitmap
-     * @param image Bitmap image to save
+     * Sets the byte array representation of the image from a given input Bitmap.
+     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
+     *
+     * @param image Bitmap representing the image
      */
-    public void setImage64FromBitmap(Bitmap image){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        this.image = baos.toByteArray();
+    public void setImageFromBitmap(Bitmap image){
+        final String METHOD_NAME = this.getClass().getName()+" - setImageFromBitmap";
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, output);
+        this.image = output.toByteArray();
     }
 
     /**
-     * Sets the base 64 encoding of the image from an input Drawable
-     * @param image Drawable image to save
+     * Sets the byte array representation of the image from a given input Drawable. The drawable
+     * is first converted to a Bitmap and then setImageFromBitmap is called.
+     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
+     *
+     * @param image Drawable representing the image
      */
-    public void setImage64FromDrawable(Drawable image){
-        Bitmap b = ((BitmapDrawable) image).getBitmap();
-        this.setImage64FromBitmap(b);
+    public void setImageFromDrawable(Drawable image){
+        Bitmap bitmap = null;
+
+        if (image instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) image;
+            if(bitmapDrawable.getBitmap() != null) {
+                this.setImageFromBitmap(bitmapDrawable.getBitmap());
+            }
+        }
+
+        if(image.getIntrinsicWidth() <= 0 || image.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(image.getIntrinsicWidth(), image.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        image.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        image.draw(canvas);
+        this.setImageFromBitmap(bitmap);
     }
 
     /**
@@ -228,4 +312,12 @@ public class Course {
      * @param spicy true or false
      */
     public void setSpicy(boolean spicy){ this.spicy = spicy;}
+
+    /**
+     * Sets the tags of the Course object.
+     *
+     * @param tags An ArrayList of Strings representing the tag.
+     */
+    public void setTags(ArrayList<String> tags){ this.tags = tags; }
+
 }
