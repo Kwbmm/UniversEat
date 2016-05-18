@@ -3,6 +3,7 @@ package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,11 +49,13 @@ public class Restaurant_menu_user extends Fragment {
     private OnFragmentInteractionListener mListener;
     public interface restaurantData{
         public Restaurant getRestaurant();
+        public int getMid();
     }
     restaurantData restData;
     ArrayList<Menu> menusshared;
     Restaurant rest;
     MenuAdapter adp;
+    private int mid;
 
     public Restaurant_menu_user() {
         // Required empty public constructor
@@ -80,7 +83,7 @@ public class Restaurant_menu_user extends Fragment {
 
         rest=restData.getRestaurant();
         menusshared = rest.getMenus();
-        adp= new MenuAdapter(menusshared);
+        adp= new MenuAdapter(menusshared,mid);
         RecyclerView recyclerView=(RecyclerView)v.findViewById(R.id.my_recycler_view);
         recyclerView.setAdapter(adp);
         LinearLayoutManager llm=new LinearLayoutManager(v.getContext());
@@ -104,6 +107,7 @@ public class Restaurant_menu_user extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_restaurant_menu_user, container, false);
+        mid=restData.getMid();
         readdata(v);
         return v;
     }
@@ -166,8 +170,10 @@ public class Restaurant_menu_user extends Fragment {
 
     public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
         private ArrayList<Menu> menus;
+        private int mid;
 
-        public MenuAdapter(ArrayList<Menu> menus){
+        public MenuAdapter(ArrayList<Menu> menus,int mid){
+            this.mid=mid;
             this.menus=menus;
             sort();
 
@@ -176,6 +182,12 @@ public class Restaurant_menu_user extends Fragment {
             Collections.sort(this.menus, new Comparator<Menu>() {
                 @Override
                 public int compare(Menu lhs, Menu rhs) {
+                    if(lhs.getMid()==mid){
+                        return -3;
+                    }
+                    if (rhs.getMid()==mid){
+                        return +3;
+                    }
 
                     return rhs.getType()-lhs.getType();
                 }});
@@ -195,6 +207,9 @@ public class Restaurant_menu_user extends Fragment {
         @Override
         public void onBindViewHolder(MenuViewHolder holder, int position) {
             Menu menu =menus.get(position);
+            if(menu.getMid()==mid){
+                holder.card.setCardBackgroundColor(Color.YELLOW);
+            }
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");

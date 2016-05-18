@@ -18,11 +18,13 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
     ImageButton rest_i;
     ImageButton rest_m;
     ImageButton rest_r;
+    int mid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
             restaurant=new Restaurant(getBaseContext(),getIntent().getExtras().getInt("rid"));
+            mid=getIntent().getExtras().getInt("mid");
             restaurant.getData();
         } catch (RestaurantException e) {
             e.printStackTrace();
@@ -82,13 +84,13 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    rest_r.getDrawable().setTint(Color.parseColor("#ffffff"));
                     rest_m.getDrawable().setTint(Color.parseColor("#000000"));
-                    rest_i.getDrawable().setTint(Color.parseColor("#000000"));}
+                    rest_i.getDrawable().setTint(Color.parseColor("#000000"));
+                    rest_r.getDrawable().setTint(Color.parseColor("#ffffff"));}
                 else{
                     rest_i.setBackgroundColor(Color.parseColor("#f95053"));
-                    rest_r.setBackgroundColor(Color.parseColor("#ffffff"));
-                    rest_m.setBackgroundColor(Color.parseColor("#f95053"));
+                    rest_r.setBackgroundColor(Color.parseColor("#f95053"));
+                    rest_m.setBackgroundColor(Color.parseColor("#ffffff"));
                 }
 
                     Review_user_view review_user_view=new Review_user_view();
@@ -99,24 +101,41 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
         }});
 
+        if(mid==-1){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                rest_i.getDrawable().setTint(Color.parseColor("#ffffff"));
+                rest_r.getDrawable().setTint(Color.parseColor("#000000"));
+                rest_m.getDrawable().setTint(Color.parseColor("#000000"));}
+            else{
+                rest_i.setBackgroundColor(Color.parseColor("#ffffff"));
+                rest_r.setBackgroundColor(Color.parseColor("#f95053"));
+                rest_m.setBackgroundColor(Color.parseColor("#f95053"));
+            }
+            Restaurant_info_user rest_view = new Restaurant_info_user();
+            getSupportFragmentManager()
+                    .beginTransaction().addToBackStack(null)
+                    .add(R.id.uif_fragment,rest_view)
+                    .commit();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            rest_i.getDrawable().setTint(Color.parseColor("#ffffff"));
-            rest_r.getDrawable().setTint(Color.parseColor("#000000"));
-            rest_m.getDrawable().setTint(Color.parseColor("#000000"));
         }
+
         else{
-            rest_i.setBackgroundColor(Color.parseColor("#ffffff"));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            rest_m.getDrawable().setTint(Color.parseColor("#ffffff"));
+            rest_i.getDrawable().setTint(Color.parseColor("#000000"));
+            rest_r.getDrawable().setTint(Color.parseColor("#000000"));}
+        else{
+            rest_i.setBackgroundColor(Color.parseColor("#f95053"));
             rest_r.setBackgroundColor(Color.parseColor("#f95053"));
-            rest_m.setBackgroundColor(Color.parseColor("#f95053"));
+            rest_m.setBackgroundColor(Color.parseColor("#ffffff"));
         }
 
-        Restaurant_info_user rest_view = new Restaurant_info_user();
+        Restaurant_menu_user menu_view = new Restaurant_menu_user();
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.uif_fragment,rest_view)
+                .add(R.id.uif_fragment,menu_view)
                 .commit();
-    }
+    }}
 
     @Override
     public void onBackPressed() {
@@ -133,5 +152,10 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
     @Override
     public Restaurant getRestaurant() {
         return this.restaurant;
+    }
+
+    @Override
+    public int getMid() {
+        return mid;
     }
 }

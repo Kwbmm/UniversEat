@@ -258,7 +258,7 @@ public class Home extends NavigationDrawer {
                 Log.e("immagine non caricata"," ");
             }
             int rid =menus.get(position).getRid();
-            holder.card.setOnClickListener(new onCardClick(position,rid));
+            holder.card.setOnClickListener(new onCardClick(position,rid,menu.getMid()));
         }
 
         @Override
@@ -270,10 +270,12 @@ public class Home extends NavigationDrawer {
     public class onCardClick implements View.OnClickListener{
         private int position;
         private int rid;
+        private int mid;
 
-        public onCardClick(int position,int rid){
+        public onCardClick(int position,int rid, int mid){
             this.position=position;
             this.rid=rid;
+            this.mid=mid;
         }
 
         @Override
@@ -281,6 +283,7 @@ public class Home extends NavigationDrawer {
             Intent restinfo=new Intent(getBaseContext(),User_info_view.class);
             Log.v("rid",rid+"");
             restinfo.putExtra("rid",this.rid);
+            restinfo.putExtra("mid",this.mid);
             startActivity(restinfo);
         }
     }
