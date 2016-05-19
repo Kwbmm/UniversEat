@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "641622330218",
+    "firebase_url": "https://luminous-heat-4574.firebaseio.com",
+    "project_id": "luminous-heat-4574",
+    "storage_bucket": "luminous-heat-4574.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:641622330218:android:620046e2699684c1",
+        "android_client_info": {
+          "package_name": "it.polito.mad.groupFive.restaurantcode"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "641622330218-3d8nu06mrqgb61p1pesp45bvdpgbpocj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuJISzQWUGt5JWSFYebdRS2sYAD2moEqc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
