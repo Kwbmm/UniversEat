@@ -19,7 +19,7 @@ android:background="@color/material_grey_100"
         android:layout_height="match_parent"
         android:background="@color/material_grey_100" />
 </LinearLayout>
-<Button
+<!--<Button
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="@string/fragment_restaurant_menu_user_Complete_Menu"
@@ -31,5 +31,5 @@ android:background="@color/material_grey_100"
     android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"
     android:layout_margin="16dp"
-    />
+    />-->
 </RelativeLayout>
