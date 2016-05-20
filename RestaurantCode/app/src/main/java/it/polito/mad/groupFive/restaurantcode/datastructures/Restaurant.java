@@ -1,6 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,9 +9,20 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -49,10 +61,11 @@ import it.polito.mad.groupFive.restaurantcode.libs.CustomUriAdapter;
  */
 public class Restaurant {
 
-    transient private Context appContext;
+    private DatabaseReference dbRoot;
+    private StorageReference storageRoot;
 
-    private int rid;
-    private int uid;
+    private String rid;
+    private String uid;
     private String name;
     private String description;
     private String address;
@@ -61,7 +74,8 @@ public class Restaurant {
     private String website;
     private String telephone;
     private String ZIPCode;
-    private byte[] image;
+    private String imageName;
+    private String imagePath;
     private float rating;
     private double xcoord;
     private double ycoord;
@@ -72,132 +86,46 @@ public class Restaurant {
     private ArrayMap<Integer, Date[]> timetableDinner = new ArrayMap<>();
     private ArrayList<Review> reviews = new ArrayList<>();
 
-    /**
-     * Create a Restaurant object. Requires, as parameter, the Android Application Context of the
-     * activity instantiating this class.
-     * The ID uniquely identifying this restaurant is generated automatically.
-     *
-     * @param appContext Application Context
-     * @throws RestaurantException if restaurant ID is negative or JSON file read fails.
-     */
-    public Restaurant(Context appContext) throws RestaurantException {
-        this(appContext,Restaurant.randInt());
+    public Restaurant(){
+        this(null);
     }
 
-    /**
-     * Create a Restaurant object. Requires, as parameters, the Android Application Context of the
-     * activity instantiating this class and a positive integer uniquely identifying the restaurant
-     * object.
-     *
-     * @param appContext Application Context
-     * @param rid Positive Integer unique identifier
-     * @throws RestaurantException
-     */
-    public Restaurant(Context appContext, int rid) throws RestaurantException {
+    public Restaurant(String rid) {
         final String METHOD_NAME = this.getClass().getName()+" - constructor";
-        if(rid < 0)
-            throw new RestaurantException("Restaurant ID must be positive");
-        this.rid = rid;
-        this.appContext = appContext;
-        Restaurant dummy;
-        if((dummy=this.readJSONFile())== null){
-            Log.e(METHOD_NAME, "Dummy is null");
-            throw new RestaurantException("Restaurant dummy object used to fill the current object is null");
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        this.dbRoot = db.getReference("restaurant");
+
+        this.rid = rid == null ? this.dbRoot.push().getKey() : rid;
+
+        //Change the dbRoot to the tree specific to this object
+        this.dbRoot = this.dbRoot.child(this.rid);
+        if(rid != null){
+            this.dbRoot.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Restaurant dummy = dataSnapshot.getValue(Restaurant.class);
+                    if(dummy != null){
+                        getData(dummy);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
-        else
-            this.copyData(dummy);
-    }
-
-    /**
-     * Copy all the data took from the JSON file on this object.
-     * @param dummy A dummy Restaurant object, on which the JSON data is written to.
-     */
-    private void copyData(Restaurant dummy) {
-        final String METHOD_NAME = this.getClass().getName()+" - copyData";
-
-        this.uid = dummy.getUid();
-        this.name = dummy.getName();
-        this.description = dummy.getDescription();
-        this.address = dummy.getAddress();
-        this.state = dummy.getState();
-        this.city = dummy.getCity();
-        this.website = dummy.getWebsite();
-        this.telephone = dummy.getTelephone();
-        this.ZIPCode = dummy.getZIPCode();
-        this.image = dummy.getImageByteArray();
-        this.xcoord = dummy.getXcoord();
-        this.ycoord = dummy.getYcoord();
-        this.menus = dummy.getMenus();
-        this.orders = dummy.getOrders();
-        this.tickets = dummy.getTickets();
-        this.timetableLunch = dummy.getTimetableLunch();
-        this.timetableDinner = dummy.getTimetableDinner();
-        this.reviews = dummy.getReviews();
-    }
-
-    /**
-     * Reads the JSON file corresponding to this restaurant and fills this class with the data found
-     * in the file.
-     * If the file doesn't exist CreateJSONFile is called and the file is created. Then the reading
-     * is performed again: this time the file will be found and fields of this class will be filled
-     * with null values (because the created file is empty).
-     *
-     * If a fail occurs, the error message is logged and this method returns null.
-     *
-     * @return A Restaurant object or null if fails.
-     */
-    private Restaurant readJSONFile(){
-        final String METHOD_NAME = this.getClass().getName()+" - readJSONFile";
-
-        InputStream is;
-        try {
-            is = appContext.openFileInput("r"+this.rid+".json");
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-            String inputString;
-            StringBuilder stringBuilder = new StringBuilder();
-
-            while ((inputString = br.readLine()) != null ) {
-                stringBuilder.append(inputString);
-            }
-
-            is.close();
-            Gson root = new GsonBuilder()
-                    .registerTypeAdapter(Uri.class, new CustomUriAdapter())
-                    .registerTypeHierarchyAdapter(byte[].class, new CustomByteArrayAdapter())
-                    .create();
-            return root.fromJson(stringBuilder.toString(), Restaurant.class);
-        } catch (FileNotFoundException e) {
-            this.createJSONFile();
-            return this.readJSONFile();
-        } catch (IOException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            return null;
-        }
-    }
-
-    /**
-     * Create the JSON file corresponding to this object. The JSON file is identified by the
-     * restaurant ID set at instantiation time.
-     * If an error occurs, the error is logged.
-     */
-    private void createJSONFile() {
-        final String METHOD_NAME = this.getClass().getName()+" - createJSONFile";
-
-        File file = new File(appContext.getFilesDir(),"r"+rid+".json");
-        Writer writer = null;
-        try {
-            writer = new FileWriter(file);
-            Gson root = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
-            root.toJson(this, writer);
-            writer.close();
-        } catch (IOException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-        }
+        //Setup the storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        this.storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
+        //Change the storageRoot to the tree specific to this object
+        this.storageRoot = this.storageRoot.child(this.rid);
+        this.imageName = "restaurant_"+this.rid+".jpg";
     }
 
     /**
      * Generate a random integer in the range [1, Integer.MAX_VALUE]
+     *
      * @return In integer in the range [1, Integer.MAX_VALUE]
      */
     public static int randInt() {
@@ -220,72 +148,92 @@ public class Restaurant {
      *
      * @throws RestaurantException If fetch fails
      */
-    public void getData() throws RestaurantException {
+    private void getData(Restaurant dummy) {
         final String METHOD_NAME = this.getClass().getName()+" - getData";
-        try {
-            FileInputStream fis = appContext.openFileInput("r"+this.rid+".json");
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader bufferedReader = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line);
-            }
-            String json = sb.toString();
-            Gson root = new GsonBuilder()
-                    .registerTypeAdapter(Uri.class, new CustomUriAdapter())
-                    .registerTypeHierarchyAdapter(byte[].class, new CustomByteArrayAdapter())
-                    .create();
-            Restaurant dummy = root.fromJson(json,Restaurant.class);
-            this.copyData(dummy);
-        } catch (IOException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            throw new RestaurantException(e.getMessage());
-        }
+        this.rid = dummy.getRid();
+        this.uid = dummy.getUid();
+        this.name = dummy.getName();
+        this.description = dummy.getDescription();
+        this.address = dummy.getAddress();
+        this.state = dummy.getState();
+        this.city = dummy.getCity();
+        this.website = dummy.getWebsite();
+        this.telephone = dummy.getTelephone();
+        this.ZIPCode = dummy.getZIPCode();
+        this.rating = dummy.getRating();
+        this.xcoord = dummy.getXcoord();
+        this.ycoord = dummy.getYcoord();
+        this.menus = dummy.getMenus();
+        this.orders = dummy.getOrders();
+        this.tickets = this.getTickets();
+        this.reviews = this.getReviews();
+        String imageName = this.getImageName();
+
+        ArrayMap<Integer, Date[]> timetableLunch = new ArrayMap<>();
+        ArrayMap<Integer, Date[]> timetableDinner = new ArrayMap<>();
     }
 
-    /**
-     * Saves the current data store in this object to its JSON file.
-     * Note that this method also saves the data for the custom sub-objects embedded inside this
-     * class (Order, Menu and Course).
-     * In case of fail, the error is logged and a RestaurantException is thrown.
-     *
-     * @throws RestaurantException If writing JSON file fails
-     */
-    public void saveData() throws RestaurantException {
+    public void saveData() {
         final String METHOD_NAME = this.getClass().getName()+" - saveData";
 
-        Gson root = new GsonBuilder()
-                .registerTypeAdapter(Uri.class, new CustomUriAdapter())
-                .registerTypeHierarchyAdapter(byte[].class, new CustomByteArrayAdapter())
-                .serializeNulls()
-                .setPrettyPrinting()
-                .create();
-        String output = root.toJson(this);
+        this.dbRoot.child("restaurant-id").setValue(this.uid);
+        this.dbRoot.child("user-id").setValue(this.uid);
+        this.dbRoot.child("name").setValue(this.name);
+        this.dbRoot.child("description").setValue(this.description);
+        this.dbRoot.child("address").setValue(this.address);
+        this.dbRoot.child("city").setValue(this.city);
+        this.dbRoot.child("zip-code").setValue(this.ZIPCode);
+        this.dbRoot.child("state").setValue(this.state);
+        this.dbRoot.child("website").setValue(this.website);
+        this.dbRoot.child("telephone").setValue(this.telephone);
+        this.dbRoot.child("rating").setValue(this.rating);
+        this.dbRoot.child("x-coord").setValue(this.xcoord); //TODO Fix this
+        this.dbRoot.child("y-coord").setValue(this.ycoord); //TODO also this
 
-        try {
-            FileOutputStream fos = this.appContext.openFileOutput("r"+this.rid+".json",Context.MODE_PRIVATE);
-            BufferedOutputStream bos = new BufferedOutputStream(fos);
-            bos.write(output.getBytes());
-            bos.close();
-            fos.close();
-        } catch (IOException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            throw new RestaurantException(e.getMessage());
+        //Set the menu IDs
+        for(Menu m : this.menus){
+            this.dbRoot.child("menu").child(m.getMid()).setValue(true);
         }
+
+        for(Order o : this.orders){
+            this.dbRoot.child("order").child(o.getOid()).setValue(true);
+        }
+
+        for(String s : this.tickets){
+            this.dbRoot.child("ticket").child(s).setValue(true);
+        }
+
+        for(Review r : this.reviews){
+            this.dbRoot.child("review").child(r.getRevID()).setValue(true);
+        }
+        this.dbRoot.child("image-name").setValue(this.imageName);
+
+        Uri file = Uri.fromFile(new File(this.imagePath,this.imageName));
+        UploadTask ut = storageRoot.child(this.imageName).putFile(file);
+        ut.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("onFailure", e.getMessage());
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.i("onSuccess","Image is located at: "+taskSnapshot.getDownloadUrl());
+            }
+        });
     }
 
     /**
      *
      * @return the id of restaurant
      */
-    public int getRid() { return this.rid; }
+    public String getRid() { return this.rid; }
 
     /**
      *
      * @return The id of the restaurant owner
      */
-    public int getUid() { return this.uid; }
+    public String getUid() { return this.uid; }
 
     /**
      * @return string Name of restaurant
@@ -318,21 +266,20 @@ public class Restaurant {
 
     /**
      *
-     * @return The byte representation of the image
+     * @return The name of the restaurant image
      */
-    public byte[] getImageByteArray() {
-        return this.image;
-    }
+    public String getImageName() { return this.imageName; }
 
-    /**
-     * Returns the Bitmap of the image.
-     * If you can, use getImageByteArray instead of this one as it is more efficient.
-     *
-     * @return The Bitmap representing the image.
-     */
-    public Bitmap getImageBitmap(){
+    public Bitmap getImageBitmap() throws RestaurantException {
         final String METHOD_NAME = this.getClass().getName()+" - getImageBitmap";
-        return BitmapFactory.decodeByteArray(this.image,0,this.image.length);
+        try {
+            File f=new File(this.imagePath, this.imageName);
+            return BitmapFactory.decodeStream(new FileInputStream(f));
+        }
+        catch (FileNotFoundException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+            throw new RestaurantException(e.getMessage());
+        }
     }
 
     /**
@@ -407,13 +354,10 @@ public class Restaurant {
      *
      * @param mid The id of the menu to search for.
      * @return The Menu object or null if nothing is found.
-     * @throws RestaurantException if menu id is negative.
      */
-    public Menu getMenuByID(int mid) throws RestaurantException {
-        if (mid <0)
-            throw new RestaurantException("Menu ID must be positive");
+    public Menu getMenuByID(String mid) {
         for(Menu m : this.menus)
-            if(m.getMid() == mid)
+            if(m.getMid().equals(mid))
                 return m;
         return null;
     }
@@ -428,13 +372,10 @@ public class Restaurant {
      *
      * @param oid The id of the order to search for.
      * @return The requested order or null if nothing is found.
-     * @throws RestaurantException if order is negative.
      */
-    public Order getOrderByID(int oid) throws RestaurantException {
-        if(oid <0)
-            throw new RestaurantException("Order ID must be positive");
+    public Order getOrderByID(String oid) {
         for(Order o : this.orders)
-            if(o.getOid() == oid)
+            if(o.getOid().equals(oid))
                 return o;
         return null;
     }
@@ -443,14 +384,11 @@ public class Restaurant {
      *
      * @param uid The user id who submitted
      * @return An ArrayList of Orders or null if nothing is found.
-     * @throws RestaurantException if user id is negative.
      */
-    public ArrayList<Order> getOrdersByUserID(int uid) throws RestaurantException {
-        if(uid <0)
-            throw new RestaurantException("User ID must be positive");
+    public ArrayList<Order> getOrdersByUserID(String uid) {
         ArrayList<Order> output = new ArrayList<>();
         for(Order o : this.orders)
-            if(o.getUid() == uid)
+            if(o.getUid().equals(uid))
                 output.add(o);
         return output.isEmpty()? null : output;
     }
@@ -490,13 +428,10 @@ public class Restaurant {
      *
      * @param revID The ID corresponding to a Review object
      * @return The Review objectd corresponding to the supplied review ID.
-     * @throws RestaurantException If review id is negative.
      */
-    public Review getReviewByRevID(int revID) throws RestaurantException {
-        if(revID < 0)
-            throw new RestaurantException("Review ID must be positive");
+    public Review getReviewByRevID(String revID) {
         for(Review r : this.reviews)
-            if(r.getRevID() == revID)
+            if(r.getRevID().equals(revID))
                 return r;
         return null;
     }
@@ -507,14 +442,11 @@ public class Restaurant {
      *
      * @param uid A user ID.
      * @return An ArrayList of Review objects matching the specified user id.
-     * @throws RestaurantException If user id is negative.
      */
-    public ArrayList<Review> getReviewsByUserID(int uid) throws RestaurantException {
-        if(uid < 0)
-            throw new RestaurantException("User ID must be positive");
+    public ArrayList<Review> getReviewsByUserID(String uid) {
         ArrayList<Review> returnRes = new ArrayList<>();
         for(Review r : this.reviews)
-            if(r.getUid() == uid)
+            if(r.getUid().equals(uid))
                 returnRes.add(r);
         return returnRes;
     }
@@ -543,7 +475,7 @@ public class Restaurant {
                 return false;
             }
             case 2:{ //Monday
-            Date startLunch = this.timetableLunch.get(0)[0];
+                Date startLunch = this.timetableLunch.get(0)[0];
                 Date endLunch = this.timetableLunch.get(0)[1];
                 Date startDinner = this.timetableDinner.get(0)[0];
                 Date endDinner = this.timetableDinner.get(0)[1];
@@ -554,7 +486,7 @@ public class Restaurant {
                 return false;
             }
             case 3:{ //Tuesday
-            Date startLunch = this.timetableLunch.get(1)[0];
+                Date startLunch = this.timetableLunch.get(1)[0];
                 Date endLunch = this.timetableLunch.get(1)[1];
                 Date startDinner = this.timetableDinner.get(1)[0];
                 Date endDinner = this.timetableDinner.get(1)[1];
@@ -565,7 +497,7 @@ public class Restaurant {
                 return false;
             }
             case 4:{ //Wednesday
-            Date startLunch = this.timetableLunch.get(2)[0];
+                Date startLunch = this.timetableLunch.get(2)[0];
                 Date endLunch = this.timetableLunch.get(2)[1];
                 Date startDinner = this.timetableDinner.get(2)[0];
                 Date endDinner = this.timetableDinner.get(2)[1];
@@ -576,7 +508,7 @@ public class Restaurant {
                 return false;
             }
             case 5:{ //Thursday
-            Date startLunch = this.timetableLunch.get(3)[0];
+                Date startLunch = this.timetableLunch.get(3)[0];
                 Date endLunch = this.timetableLunch.get(3)[1];
                 Date startDinner = this.timetableDinner.get(3)[0];
                 Date endDinner = this.timetableDinner.get(3)[1];
@@ -587,7 +519,7 @@ public class Restaurant {
                 return false;
             }
             case 6:{ //Friday
-            Date startLunch = this.timetableLunch.get(4)[0];
+                Date startLunch = this.timetableLunch.get(4)[0];
                 Date endLunch = this.timetableLunch.get(4)[1];
                 Date startDinner = this.timetableDinner.get(4)[0];
                 Date endDinner = this.timetableDinner.get(4)[1];
@@ -598,7 +530,7 @@ public class Restaurant {
                 return false;
             }
             case 7:{ //Saturday
-            Date startLunch = this.timetableLunch.get(5)[0];
+                Date startLunch = this.timetableLunch.get(5)[0];
                 Date endLunch = this.timetableLunch.get(5)[1];
                 Date startDinner = this.timetableDinner.get(5)[0];
                 Date endDinner = this.timetableDinner.get(5)[1];
@@ -609,15 +541,9 @@ public class Restaurant {
                 return false;
             }
         }
-        Log.w(METHOD_NAME,"Switch case not entered, returning wrong value");
+        Log.w(METHOD_NAME,"Switch not entered, returning wrong value");
         return false;
     }
-
-    /**
-     * Get the Android Application Context stored in this object.
-     * @return Context
-     */
-    Context getAppContext(){ return this.appContext; }
 
     /**
      *
@@ -626,7 +552,6 @@ public class Restaurant {
     public void setName(String name) {
         this.name = name;
     }
-
 
     /**
      *
@@ -651,22 +576,36 @@ public class Restaurant {
     }
 
     /**
-     *
-     * @param image Byte array representing the image
-     */
-    public void setImageFromByteArray(byte[] image){ this.image = image; }
-
-    /**
      * Sets the byte array representation of the image from a given input Bitmap.
      * If you can, use setImageFromByteArray instead of this one as it is more efficient.
      *
      * @param image Bitmap representing the image
      */
-    public void setImageFromBitmap(Bitmap image){
+    public void setImageFromBitmap(Bitmap image, Context appContext) throws RestaurantException {
         final String METHOD_NAME = this.getClass().getName()+" - setImageFromBitmap";
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, output);
-        this.image = output.toByteArray();
+        ContextWrapper cw = new ContextWrapper(appContext);
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("images", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath=new File(directory,this.imageName);
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (FileNotFoundException fnfe) {
+            Log.e(METHOD_NAME,fnfe.getMessage());
+            throw new RestaurantException(fnfe.getMessage());
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+                throw new RestaurantException(e.getMessage());
+            }
+        }
+        this.imagePath = directory.getAbsolutePath();
     }
 
     /**
@@ -676,13 +615,13 @@ public class Restaurant {
      *
      * @param image Drawable representing the image
      */
-    public void setImageFromDrawable(Drawable image){
+    public void setImageFromDrawable(Drawable image, Context appContext) throws RestaurantException {
         Bitmap bitmap = null;
 
         if (image instanceof BitmapDrawable) {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) image;
             if(bitmapDrawable.getBitmap() != null) {
-                this.setImageFromBitmap(bitmapDrawable.getBitmap());
+                this.setImageFromBitmap(bitmapDrawable.getBitmap(),appContext);
             }
         }
 
@@ -695,7 +634,7 @@ public class Restaurant {
         Canvas canvas = new Canvas(bitmap);
         image.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         image.draw(canvas);
-        this.setImageFromBitmap(bitmap);
+        this.setImageFromBitmap(bitmap,appContext);
     }
 
     /**
@@ -720,17 +659,6 @@ public class Restaurant {
      */
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    /**
-     *
-     * @param rid: the id of restaurant.
-     * @throws RestaurantException Thrown if restaurant ID is negative.
-     */
-    public void setRid(int rid) throws RestaurantException {
-        if(rid < 0)
-            throw new RestaurantException("Restaurant ID must be positive");
-        this.rid = rid;
     }
 
     /**
@@ -762,11 +690,11 @@ public class Restaurant {
     /**
      *
      * @param uid Set the id of the restaurant owner
-     * @throws RestaurantException if user id is negative
+     * @throws RestaurantException if user id null
      */
-    public void setUid(int uid) throws RestaurantException {
-        if(uid < 0)
-            throw new RestaurantException("User ID must be positive");
+    public void setUid(String uid) throws RestaurantException {
+        if(uid == null)
+            throw new RestaurantException("User ID cannot be null");
         this.uid = uid;
     }
 
@@ -884,27 +812,6 @@ public class Restaurant {
         this.timetableDinner.putAll(timetable);
     }
 
-    public void addMenu(Menu menu) throws RestaurantException {
-        final String METHOD_NAME = this.getClass().getName()+"- add menu to list";
-        this.menus.add(menu);
-        try {
-            saveData();
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            throw new RestaurantException(e.getMessage());
-        }
-    }
-
-    public void addReview(Review review) throws RestaurantException {
-        final String METHOD_NAME = this.getClass().getName()+"- add menu to list";
-        this.reviews.add(review);
-        try {
-            saveData();
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            throw new RestaurantException(e.getMessage());
-        }
-    }
     /**
      *
      * @param reviews An ArrayList of Review(s) to assign to this restaurant object.
