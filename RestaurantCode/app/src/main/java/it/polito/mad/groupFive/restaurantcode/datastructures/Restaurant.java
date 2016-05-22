@@ -43,7 +43,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
@@ -81,9 +83,9 @@ public class Restaurant {
     private double ycoord;
     private ArrayList<Menu> menus=new ArrayList<>();
     private ArrayList<Order> orders=new ArrayList<>();
-    private HashSet<String> tickets = new HashSet<>();
-    private ArrayMap<Integer, Date[]> timetableLunch = new ArrayMap<>();
-    private ArrayMap<Integer, Date[]> timetableDinner = new ArrayMap<>();
+    private Map<String,Boolean> tickets = new HashMap<>();
+    private Map<String, Map<String,String>> timetableLunch = new HashMap<>();
+    private Map<String, Map<String,String>> timetableDinner = new HashMap<>();
     private ArrayList<Review> reviews = new ArrayList<>();
 
     public Restaurant(){
@@ -99,28 +101,12 @@ public class Restaurant {
 
         //Change the dbRoot to the tree specific to this object
         this.dbRoot = this.dbRoot.child(this.rid);
-        if(rid != null){
-            this.dbRoot.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Restaurant dummy = dataSnapshot.getValue(Restaurant.class);
-                    if(dummy != null){
-                        getData(dummy);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
         //Setup the storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
         this.storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
         //Change the storageRoot to the tree specific to this object
         this.storageRoot = this.storageRoot.child(this.rid);
-        this.imageName = "restaurant_"+this.rid+".jpg";
+        this.imageName = "restaurant_"+this.rid+".png";
     }
 
     /**
@@ -138,39 +124,6 @@ public class Restaurant {
                 return Restaurant.randInt();
             return result;
         }
-    }
-
-    /**
-     * Fetch the data corresponding to the Restaurant ID of this object from the JSON file.
-     * This method is in charge of filling all the other classes of this data set (Menu, Order and
-     * Course).
-     * If an error occurs, it is logged and a RestaurantException is thrown.
-     *
-     * @throws RestaurantException If fetch fails
-     */
-    private void getData(Restaurant dummy) {
-        final String METHOD_NAME = this.getClass().getName()+" - getData";
-        this.rid = dummy.getRid();
-        this.uid = dummy.getUid();
-        this.name = dummy.getName();
-        this.description = dummy.getDescription();
-        this.address = dummy.getAddress();
-        this.state = dummy.getState();
-        this.city = dummy.getCity();
-        this.website = dummy.getWebsite();
-        this.telephone = dummy.getTelephone();
-        this.ZIPCode = dummy.getZIPCode();
-        this.rating = dummy.getRating();
-        this.xcoord = dummy.getXcoord();
-        this.ycoord = dummy.getYcoord();
-        this.menus = dummy.getMenus();
-        this.orders = dummy.getOrders();
-        this.tickets = this.getTickets();
-        this.reviews = this.getReviews();
-        String imageName = this.getImageName();
-
-        ArrayMap<Integer, Date[]> timetableLunch = new ArrayMap<>();
-        ArrayMap<Integer, Date[]> timetableDinner = new ArrayMap<>();
     }
 
     public void saveData() {
@@ -199,9 +152,9 @@ public class Restaurant {
             this.dbRoot.child("order").child(o.getOid()).setValue(true);
         }
 
-        for(String s : this.tickets){
-            this.dbRoot.child("ticket").child(s).setValue(true);
-        }
+        this.dbRoot.child("timetable-lunch").setValue(this.timetableLunch);
+        this.dbRoot.child("timetable-dinner").setValue(this.timetableDinner);
+        this.dbRoot.child("ticket").setValue(this.tickets);
 
         for(Review r : this.reviews){
             this.dbRoot.child("review").child(r.getRevID()).setValue(true);
@@ -394,19 +347,33 @@ public class Restaurant {
     }
 
     /**
-     * Returns HashSet of the strings representing the ticket name.
+     * Returns a Map of tickets, where the Key is the name of the ticket; the value indicates if
+     * this ticket is accepted by this restaurant or not.
      *
-     * @return A HashSet of Strings representing the tickets' names.
+     * @return Map of String:Bool where String = Ticket Name, Bool = accepted by this restaurant
      */
-    public HashSet<String> getTickets(){ return this.tickets; }
+    public Map<String,Boolean> getTickets(){ return this.tickets; }
 
     /**
      * Returns an ArrayMap with keys the number of the day of the week (from 0 [Monday] to 6
      * [Sunday]) and values a Duration object representing the shift of the LUNCH.
      *
-     * @return ArrayMap of the LUNCH timetable.
+     * @return Map of the LUNCH timetable.
      */
-    public ArrayMap<Integer,Date[]> getTimetableLunch(){ return this.timetableLunch; }
+    public Map<String,Date[]> getTimetableLunch() throws RestaurantException {
+        final String METHOD_NAME = this.getClass().getName()+" - getTimetableLunch";
+        Map<String,Date[]> output = new HashMap<>();
+        for(Map.Entry<String,Map<String,String>> entry : this.timetableLunch.entrySet()){
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm",Locale.getDefault());
+            try {
+                output.put(entry.getKey(),new Date[]{sdf.parse(entry.getValue().get("start")),sdf.parse(entry.getValue().get("end"))});
+            } catch (ParseException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+                throw new RestaurantException(e.getMessage());
+            }
+        }
+        return output;
+    }
 
     /**
      * Returns an ArrayMap with keys the number of the day of the week (from 0 [Monday] to 6
@@ -414,7 +381,20 @@ public class Restaurant {
      *
      * @return ArrayMap of the DINNER timetable.
      */
-    public ArrayMap<Integer,Date[]> getTimetableDinner(){ return this.timetableDinner; }
+    public Map<String,Date[]> getTimetableDinner() throws RestaurantException {
+        final String METHOD_NAME = this.getClass().getName()+" - getTimetableLunch";
+        Map<String,Date[]> output = new HashMap<>();
+        for(Map.Entry<String,Map<String,String>> entry : this.timetableDinner.entrySet()){
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm",Locale.getDefault());
+            try {
+                output.put(entry.getKey(),new Date[]{sdf.parse(entry.getValue().get("start")),sdf.parse(entry.getValue().get("end"))});
+            } catch (ParseException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+                throw new RestaurantException(e.getMessage());
+            }
+        }
+        return output;
+    }
 
     /**
      *
@@ -462,84 +442,90 @@ public class Restaurant {
         Calendar now = Calendar.getInstance();
         long nowMS = now.getTimeInMillis();
         int dow = now.get(Calendar.DAY_OF_WEEK);
-        switch (dow){
-            case 1:{ //Sunday
-                Date startLunch = this.timetableLunch.get(6)[0];
-                Date endLunch = this.timetableLunch.get(6)[1];
-                Date startDinner = this.timetableDinner.get(6)[0];
-                Date endDinner = this.timetableDinner.get(6)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm",Locale.getDefault());
+        try {
+            switch (dow){
+                case 1:{ //Sunday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(6).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(6).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(6).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(6).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
+                case 2:{ //Monday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(0).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(0).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(0).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(0).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
+                case 3:{ //Tuesday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(1).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(1).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(1).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(1).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
+                case 4:{ //Wednesday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(2).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(2).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(2).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(2).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
+                case 5:{ //Thursday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(3).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(3).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(3).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(3).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
+                case 6:{ //Friday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(4).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(4).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(4).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(4).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
+                case 7:{ //Saturday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(5).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(5).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(5).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(5).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
             }
-            case 2:{ //Monday
-                Date startLunch = this.timetableLunch.get(0)[0];
-                Date endLunch = this.timetableLunch.get(0)[1];
-                Date startDinner = this.timetableDinner.get(0)[0];
-                Date endDinner = this.timetableDinner.get(0)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
-            }
-            case 3:{ //Tuesday
-                Date startLunch = this.timetableLunch.get(1)[0];
-                Date endLunch = this.timetableLunch.get(1)[1];
-                Date startDinner = this.timetableDinner.get(1)[0];
-                Date endDinner = this.timetableDinner.get(1)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
-            }
-            case 4:{ //Wednesday
-                Date startLunch = this.timetableLunch.get(2)[0];
-                Date endLunch = this.timetableLunch.get(2)[1];
-                Date startDinner = this.timetableDinner.get(2)[0];
-                Date endDinner = this.timetableDinner.get(2)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
-            }
-            case 5:{ //Thursday
-                Date startLunch = this.timetableLunch.get(3)[0];
-                Date endLunch = this.timetableLunch.get(3)[1];
-                Date startDinner = this.timetableDinner.get(3)[0];
-                Date endDinner = this.timetableDinner.get(3)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
-            }
-            case 6:{ //Friday
-                Date startLunch = this.timetableLunch.get(4)[0];
-                Date endLunch = this.timetableLunch.get(4)[1];
-                Date startDinner = this.timetableDinner.get(4)[0];
-                Date endDinner = this.timetableDinner.get(4)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
-            }
-            case 7:{ //Saturday
-                Date startLunch = this.timetableLunch.get(5)[0];
-                Date endLunch = this.timetableLunch.get(5)[1];
-                Date startDinner = this.timetableDinner.get(5)[0];
-                Date endDinner = this.timetableDinner.get(5)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
-            }
+        } catch (ParseException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+            return false;
         }
         Log.w(METHOD_NAME,"Switch not entered, returning wrong value");
         return false;
@@ -722,9 +708,9 @@ public class Restaurant {
 
     /**
      *
-     * @param tickets A HashSet containing the names of the tickets.
+     * @param tickets A HashMap containing the names of the tickets.
      */
-    public void setTickets(HashSet<String> tickets){ this.tickets = tickets; }
+    public void setTickets(Map<String,Boolean> tickets){ this.tickets = tickets; }
 
     /**
      * Sets the amount of time during which the restaurant is open AT LUNCH.
@@ -745,17 +731,10 @@ public class Restaurant {
             throw new RestaurantException("Day of week is not in the expected range 0-6");
         }
 
-        SimpleDateFormat sdfStart = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        SimpleDateFormat sdfEnd = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        try {
-            Date startDate = sdfStart.parse(timeStart);
-            Date endDate = sdfEnd.parse(timeEnd);
-
-            this.timetableLunch.put(dayOfWeek,new Date[]{startDate,endDate});
-        } catch (ParseException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            throw new RestaurantException(e.getMessage());
-        }
+        Map<String,String> entry = new HashMap<>();
+        entry.put("start",timeStart);
+        entry.put("end",timeEnd);
+        this.timetableLunch.put(String.valueOf(dayOfWeek),entry);
     }
 
     /**
@@ -776,16 +755,10 @@ public class Restaurant {
             Log.e(METHOD_NAME, "Day of week is not in the expected range 0-6");
             throw new RestaurantException("Day of week is not in the expected range 0-6");
         }
-        SimpleDateFormat sdfStart = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        SimpleDateFormat sdfEnd = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        try {
-            Date startDate = sdfStart.parse(timeStart);
-            Date endDate = sdfEnd.parse(timeEnd);
-            this.timetableDinner.put(dayOfWeek,new Date[]{startDate,endDate});
-        } catch (ParseException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            throw new RestaurantException(e.getMessage());
-        }
+        Map<String,String> entry = new HashMap<>();
+        entry.put("start",timeStart);
+        entry.put("end",timeEnd);
+        this.timetableDinner.put(String.valueOf(dayOfWeek),entry);
     }
 
     /**
@@ -796,8 +769,14 @@ public class Restaurant {
      * [1] endHour
      * @param timetable A(n) (Array)Map of the timetable of the Lunch.
      */
-    public void setTimetableLunch(Map<Integer,Date[]> timetable){
-        this.timetableLunch.putAll(timetable);
+    public void setTimetableLunch(Map<String,Date[]> timetable){
+        for(Map.Entry<String,Date[]> entry : timetable.entrySet()){
+            Map<String,String> duration = new HashMap<>();
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm",Locale.getDefault());
+            duration.put("start",sdf.format(entry.getValue()[0]));
+            duration.put("end",sdf.format(entry.getValue()[1]));
+            this.timetableLunch.put(entry.getKey(),duration);
+        }
     }
 
     /**
@@ -808,8 +787,15 @@ public class Restaurant {
      * [1] endHour
      * @param timetable A(n) (Array)Map of the timetable of the Dinner.
      */
-    public void setTimetableDinner(Map<Integer,Date[]> timetable){
-        this.timetableDinner.putAll(timetable);
+    public void setTimetableDinner(Map<String,Date[]> timetable){
+        for(Map.Entry<String,Date[]> entry : timetable.entrySet()){
+            Map<String,String> duration = new HashMap<>();
+            SimpleDateFormat start = new SimpleDateFormat("HH:mm",Locale.getDefault());
+            SimpleDateFormat end = new SimpleDateFormat("HH:mm",Locale.getDefault());
+            duration.put("start",start.format(entry.getValue()[0]));
+            duration.put("end",end.format(entry.getValue()[1]));
+            this.timetableDinner.put(entry.getKey(),duration);
+        }
     }
 
     /**
