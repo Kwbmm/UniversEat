@@ -12,6 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.text.SimpleDateFormat;
 
 import it.polito.mad.groupFive.restaurantcode.R;
@@ -27,7 +34,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
  * Use the {@link Restaurant_info_user#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Restaurant_info_user extends Fragment {
+public class Restaurant_info_user extends Fragment implements OnMapReadyCallback {
 
     public interface restaurantData{
         public Restaurant getRestaurant();
@@ -84,6 +91,10 @@ public class Restaurant_info_user extends Fragment {
 
         View v=inflater.inflate(R.layout.fragment_restaurant_info_user, container, false);
         getRestaurantData(v);
+        restaurant.setXcoord(40.758896);
+        restaurant.setYcoord(-73.985130);
+        //SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.gmap);
+        //mapFragment.getMapAsync(this);
         return v;
     }
 
@@ -106,6 +117,7 @@ public class Restaurant_info_user extends Fragment {
         restrating.setRating(restaurant.getRating());
         ImageView restImage=(ImageView)v.findViewById(R.id.restaurant_image);
         restImage.setImageBitmap(restaurant.getImageBitmap());
+
 
         LinearLayout ll = (LinearLayout) v.findViewById(R.id.restaurant_time_t);
         int count=0;
@@ -173,5 +185,14 @@ public class Restaurant_info_user extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        LatLng latLng = new LatLng(restaurant.getXcoord(),restaurant.getYcoord());
+        map.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title("Marker"));
+        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 }

@@ -19,7 +19,9 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:src="@mipmap/ic_launcher"
-                android:id="@+id/restaurant_image"/>
+                android:id="@+id/restaurant_image"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/restaurant_name"
@@ -28,7 +30,9 @@
                 android:text="@string/restaurantView_textViewRestaurantName"
                 android:textSize="25dp"
                 android:layout_toRightOf="@id/restaurant_image"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="10dp" />
 
 
 
@@ -49,7 +53,8 @@
                 android:layout_below="@id/restaurant_rating"
                 android:textSize="18dp"
                 android:layout_toRightOf="@id/restaurant_image"
-                android:text="Based on N reviews"/>
+                android:text="Based on N reviews"
+                android:layout_marginLeft="10dp" />
             <ImageView
                 android:id="@+id/restaurant_icon1"
                 android:layout_width="30dp"
@@ -78,19 +83,19 @@
                 android:layout_marginLeft="5dp"
                 android:layout_below="@id/restaurant_image"
                 android:id="@+id/restaurant_icon4"/>
-            <ImageView
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                android:name="com.google.android.gms.maps.MapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:id="@+id/restaurant_map"
-                android:layout_below="@+id/restaurant_icon1"
-                android:background="#000000"/>
+                android:id="@+id/gmap"
+                android:layout_below="@+id/restaurant_icon1"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/restaurantView_textViewRestaurantAddress"
                 android:textAlignment="center"
                 android:id="@+id/restaurant_address"
-                android:layout_below="@id/restaurant_map"
+                android:layout_below="@+id/gmap"
                 android:textSize="20dp"
                 />
             <TextView
