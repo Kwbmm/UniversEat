@@ -146,10 +146,12 @@ public class Restaurant {
         //Set the menu IDs
         for(Menu m : this.menus){
             this.dbRoot.child("menu").child(m.getMid()).setValue(true);
+            m.saveData();
         }
 
         for(Order o : this.orders){
             this.dbRoot.child("order").child(o.getOid()).setValue(true);
+            o.saveData();
         }
 
         this.dbRoot.child("timetable-lunch").setValue(this.timetableLunch);
@@ -158,6 +160,7 @@ public class Restaurant {
 
         for(Review r : this.reviews){
             this.dbRoot.child("review").child(r.getRevID()).setValue(true);
+            r.saveData();
         }
         this.dbRoot.child("image-name").setValue(this.imageName);
 

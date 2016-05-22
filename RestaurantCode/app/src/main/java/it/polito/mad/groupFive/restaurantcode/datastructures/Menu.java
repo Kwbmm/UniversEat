@@ -1,20 +1,32 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.io.ByteArrayOutputStream;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * @author Marco Ardizzone
@@ -24,120 +36,81 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
  */
 public class Menu {
 
-    transient private Restaurant r=null;
+    private DatabaseReference dbRoot;
+    private StorageReference storageRoot;
 
-    private int mid;
+    private String rid; //The restaurant ID this menu belongs to
+    private String mid;
     private String name=null;
     private String description=null;
     private float price;
-    private byte[] image;
+    private String imageName;
+    private String imagePath;
     private int type;
-    private int choiceAmount;
     private ArrayList<Course> courses = new ArrayList<>();
-    private ArrayList<Option> options = new ArrayList<>();
-    private boolean ticket;
     private boolean beverage;
     private boolean serviceFee;
-    private int rid;
 
-    /**
-     * Create an instance of Menu: requires, as parameter, its restaurant object.
-     * The ID of the menu is generated automatically.
-     *
-     * @param restaurant The restaurant object whose this menu belongs to.
-     * @throws MenuException If menu id is negative
-     */
-    public Menu(Restaurant restaurant) throws MenuException {
-        this(restaurant, Menu.randInt());
+    public Menu(String rid) throws MenuException {
+        this(null,rid);
     }
 
-    /**
-     * Create an instance of Menu: requires, as parameters, its restaurant object and an integer
-     * positive ID to uniquely identifying this object.
-     *
-     * @param restaurant The restaurant object whose course belongs to
-     * @param mid A positive integer unique identifier.
-     * @throws MenuException If menu id is negative
-     */
-    public Menu(Restaurant restaurant, int mid) throws MenuException {
-        this.r = restaurant;
-        if(mid < 0)
-            throw new MenuException("Menu ID must be positive");
-        this.mid = mid;
-        try {
-            r.getData();
-        } catch (RestaurantException e) {
-            e.printStackTrace();
-        }
-        this.rid=r.getRid();
+    public Menu(String mid, String rid) throws MenuException {
+        final String METHOD_NAME = this.getClass().getName()+" - constructor";
+        if(rid == null)
+            throw new MenuException("Restaurant ID cannot be null");
+        this.rid = rid;
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        this.dbRoot = db.getReference("menu");
+
+        this.mid = mid == null ? this.dbRoot.push().getKey() : mid;
+
+        //Change the dbRoot to the tree specific to this object
+        this.dbRoot = this.dbRoot.child(this.mid);
+        //Setup the storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        this.storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menu/");
+        //Change the storageRoot to the tree specific to this object
+        this.storageRoot = this.storageRoot.child(this.mid);
+        this.imageName = "menu_"+this.rid+".png";
     }
 
-    /**
-     * Generate a random integer in the range [1, Integer.MAX_VALUE]
-     * @return In integer in the range [1, Integer.MAX_VALUE]
-     */
-    private static int randInt() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
-        else{
-            Random rand= new Random();
-            int result;
-            if((result=rand.nextInt(Integer.MAX_VALUE)) == 0)
-                return Menu.randInt();
-            return result;
-        }
-    }
+    void saveData(){
+        final String METHOD_NAME = this.getClass().getName()+" - saveData";
 
-    /**
-     * Fetch the data corresponding to the Menu ID of this object from the JSON file.
-     * Fetch operations are always performed inside the restaurant object, this is just a call to
-     * that method.
-     *
-     * @throws MenuException If fetch fails
-     */
-    public void getData() throws MenuException {
-        final String METHOD_NAME = this.getClass().getName()+" - getData";
-        try {
-            this.r.getData();
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            throw new MenuException(e.getMessage());
+        this.dbRoot.child("restaurant-id").setValue(this.rid); //The restaurant ID this menu belongs to
+        this.dbRoot.child("menu-id").setValue(this.mid);
+        this.dbRoot.child("name").setValue(this.name);
+        this.dbRoot.child("description").setValue(this.description);
+        this.dbRoot.child("price").setValue(this.price);
+        this.dbRoot.child("imageName").setValue(this.imageName);
+        this.dbRoot.child("type").setValue(this.type);
+        for(Course c : this.courses){
+            this.dbRoot.child("course").child(c.getCid()).setValue(true);
+            c.saveData();
         }
-        Menu dummy = null;
-        try {
-            dummy = this.r.getMenuByID(this.mid);
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            throw new MenuException(e.getMessage());
-        }
-        this.copyData(dummy);
-    }
-
-    /**
-     * Copy all the data took from the JSON file on this object.
-     * @param dummy A dummy Menu object, on which the JSON data is written to.
-     */
-    private void copyData(Menu dummy) {
-        this.mid = dummy.getMid();
-        this.name = dummy.getName();
-        this.description = dummy.getDescription();
-        this.price = dummy.getPrice();
-        this.image = dummy.getImageByteArray();
-        this.type = dummy.getType();
-        this.choiceAmount = dummy.getChoiceAmount();
-        this.courses = dummy.getCourses();
-        this.ticket = dummy.acceptTicket();
-        this.beverage = dummy.isBeverage();
-        this.serviceFee = dummy.isServiceFee();
-        this.options = dummy.getOptions();
-
+        this.dbRoot.child("beverage").setValue(this.beverage);
+        this.dbRoot.child("service-fee").setValue(this.serviceFee);
+        Uri file = Uri.fromFile(new File(this.imagePath,this.imageName));
+        UploadTask ut = storageRoot.child(this.imageName).putFile(file);
+        ut.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("onFailure", e.getMessage());
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.i("onSuccess","Image is located at: "+taskSnapshot.getDownloadUrl());
+            }
+        });
     }
 
     /**
      *
      * @return The ID
      */
-    public int getMid(){ return this.mid; }
+    public String getMid(){ return this.mid; }
 
     /**
      *
@@ -157,23 +130,16 @@ public class Menu {
      */
     public float getPrice(){ return this.price; }
 
-    /**
-     *
-     * @return The byte representation of the image
-     */
-    public byte[] getImageByteArray() {
-        return this.image;
-    }
-
-    /**
-     * Returns the Bitmap of the image.
-     * If you can, use getImageByteArray instead of this one as it is more efficient.
-     *
-     * @return The Bitmap representing the image.
-     */
-    public Bitmap getImageBitmap(){
+    public Bitmap getImageBitmap() throws MenuException {
         final String METHOD_NAME = this.getClass().getName()+" - getImageBitmap";
-        return BitmapFactory.decodeByteArray(this.image,0,this.image.length);
+        try {
+            File f=new File(this.imagePath, this.imageName);
+            return BitmapFactory.decodeStream(new FileInputStream(f));
+        }
+        catch (FileNotFoundException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+            throw new MenuException(e.getMessage());
+        }
     }
 
     /**
@@ -217,9 +183,9 @@ public class Menu {
      * @param id The id of the course
      * @return The requested course or null if nothing is found.
      */
-    public Course getCourseByID(int id){
+    public Course getCourseByID(String id){
         for(Course course : this.courses)
-            if(course.getCid() == id)
+            if(course.getCid().equals(id))
                 return course;
         return null;
     }
@@ -295,19 +261,6 @@ public class Menu {
     }
 
     /**
-     * Returns true if the menu can be bought with tickets. False otherwise.
-     *
-     * @return true or false
-     */
-    public boolean acceptTicket(){ return this.ticket; }
-
-    /**
-     *
-     * @return The number of multiple choice menu
-     */
-    public int getChoiceAmount(){ return this.choiceAmount; }
-
-    /**
      *
      * @return True if beverage is included, false otherwise.
      */
@@ -323,26 +276,6 @@ public class Menu {
         return serviceFee;
     }
 
-    /**
-     *
-     * @return An ArrayList with all the options for this menu.
-     */
-    public ArrayList<Option> getOptions(){ return this.options; }
-
-    /**
-     * Looks for an Option object with the given ID in the set of available Options.
-     * If a match is found, the corresponding Option object is returned, otherwise the method returns
-     * null.
-     *
-     * @param optID The ID to look for.
-     * @return Option object if successful, null otherwise
-     */
-    public Option getOptionByID(int optID) {
-        for(Option o : this.options)
-            if(o.getOptID() == optID)
-                return o;
-        return null;
-    }
 
     /**
      * Returns the tags associated to all the Courses in this menu. If no tags are added to the
@@ -356,17 +289,6 @@ public class Menu {
             if(c.getTags().size() != 0)
                 output.addAll(c.getTags());
         return output;
-    }
-
-    /**
-     *
-     * @param mid The ID of the menu
-     * @throws MenuException if menu id is negative.
-     */
-    public void setMid(int mid) throws MenuException {
-        if(mid < 0)
-            throw new MenuException("Menu ID must be positive");
-        this.mid = mid;
     }
 
     /**
@@ -386,7 +308,7 @@ public class Menu {
      * @return Restaurant reference to fetch data
      */
 
-    public int getRid() {
+    public String getRid() {
         return rid;
     }
 
@@ -398,22 +320,35 @@ public class Menu {
     public void setPrice(float price){ this.price = price; }
 
     /**
-     *
-     * @param image Byte array representing the image
-     */
-    public void setImageFromByteArray(byte[] image){ this.image = image; }
-
-    /**
      * Sets the byte array representation of the image from a given input Bitmap.
-     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
      *
      * @param image Bitmap representing the image
      */
-    public void setImageFromBitmap(Bitmap image){
+    public void setImageFromBitmap(Bitmap image, Context appContext) throws MenuException {
         final String METHOD_NAME = this.getClass().getName()+" - setImageFromBitmap";
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, output);
-        this.image = output.toByteArray();
+        ContextWrapper cw = new ContextWrapper(appContext);
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("images", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath=new File(directory,this.imageName);
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (FileNotFoundException fnfe) {
+            Log.e(METHOD_NAME,fnfe.getMessage());
+            throw new MenuException(fnfe.getMessage());
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+                throw new MenuException(e.getMessage());
+            }
+        }
+        this.imagePath = directory.getAbsolutePath();
     }
 
     /**
@@ -423,13 +358,13 @@ public class Menu {
      *
      * @param image Drawable representing the image
      */
-    public void setImageFromDrawable(Drawable image){
+    public void setImageFromDrawable(Drawable image, Context appContext) throws MenuException {
         Bitmap bitmap = null;
 
         if (image instanceof BitmapDrawable) {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) image;
             if(bitmapDrawable.getBitmap() != null) {
-                this.setImageFromBitmap(bitmapDrawable.getBitmap());
+                this.setImageFromBitmap(bitmapDrawable.getBitmap(),appContext);
             }
         }
 
@@ -442,7 +377,7 @@ public class Menu {
         Canvas canvas = new Canvas(bitmap);
         image.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         image.draw(canvas);
-        this.setImageFromBitmap(bitmap);
+        this.setImageFromBitmap(bitmap,appContext);
     }
 
     /**
@@ -483,18 +418,6 @@ public class Menu {
     public void setCourses(ArrayList<Course> courses){ this.courses = courses; }
 
     /**
-     *
-     * @param v true or false.
-     */
-    public void setTicket(boolean v){ this.ticket = v; }
-
-    /**
-     *
-     * @param choiceAmount The number of multiple choice menu
-     */
-    public void setChoiceAmount(int choiceAmount){ this.choiceAmount=choiceAmount; }
-
-    /**
      * Sets if beverage is included.
      *
      * @param beverage true or false
@@ -509,10 +432,4 @@ public class Menu {
      * @param serviceFee true or false
      */
     public void setServiceFee(boolean serviceFee) { this.serviceFee = serviceFee; }
-
-    /**
-     *
-     * @param opts An ArrayList of options to set on this menu.
-     */
-    public void setOptions(ArrayList<Option> opts){ this.options = opts; }
 }

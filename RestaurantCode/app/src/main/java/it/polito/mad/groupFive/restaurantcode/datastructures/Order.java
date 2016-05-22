@@ -1,14 +1,12 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import android.os.Build;
-import android.util.Log;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.Date;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * @author Marco Ardizzone
@@ -18,114 +16,79 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
  */
 public class Order {
 
-    transient private Restaurant r = null;
+    private DatabaseReference dbRoot;
 
-    private int oid;
-    private int uid;
-    private int mid;
-    private int rid;
+    private String oid;
+    private String uid;
+    private String mid;
+    private String rid;
     private Date date=null;
     private String notes;
     private String name;
 
-    /**
-     * Create an instance of Order: requires, as parameter, its restaurant object.
-     * The ID of the order is generated automatically.
-     *
-     * @param restaurant The restaurant object whose this order belongs to.
-     * @throws OrderException If order id is negative
-     */
-    public Order(Restaurant restaurant) throws OrderException {
-        this(restaurant,Order.randInt());
+    public Order(String rid, String mid, String uid) throws OrderException {
+        this(null,rid,mid,uid);
     }
 
-    /**
-     * Create an instance of Order: requires, as parameters, its restaurant object and an integer
-     * positive ID to uniquely identifying this object.
-     *
-     * @param restaurant The restaurant object whose course belongs to
-     * @param oid A positive integer unique identifier.
-     * @throws OrderException Thrown if oid is negative.
-     */
-    public Order(Restaurant restaurant, int oid) throws OrderException {
-        this.r = restaurant;
-        if(oid < 0)
-            throw new OrderException("Order ID must be positive");
-        this.oid = oid;
+    public Order(String oid, String rid, String mid, String uid) throws OrderException {
+        if(rid == null)
+            throw new OrderException("Restaurant ID cannot be null");
+        if(mid == null)
+            throw new OrderException("Menu ID cannot be null");
+        if(uid == null)
+            throw new OrderException("User ID cannot be null");
+        this.rid = rid;
+        this.mid = mid;
+        this.uid = uid;
+
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        this.dbRoot = db.getReference("order");
+
+        this.oid = oid == null ? this.dbRoot.push().getKey() : oid;
+
+        //Change the dbRoot to the tree specific to this object
+        this.dbRoot = this.dbRoot.child(this.oid);
     }
 
-    /**
-     * Generate a random integer in the range [1, Integer.MAX_VALUE]
-     * @return In integer in the range [1, Integer.MAX_VALUE]
-     */
-    private static int randInt() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
-        else{
-            Random rand= new Random();
-            int result;
-            if((result=rand.nextInt(Integer.MAX_VALUE)) == 0)
-                return Order.randInt();
-            return result;
-        }
-    }
-
-    /**
-     * Fetch the data corresponding to the Order ID of this object from the JSON file.
-     * Fetch operations are always performed inside the restaurant object, this is just a call to
-     * that method.
-     *
-     * @throws OrderException If fetch fails
-     */
-    public void getData() throws OrderException {
-        final String METHOD_NAME = this.getClass().getName()+" - getData";
-        try {
-            this.r.getData();
-            Order dummy = this.r.getOrderByID(this.oid);
-            this.copyData(dummy);
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            throw new OrderException(e.getMessage());
-        }
-    }
-
-    /**
-     * Copy all the data took from the JSON file on this object.
-     * @param dummy A dummy Order object, on which the JSON data is written to.
-     */
-    private void copyData(Order dummy) {
-        this.oid = dummy.getOid();
-        this.uid = dummy.getUid();
-        this.mid = dummy.getMid();
-        this.rid = dummy.getRid();
-        this.date = dummy.getDate();
-        this.notes = dummy.getNotes();
-        this.name = dummy.getName();
+    void saveData(){
+        this.dbRoot.child("order-id").setValue(this.oid);
+        this.dbRoot.child("user-id").setValue(this.uid);
+        this.dbRoot.child("menu-id").setValue(this.mid);
+        this.dbRoot.child("restaurant-id").setValue(this.rid);
+        this.dbRoot.child("date").setValue(this.date);
+        this.dbRoot.child("notes").setValue(this.notes);
+        this.dbRoot.child("name").setValue(this.name);
     }
 
     /**
      *
      * @return The order ID
      */
-    public int getOid(){ return this.oid;}
+    public String getOid(){ return this.oid;}
 
     /**
      *
      * @return The user ID that performed this order
      */
-    public int getUid(){ return this.uid;}
+    public String getUid(){ return this.uid;}
 
     /**
      *
      * @return The menu ID ordered
      */
-    public int getMid(){ return this.mid;}
+    public String getMid(){ return this.mid;}
 
     /**
      *
      * @return The restaurant ID whose this order belongs to
      */
-    public int getRid(){ return this.rid; }
+    public String getRid(){ return this.rid; }
+
+    /**
+     *
+     * @return The customer name who made the order.
+     */
+    public String getName(){return this.name;}
 
     /**
      *
@@ -135,58 +98,27 @@ public class Order {
 
     /**
      *
-     * @param oid The order ID
-     * @throws OrderException if order id is negative
+     * @return The additional notes added to the order, or an empty string if null.
      */
-    public void setOid(int oid) throws OrderException {
-        if(oid < 0)
-            throw new OrderException("Order ID must be positive");
-        this.oid = oid;
+    public String getNotes(){
+        return notes == null ? " " : notes;
     }
 
     /**
      *
-     * @param uid The user ID making this order
-     * @throws OrderException if user id is negative.
+     * @param name The name of the user who made the order.
      */
-    public void setUid(int uid) throws OrderException {
-        if(uid < 0 )
-            throw new OrderException("User ID must be positive");
-        this.uid = uid;
-    }
-
-    /**
-     *
-     * @param mid The menu ID ordered
-     * @throws OrderException if menu id is negative
-     */
-    public void setMid(int mid) throws OrderException {
-        if(mid < 0)
-            throw new OrderException("Menu ID must be positive");
-        this.mid = mid;
-    }
-
-    /**
-     *
-     * @param rid The restaurant ID to which this order belong to.
-     * @throws OrderException if restaurant id is negative.
-     */
-    public void setRid(int rid) throws OrderException {
-        if(rid < 0)
-            throw new OrderException("Restaurant ID must be positive");
-        this.rid= rid;
-    }
+    public void setName(String name){this.name=name;}
 
     /**
      *
      * @param d Date of the order
      */
     public void setDate(Date d){ this.date = d;}
-    public String getNotes(){
-        if(notes==null) return " ";
-        else return notes;
-    }
+
+    /**
+     *
+     * @param notes Some additional notes to attach to the order.
+     */
     public void setNotes(String notes){this.notes=notes;}
-    public String getName(){return name;}
-    public void setName(String name){this.name=name;}
 }
