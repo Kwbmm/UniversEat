@@ -71,6 +71,9 @@
     <string name="restaurauntInfo_textViewTimetable">Timetable:\nMon: time\nTue: time\nWed: time\nThu: time\nFri: time\nSat: time\nSun: time</string>
     <string name="toastFail">Something went wrong or some mandatory fields are empty!</string>
 
+    <string name="toastRestaurantLoadDataFail">We couldn\'t download data from the net :(</string>
+    <string name="toastRestaurantImageLoadFail">We couldn\'t download the image from the net :(</string>
+
     <string name="restaurantViewEdit_textViewName">Restaurant Name</string>
 
     <string name="reviewlist_imageButtonImg">Restaurant Image</string>

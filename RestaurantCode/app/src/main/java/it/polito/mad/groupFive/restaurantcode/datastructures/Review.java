@@ -25,8 +25,6 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.ReviewEx
  */
 public class Review {
 
-    private DatabaseReference dbRoot;
-
     private String revID;
     private String uid;
     private String rid;
@@ -36,38 +34,31 @@ public class Review {
     private float rating;
     private List<Reply> replies = new ArrayList<>();
 
-    public Review(String uid, String rid) throws ReviewException {
-        this(null,uid,rid);
+    public Review() {
     }
 
-    public Review(String revID, String uid, String rid) throws ReviewException {
-        if(uid == null)
-            throw new ReviewException("User ID cannot be null");
-        if(rid == null)
-            throw new ReviewException("Restaurant ID cannot be null");
+    public Review(String uid, String rid) {
         this.uid = uid;
         this.rid = rid;
-
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        this.dbRoot = db.getReference("review");
-
-        this.revID = revID == null ? this.dbRoot.push().getKey() : revID;
-        //Change the dbRoot to the tree specific to this object
-        this.dbRoot = this.dbRoot.child(this.rid);
     }
 
-    void saveData(){
-        this.dbRoot.child("review-id").setValue(this.revID);
-        this.dbRoot.child("user-id").setValue(this.uid);
-        this.dbRoot.child("restaurant-id").setValue(this.rid);
-        this.dbRoot.child("title").setValue(this.title);
-        this.dbRoot.child("review-text").setValue(this.reviewText);
-        this.dbRoot.child("date").setValue(this.date);
-        this.dbRoot.child("rating").setValue(this.rating);
-        this.dbRoot.child("reply").setValue(this.replies);
-        for(Reply r : this.replies){
-            r.saveData();
+    Map<String, Object> toMap(){
+        HashMap<String, Object> output = new HashMap<>();
+
+        output.put("revID",this.revID);
+        output.put("uid",this.uid);
+        output.put("rid",this.rid);
+        output.put("title",this.title);
+        output.put("reviewText",this.reviewText);
+        output.put("date",this.date);
+        output.put("rating",this.rating);
+
+        Map<String, Object> replyMap = new HashMap<>();
+        for (Reply r : this.replies){
+            replyMap.put(r.getRepID(),r.toMap());
         }
+        output.put("replies",replyMap);
+        return output;
     }
 
     /**

@@ -25,6 +25,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 
@@ -36,9 +39,6 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuExce
  */
 public class Menu {
 
-    private DatabaseReference dbRoot;
-    private StorageReference storageRoot;
-
     private String rid; //The restaurant ID this menu belongs to
     private String mid;
     private String name=null;
@@ -47,63 +47,35 @@ public class Menu {
     private String imageName;
     private String imagePath;
     private int type;
-    private ArrayList<Course> courses = new ArrayList<>();
     private boolean beverage;
     private boolean serviceFee;
+    private ArrayList<Course> courses = new ArrayList<>();
 
-    public Menu(String rid) throws MenuException {
-        this(null,rid);
+    public Menu() {
     }
 
-    public Menu(String mid, String rid) throws MenuException {
-        final String METHOD_NAME = this.getClass().getName()+" - constructor";
-        if(rid == null)
-            throw new MenuException("Restaurant ID cannot be null");
+    public Menu(String rid) {
         this.rid = rid;
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        this.dbRoot = db.getReference("menu");
-
-        this.mid = mid == null ? this.dbRoot.push().getKey() : mid;
-
-        //Change the dbRoot to the tree specific to this object
-        this.dbRoot = this.dbRoot.child(this.mid);
-        //Setup the storage
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        this.storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menu/");
-        //Change the storageRoot to the tree specific to this object
-        this.storageRoot = this.storageRoot.child(this.mid);
-        this.imageName = "menu_"+this.rid+".png";
     }
 
-    void saveData(){
+    Map<String, Object> toMap(){
         final String METHOD_NAME = this.getClass().getName()+" - saveData";
-
-        this.dbRoot.child("restaurant-id").setValue(this.rid); //The restaurant ID this menu belongs to
-        this.dbRoot.child("menu-id").setValue(this.mid);
-        this.dbRoot.child("name").setValue(this.name);
-        this.dbRoot.child("description").setValue(this.description);
-        this.dbRoot.child("price").setValue(this.price);
-        this.dbRoot.child("imageName").setValue(this.imageName);
-        this.dbRoot.child("type").setValue(this.type);
-        for(Course c : this.courses){
-            this.dbRoot.child("course").child(c.getCid()).setValue(true);
-            c.saveData();
+        HashMap<String, Object> output = new HashMap<>();
+        output.put("mid",this.mid);
+        output.put("name",this.name);
+        output.put("description",this.description);
+        output.put("price",this.price);
+        output.put("imageName",this.imageName);
+        output.put("imagePath",this.imagePath);
+        output.put("type",this.type);
+        output.put("beverage",this.beverage);
+        output.put("serviceFee",this.serviceFee);
+        HashMap<String, Object> courseMap = new HashMap<>();
+        for (Course c : this.courses){
+            courseMap.put(c.getCid(),c.toMap());
         }
-        this.dbRoot.child("beverage").setValue(this.beverage);
-        this.dbRoot.child("service-fee").setValue(this.serviceFee);
-        Uri file = Uri.fromFile(new File(this.imagePath,this.imageName));
-        UploadTask ut = storageRoot.child(this.imageName).putFile(file);
-        ut.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("onFailure", e.getMessage());
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.i("onSuccess","Image is located at: "+taskSnapshot.getDownloadUrl());
-            }
-        });
+        output.put("courses",courseMap);
+        return output;
     }
 
     /**

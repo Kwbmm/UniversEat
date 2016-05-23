@@ -3,6 +3,8 @@ package it.polito.mad.groupFive.restaurantcode.datastructures;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
 
@@ -26,36 +28,29 @@ public class Course {
     private ArrayList<String> tags = new ArrayList<>();
 
 
-    public Course(String mid) throws CourseException {
-        this(null,mid);
+    public Course(){
+
     }
-
-    public Course(String cid, String mid) throws CourseException {
-        if(mid == null){
-            throw new CourseException("Menu ID cannot be null");
-        }
-
+    public Course(String mid) {
         this.mid = mid;
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        this.dbRoot = db.getReference("course");
-
-        this.cid = cid == null ? this.dbRoot.push().getKey() : cid;
-
-        //Change the dbRoot to the tree specific to this object
-        this.dbRoot = this.dbRoot.child(this.cid);
     }
 
-    void saveData(){
-        this.dbRoot.child("course-id").setValue(this.cid);
-        this.dbRoot.child("menu-id").setValue(this.mid);
-        this.dbRoot.child("name").setValue(this.name);
-        this.dbRoot.child("gluten-free").setValue(this.glutenFree);
-        this.dbRoot.child("vegan").setValue(this.vegan);
-        this.dbRoot.child("vegetarian").setValue(this.vegetarian);
-        this.dbRoot.child("spicy").setValue(this.spicy);
+    Map<String,Object> toMap(){
+        HashMap<String, Object> output = new HashMap<>();
+        output.put("cid",this.cid);
+        output.put("mid",this.mid);
+        output.put("name",this.name);
+        output.put("glutenFree",this.glutenFree);
+        output.put("vegan",this.vegan);
+        output.put("vegetarian",this.vegetarian);
+        output.put("spicy",this.spicy);
+
+        HashMap<String, Boolean> tagMap = new HashMap<>();
         for(String tag : this.tags){
-            this.dbRoot.child("tag").child(tag).setValue(true);
+            tagMap.put(tag,true);
         }
+        output.put("tags",tagMap);
+        return output;
     }
 
     /**

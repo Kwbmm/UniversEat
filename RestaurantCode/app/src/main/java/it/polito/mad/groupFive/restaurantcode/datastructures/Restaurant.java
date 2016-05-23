@@ -63,9 +63,6 @@ import it.polito.mad.groupFive.restaurantcode.libs.CustomUriAdapter;
  */
 public class Restaurant {
 
-    private DatabaseReference dbRoot;
-    private StorageReference storageRoot;
-
     private String rid;
     private String uid;
     private String name;
@@ -75,9 +72,8 @@ public class Restaurant {
     private String city;
     private String website;
     private String telephone;
-    private String ZIPCode;
-    private String imageName;
-    private String imagePath;
+    private String zip;
+    private String imageLocal;
     private float rating;
     private double xcoord;
     private double ycoord;
@@ -89,24 +85,6 @@ public class Restaurant {
     private ArrayList<Review> reviews = new ArrayList<>();
 
     public Restaurant(){
-        this(null);
-    }
-
-    public Restaurant(String rid) {
-        final String METHOD_NAME = this.getClass().getName()+" - constructor";
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        this.dbRoot = db.getReference("restaurant");
-
-        this.rid = rid == null ? this.dbRoot.push().getKey() : rid;
-
-        //Change the dbRoot to the tree specific to this object
-        this.dbRoot = this.dbRoot.child(this.rid);
-        //Setup the storage
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        this.storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
-        //Change the storageRoot to the tree specific to this object
-        this.storageRoot = this.storageRoot.child(this.rid);
-        this.imageName = "restaurant_"+this.rid+".png";
     }
 
     /**
@@ -126,57 +104,30 @@ public class Restaurant {
         }
     }
 
-    public void saveData() {
-        final String METHOD_NAME = this.getClass().getName()+" - saveData";
+    public Map<String, Object> toMap() {
+        HashMap<String,Object> output = new HashMap<>();
+        output.put("rid",this.rid);
+        output.put("uid",this.uid);
+        output.put("name",this.name);
+        output.put("description",this.description);
+        output.put("address",this.address);
+        output.put("state",this.state);
+        output.put("city",this.city);
+        output.put("website",this.website);
+        output.put("telephone",this.telephone);
+        output.put("zip",this.zip);
+        output.put("imageLocal",this.imageLocal);
+        output.put("rating",this.rating);
+        output.put("xcoord",this.xcoord);
+        output.put("ycoord",this.ycoord);
 
-        this.dbRoot.child("restaurant-id").setValue(this.uid);
-        this.dbRoot.child("user-id").setValue(this.uid);
-        this.dbRoot.child("name").setValue(this.name);
-        this.dbRoot.child("description").setValue(this.description);
-        this.dbRoot.child("address").setValue(this.address);
-        this.dbRoot.child("city").setValue(this.city);
-        this.dbRoot.child("zip-code").setValue(this.ZIPCode);
-        this.dbRoot.child("state").setValue(this.state);
-        this.dbRoot.child("website").setValue(this.website);
-        this.dbRoot.child("telephone").setValue(this.telephone);
-        this.dbRoot.child("rating").setValue(this.rating);
-        this.dbRoot.child("x-coord").setValue(this.xcoord); //TODO Fix this
-        this.dbRoot.child("y-coord").setValue(this.ycoord); //TODO also this
-
-        //Set the menu IDs
-        for(Menu m : this.menus){
-            this.dbRoot.child("menu").child(m.getMid()).setValue(true);
-            m.saveData();
+        HashMap<String, Object> menuMap = new HashMap<>();
+        for (Menu m : this.menus){
+            menuMap.put(m.getMid(),m.toMap());
         }
+        output.put("menus",menuMap);
 
-        for(Order o : this.orders){
-            this.dbRoot.child("order").child(o.getOid()).setValue(true);
-            o.saveData();
-        }
-
-        this.dbRoot.child("timetable-lunch").setValue(this.timetableLunch);
-        this.dbRoot.child("timetable-dinner").setValue(this.timetableDinner);
-        this.dbRoot.child("ticket").setValue(this.tickets);
-
-        for(Review r : this.reviews){
-            this.dbRoot.child("review").child(r.getRevID()).setValue(true);
-            r.saveData();
-        }
-        this.dbRoot.child("image-name").setValue(this.imageName);
-
-        Uri file = Uri.fromFile(new File(this.imagePath,this.imageName));
-        UploadTask ut = storageRoot.child(this.imageName).putFile(file);
-        ut.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("onFailure", e.getMessage());
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.i("onSuccess","Image is located at: "+taskSnapshot.getDownloadUrl());
-            }
-        });
+        return output;
     }
 
     /**
@@ -222,24 +173,6 @@ public class Restaurant {
 
     /**
      *
-     * @return The name of the restaurant image
-     */
-    public String getImageName() { return this.imageName; }
-
-    public Bitmap getImageBitmap() throws RestaurantException {
-        final String METHOD_NAME = this.getClass().getName()+" - getImageBitmap";
-        try {
-            File f=new File(this.imagePath, this.imageName);
-            return BitmapFactory.decodeStream(new FileInputStream(f));
-        }
-        catch (FileNotFoundException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            throw new RestaurantException(e.getMessage());
-        }
-    }
-
-    /**
-     *
      * @return The latitude coordinate of restaurant
      */
     public double getXcoord() { return this.xcoord; }
@@ -273,7 +206,7 @@ public class Restaurant {
      *
      * @return a string with the ZIP code
      */
-    public String getZIPCode() { return this.ZIPCode; }
+    public String getZip() { return this.zip; }
 
     /**
      *
@@ -363,19 +296,8 @@ public class Restaurant {
      *
      * @return Map of the LUNCH timetable.
      */
-    public Map<String,Date[]> getTimetableLunch() throws RestaurantException {
-        final String METHOD_NAME = this.getClass().getName()+" - getTimetableLunch";
-        Map<String,Date[]> output = new HashMap<>();
-        for(Map.Entry<String,Map<String,String>> entry : this.timetableLunch.entrySet()){
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm",Locale.getDefault());
-            try {
-                output.put(entry.getKey(),new Date[]{sdf.parse(entry.getValue().get("start")),sdf.parse(entry.getValue().get("end"))});
-            } catch (ParseException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-                throw new RestaurantException(e.getMessage());
-            }
-        }
-        return output;
+    public Map<String,Map<String,String>> getTimetableLunch() throws RestaurantException {
+        return this.timetableLunch;
     }
 
     /**
@@ -384,19 +306,8 @@ public class Restaurant {
      *
      * @return ArrayMap of the DINNER timetable.
      */
-    public Map<String,Date[]> getTimetableDinner() throws RestaurantException {
-        final String METHOD_NAME = this.getClass().getName()+" - getTimetableLunch";
-        Map<String,Date[]> output = new HashMap<>();
-        for(Map.Entry<String,Map<String,String>> entry : this.timetableDinner.entrySet()){
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm",Locale.getDefault());
-            try {
-                output.put(entry.getKey(),new Date[]{sdf.parse(entry.getValue().get("start")),sdf.parse(entry.getValue().get("end"))});
-            } catch (ParseException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-                throw new RestaurantException(e.getMessage());
-            }
-        }
-        return output;
+    public Map<String,Map<String,String>> getTimetableDinner() throws RestaurantException {
+        return this.timetableDinner;
     }
 
     /**
@@ -534,6 +445,10 @@ public class Restaurant {
         return false;
     }
 
+    public void setRid(String rid){
+        this.rid = rid;
+    }
+
     /**
      *
      * @param name Name of restaurant
@@ -565,68 +480,6 @@ public class Restaurant {
     }
 
     /**
-     * Sets the byte array representation of the image from a given input Bitmap.
-     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
-     *
-     * @param image Bitmap representing the image
-     */
-    public void setImageFromBitmap(Bitmap image, Context appContext) throws RestaurantException {
-        final String METHOD_NAME = this.getClass().getName()+" - setImageFromBitmap";
-        ContextWrapper cw = new ContextWrapper(appContext);
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("images", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath=new File(directory,this.imageName);
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (FileNotFoundException fnfe) {
-            Log.e(METHOD_NAME,fnfe.getMessage());
-            throw new RestaurantException(fnfe.getMessage());
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-                throw new RestaurantException(e.getMessage());
-            }
-        }
-        this.imagePath = directory.getAbsolutePath();
-    }
-
-    /**
-     * Sets the byte array representation of the image from a given input Drawable. The drawable
-     * is first converted to a Bitmap and then setImageFromBitmap is called.
-     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
-     *
-     * @param image Drawable representing the image
-     */
-    public void setImageFromDrawable(Drawable image, Context appContext) throws RestaurantException {
-        Bitmap bitmap = null;
-
-        if (image instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) image;
-            if(bitmapDrawable.getBitmap() != null) {
-                this.setImageFromBitmap(bitmapDrawable.getBitmap(),appContext);
-            }
-        }
-
-        if(image.getIntrinsicWidth() <= 0 || image.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(image.getIntrinsicWidth(), image.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(bitmap);
-        image.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        image.draw(canvas);
-        this.setImageFromBitmap(bitmap,appContext);
-    }
-
-    /**
      *
      * @param xcoord The latitude coordinate of restaurant
      */
@@ -654,9 +507,7 @@ public class Restaurant {
      *
      * @param rating of restaurant
      */
-    public void setRating(float rating) throws RestaurantException {
-        if(rating < 0)
-            throw new RestaurantException("Rating must be positive");
+    public void setRating(float rating) {
         this.rating = rating;
     }
 
@@ -676,14 +527,7 @@ public class Restaurant {
         this.orders = orders;
     }
 
-    /**
-     *
-     * @param uid Set the id of the restaurant owner
-     * @throws RestaurantException if user id null
-     */
-    public void setUid(String uid) throws RestaurantException {
-        if(uid == null)
-            throw new RestaurantException("User ID cannot be null");
+    public void setUid(String uid) {
         this.uid = uid;
     }
 
@@ -705,9 +549,9 @@ public class Restaurant {
 
     /**
      *
-     * @param ZIPCode the zip code of the restaurant's city
+     * @param zip the zip code of the restaurant's city
      */
-    public void setZIPCode(String ZIPCode){ this.ZIPCode = ZIPCode; }
+    public void setZip(String zip){ this.zip = zip; }
 
     /**
      *
@@ -724,15 +568,9 @@ public class Restaurant {
      * @param dayOfWeek Day of the week during which this shift takes place. Must be between 0 and 6
      * @param timeStart Start hour of the shift.
      * @param timeEnd End hour of the shift.
-     * @throws RestaurantException if day of the week is not in range, or date parsing fails.
      */
-    public void setDurationLunch(int dayOfWeek,String timeStart, String timeEnd) throws RestaurantException {
+    public void setDurationLunch(String dayOfWeek,String timeStart, String timeEnd) {
         final String METHOD_NAME = this.getClass().getName()+" - setDurationLunch";
-
-        if(dayOfWeek < 0 || dayOfWeek > 6){
-            Log.e(METHOD_NAME, "Day of week is not in the expected range 0-6");
-            throw new RestaurantException("Day of week is not in the expected range 0-6");
-        }
 
         Map<String,String> entry = new HashMap<>();
         entry.put("start",timeStart);
@@ -749,19 +587,14 @@ public class Restaurant {
      * @param dayOfWeek Day of the week during which this shift takes place. Must be between 0 and 6
      * @param timeStart Start hour of the shift.
      * @param timeEnd End hour of the shift.
-     * @throws RestaurantException if day of the week is not in range, or date parsing fails.
      */
-    public void setDurationDinner(int dayOfWeek,String timeStart, String timeEnd) throws RestaurantException {
+    public void setDurationDinner(String dayOfWeek,String timeStart, String timeEnd) {
         final String METHOD_NAME = this.getClass().getName()+" - setDurationDinner";
 
-        if(dayOfWeek < 0 || dayOfWeek > 6){
-            Log.e(METHOD_NAME, "Day of week is not in the expected range 0-6");
-            throw new RestaurantException("Day of week is not in the expected range 0-6");
-        }
         Map<String,String> entry = new HashMap<>();
         entry.put("start",timeStart);
         entry.put("end",timeEnd);
-        this.timetableDinner.put(String.valueOf(dayOfWeek),entry);
+        this.timetableDinner.put(dayOfWeek,entry);
     }
 
     /**
@@ -772,14 +605,8 @@ public class Restaurant {
      * [1] endHour
      * @param timetable A(n) (Array)Map of the timetable of the Lunch.
      */
-    public void setTimetableLunch(Map<String,Date[]> timetable){
-        for(Map.Entry<String,Date[]> entry : timetable.entrySet()){
-            Map<String,String> duration = new HashMap<>();
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm",Locale.getDefault());
-            duration.put("start",sdf.format(entry.getValue()[0]));
-            duration.put("end",sdf.format(entry.getValue()[1]));
-            this.timetableLunch.put(entry.getKey(),duration);
-        }
+    public void setTimetableLunch(Map<String,Map<String,String>> timetable){
+        this.timetableLunch = timetable;
     }
 
     /**
@@ -790,15 +617,8 @@ public class Restaurant {
      * [1] endHour
      * @param timetable A(n) (Array)Map of the timetable of the Dinner.
      */
-    public void setTimetableDinner(Map<String,Date[]> timetable){
-        for(Map.Entry<String,Date[]> entry : timetable.entrySet()){
-            Map<String,String> duration = new HashMap<>();
-            SimpleDateFormat start = new SimpleDateFormat("HH:mm",Locale.getDefault());
-            SimpleDateFormat end = new SimpleDateFormat("HH:mm",Locale.getDefault());
-            duration.put("start",start.format(entry.getValue()[0]));
-            duration.put("end",end.format(entry.getValue()[1]));
-            this.timetableDinner.put(entry.getKey(),duration);
-        }
+    public void setTimetableDinner(Map<String,Map<String,String>> timetable){
+        this.timetableDinner = timetable;
     }
 
     /**
@@ -806,4 +626,17 @@ public class Restaurant {
      * @param reviews An ArrayList of Review(s) to assign to this restaurant object.
      */
     public void setReviews(ArrayList<Review> reviews){ this.reviews = reviews; }
+
+    public void setImageLocal(String imagePath) {
+        this.imageLocal = imagePath;
+    }
+
+    public String getImageName(){
+        String[] arrayString = this.imageLocal.split("/");
+        return arrayString[arrayString.length-1];
+    }
+
+    public String getImageLocal() {
+        return this.imageLocal;
+    }
 }
