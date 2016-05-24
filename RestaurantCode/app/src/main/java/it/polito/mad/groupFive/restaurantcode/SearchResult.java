@@ -478,7 +478,7 @@ public class SearchResult extends NavigationDrawer {
             holder.restaurant_address.setText(restaurant.getAddress());
             holder.restaurant_rating.setRating(restaurant.getRating());
             holder.restaurant_image.setImageBitmap(restaurant.getImageBitmap());
-            int rid = restaurants.get(position).getRid();
+            String rid = restaurants.get(position).getRid();
             holder.card.setOnClickListener(new onCardClick(position,rid,-1));
         }
 
@@ -638,7 +638,7 @@ public class SearchResult extends NavigationDrawer {
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
             holder.menu_image.setImageBitmap(menu.getImageBitmap());
-            int rid = menus.get(position).getRid();
+            String rid = menus.get(position).getRid();
             holder.card.setOnClickListener(new onCardClick(position,rid,menu.getMid()));
         }
 
@@ -650,10 +650,10 @@ public class SearchResult extends NavigationDrawer {
 
     public class onCardClick implements View.OnClickListener{
         private int position;
-        private int rid;
+        private String rid;
         private int mid;
 
-        public onCardClick(int position,int rid,int mid){
+        public onCardClick(int position, String rid, int mid){
             this.position=position;
             this.rid=rid;
             this.mid=mid;

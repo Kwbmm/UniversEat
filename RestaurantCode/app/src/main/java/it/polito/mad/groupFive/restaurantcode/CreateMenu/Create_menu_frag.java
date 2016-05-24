@@ -355,7 +355,7 @@ public class Create_menu_frag extends Fragment {
     private void setMenuData() {
         final String METHOD_NAME = this.getClass().getName()+" - setMenuData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), Create_menu.MODE_PRIVATE);
-        int rid = sp.getInt("rid",-1);
+        String rid = sp.getString("rid",null);
         int uid = sp.getInt("uid",-1);
 
         try {

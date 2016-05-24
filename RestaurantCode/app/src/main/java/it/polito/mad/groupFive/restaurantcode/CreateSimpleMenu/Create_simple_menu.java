@@ -41,7 +41,7 @@ public class Create_simple_menu extends NavigationDrawer implements Create_simpl
 
     public void getData(){
         SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
-        int rid=sp.getInt("rid",-1);
+        String rid=sp.getString("rid",null);
         try {
             rest=new Restaurant(this,rid);
             rest.getData();
@@ -60,7 +60,7 @@ public class Create_simple_menu extends NavigationDrawer implements Create_simpl
     public void fetchData(){
 
         SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
-        int rid=sp.getInt("rid",-1);
+        String rid=sp.getString("rid",null);
         try {
             rest=new Restaurant(this,rid);
             rest.getData();

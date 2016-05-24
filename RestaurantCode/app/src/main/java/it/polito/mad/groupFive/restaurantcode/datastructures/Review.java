@@ -22,8 +22,8 @@ public class Review {
     transient private User reviewer;
 
     private int revID;
-    private int uid;
-    private int rid;
+    private String uid;
+    private String rid;
     private String reviewText;
     private String title;
     private Date date;
@@ -115,23 +115,12 @@ public class Review {
             Log.e(METHOD_NAME, e.getMessage());
             throw new ReviewException(e.getMessage());
         }
-        this.copyData(dummy);
     }
 
     /**
      * Copy all the data took from the JSON file on this object.
      * @param dummy A dummy Review object, on which the JSON data is written to.
      */
-    private void copyData(Review dummy) {
-        this.revID = dummy.getRevID();
-        this.uid = dummy.getUid();
-        this.rid = dummy.getRid();
-        this.reviewText = dummy.getReviewText();
-        this.replies = dummy.getReplies();
-        this.rating = dummy.getRating();
-        this.title=dummy.getTitle();
-        this.date=dummy.getDate();
-    }
 
     /**
      *
@@ -143,13 +132,13 @@ public class Review {
      *
      * @return The user ID of the user who made this review.
      */
-    public int getUid(){ return this.uid; }
+    public String getUid(){ return this.uid; }
 
     /**
      *
      * @return The restaurant ID of the reviewed restaurant.
      */
-    public int getRid(){ return this.rid; }
+    public String getRid(){ return this.rid; }
 
     /**
      *
@@ -189,9 +178,9 @@ public class Review {
      * @param uid A positive integer uniquely identifying the user who made this review.
      * @throws ReviewException If user id is negative
      */
-    public void setUid(int uid) throws ReviewException {
+    public void setUid(String uid) throws ReviewException {
         final String METHOD_NAME = this.getClass().getName()+" - setUid";
-        if(uid < 0)
+        if(uid.isEmpty())
             throw new ReviewException("User ID must be positive");
         this.uid = uid;
         Log.w(METHOD_NAME, "User ID for Review ["+this.revID+"] was changed");
@@ -206,9 +195,9 @@ public class Review {
      * @param rid A positive integer uniquely identifying the Restaurant object reviewed.
      * @throws ReviewException If restaurant id is negative
      */
-    public void setRid(int rid) throws ReviewException {
+    public void setRid(String rid) throws ReviewException {
         final String METHOD_NAME = this.getClass().getName()+" - setRid";
-        if(rid < 0)
+        if(rid!=null)
             throw new ReviewException("Restaurant ID must be positive");
         this.rid = rid;
         Log.w(METHOD_NAME, "Restaurant ID for Review ["+this.revID+"] was changed");

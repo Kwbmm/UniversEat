@@ -3,124 +3,115 @@ package it.polito.mad.groupFive.restaurantcode;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
+
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.User;
+
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
+
 
 /**
  * Created by Cristiano on 05/05/2016.
  */
 public class Profile extends NavigationDrawer {
     
-    int uid;
-    RestaurantOwner restaurantOwner;
-    Customer customer;
+    String uid;
+    User user;
+    FirebaseDatabase db;
+    DatabaseReference myRef;
+    
     SharedPreferences sharedPreferences;
     boolean restOwner;
-    
+    FrameLayout mlay;
+    TextView name;
+    TextView username;
+    TextView email;
+    TextView header;
+    ImageView image;
+    ListView list;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        mlay= (FrameLayout) findViewById(R.id.frame);
         sharedPreferences=this.getSharedPreferences("RestaurantCode.Userdata",this.MODE_PRIVATE);
-        if((uid=sharedPreferences.getInt("uid",-1))==-1) finish();
+        if((uid=sharedPreferences.getString("uid",null))==null) finish();
         restOwner=sharedPreferences.getBoolean("owner",Boolean.FALSE);
-        if(restOwner) {
-            try {
-                restaurantOwner = new RestaurantOwner(getBaseContext(),uid);
-            } catch (RestaurantOwnerException e) {
-                e.printStackTrace();
-            }
-        }
-        else {
-            try {
-                customer = new Customer(getBaseContext(),uid);
-            } catch (CustomerException e) {
-                e.printStackTrace();
-            }
-        }
+            db = FirebaseDatabase.getInstance();
+            DatabaseReference Myref = db.getReference("User");
+
+            //Myref.child("Owner").addValueEventListener(new UserDataListener(this));
+            user =new User(uid);
+            Myref.orderByChild("uid").equalTo(uid).addChildEventListener(new DataList(user));
+
+
+
+
+
+        View load= LayoutInflater.from(this).inflate(R.layout.loading_bar,null);
+        mlay.addView(load);
+
+
+
         //generadatifittizi();
-        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-        mlay.inflate(this, R.layout.profile, mlay);
-        showProfile();
+
+
     }
 
-    private void generadatifittizi(){
-        customer.setName("Cristiano");
-        customer.setSurname("Ovio");
-        customer.setUserName("creeovio");
-        customer.setEmail("creeovio@gmail.com");
-        ArrayList<Integer> alist =new ArrayList<>();
-        alist.add(sharedPreferences.getInt("rid",-1));
-        alist.add(sharedPreferences.getInt("rid",-1));
-        alist.add(sharedPreferences.getInt("rid",-1));
-        alist.add(sharedPreferences.getInt("rid",-1));
-        alist.add(sharedPreferences.getInt("rid",-1));
-        alist.add(sharedPreferences.getInt("rid",-1));
-        try {
-            customer.setFavourites(alist);
-        } catch (CustomerException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     private void showProfile() {
-        TextView name = (TextView) findViewById(R.id.user_name);
-        TextView username = (TextView) findViewById(R.id.user_username);
-        TextView email = (TextView) findViewById(R.id.user_email);
-        TextView header = (TextView) findViewById(R.id.listHeader);
-        ImageView image = (ImageView) findViewById(R.id.user_image);
-        ListView list = (ListView) findViewById(R.id.profileList);
-        if(restOwner) {
-            name.setText(restaurantOwner.getName()+" "+restaurantOwner.getSurname());
-            username.setText(restaurantOwner.getUserName());
-            email.setText(restaurantOwner.getEmail());
-            header.setText("My Restaurant");
-            try {
-                image.setImageBitmap(restaurantOwner.getImageBitmap());
-            } catch (NullPointerException e){
-                Log.e("immagine non caricata"," ");
-            }
-            ProfileAdapter profileAdapter = new ProfileAdapter(this,restaurantOwner.getRestaurantIDs());
-            list.setAdapter(profileAdapter);
-        }
-        else {
-            name.setText(customer.getName()+" "+customer.getSurname());
-            username.setText(customer.getUserName());
-            email.setText(customer.getEmail());
-            header.setText("My Favourites");
-            try {
-                image.setImageBitmap(customer.getImageBitmap());
-            } catch (NullPointerException e){
-                Log.e("immagine non caricata"," ");
-            }
-            ProfileAdapter profileAdapter = new ProfileAdapter(this,customer.getFavourites());
-            list.setAdapter(profileAdapter);
-        }
+         name = (TextView) findViewById(R.id.user_name);
+       username = (TextView) findViewById(R.id.user_username);
+        email = (TextView) findViewById(R.id.user_email);
+        header = (TextView) findViewById(R.id.listHeader);
+         image= (ImageView) findViewById(R.id.user_image);
+        list= (ListView) findViewById(R.id.profileList);
+
     }
     public class ProfileAdapter extends BaseAdapter {
-        ArrayList<Integer> restaurantIDs;
+        List<String> restaurantIDs;
         Context context;
         Restaurant restaurant;
-        public ProfileAdapter(Context context, ArrayList<Integer> restaurantIDs){
+        public ProfileAdapter(Context context, List<String> restaurantIDs){
             this.restaurantIDs=restaurantIDs;
             this.context=context;
         }
@@ -141,7 +132,7 @@ public class Profile extends NavigationDrawer {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(context).inflate(R.layout.restaurant_view, null);
-            int restaurantID = restaurantIDs.get(position);
+            String restaurantID = restaurantIDs.get(position);
             try {
                 restaurant = new Restaurant(getBaseContext(),restaurantID);
                 restaurant.getData();
@@ -170,6 +161,118 @@ public class Profile extends NavigationDrawer {
                 }
             });
             return convertView;
+        }
+    }
+    public class DataList implements ChildEventListener {
+        public User user;
+
+        public DataList(User user){
+            this.user=user;
+        }
+
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            this.user=dataSnapshot.getValue(user.getClass());
+
+            if(restOwner) {
+
+            Log.v("name",user.getName());
+
+                try {
+                    FirebaseStorage storage=FirebaseStorage.getInstance();
+                    StorageReference user_img=storage.getReference("Users");
+                    StorageReference img = user_img.child(user.getUid());
+
+                    final long ONE_MEGABYTE = 1024 * 1024;
+                    img.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            mlay.removeAllViews();
+                            mlay.inflate(getBaseContext(), R.layout.profile, mlay);
+                            showProfile();
+
+                                name.setText(user.getName()+" "+user.getSurname());
+                                username.setText(user.getUserName());
+                                email.setText(user.getEmail());
+                                header.setText("My Restaurant");
+                            image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                            ProfileAdapter profileAdapter = new ProfileAdapter(getBaseContext(),user.getRestaurantIDs());
+                            list.setAdapter(profileAdapter);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
+
+
+
+                    //image.setImageBitmap(user.getImageBitmap());
+
+
+
+                } catch (NullPointerException e){
+                    Log.e("immagine non caricata"," ");
+                }
+
+            }
+            else {
+
+                try {
+                    FirebaseStorage storage=FirebaseStorage.getInstance();
+                    StorageReference user_img=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com");
+                    StorageReference img = user_img.child("Users").child(user.getUid()+".jpg");
+
+                    final long ONE_MEGABYTE = 1024 * 1024;
+                    img.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            mlay.removeAllViews();
+                            mlay.inflate(getBaseContext(), R.layout.profile, mlay);
+                            showProfile();
+                            name.setText(user.getName()+" "+user.getSurname());
+                            username.setText(user.getUserName());
+                            email.setText(user.getEmail());
+                            header.setText("My Favourites");
+                            image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                            ProfileAdapter profileAdapter = new ProfileAdapter(getBaseContext(),user.getRestaurantIDs());
+                            list.setAdapter(profileAdapter);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+                    // image.setImageBitmap(user.getImageBitmap());
+                } catch (NullPointerException e){
+                    Log.e("immagine non caricata"," ");
+                }
+
+            }
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
         }
     }
 }

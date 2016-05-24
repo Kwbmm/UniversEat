@@ -129,7 +129,7 @@ public class CreateRestaurant_2 extends Fragment {
         try {
 
 
-            if(!getR.editmode())restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));
+            if(!getR.editmode())restaurant=new Restaurant(getContext(),sp.getString("rid",null));
 
             if(address.getText().toString().trim().equals("") || address.getText() == null){
                 Log.w(METHOD_NAME,"TextView Address is either empty or null");

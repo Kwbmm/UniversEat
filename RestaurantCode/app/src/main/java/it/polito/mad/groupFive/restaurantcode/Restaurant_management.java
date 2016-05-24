@@ -89,10 +89,10 @@ public class Restaurant_management extends NavigationDrawer {
     }
 
     private boolean showresturant() {
-        int uid=0,rid=0;
+        String uid,rid;
         final SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
-        if ((rid=sharedPreferences.getInt("rid",-1))!=-1){
-            uid=sharedPreferences.getInt("uid",-1);
+        if ((rid=sharedPreferences.getString("rid",null))!=null){
+            uid=sharedPreferences.getString("uid",null);
             try {
                 restaurant=new Restaurant(getBaseContext(),rid);
             } catch (RestaurantException e) {

@@ -178,7 +178,7 @@ public class CreateRestaurant_1 extends Fragment {
             }else {
             restaurant=new Restaurant(getContext());
             SharedPreferences.Editor editor = sp.edit();
-            editor.putInt("rid",restaurant.getRid());
+            editor.putString("rid",restaurant.getRid());
             editor.apply();}
 
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
@@ -42,7 +49,7 @@ public class Login_view extends Fragment {
     private SharedPreferences sharedPreferences;
     private EditText username;
     private EditText password;
-    private Customer user;
+    private User user;
     private RestaurantOwner owner;
     private boolean own;
     private OnFragmentInteractionListener mListener;
@@ -94,59 +101,62 @@ public class Login_view extends Fragment {
         });
         username=(EditText)v.findViewById(R.id.username);
         password=(EditText)v.findViewById(R.id.password);
-        if(sharedPreferences.getBoolean("owner",false)){
-            try {
 
-                owner=new RestaurantOwner(getContext(),sharedPreferences.getInt("uid",-1));
-                own=true;
-            } catch (RestaurantOwnerException e) {
-                e.printStackTrace();
-            }
-        }else {
-            try {
-                user=new Customer(getContext(),sharedPreferences.getInt("uid",-1));
-                own=false;
-            } catch (CustomerException e) {
-                e.printStackTrace();
-            }
-        }
         incorrect_log= (LinearLayout) v.findViewById(R.id.ll_incorrect);
         Button login=(Button)v.findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FirebaseAuth auth=FirebaseAuth.getInstance();
+                String psw,usr;
+                psw=username.getText().toString();
+                usr=password.getText().toString();
+                auth.signInWithEmailAndPassword(username.getText().toString(),password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        FirebaseAuth auth=FirebaseAuth.getInstance();
+                        if (task.isSuccessful()){
 
-    if(!own){
-        if ((sharedPreferences.getInt("uid",-1)!=-1)&&username.getText().toString().equals(user.getUserName())&&password.getText().toString().equals(user.getPassword())){
-            SharedPreferences.Editor editor=sharedPreferences.edit();
-            editor.putBoolean("logged",true);
-            editor.commit();
-            mListener.onFragmentInteraction();
-            getFragmentManager().popBackStack();
-        }
-        else{
-            incorrect_log.removeAllViewsInLayout();
-            View view=inflater.inflate(R.layout.incorrect_login,null);
-            incorrect_log.addView(view);}
-    }
-                if(own){
-                    if((sharedPreferences.getInt("uid",-1)!=-1)&&username.getText().toString().equals(owner.getUserName())&&password.getText().toString().equals(owner.getPassword())){
-                        SharedPreferences.Editor editor=sharedPreferences.edit();
-                        editor.putBoolean("logged",true);
-                        editor.commit();
-                        Log.v("pws",password.getText().toString());
-                        mListener.onFragmentInteraction();
-                        getFragmentManager().popBackStack();
-                    }else{
-                        incorrect_log.removeAllViewsInLayout();
-                        View view=inflater.inflate(R.layout.incorrect_login,null);
-                        incorrect_log.addView(view);}
+                            FirebaseUser firebaseUser=auth.getCurrentUser();
+                                User customer=new User(firebaseUser.getUid());
+                                    SharedPreferences.Editor editor=sharedPreferences.edit();
+                                    editor.putBoolean("owner",customer.isManager());
+                                    editor.commit();
+                                own=customer.isManager();
 
-                }
 
+
+                            if(!own){
+
+                                editor=sharedPreferences.edit();
+                                editor.putBoolean("logged",true);
+                                editor.putString("uid",firebaseUser.getUid());
+                                editor.commit();
+                                mListener.onFragmentInteraction();
+                                getFragmentManager().popBackStack();
+                            }else{
+                                editor=sharedPreferences.edit();
+                                editor.putBoolean("logged",true);
+                                editor.putString("uid",firebaseUser.getUid());
+                                editor.commit();
+                                Log.v("pws",password.getText().toString());
+                                mListener.onFragmentInteraction();
+                                getFragmentManager().popBackStack();}
+
+
+
+                        }
+                        else{
+                            incorrect_log.removeAllViewsInLayout();
+                            View view=inflater.inflate(R.layout.incorrect_login,null);
+                            incorrect_log.addView(view);}
+
+                    }
+                });
 
 
             }
+
         });
         return v;
     }
@@ -167,21 +177,12 @@ public class Login_view extends Fragment {
     public void update(){
         sharedPreferences=getContext().getSharedPreferences(getString(R.string.user_pref),getContext().MODE_PRIVATE);
         if(sharedPreferences.getBoolean("owner",false)){
-            try {
-                Log.v("owner", "tr");
-                owner=new RestaurantOwner(getContext(),sharedPreferences.getInt("uid",-1));
-                own=true;
-            } catch (RestaurantOwnerException e) {
-                e.printStackTrace();
-            }
-        }else {
-            try {
+
+
                 Log.v("owner", "fl");
-                user=new Customer(getContext(),sharedPreferences.getInt("uid",-1));
+                user=new User(sharedPreferences.getString("uid",null));
                 own=false;
-            } catch (CustomerException e) {
-                e.printStackTrace();
-            }
+
         }
     }
 

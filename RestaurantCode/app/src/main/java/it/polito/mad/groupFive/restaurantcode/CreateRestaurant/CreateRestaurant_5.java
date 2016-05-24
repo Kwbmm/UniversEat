@@ -114,7 +114,7 @@ public class CreateRestaurant_5 extends Fragment {
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
         try {
-            restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));
+            restaurant=new Restaurant(getContext(),sp.getString("rid",null));
             //Get all the tickets
             ArrayList<CheckBox> ticketCBs = new ArrayList<>();
             //TODO wanna add more tickets??

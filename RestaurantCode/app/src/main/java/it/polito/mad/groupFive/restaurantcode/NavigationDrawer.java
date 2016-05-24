@@ -17,18 +17,20 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import it.polito.mad.groupFive.restaurantcode.Login.CreateLogin;
 import it.polito.mad.groupFive.restaurantcode.Login.Login_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
+import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
 
 public class NavigationDrawer extends AppCompatActivity implements Login_view.OnFragmentInteractionListener {
     private int phase;//0 Logged out 1 logged in
     private boolean usertype;// false user true restaurant manager
-    private RestaurantOwner rowner;
-    private Customer user;
+    private User user;
     private ArrayAdapter<String> adapter;
     private DrawerLayout drawerLayout;
     private static int REGISTRATION=1;
@@ -46,26 +48,18 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         getUserinfo();
         checkUser();
         createDrawer();
-        checkPic();
+        //checkPic();
     }
 
     private void checkPic(){
         final String METHOD_NAME = this.getClass().getName()+" - checkPic";
         if(phase==1){
             if (usertype){
-                try {
-                    rowner= new RestaurantOwner(getBaseContext(),sharedPreferences.getInt("uid",-1));
-                    this.imageView.setImageBitmap(rowner.getImageBitmap());
-                } catch (RestaurantOwnerException e) {
-                    Log.e(METHOD_NAME,e.getMessage());
-                }
-            }else{
-                try {
-                    user=new Customer(getBaseContext(),sharedPreferences.getInt("uid",-1));
-                    this.imageView.setImageBitmap(user.getImageBitmap());
-                } catch (CustomerException e) {
-                    Log.e(METHOD_NAME,e.getMessage());
-                }
+                //TODO Fix
+                sharedPreferences.getString("uid",null);
+                    user=new User ();
+                    //this.imageView.setImageBitmap(user.getImageBitmap());
+
             }
 
         }}
@@ -184,17 +178,18 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
 
     @Override
     public void onFragmentInteraction() {
-        getUserinfo();
-        checkUser();
+
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putBoolean("logged",true);
         editor.apply();
+        getUserinfo();
+        checkUser();
         adapter.notifyDataSetChanged();
         dList.setAdapter(createAdapter());
         dList.deferNotifyDataSetChanged();
         Toast toast = Toast.makeText(getBaseContext(), "Login Completed", Toast.LENGTH_SHORT);
         toast.show();
-        checkPic();
+        //checkPic();
         hideSoftKeyboard();
     }
 
@@ -245,6 +240,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                         SharedPreferences.Editor editor=sharedPreferences.edit();
                         editor.putBoolean("logged",false);
                         editor.commit();
+                        FirebaseAuth.getInstance().signOut();
                         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
                         imageView.invalidate();
                         dList.setAdapter(createAdapter());
@@ -267,6 +263,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                         phase = 0;
                         SharedPreferences.Editor editor=sharedPreferences.edit();
                         editor.putBoolean("logged",false);
+                        FirebaseAuth.getInstance().signOut();
                         editor.commit();
                         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
                         imageView.invalidate();

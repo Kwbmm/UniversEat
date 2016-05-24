@@ -38,7 +38,7 @@ public class Menu {
     private boolean ticket;
     private boolean beverage;
     private boolean serviceFee;
-    private int rid;
+    private String rid;
 
     /**
      * Create an instance of Menu: requires, as parameter, its restaurant object.
@@ -386,7 +386,7 @@ public class Menu {
      * @return Restaurant reference to fetch data
      */
 
-    public int getRid() {
+    public String getRid() {
         return rid;
     }
 

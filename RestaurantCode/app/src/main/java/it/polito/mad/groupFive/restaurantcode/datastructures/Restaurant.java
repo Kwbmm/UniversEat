@@ -51,8 +51,8 @@ public class Restaurant {
 
     transient private Context appContext;
 
-    private int rid;
-    private int uid;
+    private String rid;
+    private String uid;
     private String name;
     private String description;
     private String address;
@@ -81,7 +81,6 @@ public class Restaurant {
      * @throws RestaurantException if restaurant ID is negative or JSON file read fails.
      */
     public Restaurant(Context appContext) throws RestaurantException {
-        this(appContext,Restaurant.randInt());
     }
 
     /**
@@ -93,9 +92,9 @@ public class Restaurant {
      * @param rid Positive Integer unique identifier
      * @throws RestaurantException
      */
-    public Restaurant(Context appContext, int rid) throws RestaurantException {
+    public Restaurant(Context appContext, String rid) throws RestaurantException {
         final String METHOD_NAME = this.getClass().getName()+" - constructor";
-        if(rid < 0)
+        if(rid!=null)
             throw new RestaurantException("Restaurant ID must be positive");
         this.rid = rid;
         this.appContext = appContext;
@@ -279,13 +278,13 @@ public class Restaurant {
      *
      * @return the id of restaurant
      */
-    public int getRid() { return this.rid; }
+    public String getRid() { return this.rid; }
 
     /**
      *
      * @return The id of the restaurant owner
      */
-    public int getUid() { return this.uid; }
+    public String getUid() { return this.uid; }
 
     /**
      * @return string Name of restaurant
@@ -445,8 +444,8 @@ public class Restaurant {
      * @return An ArrayList of Orders or null if nothing is found.
      * @throws RestaurantException if user id is negative.
      */
-    public ArrayList<Order> getOrdersByUserID(int uid) throws RestaurantException {
-        if(uid <0)
+    public ArrayList<Order> getOrdersByUserID(String uid) throws RestaurantException {
+        if(uid!=null)
             throw new RestaurantException("User ID must be positive");
         ArrayList<Order> output = new ArrayList<>();
         for(Order o : this.orders)
@@ -509,8 +508,8 @@ public class Restaurant {
      * @return An ArrayList of Review objects matching the specified user id.
      * @throws RestaurantException If user id is negative.
      */
-    public ArrayList<Review> getReviewsByUserID(int uid) throws RestaurantException {
-        if(uid < 0)
+    public ArrayList<Review> getReviewsByUserID(String uid) throws RestaurantException {
+        if(uid.isEmpty())
             throw new RestaurantException("User ID must be positive");
         ArrayList<Review> returnRes = new ArrayList<>();
         for(Review r : this.reviews)
@@ -727,8 +726,8 @@ public class Restaurant {
      * @param rid: the id of restaurant.
      * @throws RestaurantException Thrown if restaurant ID is negative.
      */
-    public void setRid(int rid) throws RestaurantException {
-        if(rid < 0)
+    public void setRid(String rid) throws RestaurantException {
+        if(rid!=null)
             throw new RestaurantException("Restaurant ID must be positive");
         this.rid = rid;
     }
@@ -764,8 +763,8 @@ public class Restaurant {
      * @param uid Set the id of the restaurant owner
      * @throws RestaurantException if user id is negative
      */
-    public void setUid(int uid) throws RestaurantException {
-        if(uid < 0)
+    public void setUid(String uid) throws RestaurantException {
+        if(uid!=null)
             throw new RestaurantException("User ID must be positive");
         this.uid = uid;
     }

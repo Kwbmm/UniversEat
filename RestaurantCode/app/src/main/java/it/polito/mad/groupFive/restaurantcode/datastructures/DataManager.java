@@ -69,7 +69,7 @@ public class DataManager {
         if(m.matches()){
             Integer intObj = Integer.valueOf(m.group(2));
             try {
-                Restaurant r = new Restaurant(this.appContext, intObj);
+                Restaurant r = new Restaurant(this.appContext, "ciao");
                 this.restaurants.add(r);
                 this.setMenus(r);
             } catch (RestaurantException e) {
@@ -121,7 +121,7 @@ public class DataManager {
      * @param rid Restaurant ID
      * @return Restaurant object or null if no match.
      */
-    public Restaurant getRestaurantByID(int rid){
+    public Restaurant getRestaurantByID(String rid){
         for(Restaurant r : this.restaurants)
             if(r.getRid() == rid)
                 return r;

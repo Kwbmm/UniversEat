@@ -72,9 +72,9 @@ public class Menu_view_edit extends NavigationDrawer {
 
     public void readdata() {
         sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
-        int rid, uid;
-        uid = sharedPreferences.getInt("uid", -1);
-        rid = sharedPreferences.getInt("rid", -1);
+        String rid, uid;
+        uid = sharedPreferences.getString("uid", null);
+        rid = sharedPreferences.getString("rid", null);
         try {
 
             rest = new Restaurant(getBaseContext(),rid);

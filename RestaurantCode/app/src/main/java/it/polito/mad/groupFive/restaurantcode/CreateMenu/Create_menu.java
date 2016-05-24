@@ -44,7 +44,7 @@ public class Create_menu extends NavigationDrawer implements Create_menu_frag.On
         SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref), Create_menu.MODE_PRIVATE);
 
         try {
-            restaurant= new Restaurant(getBaseContext(),sp.getInt("rid",-1));
+            restaurant= new Restaurant(getBaseContext(),sp.getString("rid",null));
             restaurant.getData();
             this.menu=new Menu(restaurant);
         } catch (RestaurantException e) {

@@ -21,9 +21,9 @@ public class Order {
     transient private Restaurant r = null;
 
     private int oid;
-    private int uid;
+    private String uid;
     private int mid;
-    private int rid;
+    private String rid;
     private Date date=null;
     private String notes;
     private String name;
@@ -113,7 +113,7 @@ public class Order {
      *
      * @return The user ID that performed this order
      */
-    public int getUid(){ return this.uid;}
+    public String getUid(){ return this.uid;}
 
     /**
      *
@@ -125,7 +125,7 @@ public class Order {
      *
      * @return The restaurant ID whose this order belongs to
      */
-    public int getRid(){ return this.rid; }
+    public String getRid(){ return this.rid; }
 
     /**
      *
@@ -149,8 +149,8 @@ public class Order {
      * @param uid The user ID making this order
      * @throws OrderException if user id is negative.
      */
-    public void setUid(int uid) throws OrderException {
-        if(uid < 0 )
+    public void setUid(String uid) throws OrderException {
+        if(uid!=null )
             throw new OrderException("User ID must be positive");
         this.uid = uid;
     }
@@ -171,8 +171,8 @@ public class Order {
      * @param rid The restaurant ID to which this order belong to.
      * @throws OrderException if restaurant id is negative.
      */
-    public void setRid(int rid) throws OrderException {
-        if(rid < 0)
+    public void setRid(String rid) throws OrderException {
+        if(rid!=null)
             throw new OrderException("Restaurant ID must be positive");
         this.rid= rid;
     }

@@ -231,7 +231,7 @@ public class CreateRestaurant_4 extends Fragment {
 
         try {
             if(!getR.editmode()){
-                restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));}
+                restaurant=new Restaurant(getContext(),sp.getString("rid",null));}
             for(int i = 0; i < this.weekDays.length; i++) {
                 CheckBox cb = (CheckBox) this.parentView.findViewById(this.weekdayToRL_IDs.get(this.weekDays[i])).findViewById(R.id.checkBox);
                 if(cb.isChecked()){

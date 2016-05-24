@@ -40,17 +40,15 @@ public class Create_review extends NavigationDrawer {
             public void onClick(View v) {
                 if(title.getText().length()>0&&
                         text.getText().length()>0&&rating.getRating()>0){
-                    int uid=preferences.getInt("uid",-1);
+                    String uid=preferences.getString("uid",null);
                     try {
-                        RestaurantOwner user=new RestaurantOwner(getBaseContext(),uid);
+                        User user=new User(uid);
                         Review rev=new Review(rest,user);
                         rev.setRating(rating.getRating());
                         rev.setTitle(title.getText().toString());
                         rev.setReviewText(text.getText().toString());
                         rest.addReview(rev);
                         rest.saveData();
-                    } catch (RestaurantOwnerException e) {
-                        e.printStackTrace();
                     } catch (ReviewException e) {
                         e.printStackTrace();
                     } catch (RestaurantException e) {
@@ -66,7 +64,7 @@ public class Create_review extends NavigationDrawer {
         });
     }
     private void getData(){
-        int rid=getIntent().getExtras().getInt("rid");
+        String rid=getIntent().getExtras().getString("rid");
         try {
             rest=new Restaurant(this,rid);
         } catch (RestaurantException e) {

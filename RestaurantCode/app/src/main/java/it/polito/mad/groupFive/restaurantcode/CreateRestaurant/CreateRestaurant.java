@@ -32,10 +32,10 @@ public class CreateRestaurant
         final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag1";
         try {
             SharedPreferences sp = getSharedPreferences(getString(R.string.user_pref),CreateRestaurant.MODE_PRIVATE);
-            this.restaurant = new Restaurant(getApplicationContext(),sp.getInt("rid",-1));
+            this.restaurant = new Restaurant(getApplicationContext(),sp.getString("rid",null));
             SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),CreateRestaurant.MODE_PRIVATE);
             SharedPreferences.Editor editor= sharedPreferences.edit();
-            editor.putInt("rid",this.restaurant.getRid());
+            editor.putString("rid",this.restaurant.getRid());
             editor.apply();
         } catch (RestaurantException e) {
             Log.e(METHOD_NAME,e.getMessage());
@@ -126,8 +126,8 @@ public class CreateRestaurant
         mlay.inflate(this, R.layout.activity_create_restaurant, mlay);
 
         //Fetch data -> edit mode
-        int rid;
-        if((rid=this.getIntent().getExtras().getInt("rid",-1))!=-1){
+        String rid;
+        if((rid=this.getIntent().getExtras().getString("rid",null))!=null){
             try {
                 this.restaurant=new Restaurant(getBaseContext(),rid);
                 edit=true;
