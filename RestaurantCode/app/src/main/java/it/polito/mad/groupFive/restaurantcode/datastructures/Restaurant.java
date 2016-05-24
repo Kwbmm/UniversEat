@@ -1,6 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,9 +9,20 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -31,7 +43,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
@@ -49,8 +63,6 @@ import it.polito.mad.groupFive.restaurantcode.libs.CustomUriAdapter;
  */
 public class Restaurant {
 
-    transient private Context appContext;
-
     private String rid;
     private String uid;
     private String name;
@@ -60,143 +72,24 @@ public class Restaurant {
     private String city;
     private String website;
     private String telephone;
-    private String ZIPCode;
-    private byte[] image;
+    private String zip;
+    private String imageLocal;
     private float rating;
     private double xcoord;
     private double ycoord;
     private ArrayList<Menu> menus=new ArrayList<>();
     private ArrayList<Order> orders=new ArrayList<>();
-    private HashSet<String> tickets = new HashSet<>();
-    private ArrayMap<Integer, Date[]> timetableLunch = new ArrayMap<>();
-    private ArrayMap<Integer, Date[]> timetableDinner = new ArrayMap<>();
+    private Map<String,Boolean> tickets = new HashMap<>();
+    private Map<String, Map<String,String>> timetableLunch = new HashMap<>();
+    private Map<String, Map<String,String>> timetableDinner = new HashMap<>();
     private ArrayList<Review> reviews = new ArrayList<>();
 
-    /**
-     * Create a Restaurant object. Requires, as parameter, the Android Application Context of the
-     * activity instantiating this class.
-     * The ID uniquely identifying this restaurant is generated automatically.
-     *
-     * @param appContext Application Context
-     * @throws RestaurantException if restaurant ID is negative or JSON file read fails.
-     */
-    public Restaurant(Context appContext) throws RestaurantException {
-    }
-
-    /**
-     * Create a Restaurant object. Requires, as parameters, the Android Application Context of the
-     * activity instantiating this class and a positive integer uniquely identifying the restaurant
-     * object.
-     *
-     * @param appContext Application Context
-     * @param rid Positive Integer unique identifier
-     * @throws RestaurantException
-     */
-    public Restaurant(Context appContext, String rid) throws RestaurantException {
-        final String METHOD_NAME = this.getClass().getName()+" - constructor";
-        if(rid!=null)
-            throw new RestaurantException("Restaurant ID must be positive");
-        this.rid = rid;
-        this.appContext = appContext;
-        Restaurant dummy;
-        if((dummy=this.readJSONFile())== null){
-            Log.e(METHOD_NAME, "Dummy is null");
-            throw new RestaurantException("Restaurant dummy object used to fill the current object is null");
-        }
-        else
-            this.copyData(dummy);
-    }
-
-    /**
-     * Copy all the data took from the JSON file on this object.
-     * @param dummy A dummy Restaurant object, on which the JSON data is written to.
-     */
-    private void copyData(Restaurant dummy) {
-        final String METHOD_NAME = this.getClass().getName()+" - copyData";
-
-        this.uid = dummy.getUid();
-        this.name = dummy.getName();
-        this.description = dummy.getDescription();
-        this.address = dummy.getAddress();
-        this.state = dummy.getState();
-        this.city = dummy.getCity();
-        this.website = dummy.getWebsite();
-        this.telephone = dummy.getTelephone();
-        this.ZIPCode = dummy.getZIPCode();
-        this.image = dummy.getImageByteArray();
-        this.xcoord = dummy.getXcoord();
-        this.ycoord = dummy.getYcoord();
-        this.menus = dummy.getMenus();
-        this.orders = dummy.getOrders();
-        this.tickets = dummy.getTickets();
-        this.timetableLunch = dummy.getTimetableLunch();
-        this.timetableDinner = dummy.getTimetableDinner();
-        this.reviews = dummy.getReviews();
-    }
-
-    /**
-     * Reads the JSON file corresponding to this restaurant and fills this class with the data found
-     * in the file.
-     * If the file doesn't exist CreateJSONFile is called and the file is created. Then the reading
-     * is performed again: this time the file will be found and fields of this class will be filled
-     * with null values (because the created file is empty).
-     *
-     * If a fail occurs, the error message is logged and this method returns null.
-     *
-     * @return A Restaurant object or null if fails.
-     */
-    private Restaurant readJSONFile(){
-        final String METHOD_NAME = this.getClass().getName()+" - readJSONFile";
-
-        InputStream is;
-        try {
-            is = appContext.openFileInput("r"+this.rid+".json");
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-            String inputString;
-            StringBuilder stringBuilder = new StringBuilder();
-
-            while ((inputString = br.readLine()) != null ) {
-                stringBuilder.append(inputString);
-            }
-
-            is.close();
-            Gson root = new GsonBuilder()
-                    .registerTypeAdapter(Uri.class, new CustomUriAdapter())
-                    .registerTypeHierarchyAdapter(byte[].class, new CustomByteArrayAdapter())
-                    .create();
-            return root.fromJson(stringBuilder.toString(), Restaurant.class);
-        } catch (FileNotFoundException e) {
-            this.createJSONFile();
-            return this.readJSONFile();
-        } catch (IOException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            return null;
-        }
-    }
-
-    /**
-     * Create the JSON file corresponding to this object. The JSON file is identified by the
-     * restaurant ID set at instantiation time.
-     * If an error occurs, the error is logged.
-     */
-    private void createJSONFile() {
-        final String METHOD_NAME = this.getClass().getName()+" - createJSONFile";
-
-        File file = new File(appContext.getFilesDir(),"r"+rid+".json");
-        Writer writer = null;
-        try {
-            writer = new FileWriter(file);
-            Gson root = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
-            root.toJson(this, writer);
-            writer.close();
-        } catch (IOException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-        }
+    public Restaurant(){
     }
 
     /**
      * Generate a random integer in the range [1, Integer.MAX_VALUE]
+     *
      * @return In integer in the range [1, Integer.MAX_VALUE]
      */
     public static int randInt() {
@@ -211,67 +104,30 @@ public class Restaurant {
         }
     }
 
-    /**
-     * Fetch the data corresponding to the Restaurant ID of this object from the JSON file.
-     * This method is in charge of filling all the other classes of this data set (Menu, Order and
-     * Course).
-     * If an error occurs, it is logged and a RestaurantException is thrown.
-     *
-     * @throws RestaurantException If fetch fails
-     */
-    public void getData() throws RestaurantException {
-        final String METHOD_NAME = this.getClass().getName()+" - getData";
-        try {
-            FileInputStream fis = appContext.openFileInput("r"+this.rid+".json");
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader bufferedReader = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line);
-            }
-            String json = sb.toString();
-            Gson root = new GsonBuilder()
-                    .registerTypeAdapter(Uri.class, new CustomUriAdapter())
-                    .registerTypeHierarchyAdapter(byte[].class, new CustomByteArrayAdapter())
-                    .create();
-            Restaurant dummy = root.fromJson(json,Restaurant.class);
-            this.copyData(dummy);
-        } catch (IOException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            throw new RestaurantException(e.getMessage());
+    public Map<String, Object> toMap() {
+        HashMap<String,Object> output = new HashMap<>();
+        output.put("rid",this.rid);
+        output.put("uid",this.uid);
+        output.put("name",this.name);
+        output.put("description",this.description);
+        output.put("address",this.address);
+        output.put("state",this.state);
+        output.put("city",this.city);
+        output.put("website",this.website);
+        output.put("telephone",this.telephone);
+        output.put("zip",this.zip);
+        output.put("imageLocal",this.imageLocal);
+        output.put("rating",this.rating);
+        output.put("xcoord",this.xcoord);
+        output.put("ycoord",this.ycoord);
+
+        HashMap<String, Object> menuMap = new HashMap<>();
+        for (Menu m : this.menus){
+            menuMap.put(m.getMid(),m.toMap());
         }
-    }
+        output.put("menus",menuMap);
 
-    /**
-     * Saves the current data store in this object to its JSON file.
-     * Note that this method also saves the data for the custom sub-objects embedded inside this
-     * class (Order, Menu and Course).
-     * In case of fail, the error is logged and a RestaurantException is thrown.
-     *
-     * @throws RestaurantException If writing JSON file fails
-     */
-    public void saveData() throws RestaurantException {
-        final String METHOD_NAME = this.getClass().getName()+" - saveData";
-
-        Gson root = new GsonBuilder()
-                .registerTypeAdapter(Uri.class, new CustomUriAdapter())
-                .registerTypeHierarchyAdapter(byte[].class, new CustomByteArrayAdapter())
-                .serializeNulls()
-                .setPrettyPrinting()
-                .create();
-        String output = root.toJson(this);
-
-        try {
-            FileOutputStream fos = this.appContext.openFileOutput("r"+this.rid+".json",Context.MODE_PRIVATE);
-            BufferedOutputStream bos = new BufferedOutputStream(fos);
-            bos.write(output.getBytes());
-            bos.close();
-            fos.close();
-        } catch (IOException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            throw new RestaurantException(e.getMessage());
-        }
+        return output;
     }
 
     /**
@@ -317,25 +173,6 @@ public class Restaurant {
 
     /**
      *
-     * @return The byte representation of the image
-     */
-    public byte[] getImageByteArray() {
-        return this.image;
-    }
-
-    /**
-     * Returns the Bitmap of the image.
-     * If you can, use getImageByteArray instead of this one as it is more efficient.
-     *
-     * @return The Bitmap representing the image.
-     */
-    public Bitmap getImageBitmap(){
-        final String METHOD_NAME = this.getClass().getName()+" - getImageBitmap";
-        return BitmapFactory.decodeByteArray(this.image,0,this.image.length);
-    }
-
-    /**
-     *
      * @return The latitude coordinate of restaurant
      */
     public double getXcoord() { return this.xcoord; }
@@ -369,7 +206,7 @@ public class Restaurant {
      *
      * @return a string with the ZIP code
      */
-    public String getZIPCode() { return this.ZIPCode; }
+    public String getZip() { return this.zip; }
 
     /**
      *
@@ -406,13 +243,10 @@ public class Restaurant {
      *
      * @param mid The id of the menu to search for.
      * @return The Menu object or null if nothing is found.
-     * @throws RestaurantException if menu id is negative.
      */
-    public Menu getMenuByID(int mid) throws RestaurantException {
-        if (mid <0)
-            throw new RestaurantException("Menu ID must be positive");
+    public Menu getMenuByID(String mid) {
         for(Menu m : this.menus)
-            if(m.getMid() == mid)
+            if(m.getMid().equals(mid))
                 return m;
         return null;
     }
@@ -427,13 +261,10 @@ public class Restaurant {
      *
      * @param oid The id of the order to search for.
      * @return The requested order or null if nothing is found.
-     * @throws RestaurantException if order is negative.
      */
-    public Order getOrderByID(int oid) throws RestaurantException {
-        if(oid <0)
-            throw new RestaurantException("Order ID must be positive");
+    public Order getOrderByID(String oid) {
         for(Order o : this.orders)
-            if(o.getOid() == oid)
+            if(o.getOid().equals(oid))
                 return o;
         return null;
     }
@@ -442,32 +273,32 @@ public class Restaurant {
      *
      * @param uid The user id who submitted
      * @return An ArrayList of Orders or null if nothing is found.
-     * @throws RestaurantException if user id is negative.
      */
-    public ArrayList<Order> getOrdersByUserID(String uid) throws RestaurantException {
-        if(uid!=null)
-            throw new RestaurantException("User ID must be positive");
+    public ArrayList<Order> getOrdersByUserID(String uid) {
         ArrayList<Order> output = new ArrayList<>();
         for(Order o : this.orders)
-            if(o.getUid() == uid)
+            if(o.getUid().equals(uid))
                 output.add(o);
         return output.isEmpty()? null : output;
     }
 
     /**
-     * Returns HashSet of the strings representing the ticket name.
+     * Returns a Map of tickets, where the Key is the name of the ticket; the value indicates if
+     * this ticket is accepted by this restaurant or not.
      *
-     * @return A HashSet of Strings representing the tickets' names.
+     * @return Map of String:Bool where String = Ticket Name, Bool = accepted by this restaurant
      */
-    public HashSet<String> getTickets(){ return this.tickets; }
+    public Map<String,Boolean> getTickets(){ return this.tickets; }
 
     /**
      * Returns an ArrayMap with keys the number of the day of the week (from 0 [Monday] to 6
      * [Sunday]) and values a Duration object representing the shift of the LUNCH.
      *
-     * @return ArrayMap of the LUNCH timetable.
+     * @return Map of the LUNCH timetable.
      */
-    public ArrayMap<Integer,Date[]> getTimetableLunch(){ return this.timetableLunch; }
+    public Map<String,Map<String,String>> getTimetableLunch() throws RestaurantException {
+        return this.timetableLunch;
+    }
 
     /**
      * Returns an ArrayMap with keys the number of the day of the week (from 0 [Monday] to 6
@@ -475,7 +306,9 @@ public class Restaurant {
      *
      * @return ArrayMap of the DINNER timetable.
      */
-    public ArrayMap<Integer,Date[]> getTimetableDinner(){ return this.timetableDinner; }
+    public Map<String,Map<String,String>> getTimetableDinner() throws RestaurantException {
+        return this.timetableDinner;
+    }
 
     /**
      *
@@ -489,13 +322,10 @@ public class Restaurant {
      *
      * @param revID The ID corresponding to a Review object
      * @return The Review objectd corresponding to the supplied review ID.
-     * @throws RestaurantException If review id is negative.
      */
-    public Review getReviewByRevID(int revID) throws RestaurantException {
-        if(revID < 0)
-            throw new RestaurantException("Review ID must be positive");
+    public Review getReviewByRevID(String revID) {
         for(Review r : this.reviews)
-            if(r.getRevID() == revID)
+            if(r.getRevID().equals(revID))
                 return r;
         return null;
     }
@@ -506,14 +336,11 @@ public class Restaurant {
      *
      * @param uid A user ID.
      * @return An ArrayList of Review objects matching the specified user id.
-     * @throws RestaurantException If user id is negative.
      */
-    public ArrayList<Review> getReviewsByUserID(String uid) throws RestaurantException {
-        if(uid.isEmpty())
-            throw new RestaurantException("User ID must be positive");
+    public ArrayList<Review> getReviewsByUserID(String uid) {
         ArrayList<Review> returnRes = new ArrayList<>();
         for(Review r : this.reviews)
-            if(r.getUid() == uid)
+            if(r.getUid().equals(uid))
                 returnRes.add(r);
         return returnRes;
     }
@@ -529,94 +356,98 @@ public class Restaurant {
         Calendar now = Calendar.getInstance();
         long nowMS = now.getTimeInMillis();
         int dow = now.get(Calendar.DAY_OF_WEEK);
-        switch (dow){
-            case 1:{ //Sunday
-                Date startLunch = this.timetableLunch.get(6)[0];
-                Date endLunch = this.timetableLunch.get(6)[1];
-                Date startDinner = this.timetableDinner.get(6)[0];
-                Date endDinner = this.timetableDinner.get(6)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm",Locale.getDefault());
+        try {
+            switch (dow){
+                case 1:{ //Sunday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(6).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(6).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(6).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(6).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
+                case 2:{ //Monday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(0).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(0).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(0).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(0).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
+                case 3:{ //Tuesday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(1).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(1).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(1).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(1).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
+                case 4:{ //Wednesday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(2).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(2).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(2).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(2).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
+                case 5:{ //Thursday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(3).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(3).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(3).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(3).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
+                case 6:{ //Friday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(4).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(4).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(4).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(4).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
+                case 7:{ //Saturday
+                    Date startLunch = sdf.parse(this.timetableLunch.get(5).get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get(5).get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get(5).get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get(5).get("end"));
+                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
+                        return true;
+                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                        return true;
+                    return false;
+                }
             }
-            case 2:{ //Monday
-            Date startLunch = this.timetableLunch.get(0)[0];
-                Date endLunch = this.timetableLunch.get(0)[1];
-                Date startDinner = this.timetableDinner.get(0)[0];
-                Date endDinner = this.timetableDinner.get(0)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
-            }
-            case 3:{ //Tuesday
-            Date startLunch = this.timetableLunch.get(1)[0];
-                Date endLunch = this.timetableLunch.get(1)[1];
-                Date startDinner = this.timetableDinner.get(1)[0];
-                Date endDinner = this.timetableDinner.get(1)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
-            }
-            case 4:{ //Wednesday
-            Date startLunch = this.timetableLunch.get(2)[0];
-                Date endLunch = this.timetableLunch.get(2)[1];
-                Date startDinner = this.timetableDinner.get(2)[0];
-                Date endDinner = this.timetableDinner.get(2)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
-            }
-            case 5:{ //Thursday
-            Date startLunch = this.timetableLunch.get(3)[0];
-                Date endLunch = this.timetableLunch.get(3)[1];
-                Date startDinner = this.timetableDinner.get(3)[0];
-                Date endDinner = this.timetableDinner.get(3)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
-            }
-            case 6:{ //Friday
-            Date startLunch = this.timetableLunch.get(4)[0];
-                Date endLunch = this.timetableLunch.get(4)[1];
-                Date startDinner = this.timetableDinner.get(4)[0];
-                Date endDinner = this.timetableDinner.get(4)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
-            }
-            case 7:{ //Saturday
-            Date startLunch = this.timetableLunch.get(5)[0];
-                Date endLunch = this.timetableLunch.get(5)[1];
-                Date startDinner = this.timetableDinner.get(5)[0];
-                Date endDinner = this.timetableDinner.get(5)[1];
-                if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                    return true;
-                if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
-                    return true;
-                return false;
-            }
+        } catch (ParseException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+            return false;
         }
-        Log.w(METHOD_NAME,"Switch case not entered, returning wrong value");
+        Log.w(METHOD_NAME,"Switch not entered, returning wrong value");
         return false;
     }
 
-    /**
-     * Get the Android Application Context stored in this object.
-     * @return Context
-     */
-    Context getAppContext(){ return this.appContext; }
+    public void setRid(String rid){
+        this.rid = rid;
+    }
 
     /**
      *
@@ -625,7 +456,6 @@ public class Restaurant {
     public void setName(String name) {
         this.name = name;
     }
-
 
     /**
      *
@@ -647,54 +477,6 @@ public class Restaurant {
      */
     public void setCity(String city) {
         this.city = city;
-    }
-
-    /**
-     *
-     * @param image Byte array representing the image
-     */
-    public void setImageFromByteArray(byte[] image){ this.image = image; }
-
-    /**
-     * Sets the byte array representation of the image from a given input Bitmap.
-     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
-     *
-     * @param image Bitmap representing the image
-     */
-    public void setImageFromBitmap(Bitmap image){
-        final String METHOD_NAME = this.getClass().getName()+" - setImageFromBitmap";
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, output);
-        this.image = output.toByteArray();
-    }
-
-    /**
-     * Sets the byte array representation of the image from a given input Drawable. The drawable
-     * is first converted to a Bitmap and then setImageFromBitmap is called.
-     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
-     *
-     * @param image Drawable representing the image
-     */
-    public void setImageFromDrawable(Drawable image){
-        Bitmap bitmap = null;
-
-        if (image instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) image;
-            if(bitmapDrawable.getBitmap() != null) {
-                this.setImageFromBitmap(bitmapDrawable.getBitmap());
-            }
-        }
-
-        if(image.getIntrinsicWidth() <= 0 || image.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(image.getIntrinsicWidth(), image.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(bitmap);
-        image.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        image.draw(canvas);
-        this.setImageFromBitmap(bitmap);
     }
 
     /**
@@ -723,22 +505,9 @@ public class Restaurant {
 
     /**
      *
-     * @param rid: the id of restaurant.
-     * @throws RestaurantException Thrown if restaurant ID is negative.
-     */
-    public void setRid(String rid) throws RestaurantException {
-        if(rid!=null)
-            throw new RestaurantException("Restaurant ID must be positive");
-        this.rid = rid;
-    }
-
-    /**
-     *
      * @param rating of restaurant
      */
-    public void setRating(float rating) throws RestaurantException {
-        if(rating < 0)
-            throw new RestaurantException("Rating must be positive");
+    public void setRating(float rating) {
         this.rating = rating;
     }
 
@@ -758,14 +527,7 @@ public class Restaurant {
         this.orders = orders;
     }
 
-    /**
-     *
-     * @param uid Set the id of the restaurant owner
-     * @throws RestaurantException if user id is negative
-     */
-    public void setUid(String uid) throws RestaurantException {
-        if(uid!=null)
-            throw new RestaurantException("User ID must be positive");
+    public void setUid(String uid) {
         this.uid = uid;
     }
 
@@ -787,15 +549,15 @@ public class Restaurant {
 
     /**
      *
-     * @param ZIPCode the zip code of the restaurant's city
+     * @param zip the zip code of the restaurant's city
      */
-    public void setZIPCode(String ZIPCode){ this.ZIPCode = ZIPCode; }
+    public void setZip(String zip){ this.zip = zip; }
 
     /**
      *
-     * @param tickets A HashSet containing the names of the tickets.
+     * @param tickets A HashMap containing the names of the tickets.
      */
-    public void setTickets(HashSet<String> tickets){ this.tickets = tickets; }
+    public void setTickets(Map<String,Boolean> tickets){ this.tickets = tickets; }
 
     /**
      * Sets the amount of time during which the restaurant is open AT LUNCH.
@@ -806,27 +568,14 @@ public class Restaurant {
      * @param dayOfWeek Day of the week during which this shift takes place. Must be between 0 and 6
      * @param timeStart Start hour of the shift.
      * @param timeEnd End hour of the shift.
-     * @throws RestaurantException if day of the week is not in range, or date parsing fails.
      */
-    public void setDurationLunch(int dayOfWeek,String timeStart, String timeEnd) throws RestaurantException {
+    public void setDurationLunch(String dayOfWeek,String timeStart, String timeEnd) {
         final String METHOD_NAME = this.getClass().getName()+" - setDurationLunch";
 
-        if(dayOfWeek < 0 || dayOfWeek > 6){
-            Log.e(METHOD_NAME, "Day of week is not in the expected range 0-6");
-            throw new RestaurantException("Day of week is not in the expected range 0-6");
-        }
-
-        SimpleDateFormat sdfStart = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        SimpleDateFormat sdfEnd = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        try {
-            Date startDate = sdfStart.parse(timeStart);
-            Date endDate = sdfEnd.parse(timeEnd);
-
-            this.timetableLunch.put(dayOfWeek,new Date[]{startDate,endDate});
-        } catch (ParseException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            throw new RestaurantException(e.getMessage());
-        }
+        Map<String,String> entry = new HashMap<>();
+        entry.put("start",timeStart);
+        entry.put("end",timeEnd);
+        this.timetableLunch.put(String.valueOf(dayOfWeek),entry);
     }
 
     /**
@@ -838,25 +587,14 @@ public class Restaurant {
      * @param dayOfWeek Day of the week during which this shift takes place. Must be between 0 and 6
      * @param timeStart Start hour of the shift.
      * @param timeEnd End hour of the shift.
-     * @throws RestaurantException if day of the week is not in range, or date parsing fails.
      */
-    public void setDurationDinner(int dayOfWeek,String timeStart, String timeEnd) throws RestaurantException {
+    public void setDurationDinner(String dayOfWeek,String timeStart, String timeEnd) {
         final String METHOD_NAME = this.getClass().getName()+" - setDurationDinner";
 
-        if(dayOfWeek < 0 || dayOfWeek > 6){
-            Log.e(METHOD_NAME, "Day of week is not in the expected range 0-6");
-            throw new RestaurantException("Day of week is not in the expected range 0-6");
-        }
-        SimpleDateFormat sdfStart = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        SimpleDateFormat sdfEnd = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        try {
-            Date startDate = sdfStart.parse(timeStart);
-            Date endDate = sdfEnd.parse(timeEnd);
-            this.timetableDinner.put(dayOfWeek,new Date[]{startDate,endDate});
-        } catch (ParseException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            throw new RestaurantException(e.getMessage());
-        }
+        Map<String,String> entry = new HashMap<>();
+        entry.put("start",timeStart);
+        entry.put("end",timeEnd);
+        this.timetableDinner.put(dayOfWeek,entry);
     }
 
     /**
@@ -867,8 +605,8 @@ public class Restaurant {
      * [1] endHour
      * @param timetable A(n) (Array)Map of the timetable of the Lunch.
      */
-    public void setTimetableLunch(Map<Integer,Date[]> timetable){
-        this.timetableLunch.putAll(timetable);
+    public void setTimetableLunch(Map<String,Map<String,String>> timetable){
+        this.timetableLunch = timetable;
     }
 
     /**
@@ -879,34 +617,26 @@ public class Restaurant {
      * [1] endHour
      * @param timetable A(n) (Array)Map of the timetable of the Dinner.
      */
-    public void setTimetableDinner(Map<Integer,Date[]> timetable){
-        this.timetableDinner.putAll(timetable);
+    public void setTimetableDinner(Map<String,Map<String,String>> timetable){
+        this.timetableDinner = timetable;
     }
 
-    public void addMenu(Menu menu) throws RestaurantException {
-        final String METHOD_NAME = this.getClass().getName()+"- add menu to list";
-        this.menus.add(menu);
-        try {
-            saveData();
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            throw new RestaurantException(e.getMessage());
-        }
-    }
-
-    public void addReview(Review review) throws RestaurantException {
-        final String METHOD_NAME = this.getClass().getName()+"- add menu to list";
-        this.reviews.add(review);
-        try {
-            saveData();
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            throw new RestaurantException(e.getMessage());
-        }
-    }
     /**
      *
      * @param reviews An ArrayList of Review(s) to assign to this restaurant object.
      */
     public void setReviews(ArrayList<Review> reviews){ this.reviews = reviews; }
+
+    public void setImageLocal(String imagePath) {
+        this.imageLocal = imagePath;
+    }
+
+    public String getImageName(){
+        String[] arrayString = this.imageLocal.split("/");
+        return arrayString[arrayString.length-1];
+    }
+
+    public String getImageLocal() {
+        return this.imageLocal;
+    }
 }

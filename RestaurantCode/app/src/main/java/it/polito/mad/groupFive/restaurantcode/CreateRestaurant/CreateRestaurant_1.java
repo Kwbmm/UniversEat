@@ -3,7 +3,9 @@ package it.polito.mad.groupFive.restaurantcode.CreateRestaurant;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,9 +26,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -56,6 +62,7 @@ public class CreateRestaurant_1 extends Fragment {
     private String mParam2;
 
     private Uri restaurantPicUri = null;
+    private String restaurantPicAbsPath;
     private View parentView=null;
 
     private onFragInteractionListener mListener;
@@ -119,7 +126,8 @@ public class CreateRestaurant_1 extends Fragment {
         telephone= (TextView) parentView.findViewById(R.id.editText_Telephone);
         website= (TextView) parentView.findViewById(R.id.editText_Website);
         if(getR.editmode()){
-        fetchData();}
+//            fetchData();
+        }
         restaurantImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,7 +157,7 @@ public class CreateRestaurant_1 extends Fragment {
                     }
                     else{
                         Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
-                        .show();
+                                .show();
                     }
                 }
             }
@@ -157,71 +165,69 @@ public class CreateRestaurant_1 extends Fragment {
         });
         return this.parentView;
     }
-
-    private void fetchData(){
-        restaurant=getR.getRest();
-        name.setText(restaurant.getName());
-        description.setText(restaurant.getDescription());
-        telephone.setText(restaurant.getTelephone());
-        website.setText(restaurant.getWebsite());
-        restaurantImg.setImageBitmap(restaurant.getImageBitmap());
-    }
-
+    /*
+        private void fetchData(){
+            final String METHOD_NAME = this.getClass().getName()+" - fetchData";
+            restaurant=getR.getRest();
+            name.setText(restaurant.getName());
+            description.setText(restaurant.getDescription());
+            telephone.setText(restaurant.getTelephone());
+            website.setText(restaurant.getWebsite());
+            try {
+                restaurantImg.setImageBitmap(restaurant.getImageBitmap());
+            } catch (RestaurantException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+            }
+        }
+    */
     private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
+        if(getR.editmode()){
+            isImageSet=true;
+        }else {
+            restaurant=new Restaurant();
+        }
 
-        try {
-            if(getR.editmode()){
-                isImageSet=true;
-            }else {
-            restaurant=new Restaurant(getContext());
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putString("rid",restaurant.getRid());
-            editor.apply();}
-
-
-            if(name.getText().toString().trim().equals("") || name.getText() == null){
-                Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
-                return false;
-            }
-            restaurant.setName(name.getText().toString());
-
-
-            if(description.getText().toString().trim().equals("") || description.getText() == null){
-                Log.w(METHOD_NAME,"TextView Description is either empty or null");
-                return false;
-            }
-            restaurant.setDescription(description.getText().toString());
-
-
-            if(!isImageSet){
-                Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
-                return false;
-            }
-            if(!getR.editmode()){
-            restaurant.setImageFromDrawable(restaurantImg.getDrawable());}
-
-
-            if(telephone.getText().toString().trim().equals("") || telephone.getText() == null){
-                Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
-                return false;
-            }
-            restaurant.setTelephone(telephone.getText().toString());
-
-
-            if(website.getText().toString().trim().equals("") || website.getText() == null){
-                Log.w(METHOD_NAME,"TextView Website is either empty or null");
-                return false;
-            }
-            restaurant.setWebsite(website.getText().toString());
-
-            return true;
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
+        if(name.getText().toString().trim().equals("") || name.getText() == null){
+            Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
             return false;
         }
+        restaurant.setName(name.getText().toString());
+
+
+        if(description.getText().toString().trim().equals("") || description.getText() == null){
+            Log.w(METHOD_NAME,"TextView Description is either empty or null");
+            return false;
+        }
+        restaurant.setDescription(description.getText().toString());
+
+
+        if(!isImageSet){
+            Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
+            return false;
+        }
+        Log.d(METHOD_NAME,this.restaurantPicUri.toString());
+        if(!getR.editmode()){
+            restaurant.setImageLocal(this.restaurantPicUri.toString());
+        }
+        restaurant.setImageLocal(this.restaurantPicUri.toString());
+
+
+        if(telephone.getText().toString().trim().equals("") || telephone.getText() == null){
+            Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
+            return false;
+        }
+        restaurant.setTelephone(telephone.getText().toString());
+
+        if(website.getText().toString().trim().equals("") || website.getText() == null){
+            Log.w(METHOD_NAME,"TextView Website is either empty or null");
+            return false;
+        }
+        restaurant.setWebsite(website.getText().toString());
+
+        return true;
     }
 
     private void pickImage(){
@@ -246,6 +252,7 @@ public class CreateRestaurant_1 extends Fragment {
                             Log.e(METHOD_NAME, ioe.getMessage());
                         }
                         if (photo != null) {
+                            restaurantPicAbsPath = photo.getAbsolutePath();
                             restaurantPicUri = Uri.fromFile(photo);
                             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, restaurantPicUri);
                             startActivityForResult(cameraIntent, CAPTURE_IMAGE);
@@ -328,6 +335,7 @@ public class CreateRestaurant_1 extends Fragment {
             try{
                 this.restaurantImg.setImageBitmap(new Picture(this.restaurantPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
                 this.isImageSet = true;
+
             } catch(IOException ioe){Log.e(METHOD_NAME,ioe.getMessage());}
         }
     }

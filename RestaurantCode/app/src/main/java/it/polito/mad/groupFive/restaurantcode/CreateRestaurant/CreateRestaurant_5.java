@@ -15,7 +15,9 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -39,6 +41,8 @@ public class CreateRestaurant_5 extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private String rid,uid;
 
     private onFragInteractionListener mListener;
 
@@ -86,6 +90,8 @@ public class CreateRestaurant_5 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_5, container, false);
+        this.rid = getArguments().getString("rid");
+        this.uid = getArguments().getString("uid");
 
         Button btnFinish = (Button) this.parentView.findViewById(R.id.Button_Finish);
         btnFinish.setOnClickListener(new View.OnClickListener() {
@@ -113,25 +119,22 @@ public class CreateRestaurant_5 extends Fragment {
 
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
-        try {
-            restaurant=new Restaurant(getContext(),sp.getString("rid",null));
-            //Get all the tickets
-            ArrayList<CheckBox> ticketCBs = new ArrayList<>();
-            //TODO wanna add more tickets??
-            ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_1));
-            ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_2));
-            ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_3));
-            ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_4));
-            HashSet<String> ticketSet = new HashSet<>();
-            for(CheckBox cb : ticketCBs){
-                if(cb.isChecked()) ticketSet.add(cb.getText().toString());
-            }
-            restaurant.setTickets(ticketSet);
-            return true;
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            return false;
+        restaurant=new Restaurant();
+        restaurant.setRid(this.rid);
+        restaurant.setUid(this.uid);
+        //Get all the tickets
+        ArrayList<CheckBox> ticketCBs = new ArrayList<>();
+        //TODO wanna add more tickets??
+        ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_1));
+        ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_2));
+        ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_3));
+        ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_4));
+        Map<String,Boolean> ticketMap = new HashMap<>();
+        for(CheckBox cb : ticketCBs){
+            if(cb.isChecked()) ticketMap.put(cb.getText().toString(),true);
         }
+        restaurant.setTickets(ticketMap);
+        return true;
     }
 
     @Override

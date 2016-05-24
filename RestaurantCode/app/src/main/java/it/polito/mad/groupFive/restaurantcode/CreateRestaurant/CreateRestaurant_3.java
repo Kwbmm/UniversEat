@@ -46,6 +46,8 @@ public class CreateRestaurant_3 extends Fragment {
 
     private onFragInteractionListener mListener;
 
+    private String rid,uid;
+
     private View parentView=null;
     private Restaurant restaurant = null;
     private String[] weekDays = new String[7];
@@ -92,6 +94,8 @@ public class CreateRestaurant_3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_3, container, false);
+        this.rid = getArguments().getString("rid");
+        this.uid = getArguments().getString("uid");
         weekDays[0] = getResources().getString(R.string.monday);
         weekDays[1] = getResources().getString(R.string.tuesday);
         weekDays[2] = getResources().getString(R.string.wednesday);
@@ -184,17 +188,20 @@ public class CreateRestaurant_3 extends Fragment {
             });
 
             if (getR.editmode()){
-                if(!restaurant.getTimetableLunch().isEmpty()){
-                    if (restaurant.getTimetableLunch().containsKey(count)){
-                        SimpleDateFormat dateFormat=new SimpleDateFormat("hh:mm");
-                        cb.setChecked(true);
-                        timetableItem.findViewById(R.id.from).setVisibility(View.VISIBLE);
-                        timetableItem.findViewById(R.id.textClockFrom).setVisibility(View.VISIBLE);
-                        timetableItem.findViewById(R.id.to).setVisibility(View.VISIBLE);
-                        timetableItem.findViewById(R.id.textClockTo).setVisibility(View.VISIBLE);
-                        btnFrom.setText(dateFormat.format(restaurant.getTimetableLunch().get(count)[1]));
-                        btnTo.setText(dateFormat.format(restaurant.getTimetableLunch().get(count)[1]));
-                        Log.v("count",count+"");}}
+                try {
+                    if(!restaurant.getTimetableLunch().isEmpty()){
+                        if (restaurant.getTimetableLunch().containsKey(weekDays[count])){
+                            cb.setChecked(true);
+                            timetableItem.findViewById(R.id.from).setVisibility(View.VISIBLE);
+                            timetableItem.findViewById(R.id.textClockFrom).setVisibility(View.VISIBLE);
+                            timetableItem.findViewById(R.id.to).setVisibility(View.VISIBLE);
+                            timetableItem.findViewById(R.id.textClockTo).setVisibility(View.VISIBLE);
+                            btnFrom.setText(restaurant.getTimetableLunch().get(weekDays[count]).get("start"));
+                            btnTo.setText(restaurant.getTimetableLunch().get(weekDays[count]).get("end"));
+                            Log.v("count",count+"");}}
+                } catch (RestaurantException e) {
+                    Log.e(METHOD_NAME,e.getMessage());
+                }
             }
 
             timetableItem.findViewById(R.id.RL_timeTableItem).setId(weekdayToRL_IDs.get(weekday));
@@ -227,23 +234,18 @@ public class CreateRestaurant_3 extends Fragment {
 
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
-        try {
-            if(!getR.editmode()){
-                restaurant=new Restaurant(getContext(),sp.getString("rid",null));}
-            for(int i = 0; i < this.weekDays.length; i++) {
-                CheckBox cb = (CheckBox) this.parentView.findViewById(this.weekdayToRL_IDs.get(this.weekDays[i])).findViewById(R.id.checkBox);
-                if(cb.isChecked()){
-                    Button bFrom = (Button) this.parentView.findViewById(this.weekdayToRL_IDs.get(this.weekDays[i])).findViewById(R.id.textClockFrom);
-                    Button bTo = (Button) this.parentView.findViewById(this.weekdayToRL_IDs.get(this.weekDays[i])).findViewById(R.id.textClockTo);
-                    restaurant.setDurationLunch(i,bFrom.getText().toString(),bTo.getText().toString());
-                }
-            }
-            return true;
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            return false;
+        if(!getR.editmode()){
+            restaurant = new Restaurant();
         }
-
+        for (String weekDay : this.weekDays) {
+            CheckBox cb = (CheckBox) this.parentView.findViewById(this.weekdayToRL_IDs.get(weekDay)).findViewById(R.id.checkBox);
+            if (cb.isChecked()) {
+                Button bFrom = (Button) this.parentView.findViewById(this.weekdayToRL_IDs.get(weekDay)).findViewById(R.id.textClockFrom);
+                Button bTo = (Button) this.parentView.findViewById(this.weekdayToRL_IDs.get(weekDay)).findViewById(R.id.textClockTo);
+                restaurant.setDurationLunch(weekDay, bFrom.getText().toString(), bTo.getText().toString());
+            }
+        }
+        return true;
     }
 
     @Override

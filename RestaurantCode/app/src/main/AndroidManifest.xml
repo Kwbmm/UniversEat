@@ -39,7 +39,7 @@
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".Restaurant_management"
+            android:name=".RestaurantManagement"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
             />
@@ -66,9 +66,6 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
             />
-        <activity
-            android:name=".CreateMenu.Create_menu"
-            android:screenOrientation="portrait" />
         <activity android:name=".RestaurantView.User_info_view"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>

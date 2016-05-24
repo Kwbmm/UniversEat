@@ -3,8 +3,14 @@ package it.polito.mad.groupFive.restaurantcode.datastructures;
 import android.os.Build;
 import android.util.Log;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -18,115 +24,48 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.ReviewEx
  * @brief Review class
  */
 public class Review {
-    transient private Restaurant restaurant;
-    transient private User reviewer;
 
-    private int revID;
+    private String revID;
     private String uid;
     private String rid;
-    private String reviewText;
     private String title;
+    private String reviewText;
     private Date date;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    private ArrayList<String> replies = new ArrayList<>();
     private float rating;
+    private List<Reply> replies = new ArrayList<>();
 
-    /**
-     * Create an instance of Review: requires, as parameter, its restaurant object and the user
-     * object who performed the review.
-     * This constructor takes care of setting also the user id and restaurant id, taken from the
-     * passed objects.
-     * The ID of the review is generated automatically.
-     *
-     * @param r The restaurant object whose this menu belongs to.
-     * @param u The user object who made this review
-     * @throws ReviewException If review id is negative
-     */
-    public Review(Restaurant r, User u) throws ReviewException {
-        this(r,u,Review.randInt());
+    public Review() {
     }
 
-    /**
-     * Create an instance of Review: requires, as parameter, its restaurant object and the user
-     * object who performed the review.
-     * This constructor takes care of setting also the user id and restaurant id, taken from the
-     * passed objects.
-     * The ID must be a positive integer uniquely identifying the review.
-     *
-     * @param r The restaurant object whose this menu belongs to.
-     * @param u The user object who made this review
-     * @param revID A positive integer unique identifier.
-     * @throws ReviewException If review id is negative
-     */
-    public Review(Restaurant r, User u, int revID) throws ReviewException {
-        if(revID < 0 )
-            throw new ReviewException("Review ID must be positive");
-        this.revID = revID;
-        this.restaurant = r;
-        this.rid = r.getRid();
-        this.reviewer = u;
-        this.uid = u.getUid();
-        this.date = new Date();
+    public Review(String uid, String rid) {
+        this.uid = uid;
+        this.rid = rid;
     }
 
-    /**
-     * Generate a random integer in the range [1, Integer.MAX_VALUE]
-     * @return In integer in the range [1, Integer.MAX_VALUE]
-     */
-    private static int randInt() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
-        else{
-            Random rand= new Random();
-            int result;
-            if((result=rand.nextInt(Integer.MAX_VALUE)) == 0)
-                return Review.randInt();
-            return result;
+    Map<String, Object> toMap(){
+        HashMap<String, Object> output = new HashMap<>();
+
+        output.put("revID",this.revID);
+        output.put("uid",this.uid);
+        output.put("rid",this.rid);
+        output.put("title",this.title);
+        output.put("reviewText",this.reviewText);
+        output.put("date",this.date);
+        output.put("rating",this.rating);
+
+        Map<String, Object> replyMap = new HashMap<>();
+        for (Reply r : this.replies){
+            replyMap.put(r.getRepID(),r.toMap());
         }
+        output.put("replies",replyMap);
+        return output;
     }
-
-    /**
-     * Fetch the data corresponding to the Review ID of this object from the JSON file.
-     * Fetch operations are always performed inside the restaurant object, this is just a call to
-     * that method.
-     *
-     * @throws ReviewException If fetch fails
-     */
-    public void getData() throws ReviewException {
-        final String METHOD_NAME = this.getClass().getName()+" - getData";
-        try {
-            this.restaurant.getData();
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            throw new ReviewException(e.getMessage());
-        }
-        Review dummy = null;
-        try {
-            dummy = this.restaurant.getReviewByRevID(this.revID);
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            throw new ReviewException(e.getMessage());
-        }
-    }
-
-    /**
-     * Copy all the data took from the JSON file on this object.
-     * @param dummy A dummy Review object, on which the JSON data is written to.
-     */
 
     /**
      *
      * @return The Review ID
      */
-    public int getRevID(){ return this.revID; }
+    public String getRevID(){ return this.revID; }
 
     /**
      *
@@ -142,6 +81,14 @@ public class Review {
 
     /**
      *
+     * @return The review title
+     */
+    public String getTitle() {
+        return this.title;
+    }
+
+    /**
+     *
      * @return The text of the review.
      */
     public String getReviewText(){ return this.reviewText; }
@@ -150,24 +97,13 @@ public class Review {
      *
      * @return The comments to the review text, if any.
      */
-    public ArrayList<String> getReplies(){ return this.replies; }
+    public List<Reply> getReplies(){ return this.replies; }
 
     /**
      *
      * @return The rating given to the restaurant from this review.
      */
     public float getRating(){ return this.rating; }
-
-    /**
-     *
-     * @param revID A positive integer uniquely identifying the Review object
-     * @throws ReviewException If review id is negative
-     */
-    public void setRevID(int revID) throws ReviewException {
-        if(revID < 0)
-            throw new ReviewException("Review ID must be positive");
-        this.revID = revID;
-    }
 
     /**
      * Set the User ID of the User who made this review. PLEASE, be aware that by instantiating a
@@ -180,27 +116,14 @@ public class Review {
      */
     public void setUid(String uid) throws ReviewException {
         final String METHOD_NAME = this.getClass().getName()+" - setUid";
-        if(uid.isEmpty())
+        if(uid == null)
             throw new ReviewException("User ID must be positive");
         this.uid = uid;
         Log.w(METHOD_NAME, "User ID for Review ["+this.revID+"] was changed");
     }
 
-    /**
-     * Set the Restaurant ID of the reviewed restaurant. PLEASE, be aware that by instantiating a
-     * a Review object, a restaurant ID is already set by default.
-     * USE THIS METHOD ONLY IF YOU KNOW WHAT YOU ARE DOING.
-     * The method logs a warning when it is called to notify the restaurant id change.
-     *
-     * @param rid A positive integer uniquely identifying the Restaurant object reviewed.
-     * @throws ReviewException If restaurant id is negative
-     */
-    public void setRid(String rid) throws ReviewException {
-        final String METHOD_NAME = this.getClass().getName()+" - setRid";
-        if(rid!=null)
-            throw new ReviewException("Restaurant ID must be positive");
-        this.rid = rid;
-        Log.w(METHOD_NAME, "Restaurant ID for Review ["+this.revID+"] was changed");
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**
@@ -211,9 +134,9 @@ public class Review {
 
     /**
      *
-     * @param replies An ArrayList representing the list of comments to the review text.
+     * @param replies A list representing the list of comments to the review text.
      */
-    public void setReplies(ArrayList<String> replies){ this.replies = replies; }
+    public void setReplies(List<Reply> replies){ this.replies = replies; }
 
     /**
      *
