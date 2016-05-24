@@ -260,9 +260,10 @@ public class CreateRestaurant_1 extends Fragment {
                     }
                 } else if (choices[which].equals(getResources().getString(R.string.pick_gallery))) {
                     //Choose from gallery
-                    Intent intent = new Intent();
-                    intent.setType(IMAGE_TYPE);
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    //Intent intent = new Intent();
+                    //intent.setType(IMAGE_TYPE);
+                    //intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.intentChooser_select_image)), SELECT_PICTURE);
                 }
             }

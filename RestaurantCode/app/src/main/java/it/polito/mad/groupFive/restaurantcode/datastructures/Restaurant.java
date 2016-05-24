@@ -87,6 +87,11 @@ public class Restaurant {
     public Restaurant(){
     }
 
+    public Restaurant(String uid, String rid){
+        this.uid = uid;
+        this.rid = rid;
+    }
+
     /**
      * Generate a random integer in the range [1, Integer.MAX_VALUE]
      *
@@ -120,13 +125,27 @@ public class Restaurant {
         output.put("rating",this.rating);
         output.put("xcoord",this.xcoord);
         output.put("ycoord",this.ycoord);
+        output.put("timetableLunch",this.timetableLunch);
+        output.put("timetableDinner",this.timetableDinner);
+        output.put("tickets",this.tickets);
 
-        HashMap<String, Object> menuMap = new HashMap<>();
+        HashMap<String, Boolean> menuMap = new HashMap<>();
         for (Menu m : this.menus){
-            menuMap.put(m.getMid(),m.toMap());
+            menuMap.put(m.getMid(),true);
         }
         output.put("menus",menuMap);
 
+        HashMap<String, Boolean> orderMap = new HashMap<>();
+        for (Order o : this.orders){
+            orderMap.put(o.getOid(),true);
+        }
+        output.put("orders",orderMap);
+
+        HashMap<String,Boolean> reviewMap = new HashMap<>();
+        for (Review r: this.reviews){
+            reviewMap.put(r.getRevID(),true);
+        }
+        output.put("reviews",reviewMap);
         return output;
     }
 

@@ -54,8 +54,9 @@ public class Menu {
     public Menu() {
     }
 
-    public Menu(String rid) {
+    public Menu(String rid, String mid) {
         this.rid = rid;
+        this.mid = mid;
     }
 
     Map<String, Object> toMap(){
@@ -70,9 +71,9 @@ public class Menu {
         output.put("type",this.type);
         output.put("beverage",this.beverage);
         output.put("serviceFee",this.serviceFee);
-        HashMap<String, Object> courseMap = new HashMap<>();
+        HashMap<String, Boolean> courseMap = new HashMap<>();
         for (Course c : this.courses){
-            courseMap.put(c.getCid(),c.toMap());
+            courseMap.put(c.getCid(),true);
         }
         output.put("courses",courseMap);
         return output;

@@ -5,6 +5,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderException;
 
@@ -16,8 +18,6 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.OrderExc
  */
 public class Order {
 
-    private DatabaseReference dbRoot;
-
     private String oid;
     private String uid;
     private String mid;
@@ -26,38 +26,26 @@ public class Order {
     private String notes;
     private String name;
 
-    public Order(String rid, String mid, String uid) throws OrderException {
-        this(null,rid,mid,uid);
+    public Order() {
     }
 
-    public Order(String oid, String rid, String mid, String uid) throws OrderException {
-        if(rid == null)
-            throw new OrderException("Restaurant ID cannot be null");
-        if(mid == null)
-            throw new OrderException("Menu ID cannot be null");
-        if(uid == null)
-            throw new OrderException("User ID cannot be null");
+    public Order(String rid, String mid, String uid, String oid){
         this.rid = rid;
         this.mid = mid;
         this.uid = uid;
-
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        this.dbRoot = db.getReference("order");
-
-        this.oid = oid == null ? this.dbRoot.push().getKey() : oid;
-
-        //Change the dbRoot to the tree specific to this object
-        this.dbRoot = this.dbRoot.child(this.oid);
+        this.oid = oid;
     }
 
-    void saveData(){
-        this.dbRoot.child("order-id").setValue(this.oid);
-        this.dbRoot.child("user-id").setValue(this.uid);
-        this.dbRoot.child("menu-id").setValue(this.mid);
-        this.dbRoot.child("restaurant-id").setValue(this.rid);
-        this.dbRoot.child("date").setValue(this.date);
-        this.dbRoot.child("notes").setValue(this.notes);
-        this.dbRoot.child("name").setValue(this.name);
+    Map<String,Object> toMap(){
+        HashMap<String,Object> output = new HashMap<>();
+        output.put("oid",this.oid);
+        output.put("uid",this.uid);
+        output.put("mid",this.mid);
+        output.put("rid",this.rid);
+        output.put("date",this.date);
+        output.put("notes",this.notes);
+        output.put("name",this.name);
+        return output;
     }
 
     /**
