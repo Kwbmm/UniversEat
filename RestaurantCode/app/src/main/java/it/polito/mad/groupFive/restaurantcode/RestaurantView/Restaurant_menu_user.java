@@ -198,6 +198,14 @@ public class Restaurant_menu_user extends Fragment {
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
+            if(!menu.isGlutenFree())
+                holder.glutenfree_icon.setVisibility(View.GONE);
+            if(!menu.isVegetarian())
+                holder.vegetarian_icon.setVisibility(View.GONE);
+            if(!menu.isVegan())
+                holder.vegan_icon.setVisibility(View.GONE);
+            if(!menu.isSpicy())
+                holder.spicy_icon.setVisibility(View.GONE);
             try {
                 holder.menu_image.setImageBitmap(menu.getImageBitmap());
             } catch (NullPointerException e){

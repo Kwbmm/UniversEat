@@ -14,8 +14,9 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -41,6 +42,8 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
     }
     restaurantData data;
     Restaurant restaurant;
+    GoogleMap myMap;
+    MapView mapView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -91,6 +94,12 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
 
         View v=inflater.inflate(R.layout.fragment_restaurant_info_user, container, false);
         getRestaurantData(v);
+
+        //init map
+        MapsInitializer.initialize(this.getActivity());
+        mapView = (MapView) v.findViewById(R.id.gmap);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
         restaurant.setXcoord(40.758896);
         restaurant.setYcoord(-73.985130);
         //SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.gmap);
@@ -110,15 +119,15 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
         TextView restname= (TextView) v.findViewById(R.id.restaurant_name);
         restname.setText(restaurant.getName());
         TextView restaddr=(TextView) v.findViewById(R.id.restaurant_address);
-        restaddr.setText(restaurant.getAddress());
+        restaddr.setText(restaurant.getAddress()+", "+restaurant.getCity()+" "+restaurant.getZIPCode());
         TextView resttel=(TextView)v.findViewById(R.id.restaurant_tel);
         resttel.setText(restaurant.getTelephone());
+        TextView restweb=(TextView)v.findViewById(R.id.restaurant_web);
+        restweb.setText(restaurant.getWebsite());
         RatingBar restrating= (RatingBar) v.findViewById(R.id.restaurant_rating);
         restrating.setRating(restaurant.getRating());
         ImageView restImage=(ImageView)v.findViewById(R.id.restaurant_image);
         restImage.setImageBitmap(restaurant.getImageBitmap());
-
-
         LinearLayout ll = (LinearLayout) v.findViewById(R.id.restaurant_time_t);
         int count=0;
         for(String weekday : getResources().getStringArray(R.array.week)){
@@ -188,11 +197,42 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
     }
 
     @Override
+    public void onPause(){
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onLowMemory(){
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
     public void onMapReady(GoogleMap map) {
         LatLng latLng = new LatLng(restaurant.getXcoord(),restaurant.getYcoord());
         map.addMarker(new MarkerOptions()
                 .position(latLng)
-                .title("Marker"));
+                .title(restaurant.getName()));
+        map.moveCamera(CameraUpdateFactory.zoomTo(15));
         map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 }

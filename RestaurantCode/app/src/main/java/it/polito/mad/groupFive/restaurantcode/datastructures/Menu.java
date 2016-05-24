@@ -515,4 +515,33 @@ public class Menu {
      * @param opts An ArrayList of options to set on this menu.
      */
     public void setOptions(ArrayList<Option> opts){ this.options = opts; }
+
+    public boolean isVegan(){
+        for(Course c: this.courses){
+            if(c.isVegan()==Boolean.FALSE)
+                return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+    public boolean isVegetarian(){
+        for(Course c: this.courses){
+            if(c.isVegetarian()==Boolean.FALSE)
+                return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+    public boolean isSpicy(){
+        for(Course c: this.courses){
+            if(c.isSpicy()==Boolean.TRUE)
+                return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    public boolean isGlutenFree(){
+        for(Course c: this.courses){
+            if(c.isGlutenFree()==Boolean.FALSE)
+                return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
 }

@@ -152,6 +152,10 @@ public class Menu_view_edit extends NavigationDrawer {
         protected ImageButton edit;
         protected CardView card;
         protected ImageView menu_image;
+        protected ImageView vegetarian_icon;
+        protected ImageView vegan_icon;
+        protected ImageView spicy_icon;
+        protected ImageView glutenfree_icon;
 
         public MenuViewHoder(View itemView) {
             super(itemView);
@@ -161,6 +165,10 @@ public class Menu_view_edit extends NavigationDrawer {
             this.edit=(ImageButton) itemView.findViewById(R.id.menu_edit);
             this.card= (CardView) itemView.findViewById(R.id.menu_card);
             this.menu_image=(ImageView)itemView.findViewById(R.id.menu_image);
+            this.vegan_icon= (ImageView) itemView.findViewById(R.id.menu_icon4);
+            this.vegetarian_icon= (ImageView) itemView.findViewById(R.id.menu_icon3);
+            this.spicy_icon= (ImageView) itemView.findViewById(R.id.menu_icon1);
+            this.glutenfree_icon= (ImageView) itemView.findViewById(R.id.menu_icon2);
         }
     }
 
@@ -205,6 +213,14 @@ public class Menu_view_edit extends NavigationDrawer {
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
             holder.edit.setOnClickListener(new onEditclick(position));
+            if(!menu.isGlutenFree())
+                holder.glutenfree_icon.setVisibility(View.GONE);
+            if(!menu.isVegetarian())
+                holder.vegetarian_icon.setVisibility(View.GONE);
+            if(!menu.isVegan())
+                holder.vegan_icon.setVisibility(View.GONE);
+            if(!menu.isSpicy())
+                holder.spicy_icon.setVisibility(View.GONE);
             try {
                 holder.menu_image.setImageBitmap(menu.getImageBitmap());
             } catch (NullPointerException e){

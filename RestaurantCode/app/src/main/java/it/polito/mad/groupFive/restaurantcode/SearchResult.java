@@ -638,6 +638,14 @@ public class SearchResult extends NavigationDrawer {
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
             holder.menu_image.setImageBitmap(menu.getImageBitmap());
+            if(!menu.isGlutenFree())
+                holder.glutenfree_icon.setVisibility(View.GONE);
+            if(!menu.isVegetarian())
+                holder.vegetarian_icon.setVisibility(View.GONE);
+            if(!menu.isVegan())
+                holder.vegan_icon.setVisibility(View.GONE);
+            if(!menu.isSpicy())
+                holder.spicy_icon.setVisibility(View.GONE);
             int rid = menus.get(position).getRid();
             holder.card.setOnClickListener(new onCardClick(position,rid));
         }

@@ -13,6 +13,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -38,6 +42,7 @@ public class CreateRestaurant_2 extends Fragment {
     private onFragInteractionListener mListener;
     private View parentView=null;
     private TextView address;
+    private TextView mapPickerText;
     private TextView city;
     private TextView ZIPCode;
     private TextView state;
@@ -86,6 +91,21 @@ public class CreateRestaurant_2 extends Fragment {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_2, container, false);
         address = (TextView) parentView.findViewById(R.id.editText_Address);
+        mapPickerText = (TextView) parentView.findViewById(R.id.mapPickerText);
+        mapPickerText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int PLACE_PICKER_REQUEST = 17;
+                PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+                try {
+                    startActivityForResult(intentBuilder.build(getActivity()),PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         city = (TextView) parentView.findViewById(R.id.editText_City);
         ZIPCode = (TextView) parentView.findViewById(R.id.editText_ZIPCode);
         state = (TextView) parentView.findViewById(R.id.editText_State);

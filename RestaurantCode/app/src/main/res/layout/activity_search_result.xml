@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
-    tools:context="it.polito.mad.groupFive.restaurantcode.SearchResult">
+    tools:context="it.polito.mad.groupFive.restaurantcode.SearchResult"
+    android:background="@color/material_grey_100">
 
     <!-- Shows either Menus or Restaurants -->
     <android.support.v7.widget.RecyclerView
@@ -15,6 +16,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        />
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" />
 
 </RelativeLayout>
