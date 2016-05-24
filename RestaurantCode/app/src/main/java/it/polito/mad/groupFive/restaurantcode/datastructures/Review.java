@@ -1,20 +1,11 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import android.os.Build;
-import android.util.Log;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.ReviewException;
 
 /**
@@ -34,15 +25,32 @@ public class Review {
     private float rating;
     private List<Reply> replies = new ArrayList<>();
 
-    public Review() {
-    }
-
-    public Review(String uid, String rid) {
+    /**
+     * Create a new Review object.
+     *
+     * @param uid The user ID who made this review.
+     * @param rid The restaurant ID reviewed.
+     * @param revID The ID of this Review object.
+     * @throws ReviewException If user ID, restaurant ID or review ID are null.
+     */
+    public Review(String uid, String rid, String revID) throws ReviewException {
+        if(uid == null)
+            throw new ReviewException("User ID cannot be null");
+        if(rid == null)
+            throw new ReviewException("Restaurant ID cannot be null");
+        if(revID == null)
+            throw new ReviewException("Review ID cannot be null");
         this.uid = uid;
         this.rid = rid;
+        this.revID = revID;
     }
 
-    Map<String, Object> toMap(){
+    /**
+     * Creates a Map of this Object, ready to be put as value inside Firebase DB.
+     *
+     * @return A Map representing this object.
+     */
+    public Map<String, Object> toMap(){
         HashMap<String, Object> output = new HashMap<>();
 
         output.put("revID",this.revID);
@@ -95,6 +103,12 @@ public class Review {
 
     /**
      *
+     * @return A Date object representing the moment in which this review was made.
+     */
+    public Date getDate(){return this.date;}
+
+    /**
+     *
      * @return The comments to the review text, if any.
      */
     public List<Reply> getReplies(){ return this.replies; }
@@ -105,45 +119,31 @@ public class Review {
      */
     public float getRating(){ return this.rating; }
 
-    /**
-     * Set the User ID of the User who made this review. PLEASE, be aware that by instantiating a
-     * a Review object, a user ID is already set by default.
-     * USE THIS METHOD ONLY IF YOU KNOW WHAT YOU ARE DOING.
-     * The method logs a warning when it is called to notify the user id change.
-     *
-     * @param uid A positive integer uniquely identifying the user who made this review.
-     * @throws ReviewException If user id is negative
-     */
-    public void setUid(String uid) throws ReviewException {
-        final String METHOD_NAME = this.getClass().getName()+" - setUid";
-        if(uid == null)
-            throw new ReviewException("User ID must be positive");
-        this.uid = uid;
-        Log.w(METHOD_NAME, "User ID for Review ["+this.revID+"] was changed");
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public Review setTitle(String title) {
+        this.title = title; return this;
     }
 
     /**
      *
      * @param s A string representing the text of the review.
      */
-    public void setReviewText(String s){ this.reviewText = s; }
+    public Review setReviewText(String s){ this.reviewText = s; return this; }
+
+    /**
+     *
+     * @param d A Date object representing the moment in which this review is made.
+     */
+    public Review setDate(Date d){this.date=d; return this;}
 
     /**
      *
      * @param replies A list representing the list of comments to the review text.
      */
-    public void setReplies(List<Reply> replies){ this.replies = replies; }
+    public Review setReplies(List<Reply> replies){ this.replies = replies; return this; }
 
     /**
      *
      * @param r The rating given by the user for the reviewed restaurant.
      */
-    public void setRating(float r){ this.rating = r; }
-
-    public Date getDate(){return this.date;}
-    public void setDate(Date d){this.date=d;}
+    public Review setRating(float r){ this.rating = r; return this; }
 }

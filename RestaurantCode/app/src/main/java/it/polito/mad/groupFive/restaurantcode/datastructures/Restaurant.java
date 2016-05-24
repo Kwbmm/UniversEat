@@ -1,59 +1,16 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.util.ArrayMap;
 import android.util.Log;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.libs.CustomByteArrayAdapter;
-import it.polito.mad.groupFive.restaurantcode.libs.CustomUriAdapter;
 
 /**
  * @author Marco Ardizzone
@@ -73,7 +30,7 @@ public class Restaurant {
     private String website;
     private String telephone;
     private String zip;
-    private String imageLocal;
+    private String imageLocalPath;
     private float rating;
     private double xcoord;
     private double ycoord;
@@ -84,31 +41,20 @@ public class Restaurant {
     private Map<String, Map<String,String>> timetableDinner = new HashMap<>();
     private ArrayList<Review> reviews = new ArrayList<>();
 
-    public Restaurant(){
-    }
-
-    public Restaurant(String uid, String rid){
+    public Restaurant(String uid, String rid) throws RestaurantException {
+        if(uid == null)
+            throw new RestaurantException("User ID cannot be null");
+        if(rid == null)
+            throw new RestaurantException("Restaurant canno be null");
         this.uid = uid;
         this.rid = rid;
     }
 
     /**
-     * Generate a random integer in the range [1, Integer.MAX_VALUE]
+     * Creates a Map of this Object, ready to be put as value inside Firebase DB.
      *
-     * @return In integer in the range [1, Integer.MAX_VALUE]
+     * @return A Map representing this object.
      */
-    public static int randInt() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
-        else{
-            Random rand= new Random();
-            int result;
-            if((result=rand.nextInt(Integer.MAX_VALUE)) == 0)
-                return Restaurant.randInt();
-            return result;
-        }
-    }
-
     public Map<String, Object> toMap() {
         HashMap<String,Object> output = new HashMap<>();
         output.put("rid",this.rid);
@@ -121,7 +67,7 @@ public class Restaurant {
         output.put("website",this.website);
         output.put("telephone",this.telephone);
         output.put("zip",this.zip);
-        output.put("imageLocal",this.imageLocal);
+        output.put("imageLocalPath",this.imageLocalPath);
         output.put("rating",this.rating);
         output.put("xcoord",this.xcoord);
         output.put("ycoord",this.ycoord);
@@ -129,23 +75,6 @@ public class Restaurant {
         output.put("timetableDinner",this.timetableDinner);
         output.put("tickets",this.tickets);
 
-        HashMap<String, Boolean> menuMap = new HashMap<>();
-        for (Menu m : this.menus){
-            menuMap.put(m.getMid(),true);
-        }
-        output.put("menus",menuMap);
-
-        HashMap<String, Boolean> orderMap = new HashMap<>();
-        for (Order o : this.orders){
-            orderMap.put(o.getOid(),true);
-        }
-        output.put("orders",orderMap);
-
-        HashMap<String,Boolean> reviewMap = new HashMap<>();
-        for (Review r: this.reviews){
-            reviewMap.put(r.getRevID(),true);
-        }
-        output.put("reviews",reviewMap);
         return output;
     }
 
@@ -173,6 +102,23 @@ public class Restaurant {
     public String getDescription() { return this.description; }
 
     /**
+     * Get the filename of this restaurant's image.
+     * @return The name of the image.
+     */
+    public String getImageName(){
+        String[] arrayString = this.imageLocalPath.split("/");
+        return arrayString[arrayString.length-1];
+    }
+
+    /**
+     * Get the local path of where the restaurant's image is stored.
+     * @return The location of the image.
+     */
+    public String getImageLocalPath() {
+        return this.imageLocalPath;
+    }
+
+    /**
      *
      * @return Address of restaurant
      */
@@ -194,13 +140,13 @@ public class Restaurant {
      *
      * @return The latitude coordinate of restaurant
      */
-    public double getXcoord() { return this.xcoord; }
+    public double getXCoord() { return this.xcoord; }
 
     /**
      *
      * @return The longitude coordinate of restaurant
      */
-    public double getYcoord() { return this.ycoord; }
+    public double getYCoord() { return this.ycoord; }
 
     /**
      *
@@ -315,7 +261,7 @@ public class Restaurant {
      *
      * @return Map of the LUNCH timetable.
      */
-    public Map<String,Map<String,String>> getTimetableLunch() throws RestaurantException {
+    public Map<String,Map<String,String>> getTimetableLunch() {
         return this.timetableLunch;
     }
 
@@ -325,7 +271,7 @@ public class Restaurant {
      *
      * @return ArrayMap of the DINNER timetable.
      */
-    public Map<String,Map<String,String>> getTimetableDinner() throws RestaurantException {
+    public Map<String,Map<String,String>> getTimetableDinner() {
         return this.timetableDinner;
     }
 
@@ -368,7 +314,7 @@ public class Restaurant {
      * Returns true if the restaurant is open at the current time, false otherwise.
      * In case of error, a warning is logged and the method returns false.
      *
-     * @return True if restaurant is open, false otherewise.
+     * @return True if restaurant is open, false otherwise.
      */
     public boolean isOpen(){
         final String METHOD_NAME = this.getClass().getName()+" - isOpen";
@@ -464,198 +410,193 @@ public class Restaurant {
         return false;
     }
 
-    public void setRid(String rid){
-        this.rid = rid;
-    }
-
     /**
      *
      * @param name Name of restaurant
      */
-    public void setName(String name) {
-        this.name = name;
+    public Restaurant setName(String name) {
+        this.name = name; return this;
     }
 
     /**
      *
      * @param address Address of restaurant
      */
-    public void setAddress(String address) { this.address = address; }
+    public Restaurant setAddress(String address) { this.address = address; return this; }
 
     /**
      *
      * @param state The state of restaurant
      */
-    public void setState(String state) {
-        this.state = state;
+    public Restaurant setState(String state) {
+        this.state = state; return this;
     }
 
     /**
      *
      * @param city City of restaurant
      */
-    public void setCity(String city) {
-        this.city = city;
+    public Restaurant setCity(String city) {
+        this.city = city; return this;
     }
 
     /**
      *
      * @param xcoord The latitude coordinate of restaurant
      */
-    public void setXcoord(double xcoord) {
-        this.xcoord = xcoord;
+    public Restaurant setXCoord(double xcoord) {
+        this.xcoord = xcoord; return this;
     }
 
     /**
      *
      * @param ycoord The longitude coordinate of restaurant
      */
-    public void setYcoord(double ycoord) {
-        this.ycoord = ycoord;
+    public Restaurant setYCoord(double ycoord) {
+        this.ycoord = ycoord; return this;
     }
 
     /**
      *
      * @param description of the restaurant
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public Restaurant setDescription(String description) {
+        this.description = description; return this;
+    }
+
+    /**
+     * Sets the local path of this restaurants's image.
+     * @param imagePath The local path of the image
+     */
+    public Restaurant setImageLocalPath(String imagePath) {
+        this.imageLocalPath = imagePath; return this;
     }
 
     /**
      *
      * @param rating of restaurant
      */
-    public void setRating(float rating) {
-        this.rating = rating;
+    public Restaurant setRating(float rating) {
+        this.rating = rating; return this;
     }
 
     /**
      *
      * @param menus: the arraylist of restaurant's menu
      */
-    public void setMenus(ArrayList<Menu> menus) {
-        this.menus = menus;
+    public Restaurant setMenus(ArrayList<Menu> menus) {
+        this.menus = menus; return this;
     }
 
     /**
      *
      * @param orders:the arraylist of restaurant's orders
      */
-    public void setOrders(ArrayList<Order> orders) {
-        this.orders = orders;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
+    public Restaurant setOrders(ArrayList<Order> orders) {
+        this.orders = orders; return this;
     }
 
     /**
      *
      * @param website of the restaurant
      */
-    public void setWebsite(String website) {
-        this.website = website;
+    public Restaurant setWebsite(String website) {
+        this.website = website; return this;
     }
 
     /**
      *
      * @param telephone the telephone number of the restaurant
      */
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    public Restaurant setTelephone(String telephone) {
+        this.telephone = telephone; return this;
     }
 
     /**
      *
      * @param zip the zip code of the restaurant's city
      */
-    public void setZip(String zip){ this.zip = zip; }
+    public Restaurant setZip(String zip){ this.zip = zip; return this; }
 
     /**
      *
      * @param tickets A HashMap containing the names of the tickets.
      */
-    public void setTickets(Map<String,Boolean> tickets){ this.tickets = tickets; }
+    public Restaurant setTickets(Map<String,Boolean> tickets){ this.tickets = tickets; return this; }
 
     /**
-     * Sets the amount of time during which the restaurant is open AT LUNCH.
-     * Returns true in case of success, false otherwise.
-     * If false is returned, an error message is logged.
-     * Parameter dayOfWeek should range between 0 (Monday) and 6(Sunday).
+     * Set the duration of the lunch time.
      *
-     * @param dayOfWeek Day of the week during which this shift takes place. Must be between 0 and 6
-     * @param timeStart Start hour of the shift.
-     * @param timeEnd End hour of the shift.
+     * @param dayOfWeek The day of the week, can be: Mon, Tue, Wed, Thu, Fri, Sat, Sun
+     * @param timeStart Start time of the lunch
+     * @param timeEnd End time of the lunch
      */
-    public void setDurationLunch(String dayOfWeek,String timeStart, String timeEnd) {
+    public Restaurant setDurationLunch(String dayOfWeek,String timeStart, String timeEnd) {
         final String METHOD_NAME = this.getClass().getName()+" - setDurationLunch";
 
         Map<String,String> entry = new HashMap<>();
         entry.put("start",timeStart);
         entry.put("end",timeEnd);
-        this.timetableLunch.put(String.valueOf(dayOfWeek),entry);
+        this.timetableLunch.put(dayOfWeek,entry);
+        return this;
     }
 
     /**
-     * Sets the amount of time during which the restaurant is open AT DINNER.
-     * Returns true in case of success, false otherwise.
-     * If false is returned, an error message is logged.
-     * Parameter dayOfWeek should range between 0 (Monday) and 6(Sunday).
+     * Set the duration of the dinner time.
      *
-     * @param dayOfWeek Day of the week during which this shift takes place. Must be between 0 and 6
-     * @param timeStart Start hour of the shift.
-     * @param timeEnd End hour of the shift.
+     * @param dayOfWeek The day of the week, can be: Mon, Tue, Wed, Thu, Fri, Sat, Sun
+     * @param timeStart Start time of the dinner
+     * @param timeEnd End time of the dinner
      */
-    public void setDurationDinner(String dayOfWeek,String timeStart, String timeEnd) {
+    public Restaurant setDurationDinner(String dayOfWeek,String timeStart, String timeEnd) {
         final String METHOD_NAME = this.getClass().getName()+" - setDurationDinner";
 
         Map<String,String> entry = new HashMap<>();
         entry.put("start",timeStart);
         entry.put("end",timeEnd);
         this.timetableDinner.put(dayOfWeek,entry);
+        return this;
     }
 
     /**
-     * Set the timetable for lunch time of this restaurant.
-     * Input parameter is a Map with key the days of the week (from 0 to 6) and as value an array
-     * of Date. The array must be of length 2. It should be structured as:
-     * [0] startHour
-     * [1] endHour
-     * @param timetable A(n) (Array)Map of the timetable of the Lunch.
+     * Set the whole timetable for the lunch of this restaurant.
+     * The timetable is formatted as follows:
+     *      Mon-
+     *          |-start => startTime
+     *          |-end => endTime
+     *      ...
+     *      Sun-
+     *          |-start => startTime
+     *          |-end => endTime
+     *
+     * @param timetable A map representing the timetable formatted as shown.
      */
-    public void setTimetableLunch(Map<String,Map<String,String>> timetable){
+    public Restaurant setTimetableLunch(Map<String,Map<String,String>> timetable){
         this.timetableLunch = timetable;
+        return this;
     }
 
     /**
-     * Set the timetable for dinner time of this restaurant.
-     * Input parameter is a Map with key the days of the week (from 0 to 6) and as value an array
-     * of Date. The array must be of length 2. It should be structured as:
-     * [0] startHour
-     * [1] endHour
-     * @param timetable A(n) (Array)Map of the timetable of the Dinner.
+     * Set the whole timetable for the dinner of this restaurant.
+     * The timetable is formatted as follows:
+     *      Mon-
+     *          |-start => startTime
+     *          |-end => endTime
+     *      ...
+     *      Sun-
+     *          |-start => startTime
+     *          |-end => endTime
+     *
+     * @param timetable A map representing the timetable formatted as shown.
      */
-    public void setTimetableDinner(Map<String,Map<String,String>> timetable){
+    public Restaurant setTimetableDinner(Map<String,Map<String,String>> timetable){
         this.timetableDinner = timetable;
+        return this;
     }
 
     /**
      *
      * @param reviews An ArrayList of Review(s) to assign to this restaurant object.
      */
-    public void setReviews(ArrayList<Review> reviews){ this.reviews = reviews; }
-
-    public void setImageLocal(String imagePath) {
-        this.imageLocal = imagePath;
-    }
-
-    public String getImageName(){
-        String[] arrayString = this.imageLocal.split("/");
-        return arrayString[arrayString.length-1];
-    }
-
-    public String getImageLocal() {
-        return this.imageLocal;
-    }
+    public Restaurant setReviews(ArrayList<Review> reviews){ this.reviews = reviews; return this; }
 }

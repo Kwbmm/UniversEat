@@ -1,7 +1,5 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +14,6 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseEx
  */
 public class Course {
 
-    private DatabaseReference dbRoot;
-
     private String cid;
     private String mid;
     private String name;
@@ -27,15 +23,28 @@ public class Course {
     private boolean spicy;
     private ArrayList<String> tags = new ArrayList<>();
 
-
-    public Course(){
-
-    }
-    public Course(String mid) {
+    /**
+     * Create a new Course object.
+     *
+     * @param mid The Menu ID to which this Course belongs to.
+     * @param cid The ID of this Course
+     * @throws CourseException If Menu ID or Course ID are null
+     */
+    public Course(String mid, String cid) throws CourseException {
+        if(mid == null)
+            throw new CourseException("Menu ID cannot be null");
+        if(cid == null)
+            throw new CourseException("Course ID cannot be null");
         this.mid = mid;
+        this.cid = cid;
     }
 
-    Map<String,Object> toMap(){
+    /**
+     * Creates a Map of this Object, ready to be put as value inside Firebase DB.
+     *
+     * @return A Map representing this object.
+     */
+    public Map<String,Object> toMap(){
         HashMap<String, Object> output = new HashMap<>();
         output.put("cid",this.cid);
         output.put("mid",this.mid);
@@ -73,24 +82,28 @@ public class Course {
 
     /**
      * Returns true if course is gluten-free. False otherwise.
+     *
      * @return true or false
      */
     public boolean isGlutenFree(){ return this.glutenFree; }
 
     /**
      * Returns true if course is vegan. False otherwise.
+     *
      * @return true or false
      */
     public boolean isVegan(){ return this.vegan; }
 
     /**
      * Returns true if course is vegetarian. False otherwise.
+     *
      * @return true or false
      */
     public boolean isVegetarian(){ return this.vegetarian; }
 
     /**
      * Returns true if course is spicy. False otherwise.
+     *
      * @return true or false
      */
     public boolean isSpicy(){ return this.spicy; }
@@ -104,39 +117,44 @@ public class Course {
 
     /**
      * Sets the name of the course
+     *
      * @param name Name of the course
      */
-    public void setName(String name){ this.name = name;}
+    public Course setName(String name){ this.name = name; return this;
+    }
 
     /**
      * Sets if the course is gluten-free
+     *
      * @param gf true or false
      */
-    public void setGlutenFree(boolean gf){ this.glutenFree = gf;}
+    public Course setGlutenFree(boolean gf){ this.glutenFree = gf; return this;}
 
     /**
      * Sets if the course is vegan
+     *
      * @param vegan true or false
      */
-    public void setVegan(boolean vegan){ this.vegan = vegan;}
+    public Course setVegan(boolean vegan){ this.vegan = vegan; return this;}
 
     /**
      * Sets if the course is vegetarian
+     *
      * @param vegetarian true or false
      */
-    public void setVegetarian(boolean vegetarian){ this.vegetarian = vegetarian;}
+    public Course setVegetarian(boolean vegetarian){ this.vegetarian = vegetarian; return this;}
 
     /**
      * Sets if the course is spicy
+     *
      * @param spicy true or false
      */
-    public void setSpicy(boolean spicy){ this.spicy = spicy;}
+    public Course setSpicy(boolean spicy){ this.spicy = spicy; return this;}
 
     /**
      * Sets the tags of the Course object.
      *
      * @param tags An ArrayList of Strings representing the tag.
      */
-    public void setTags(ArrayList<String> tags){ this.tags = tags; }
-
+    public Course setTags(ArrayList<String> tags){ this.tags = tags; return this;}
 }

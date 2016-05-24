@@ -1,33 +1,8 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.util.Log;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 
@@ -41,41 +16,50 @@ public class Menu {
 
     private String rid; //The restaurant ID this menu belongs to
     private String mid;
-    private String name=null;
-    private String description=null;
+    private String name;
+    private String description;
     private float price;
-    private String imageName;
-    private String imagePath;
+    private String imageLocalPath;
     private int type;
     private boolean beverage;
     private boolean serviceFee;
     private ArrayList<Course> courses = new ArrayList<>();
 
-    public Menu() {
-    }
-
-    public Menu(String rid, String mid) {
+    /**
+     * Creates a new Menu object.
+     *
+     * @param rid The restaurant ID to which this menu belongs to.
+     * @param mid The ID of this Menu object.
+     * @throws MenuException If restaurant ID or menu ID are null.
+     */
+    public Menu(String rid, String mid) throws MenuException {
+        if(rid == null)
+            throw new MenuException("Restaurant ID cannot be null");
+        if(mid == null)
+            throw new MenuException("Menu ID cannot be null");
         this.rid = rid;
         this.mid = mid;
     }
 
-    Map<String, Object> toMap(){
+    /**
+     * Creates a Map of this Object, ready to be put as value inside Firebase DB.
+     *
+     * @return A Map representing this object.
+     */
+    public Map<String, Object> toMap(){
         final String METHOD_NAME = this.getClass().getName()+" - saveData";
+
         HashMap<String, Object> output = new HashMap<>();
         output.put("mid",this.mid);
+        output.put("rid",this.rid);
         output.put("name",this.name);
         output.put("description",this.description);
         output.put("price",this.price);
-        output.put("imageName",this.imageName);
-        output.put("imagePath",this.imagePath);
+        output.put("imageLocalPath",this.imageLocalPath);
         output.put("type",this.type);
         output.put("beverage",this.beverage);
         output.put("serviceFee",this.serviceFee);
-        HashMap<String, Boolean> courseMap = new HashMap<>();
-        for (Course c : this.courses){
-            courseMap.put(c.getCid(),true);
-        }
-        output.put("courses",courseMap);
+
         return output;
     }
 
@@ -84,6 +68,8 @@ public class Menu {
      * @return The ID
      */
     public String getMid(){ return this.mid; }
+
+    public String getRid(){ return this.rid; }
 
     /**
      *
@@ -98,22 +84,27 @@ public class Menu {
     public String getDescription(){ return this.description; }
 
     /**
+     * Get the filename of this menu's image.
+     * @return The name of the image.
+     */
+    public String getImageName(){
+        String[] arrayString = this.imageLocalPath.split("/");
+        return arrayString[arrayString.length-1];
+    }
+
+    /**
+     * Get the local path of where the menu's image is stored.
+     * @return The location of the image.
+     */
+    public String getImageLocalPath() {
+        return this.imageLocalPath;
+    }
+
+    /**
      *
      * @return The price of the menu
      */
     public float getPrice(){ return this.price; }
-
-    public Bitmap getImageBitmap() throws MenuException {
-        final String METHOD_NAME = this.getClass().getName()+" - getImageBitmap";
-        try {
-            File f=new File(this.imagePath, this.imageName);
-            return BitmapFactory.decodeStream(new FileInputStream(f));
-        }
-        catch (FileNotFoundException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            throw new MenuException(e.getMessage());
-        }
-    }
 
     /**
      * This method returns a textual representation of the type of menu. It can be:
@@ -268,89 +259,27 @@ public class Menu {
      *
      * @param name The name of the menu
      */
-    public void setName(String name){ this.name = name; }
+    public Menu setName(String name){ this.name = name; return this;}
 
     /**
      *
      * @param description The description of the menu
      */
-    public void setDescription(String description){ this.description = description; }
-
-    /**
-     *
-     * @return Restaurant reference to fetch data
-     */
-
-    public String getRid() {
-        return rid;
-    }
+    public Menu setDescription(String description){ this.description = description; return this; }
 
     /**
      *
      * @param price The price of the menu
-
      */
-    public void setPrice(float price){ this.price = price; }
+    public Menu setPrice(float price){ this.price = price; return this; }
 
     /**
-     * Sets the byte array representation of the image from a given input Bitmap.
-     *
-     * @param image Bitmap representing the image
+     * Sets the local path of this menu's image.
+     * @param imagePath The local path of the image
      */
-    public void setImageFromBitmap(Bitmap image, Context appContext) throws MenuException {
-        final String METHOD_NAME = this.getClass().getName()+" - setImageFromBitmap";
-        ContextWrapper cw = new ContextWrapper(appContext);
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("images", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath=new File(directory,this.imageName);
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (FileNotFoundException fnfe) {
-            Log.e(METHOD_NAME,fnfe.getMessage());
-            throw new MenuException(fnfe.getMessage());
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-                throw new MenuException(e.getMessage());
-            }
-        }
-        this.imagePath = directory.getAbsolutePath();
-    }
-
-    /**
-     * Sets the byte array representation of the image from a given input Drawable. The drawable
-     * is first converted to a Bitmap and then setImageFromBitmap is called.
-     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
-     *
-     * @param image Drawable representing the image
-     */
-    public void setImageFromDrawable(Drawable image, Context appContext) throws MenuException {
-        Bitmap bitmap = null;
-
-        if (image instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) image;
-            if(bitmapDrawable.getBitmap() != null) {
-                this.setImageFromBitmap(bitmapDrawable.getBitmap(),appContext);
-            }
-        }
-
-        if(image.getIntrinsicWidth() <= 0 || image.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(image.getIntrinsicWidth(), image.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(bitmap);
-        image.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        image.draw(canvas);
-        this.setImageFromBitmap(bitmap,appContext);
+    public Menu setImageLocal(String imagePath) {
+        this.imageLocalPath = imagePath;
+        return this;
     }
 
     /**
@@ -388,15 +317,15 @@ public class Menu {
      *
      * @param courses The list of courses of this menu
      */
-    public void setCourses(ArrayList<Course> courses){ this.courses = courses; }
+    public Menu setCourses(ArrayList<Course> courses){ this.courses = courses; return this; }
 
     /**
      * Sets if beverage is included.
      *
      * @param beverage true or false
      */
-    public void setBeverage(boolean beverage) {
-        this.beverage = beverage;
+    public Menu setBeverage(boolean beverage) {
+        this.beverage = beverage; return this;
     }
 
     /**
@@ -404,5 +333,5 @@ public class Menu {
      *
      * @param serviceFee true or false
      */
-    public void setServiceFee(boolean serviceFee) { this.serviceFee = serviceFee; }
+    public Menu setServiceFee(boolean serviceFee) { this.serviceFee = serviceFee; return this; }
 }

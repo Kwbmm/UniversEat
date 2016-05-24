@@ -1,9 +1,5 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,17 +22,36 @@ public class Order {
     private String notes;
     private String name;
 
-    public Order() {
-    }
-
-    public Order(String rid, String mid, String uid, String oid){
+    /**
+     * Create a new Order object.
+     *
+     * @param rid The restaurant ID to which this order belongs to.
+     * @param mid The menu ID to which this order was made for.
+     * @param uid The user ID who made the order.
+     * @param oid The ID of this Order object.
+     * @throws OrderException If restaurant ID, menu ID, user ID or order ID are null.
+     */
+    public Order(String rid, String mid, String uid, String oid) throws OrderException {
+        if(rid == null)
+            throw new OrderException("Restaurant ID cannot be null");
+        if(mid == null)
+            throw new OrderException("Menu ID cannot be null");
+        if(uid == null)
+            throw new OrderException("User ID cannot be null");
+        if(oid == null)
+            throw new OrderException("Order ID cannot be null");
         this.rid = rid;
         this.mid = mid;
         this.uid = uid;
         this.oid = oid;
     }
 
-    Map<String,Object> toMap(){
+    /**
+     * Creates a Map of this Object, ready to be put as value inside Firebase DB.
+     *
+     * @return A Map representing this object.
+     */
+    public Map<String,Object> toMap(){
         HashMap<String,Object> output = new HashMap<>();
         output.put("oid",this.oid);
         output.put("uid",this.uid);
@@ -96,17 +111,17 @@ public class Order {
      *
      * @param name The name of the user who made the order.
      */
-    public void setName(String name){this.name=name;}
+    public Order setName(String name){this.name=name; return this;}
 
     /**
      *
      * @param d Date of the order
      */
-    public void setDate(Date d){ this.date = d;}
+    public Order setDate(Date d){ this.date = d; return this;}
 
     /**
      *
      * @param notes Some additional notes to attach to the order.
      */
-    public void setNotes(String notes){this.notes=notes;}
+    public Order setNotes(String notes){this.notes=notes; return this;}
 }
