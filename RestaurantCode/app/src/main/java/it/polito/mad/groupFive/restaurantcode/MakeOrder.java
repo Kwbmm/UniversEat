@@ -26,9 +26,9 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
  */
 public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Listener, DatePickerFragment.Listener{
 
-    private int rid;
+    private String rid;
     private int mid;
-    private int uid;
+    private String uid;
     private Restaurant restaurant;
     private String name;
     private Calendar date;
@@ -40,9 +40,9 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.make_order, mlay);
-        rid=getIntent().getExtras().getInt("rid");
+        rid=getIntent().getExtras().getString("rid");
         mid=getIntent().getExtras().getInt("mid");
-        uid=getIntent().getExtras().getInt("uid");
+        uid=getIntent().getExtras().getString("uid");
         Log.e("RID MID UID",rid+" "+mid+" "+uid);
         date=Calendar.getInstance();
         months=getResources().getStringArray(R.array.months);

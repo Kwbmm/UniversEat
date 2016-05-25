@@ -41,8 +41,8 @@ public class Order_management extends NavigationDrawer {
         super.onCreate(savedInstanceState);
         months=getResources().getStringArray(R.array.months);
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
-        int uid=sharedPreferences.getInt("uid",-1);
-        int rid=sharedPreferences.getInt("rid",-1);
+        String uid=sharedPreferences.getString("uid",null);
+        String rid=sharedPreferences.getString("rid",null);
         Log.e("RID E UID",""+rid+" "+uid);
         try {
             restaurant=new Restaurant(this,rid);

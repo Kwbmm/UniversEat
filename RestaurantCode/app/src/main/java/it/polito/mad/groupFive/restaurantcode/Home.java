@@ -18,6 +18,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,11 +46,12 @@ public class Home extends NavigationDrawer {
     private Restaurant rest;
     private SharedPreferences sharedPreferences;
     private View parent;
-    private int user;
+    private String user;
     private SearchView searchView;
     private LinearLayout dropdown;
     private boolean drop_visible;
 
+    private RestaurantOwner owner;
 
 
     @Override
@@ -82,91 +86,12 @@ public class Home extends NavigationDrawer {
             option.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     if (!drop_visible){
                         View options=LayoutInflater.from(getBaseContext()).inflate(R.layout.dropdown_options,null);
                         dropdown.addView(options);
-                        Button fakedata=(Button)findViewById(R.id.fake_data);
-                        if (fakedata != null) {
-                            fakedata.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    final String METHOD_NAME = this.getClass().getName()+" - onClick";
-                                    int count=1;
-                                    try {
-                                        Restaurant rest = new Restaurant(v.getContext());
-                                        RestaurantOwner ro= new RestaurantOwner(getBaseContext(),2);
-                                        ro.setName("Owner");
-                                        ro.setEmail("owner@rest.com");
-                                        ro.setImageFromDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
-                                        ro.setUserName("1");
-                                        ro.setPassword("1");
-                                        ro.saveData();
-                                        Order order =new Order(rest,2);
-                                        order.setDate(new Date());
-                                        order.setMid(14);
-                                        order.setUid(22);
-                                        rest.setImageFromDrawable(getResources().getDrawable(R.drawable.ic_account_circle_black_24dp));
-                                        rest.setUid(2);
-                                        rest.setXcoord(0.0f);
-                                        rest.setYcoord(0.0f);
-                                        rest.setName("Pippo");
-                                        rest.setDescription("Figo");
-                                        rest.setState("Bello");
-                                        rest.setRating(3.5f);
-                                        rest.setCity("Politia");
-                                        rest.setAddress("Via vai");
-                                        rest.setTelephone("011667788");
-                                        rest.getOrders().add(order);
-                                        Log.v("create",String.valueOf(rest.getOrders().size()));
-                                        rest.saveData();
-
-                                        ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> ms = rest.getMenus();
-                                        for (int i = 0; i < 5; i++) {
-                                            it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
-                                            mn.setName("Menu " +i);
-                                            mn.setDescription("Description");
-                                            mn.setImageFromDrawable(getResources().getDrawable(R.mipmap.ic_pizza));
-                                            mn.setPrice((float)(3*(i+1)));
-                                            mn.setTicket(true);
-                                            mn.setServiceFee(true);
-                                            mn.setBeverage(false);
-                                            mn.setType(1);
-                                            rest.getMenus().add(mn);
-                                            User user =new RestaurantOwner(v.getContext());
-                                            Review review=new Review(rest,user);
-                                            review.setRating(4.3f);
-                                            review.setDate(new Date());
-                                            review.setReviewText("Molto Buonissimo");
-                                            review.setTitle("Il Massimo della Pizza");
-                                            rest.addReview(review);
-                                        }
-                                        it.polito.mad.groupFive.restaurantcode.datastructures.Menu mn = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(rest);
-                                        mn.setName("Orecchiette tris");
-                                        mn.setDescription("orecchiette, patate, pollo");
-                                        mn.setPrice(1.5f);
-                                        mn.setTicket(false);
-                                        mn.setType(2);
-                                        mn.setBeverage(true);
-                                        mn.setServiceFee(false);
-                                        rest.getMenus().add(mn);
-                                        rest.saveData();
-                                        SharedPreferences sharedPreferences=v.getContext().getSharedPreferences(getString(R.string.user_pref),v.getContext().MODE_PRIVATE);
-                                        SharedPreferences.Editor editor= sharedPreferences.edit();
-                                        editor.putInt("uid",2);
-                                        editor.putInt("rid",rest.getRid());
-                                        editor.putBoolean("owner",true);
-                                        editor.apply();
-                                    } catch (RestaurantException |
-                                            MenuException |
-                                            OrderException |
-                                            ReviewException |
-                                            RestaurantOwnerException e) {
-                                        Log.e(METHOD_NAME, e.getMessage());
-                                    }
-                                }
-                            });
-                        }
                         drop_visible=true;
+
                     }else {
                         drop_visible=false;
                         dropdown.removeAllViews();
@@ -207,12 +132,12 @@ public class Home extends NavigationDrawer {
 
     private void getMenus(){
         sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
-        int rid, uid;
-        uid = sharedPreferences.getInt("uid", -1);
-        rid = sharedPreferences.getInt("rid", -1);
+        String rid, uid;
+        uid = sharedPreferences.getString("uid", null);
+        rid = sharedPreferences.getString("rid", null);
         user=uid;
         Log.v("uid",uid+" ");
-        try {if(uid>0){
+        try {if(uid!=null){
             menusshared = new Restaurant(getBaseContext(),rid).getMenus();}else menusshared=null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -257,7 +182,7 @@ public class Home extends NavigationDrawer {
             } catch (NullPointerException e){
                 Log.e("immagine non caricata"," ");
             }
-            int rid =menus.get(position).getRid();
+            String rid =menus.get(position).getRid();
             holder.card.setOnClickListener(new onCardClick(position,rid,menu.getMid()));
         }
 
@@ -269,10 +194,10 @@ public class Home extends NavigationDrawer {
 
     public class onCardClick implements View.OnClickListener{
         private int position;
-        private int rid;
+        private String rid;
         private int mid;
 
-        public onCardClick(int position,int rid, int mid){
+        public onCardClick(int position, String rid, int mid){
             this.position=position;
             this.rid=rid;
             this.mid=mid;

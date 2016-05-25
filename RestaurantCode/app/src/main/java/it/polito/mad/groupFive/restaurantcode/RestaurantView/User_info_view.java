@@ -23,7 +23,7 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
-            restaurant=new Restaurant(getBaseContext(),getIntent().getExtras().getInt("rid"));
+            restaurant=new Restaurant(getBaseContext(),getIntent().getExtras().getString("rid"));
             mid=getIntent().getExtras().getInt("mid");
             restaurant.getData();
         } catch (RestaurantException e) {

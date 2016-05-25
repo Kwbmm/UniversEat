@@ -32,13 +32,13 @@ public class Menu_details extends NavigationDrawer {
     private Restaurant restaurant;
     private it.polito.mad.groupFive.restaurantcode.datastructures.Menu menu;
     int mid;
-    int rid;
+    String rid;
     SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mid=getIntent().getExtras().getInt("mid");
-        rid=getIntent().getExtras().getInt("rid");
+        rid=getIntent().getExtras().getString("rid");
         Log.e("RID E MID",""+rid+" "+mid);
         try {
             restaurant=new Restaurant(getBaseContext(),rid);

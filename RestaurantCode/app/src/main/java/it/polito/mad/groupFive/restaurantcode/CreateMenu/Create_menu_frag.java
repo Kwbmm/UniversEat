@@ -1,4 +1,4 @@
-package it.polito.mad.groupFive.restaurantcode.Login;
+package it.polito.mad.groupFive.restaurantcode.CreateMenu;
 
 import android.Manifest;
 import android.app.Activity;
@@ -24,30 +24,43 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.NumberPicker;
+import android.widget.Spinner;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 import it.polito.mad.groupFive.restaurantcode.R;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
-import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
-import it.polito.mad.groupFive.restaurantcode.datastructures.User;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.libs.RealPathUtil;
 
+
 /**
- * Created by Giovanni on 27/04/16.
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link Create_menu_frag.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link Create_menu_frag#newInstance} factory method to
+ * create an instance of this fragment.
  */
-public class Createlog_frag1 extends Fragment{
+public class Create_menu_frag extends Fragment {
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -56,39 +69,49 @@ public class Createlog_frag1 extends Fragment{
     private static final int CAPTURE_IMAGE = 1;
     private static final int SELECT_PICTURE = 2;
 
-    private View v=null;
-
-    private OnFragmentInteractionListener mListener;
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    private Uri userPicUri = null;
-    private User user=null;
-    private Bitmap img;
-    private ImageView userPicView = null;
-    private EditText txtname;
-    private EditText txtsurname;
-    private EditText nickname;
-    private EditText txtmail;
-    private EditText txtpassword;
-    private EditText txtrepeat;
-    private boolean owner;
-    private boolean isImageSet=false;
+    private Uri menuPicUri = null;
 
-    public Createlog_frag1(){
-        //void constructor
+    private OnFragmentInteractionListener mListener;
+
+    private ImageView menuPicView = null;
+
+    private Menu menu= null;
+    private Restaurant restaurant= null;
+    private EditText txtname;
+    private EditText txtdesc;
+    private int type=1;
+    private int value;
+    private String spin ;
+    private NumberPicker numberPicker;
+
+    private View v=null;
+
+    public Create_menu_frag() {
+        // Required empty public constructor
     }
 
-    public static Createlog_frag1 newInstance(String param1, String param2) {
-        Createlog_frag1 fragment = new Createlog_frag1();
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment Create_menu_frag.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static Create_menu_frag newInstance(String param1, String param2) {
+        Create_menu_frag fragment = new Create_menu_frag();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,24 +120,59 @@ public class Createlog_frag1 extends Fragment{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        spin=getString(R.string.create_menu_frag_fixed);
 
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final String METHOD_NAME = this.getClass().getName() + " - onCreateView";
-        owner =this.getArguments().getBoolean("owner");
+        final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
         // Inflate the layout for this fragment
-        v = inflater.inflate(R.layout.fragment_createlog_1, container, false);
-        txtname = (EditText) v.findViewById(R.id.editText_UserName);
-        txtmail = (EditText) v.findViewById(R.id.editText_Mail);
-        nickname = (EditText) v.findViewById(R.id.editText_Nickname);
-        txtsurname = (EditText) v.findViewById(R.id.editText_surname);
-        txtpassword = (EditText) v.findViewById(R.id.editText_Password);
-        txtrepeat = (EditText) v.findViewById(R.id.editText_Password_repeat);
+        v = inflater.inflate(R.layout.fragment_create_menu, container, false);
+        txtname = (EditText) v.findViewById(R.id.cmed_1_1);
+        txtdesc = (EditText) v.findViewById(R.id.cmed_1_2);
+        final Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(),
+                R.array.spinner_menu, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        numberPicker = (NumberPicker) v.findViewById(R.id.numberPicker);
+        numberPicker.setEnabled(false);
 
-        this.userPicView = (ImageView) v.findViewById(R.id.imageView_UserImage);
-        this.userPicView.setOnClickListener(new View.OnClickListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                spin = parent.getItemAtPosition(position).toString();
+                String s = getString(R.string.create_menu_frag_multiple_choice);
+                if(spin.equals(s)) {
+                    numberPicker.setEnabled(true);
+                    numberPicker.setMinValue(1);
+                    numberPicker.setMaxValue(6);
+                    numberPicker.setWrapSelectorWheel(true);
+                    type=2;
+
+                }
+                else {
+                    numberPicker.setEnabled(false);
+                    type=1;
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0)
+            { }
+        });
+
+        ImageView restaurantImg = (ImageView) v.findViewById(R.id.cmiw_1_1);
+        restaurantImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isStoragePermissionGranted()){
@@ -130,26 +188,33 @@ public class Createlog_frag1 extends Fragment{
             }
         });
 
-
-        Button btnNext = (Button) v.findViewById(R.id.Button_Next);
+        Button btnNext = (Button) v.findViewById(R.id.next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(METHOD_NAME,"Press Next: OK");
+
                 Activity a = getActivity();
                 if(a instanceof OnFragmentInteractionListener) {
-                    if(setUserData()){
-                        OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
-                        obs.onChangeFrag(user,img);
-                    }
-                    else {
-                        Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
-                                .show();
-                    }
-                }}});
+                    setMenuData();
+/*
+                    FrameLayout mlay= (FrameLayout) v.findViewById(R.id.frame);
+                    mlay.inflate(v.getContext(), R.layout.activity_create_menu, mlay);
+                    Create_menu_frag2 fragment= new Create_menu_frag2();
+                    getFragmentManager().beginTransaction().replace(R.id.acm_1,fragment).addToBackStack(null).commit();
+*/
+                    OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
+                    obs.onChangeFrag(menu);
+                }
 
+
+                //TODO passare type, immagine, recuperare restaurant id, creare oggetto menu, lanciare nuova activity
+            }
+        });
         return v;
-
     }
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -167,60 +232,19 @@ public class Createlog_frag1 extends Fragment{
         mListener = null;
     }
 
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
     public interface OnFragmentInteractionListener {
-        void onChangeFrag(User u, Bitmap image);
-    }
-
-
-    public boolean setUserData() {
-        final String METHOD_NAME = this.getClass().getName()+" - setUserData";
-        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
-        String uid = sp.getString("uid",null);
-        user = new User(owner);
-
-            if(txtname.getText().toString().trim().equals("") || txtname.getText() == null){
-                Log.w(METHOD_NAME,"TextView Name is either empty or null");
-                return false;
-            }
-            user.setName(txtname.getText().toString());
-
-            if(txtsurname.getText().toString().trim().equals("") || txtsurname.getText() == null){
-                Log.w(METHOD_NAME,"TextView Surname is either empty or null");
-                return false;
-            }
-            user.setSurname(txtsurname.getText().toString());
-
-            if(txtmail.getText().toString().trim().equals("") || txtmail.getText() == null){
-                Log.w(METHOD_NAME,"TextView Email is either empty or null");
-                return false;
-            }
-            user.setEmail(txtmail.getText().toString());
-
-            if(nickname.getText().toString().trim().equals("") || nickname.getText() == null){
-                Log.w(METHOD_NAME, "TextView Username is either empty or null");
-                return false;
-            }
-            user.setUserName(nickname.getText().toString());
-
-            if(!isImageSet){
-                Log.w(METHOD_NAME,"ImageView Profile Picture is not set");
-                return false;
-            }
-            //this.img=userPicView.getDrawingCache();
-           // user.setImageFromDrawable(userPicView.getDrawable());
-
-            if(txtpassword.getText().toString().trim().equals("") || txtpassword.getText() == null){
-                Log.w(METHOD_NAME, "TextView Password is either empty or null");
-                return false;
-            }
-            if(!txtpassword.getText().toString().equals(txtrepeat.getText().toString())){
-                Toast.makeText(getContext(),getResources().getString(R.string.toastRegisterPasswordFail),Toast.LENGTH_LONG)
-                        .show();
-                return false;
-            }
-            user.setPassword(txtpassword.getText().toString());
-            return true;
-
+        // TODO: Update argument type and name
+        void onChangeFrag(Menu menu);
     }
 
     private void pickImage(){
@@ -245,8 +269,8 @@ public class Createlog_frag1 extends Fragment{
                             Log.e(METHOD_NAME, ioe.getMessage());
                         }
                         if (photo != null) {
-                            userPicUri = Uri.fromFile(photo);
-                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, userPicUri);
+                            menuPicUri = Uri.fromFile(photo);
+                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, menuPicUri);
                             startActivityForResult(cameraIntent, CAPTURE_IMAGE);
                         }
                     }
@@ -307,27 +331,55 @@ public class Createlog_frag1 extends Fragment{
                 storageDir      /* directory */
         );
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         final String METHOD_NAME = this.getClass().getName()+" - onActivityResult";
         super.onActivityResult(requestCode, resultCode, data);
-        int imageWidth = 400;
-        int imageHeight = 400;
+        int imageWidth = 600;
+        int imageHeight = 600;
         if(resultCode == getActivity().RESULT_OK && requestCode == SELECT_PICTURE){
-            this.userPicUri = data.getData();
+            this.menuPicView = (ImageView) getActivity().findViewById(R.id.cmiw_1_1);
+            this.menuPicUri = data.getData();
             try{
-                img=new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap();
-                this.userPicView.setImageBitmap(img);
-                this.isImageSet = true;
+                this.menuPicView.setImageBitmap(new Picture(this.menuPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
             } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
         if(resultCode == getActivity().RESULT_OK && requestCode == CAPTURE_IMAGE){
+            this.menuPicView = (ImageView) getActivity().findViewById(R.id.cmiw_1_1);
             try{
-                img=new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap();
-                this.userPicView.setImageBitmap(img);
-                this.isImageSet = true;
-            } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
+                this.menuPicView.setImageBitmap(new Picture(this.menuPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
+            } catch(IOException ioe){Log.e(METHOD_NAME,ioe.getMessage());}
         }
+    }
+
+    private void setMenuData() {
+        final String METHOD_NAME = this.getClass().getName()+" - setMenuData";
+        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), Create_menu.MODE_PRIVATE);
+        String rid = sp.getString("rid",null);
+        int uid = sp.getInt("uid",-1);
+
+        try {
+            restaurant = new Restaurant(getContext(),rid);
+            restaurant.getData();
+            menu=new Menu(restaurant);
+            menu.setName(txtname.getText().toString());
+            menu.setDescription(txtdesc.getText().toString());
+            if(numberPicker.isEnabled()){
+            value =numberPicker.getValue();}
+            else { value=1;
+            }
+            menu.setChoiceAmount(value);
+            if (!menu.setType(type))
+                throw new MenuException("Error number of type");
+
+
+            ImageView menuImg = (ImageView) v.findViewById(R.id.cmiw_1_1);
+            // menu.setImage64FromDrawable(menuImg.getDrawable());
+        } catch (RestaurantException e) {
+            e.printStackTrace();
+        }  catch (MenuException e) {
+            e.printStackTrace();
+        }
+
     }
 }
