@@ -2,6 +2,7 @@ package it.polito.mad.groupFive.restaurantcode.CreateRestaurant;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,7 +16,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -46,8 +50,8 @@ public class CreateRestaurant_2 extends Fragment {
     private TextView city;
     private TextView ZIPCode;
     private TextView state;
-
     private Restaurant restaurant=null;
+    int PLACE_PICKER_REQUEST = 1;
 
     public CreateRestaurant_2() {
         // Required empty public constructor
@@ -95,13 +99,14 @@ public class CreateRestaurant_2 extends Fragment {
         mapPickerText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int PLACE_PICKER_REQUEST = 17;
-                PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
                 try {
-                    startActivityForResult(intentBuilder.build(getActivity()),PLACE_PICKER_REQUEST);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
+                    PlacePicker.IntentBuilder intentBuilder =
+                            new PlacePicker.IntentBuilder();
+                    Intent intent = intentBuilder.build(getActivity());
+                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
+
+                } catch (GooglePlayServicesRepairableException
+                        | GooglePlayServicesNotAvailableException e) {
                     e.printStackTrace();
                 }
             }
@@ -185,6 +190,16 @@ public class CreateRestaurant_2 extends Fragment {
         } catch (RestaurantException e) {
             Log.e(METHOD_NAME, e.getMessage());
             return false;
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                Place place = PlacePicker.getPlace(getContext(),data);
+                String toastMsg = String.format("Place: %s", place.getName());
+                Toast.makeText(getActivity(), toastMsg, Toast.LENGTH_LONG).show();
+            }
         }
     }
 

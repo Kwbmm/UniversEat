@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
 
 
@@ -22,36 +25,31 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDQhAjHBN1S0mnw5LYvJJR0-vFwJ1pdG7g"/>
-
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyDQhAjHBN1S0mnw5LYvJJR0-vFwJ1pdG7g"/>
         <activity
             android:name=".Home"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            >
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".SearchResult" />
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".NavigationDrawer"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Restaurant_management"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop" />
         <activity
             android:name=".CreateRestaurant.CreateRestaurant"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".Menu_details"
             android:screenOrientation="portrait" />
@@ -70,8 +68,7 @@
             android:name=".Order_management"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop" />
         <activity
             android:name=".CreateMenu.Create_menu"
             android:screenOrientation="portrait" />
@@ -80,13 +77,11 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".Login.CreateLogin"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop" />
         <activity android:name=".SearchResult">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />

@@ -42,7 +42,6 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
     }
     restaurantData data;
     Restaurant restaurant;
-    GoogleMap myMap;
     MapView mapView;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -118,6 +117,8 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
         rest_rev_det.setText("Based on "+restaurant.getReviews().size()+" Reviews");
         TextView restname= (TextView) v.findViewById(R.id.restaurant_name);
         restname.setText(restaurant.getName());
+        TextView restdescr = (TextView) v.findViewById(R.id.restaurant_description);
+        restdescr.setText(restaurant.getDescription());
         TextView restaddr=(TextView) v.findViewById(R.id.restaurant_address);
         restaddr.setText(restaurant.getAddress()+", "+restaurant.getCity()+" "+restaurant.getZIPCode());
         TextView resttel=(TextView)v.findViewById(R.id.restaurant_tel);

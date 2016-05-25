@@ -145,7 +145,7 @@ public class Restaurant_management extends NavigationDrawer {
         ImageView rmimw = (ImageView) findViewById(R.id.restaurant_image);
         ImageButton edit =(ImageButton) findViewById(R.id.restaurant_edit);
         rname.setText(restaurant.getName());
-        raddress.setText(restaurant.getAddress());
+        raddress.setText(restaurant.getCity());
         rbar.setRating(restaurant.getRating());
         edit.setOnClickListener( new onEditclick(1));
 
@@ -172,7 +172,7 @@ public class Restaurant_management extends NavigationDrawer {
         RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
         ImageView rmimw = (ImageView) findViewById(R.id.restaurant_image);
         rname.setText(restaurant.getName());
-        raddress.setText(restaurant.getAddress());
+        raddress.setText(restaurant.getCity());
         rbar.setRating(restaurant.getRating());
         rmimw.setImageBitmap(restaurant.getImageBitmap());
 

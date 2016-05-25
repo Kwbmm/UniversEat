@@ -19,7 +19,10 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:src="@mipmap/ic_launcher"
-            android:id="@+id/restaurant_image"/>
+            android:id="@+id/restaurant_image"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="15dp" />
 
         <TextView
             android:id="@+id/restaurant_name"
@@ -28,7 +31,8 @@
             android:text="@string/restaurantView_textViewRestaurantName"
             android:textSize="25dp"
             android:layout_toRightOf="@id/restaurant_image"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginTop="22dp" />
 
 
 
@@ -50,35 +54,6 @@
             android:textSize="18dp"
             android:layout_toRightOf="@id/restaurant_image"
             android:text="@string/restaurantView_textViewRestaurantAddress"/>
-        <ImageView
-            android:id="@+id/restaurant_icon1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/restaurant_icon1"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/restaurant_icon2"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/restaurant_icon2"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/restaurant_icon3"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/restaurant_icon3"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/restaurant_icon4"/>
-
 
 
     </RelativeLayout>
