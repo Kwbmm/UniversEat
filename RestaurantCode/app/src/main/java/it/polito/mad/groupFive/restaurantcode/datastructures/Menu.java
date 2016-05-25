@@ -40,6 +40,11 @@ public class Menu {
         this.rid = rid;
         this.mid = mid;
     }
+    public Menu(String mid) throws MenuException {
+        if(mid == null)
+            throw new MenuException("Menu ID cannot be null");
+        this.mid = mid;
+    }
 
     /**
      * Creates a Map of this Object, ready to be put as value inside Firebase DB.
@@ -246,6 +251,10 @@ public class Menu {
         return serviceFee;
     }
 
+
+    public void setRid(String rid) {
+        this.rid = rid;
+    }
 
     /**
      * Returns the tags associated to all the Courses in this menu. If no tags are added to the

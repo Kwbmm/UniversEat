@@ -3,6 +3,7 @@ package it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -107,7 +113,10 @@ public class Create_simple_menu2 extends Fragment {
 
                         Course newDish;
                 try {
-                    newDish=new Course(data.getRest());
+                    FirebaseDatabase db=FirebaseDatabase.getInstance();
+                    DatabaseReference ref=db.getReference("course");
+                    String cid= ref.push().getKey();
+                    newDish=new Course(data.getMenu().getMid(),cid);
                     data.setNewDish(newDish);
                 } catch (CourseException e) {
                     e.printStackTrace();
@@ -124,7 +133,6 @@ public class Create_simple_menu2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         data=sData.getdata();
-        rest=sData.getdata().getRest();
         menu=sData.getdata().getMenu();
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_create_simple_menu2, container, false);
@@ -148,23 +156,27 @@ public class Create_simple_menu2 extends Fragment {
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-
                     if(price.getText().toString().length()>0) {
                         menu.setPrice(Float.valueOf(price.getText().toString()));
                         menu.setServiceFee(fee.isChecked());
                         menu.setBeverage(drink.isChecked());
-                        rest.saveData();
-                        getActivity().finish();
+                        FirebaseDatabase db= FirebaseDatabase.getInstance();
+                        DatabaseReference ref=db.getReference("menu");
+                        ref.child(menu.getMid()).setValue(menu.toMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                getActivity().finish();
+
+                            }
+                        });
+
                     }
                     else
                         Toast.makeText(getContext(),getResources().getString(R.string.toast_empty_price), Toast.LENGTH_LONG)
                                 .show();
 
 
-                } catch (RestaurantException e) {
-                    e.printStackTrace();
-                }
+
             }
         });
 

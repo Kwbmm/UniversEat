@@ -233,7 +233,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
 
                     }
                     if (position == 3) {
-                        Intent intent = new Intent(view.getContext(), Restaurant_management.class);
+                        Intent intent = new Intent(view.getContext(), RestaurantManagement.class);
                         startActivity(intent);
                     }
                     if (position == 2) {

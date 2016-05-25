@@ -148,15 +148,11 @@ public class Create_simple_menu1 extends Fragment {
                             data.getMenu().setDescription(description.getText().toString());
 
                             if (!sData.getdata().isEdit()) {
-                                data.getMenu().setImageFromDrawable(menuPicView.getDrawable());
+                                //data.getMenu().setImageFromDrawable(menuPicView.getDrawable());
                             } else {
-                                data.getMenu().setImageFromDrawable(restaurantImg.getDrawable());
+                               // data.getMenu().setImageFromDrawable(restaurantImg.getDrawable());
                             }
-                            try {
-                                data.getRest().saveData();
-                            } catch (RestaurantException e) {
-                                e.printStackTrace();
-                            }
+
                             Create_simple_menu2 csm2 = new Create_simple_menu2();
                             getFragmentManager().beginTransaction().replace(R.id.fragment_holder, csm2).commit();
                         }
@@ -183,7 +179,7 @@ public class Create_simple_menu1 extends Fragment {
 
     public void fetchData(){
         if(sData.getdata().isEdit()){
-            restaurantImg.setImageBitmap(sData.getdata().getMenu().getImageBitmap());
+            //restaurantImg.setImageBitmap(sData.getdata().getMenu().getImageBitmap());
             description.setText(sData.getdata().getMenu().getDescription());
             name.setText(sData.getdata().getMenu().getName());
         }

@@ -50,6 +50,13 @@ public class Restaurant {
         this.rid = rid;
     }
 
+    public Restaurant(String rid) throws RestaurantException {
+        if(rid == null)
+            throw new RestaurantException("Restaurant canno be null");
+        this.rid = rid;
+
+    }
+
     /**
      * Creates a Map of this Object, ready to be put as value inside Firebase DB.
      *

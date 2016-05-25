@@ -3,6 +3,7 @@ package it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,11 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -132,21 +138,28 @@ public class Add_simple_dish extends Fragment{
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
+
                     newDish.setName(name.getText().toString());
                     newDish.setVegan(vegan.isChecked());
                     newDish.setGlutenFree(glutenFree.isChecked());
                     newDish.setVegetarian(vegetarian.isChecked());
                     newDish.setSpicy(hot.isChecked());
-                    ArrayList<Course> alc=data.getMenu().getCourses();
-                    alc.add(newDish);
-                    data.getMenu().setCourses(alc);
-                    data.getRest().saveData();
-                    Log.v("back","back");
-                    getFragmentManager().popBackStack();
-                }  catch (RestaurantException e) {
-                    e.printStackTrace();
-                }
+
+                    FirebaseDatabase db=FirebaseDatabase.getInstance();
+                    DatabaseReference ref=db.getReference("course");
+                    ref.child(newDish.getCid()).setValue(newDish.toMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            getFragmentManager().popBackStack();
+                        }
+                    });
+
+                    //ArrayList<Course> alc=data.getMenu().getCourses();
+                    //alc.add(newDish);
+
+
+
+
 
 
             }

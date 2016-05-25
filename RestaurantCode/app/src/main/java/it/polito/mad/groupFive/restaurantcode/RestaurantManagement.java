@@ -290,7 +290,6 @@ public class RestaurantManagement extends NavigationDrawer {
         public void onClick(DialogInterface dialog, int which) {
             switch (which){
                 case 0:{
-                    //TODO:edit intent
                     Intent edit_menu=new Intent(getBaseContext(),CreateRestaurant.class);
                     edit_menu.putExtra("rid",restaurant.getRid());
                     startActivityForResult(edit_menu,3);
@@ -298,6 +297,7 @@ public class RestaurantManagement extends NavigationDrawer {
                 }
                 case 1:{
                     SharedPreferences.Editor editor=sharedPreferences.edit();
+                    //TOdo delete from server
                     editor.remove("rid");
                     editor.commit();
                     v.setVisibility(View.INVISIBLE);
