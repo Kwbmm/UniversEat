@@ -60,6 +60,12 @@ public class Menu {
         output.put("beverage",this.beverage);
         output.put("serviceFee",this.serviceFee);
 
+        HashMap<String,Boolean> tagMap = new HashMap<>();
+        for(String tag : this.getTags()){
+            tagMap.put(tag,true);
+        }
+        output.put("tags",tagMap);
+
         return output;
     }
 
