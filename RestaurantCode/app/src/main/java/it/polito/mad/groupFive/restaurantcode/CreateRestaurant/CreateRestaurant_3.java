@@ -1,9 +1,11 @@
 package it.polito.mad.groupFive.restaurantcode.CreateRestaurant;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.ArrayMap;
@@ -20,6 +22,8 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -47,6 +51,8 @@ public class CreateRestaurant_3 extends Fragment {
     private onFragInteractionListener mListener;
 
     private String rid,uid;
+    private int hourStart=-1, hourEnd=-1;
+    private int minuteStart=-1, minuteEnd=-1;
 
     private View parentView=null;
     private Restaurant restaurant = null;
@@ -104,9 +110,6 @@ public class CreateRestaurant_3 extends Fragment {
         weekDays[5] = getResources().getString(R.string.saturday);
         weekDays[6] = getResources().getString(R.string.sunday);
         this.weekdayToRL_IDs = new ArrayMap<>();
-        if (getR.editmode()){
-            restaurant=getR.getRest();
-        }
 
         LinearLayout ll = (LinearLayout) this.parentView.findViewById(R.id.FL_timetableLunch);
         int count=0;
@@ -117,13 +120,26 @@ public class CreateRestaurant_3 extends Fragment {
             cb.setText(weekday);
 
             cb.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onClick(View v) {
                     if(((CheckBox)v).isChecked()){
                         timetableItem.findViewById(R.id.from).setVisibility(View.VISIBLE);
                         timetableItem.findViewById(R.id.textClockFrom).setVisibility(View.VISIBLE);
+                        if(hourStart != -1 && minuteStart != -1){
+                            Button btnFrom = (Button) timetableItem.findViewById(R.id.textClockFrom);
+                            btnFrom.setText(String.format(Locale.getDefault(),"%02d",hourStart)+
+                                    ":" +
+                                    String.format(Locale.getDefault(),"%02d",minuteStart));
+                        }
                         timetableItem.findViewById(R.id.to).setVisibility(View.VISIBLE);
                         timetableItem.findViewById(R.id.textClockTo).setVisibility(View.VISIBLE);
+                        if(hourEnd != -1 && minuteEnd != -1){
+                            Button btnTo = (Button) timetableItem.findViewById(R.id.textClockTo);
+                            btnTo.setText(String.format(Locale.getDefault(),"%02d",hourEnd)+
+                                    ":" +
+                                    String.format(Locale.getDefault(),"%02d",minuteEnd));
+                        }
                     }
                     else{
                         timetableItem.findViewById(R.id.from).setVisibility(View.INVISIBLE);
@@ -134,11 +150,12 @@ public class CreateRestaurant_3 extends Fragment {
                 }
             });
 
-            weekdayToRL_IDs.put(weekday,Restaurant.randInt());
+            weekdayToRL_IDs.put(weekday,this.randInt());
             //Set the clock popup for both buttons (to and from)
             final Button btnFrom = (Button) timetableItem.findViewById(R.id.textClockFrom);
 
             btnFrom.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onClick(View v) {
                     int startHour = 10;
@@ -147,6 +164,8 @@ public class CreateRestaurant_3 extends Fragment {
                             new TimePickerDialog.OnTimeSetListener() {
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                    hourStart = hourOfDay;
+                                    minuteStart = minute;
                                     btnFrom.setText(
                                             String.format(Locale.getDefault(),"%02d",hourOfDay)+
                                                     ":" +
@@ -172,6 +191,8 @@ public class CreateRestaurant_3 extends Fragment {
                             new TimePickerDialog.OnTimeSetListener() {
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                    hourEnd = hourOfDay;
+                                    minuteEnd = minute;
                                     btnTo.setText(
                                             String.format(Locale.getDefault(),"%02d",hourOfDay)+
                                                     ":" +
@@ -186,23 +207,6 @@ public class CreateRestaurant_3 extends Fragment {
                     ctpd.show();
                 }
             });
-
-            if (getR.editmode()){
-                try {
-                    if(!restaurant.getTimetableLunch().isEmpty()){
-                        if (restaurant.getTimetableLunch().containsKey(weekDays[count])){
-                            cb.setChecked(true);
-                            timetableItem.findViewById(R.id.from).setVisibility(View.VISIBLE);
-                            timetableItem.findViewById(R.id.textClockFrom).setVisibility(View.VISIBLE);
-                            timetableItem.findViewById(R.id.to).setVisibility(View.VISIBLE);
-                            timetableItem.findViewById(R.id.textClockTo).setVisibility(View.VISIBLE);
-                            btnFrom.setText(restaurant.getTimetableLunch().get(weekDays[count]).get("start"));
-                            btnTo.setText(restaurant.getTimetableLunch().get(weekDays[count]).get("end"));
-                            Log.v("count",count+"");}}
-                } catch (RestaurantException e) {
-                    Log.e(METHOD_NAME,e.getMessage());
-                }
-            }
 
             timetableItem.findViewById(R.id.RL_timeTableItem).setId(weekdayToRL_IDs.get(weekday));
             ll.addView(timetableItem);
@@ -232,21 +236,40 @@ public class CreateRestaurant_3 extends Fragment {
     private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
 
-        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
-
-        if(!getR.editmode()){
-            restaurant = new Restaurant();
-        }
-        for (String weekDay : this.weekDays) {
-            CheckBox cb = (CheckBox) this.parentView.findViewById(this.weekdayToRL_IDs.get(weekDay)).findViewById(R.id.checkBox);
-            if (cb.isChecked()) {
-                Button bFrom = (Button) this.parentView.findViewById(this.weekdayToRL_IDs.get(weekDay)).findViewById(R.id.textClockFrom);
-                Button bTo = (Button) this.parentView.findViewById(this.weekdayToRL_IDs.get(weekDay)).findViewById(R.id.textClockTo);
-                restaurant.setDurationLunch(weekDay, bFrom.getText().toString(), bTo.getText().toString());
+        try {
+            this.restaurant = new Restaurant(this.uid,this.rid);
+            for (String weekDay : this.weekDays) {
+                CheckBox cb = (CheckBox) this.parentView.findViewById(this.weekdayToRL_IDs.get(weekDay)).findViewById(R.id.checkBox);
+                if (cb.isChecked()) {
+                    Button bFrom = (Button) this.parentView.findViewById(this.weekdayToRL_IDs.get(weekDay)).findViewById(R.id.textClockFrom);
+                    Button bTo = (Button) this.parentView.findViewById(this.weekdayToRL_IDs.get(weekDay)).findViewById(R.id.textClockTo);
+                    restaurant.setDurationLunch(weekDay, bFrom.getText().toString(), bTo.getText().toString());
+                }
             }
+            return true;
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+            return false;
         }
-        return true;
     }
+
+    /**
+     * Generate a random integer in the range [1, Integer.MAX_VALUE]
+     *
+     * @return In integer in the range [1, Integer.MAX_VALUE]
+     */
+    private int randInt() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
+        else{
+            Random rand= new Random();
+            int result;
+            if((result=rand.nextInt(Integer.MAX_VALUE)) == 0)
+                return this.randInt();
+            return result;
+        }
+    }
+
 
     @Override
     public void onAttach(Context context) {

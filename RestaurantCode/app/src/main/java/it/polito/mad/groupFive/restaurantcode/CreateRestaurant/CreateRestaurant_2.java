@@ -42,7 +42,7 @@ public class CreateRestaurant_2 extends Fragment {
     private TextView ZIPCode;
     private TextView state;
 
-    private Restaurant restaurant=null;
+    private Restaurant restaurant;
     private String rid; //The id of the restaurant, passed from the activity
     private String uid; //The id of the owner of the restaurant, passed from the activity
 
@@ -93,9 +93,9 @@ public class CreateRestaurant_2 extends Fragment {
         city = (TextView) parentView.findViewById(R.id.editText_City);
         ZIPCode = (TextView) parentView.findViewById(R.id.editText_ZIPCode);
         state = (TextView) parentView.findViewById(R.id.editText_State);
-        if(getR.editmode()){
-            fetchData();
-        }
+        //if(getR.editmode()){
+        //    fetchData();
+        //}
         Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,39 +129,44 @@ public class CreateRestaurant_2 extends Fragment {
     private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
 
-        if(!getR.editmode())restaurant=new Restaurant();
+//        if(!getR.editmode())restaurant=new Restaurant();
+        try {
+            restaurant = new Restaurant(this.uid,this.rid);
+            if(address.getText().toString().trim().equals("") || address.getText() == null){
+                Log.w(METHOD_NAME,"TextView Address is either empty or null");
+                return false;
+            }
+            restaurant.setAddress(address.getText().toString());
 
-        if(address.getText().toString().trim().equals("") || address.getText() == null){
-            Log.w(METHOD_NAME,"TextView Address is either empty or null");
+
+            if(city.getText().toString().trim().equals("") || city.getText() == null){
+                Log.w(METHOD_NAME,"TextView City is either empty or null");
+                return false;
+            }
+            restaurant.setCity(city.getText().toString());
+
+
+            if(ZIPCode.getText().toString().trim().equals("") || ZIPCode.getText() == null){
+                Log.w(METHOD_NAME,"TextView ZIPCode is either empty or null");
+                return false;
+            }
+            restaurant.setZip(ZIPCode.getText().toString());
+
+
+            if(state.getText().toString().trim().equals("") || state.getText() == null){
+                Log.w(METHOD_NAME,"TextView State is either empty or null");
+                return false;
+            }
+            restaurant.setState(state.getText().toString());
+
+            //TODO Manage GMaps to set this data
+            //restaurant.setXcoord();
+            //restaurant.setYcoord();
+            return true;
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME,e.getMessage());
             return false;
         }
-        restaurant.setAddress(address.getText().toString());
-
-
-        if(city.getText().toString().trim().equals("") || city.getText() == null){
-            Log.w(METHOD_NAME,"TextView City is either empty or null");
-            return false;
-        }
-        restaurant.setCity(city.getText().toString());
-
-
-        if(ZIPCode.getText().toString().trim().equals("") || ZIPCode.getText() == null){
-            Log.w(METHOD_NAME,"TextView ZIPCode is either empty or null");
-            return false;
-        }
-        restaurant.setZip(ZIPCode.getText().toString());
-
-
-        if(state.getText().toString().trim().equals("") || state.getText() == null){
-            Log.w(METHOD_NAME,"TextView State is either empty or null");
-            return false;
-        }
-        restaurant.setState(state.getText().toString());
-
-        //TODO Manage GMaps to set this data
-        //restaurant.setXcoord();
-        //restaurant.setYcoord();
-        return true;
     }
 
     @Override

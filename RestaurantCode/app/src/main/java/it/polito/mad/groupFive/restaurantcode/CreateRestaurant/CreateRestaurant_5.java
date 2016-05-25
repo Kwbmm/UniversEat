@@ -117,24 +117,26 @@ public class CreateRestaurant_5 extends Fragment {
     private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
 
-        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
-        restaurant=new Restaurant();
-        restaurant.setRid(this.rid);
-        restaurant.setUid(this.uid);
-        //Get all the tickets
-        ArrayList<CheckBox> ticketCBs = new ArrayList<>();
-        //TODO wanna add more tickets??
-        ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_1));
-        ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_2));
-        ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_3));
-        ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_4));
-        Map<String,Boolean> ticketMap = new HashMap<>();
-        for(CheckBox cb : ticketCBs){
-            if(cb.isChecked()) ticketMap.put(cb.getText().toString(),true);
+        try {
+            restaurant=new Restaurant(this.uid,this.rid);
+            //Get all the tickets
+            ArrayList<CheckBox> ticketCBs = new ArrayList<>();
+            //TODO wanna add more tickets??
+            ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_1));
+            ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_2));
+            ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_3));
+            ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_4));
+            Map<String,Boolean> ticketMap = new HashMap<>();
+            for(CheckBox cb : ticketCBs){
+                if(cb.isChecked()) ticketMap.put(cb.getText().toString(),true);
+            }
+            restaurant.setTickets(ticketMap);
+            return true;
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+            return false;
         }
-        restaurant.setTickets(ticketMap);
-        return true;
     }
 
     @Override

@@ -70,6 +70,7 @@ public class CreateRestaurant_1 extends Fragment {
     private boolean isImageSet=false;
 
     private Restaurant restaurant = null;
+    private String uid,rid;
     /*view items*/
     private ImageView restaurantImg;
     private TextView description;
@@ -116,7 +117,8 @@ public class CreateRestaurant_1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
-
+        this.rid = getArguments().getString("rid");
+        this.uid = getArguments().getString("uid");
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_1, container, false);
 
         restaurantImg = (ImageView) this.parentView.findViewById(R.id.imageView_RestaurantImage);
@@ -153,7 +155,6 @@ public class CreateRestaurant_1 extends Fragment {
                     if(setRestaurantData()){
                         onFragInteractionListener obs = (onFragInteractionListener) a;
                         obs.onChangeFrag1(restaurant);
-
                     }
                     else{
                         Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
@@ -184,50 +185,48 @@ public class CreateRestaurant_1 extends Fragment {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
-        if(getR.editmode()){
-            isImageSet=true;
-        }else {
-            restaurant=new Restaurant();
-        }
+        try {
+            restaurant=new Restaurant(this.uid,this.rid);
+            if(name.getText().toString().trim().equals("") || name.getText() == null){
+                Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
+                return false;
+            }
+            restaurant.setName(name.getText().toString());
 
-        if(name.getText().toString().trim().equals("") || name.getText() == null){
-            Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
+
+            if(description.getText().toString().trim().equals("") || description.getText() == null){
+                Log.w(METHOD_NAME,"TextView Description is either empty or null");
+                return false;
+            }
+            restaurant.setDescription(description.getText().toString());
+
+
+            if(!isImageSet){
+                Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
+                return false;
+            }
+
+            if(!getR.editmode()){
+                restaurant.setImageLocalPath(this.restaurantPicUri.toString());
+            }
+            restaurant.setImageLocalPath(this.restaurantPicUri.toString());
+
+            if(telephone.getText().toString().trim().equals("") || telephone.getText() == null){
+                Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
+                return false;
+            }
+            restaurant.setTelephone(telephone.getText().toString());
+
+            if(website.getText().toString().trim().equals("") || website.getText() == null){
+                Log.w(METHOD_NAME,"TextView Website is either empty or null");
+                return false;
+            }
+            restaurant.setWebsite(website.getText().toString());
+            return true;
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME,e.getMessage());
             return false;
         }
-        restaurant.setName(name.getText().toString());
-
-
-        if(description.getText().toString().trim().equals("") || description.getText() == null){
-            Log.w(METHOD_NAME,"TextView Description is either empty or null");
-            return false;
-        }
-        restaurant.setDescription(description.getText().toString());
-
-
-        if(!isImageSet){
-            Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
-            return false;
-        }
-        Log.d(METHOD_NAME,this.restaurantPicUri.toString());
-        if(!getR.editmode()){
-            restaurant.setImageLocal(this.restaurantPicUri.toString());
-        }
-        restaurant.setImageLocal(this.restaurantPicUri.toString());
-
-
-        if(telephone.getText().toString().trim().equals("") || telephone.getText() == null){
-            Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
-            return false;
-        }
-        restaurant.setTelephone(telephone.getText().toString());
-
-        if(website.getText().toString().trim().equals("") || website.getText() == null){
-            Log.w(METHOD_NAME,"TextView Website is either empty or null");
-            return false;
-        }
-        restaurant.setWebsite(website.getText().toString());
-
-        return true;
     }
 
     private void pickImage(){
@@ -261,9 +260,6 @@ public class CreateRestaurant_1 extends Fragment {
                 } else if (choices[which].equals(getResources().getString(R.string.pick_gallery))) {
                     //Choose from gallery
                     Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    //Intent intent = new Intent();
-                    //intent.setType(IMAGE_TYPE);
-                    //intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.intentChooser_select_image)), SELECT_PICTURE);
                 }
             }
@@ -336,7 +332,6 @@ public class CreateRestaurant_1 extends Fragment {
             try{
                 this.restaurantImg.setImageBitmap(new Picture(this.restaurantPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
                 this.isImageSet = true;
-
             } catch(IOException ioe){Log.e(METHOD_NAME,ioe.getMessage());}
         }
     }

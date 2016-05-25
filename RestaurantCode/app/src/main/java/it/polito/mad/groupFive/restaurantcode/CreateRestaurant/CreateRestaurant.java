@@ -44,40 +44,39 @@ public class CreateRestaurant
     private boolean edit=false;
     private DatabaseReference dbRoot;
     private StorageReference storageRoot;
+    FirebaseDatabase db;
+    String rid,uid;
+
 
 
     @Override
     public void onChangeFrag1(Restaurant r) {
         final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag1";
-        SharedPreferences sp = this.getSharedPreferences(getString(R.string.user_pref),CreateRestaurant.MODE_PRIVATE);
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        this.dbRoot = db.getReference().child("restaurant");
-        String rid = this.dbRoot.push().getKey();
-        String uid = sp.getString("uid",null);
-        this.dbRoot = this.dbRoot.child(rid);
 
-        this.restaurant = new Restaurant();
-        this.restaurant.setRid(rid);
-        this.restaurant.setUid(uid);
-        this.restaurant.setName(r.getName());
-        this.restaurant.setDescription(r.getDescription());
-        this.restaurant.setImageLocal(r.getImageLocal());
-
-        this.restaurant.setTelephone(r.getTelephone());
-        this.restaurant.setWebsite(r.getWebsite());
+        try {
+            this.restaurant = new Restaurant(this.uid,this.rid);
+            this.restaurant
+                    .setName(r.getName())
+                    .setDescription(r.getDescription())
+                    .setImageLocalPath(r.getImageLocalPath())
+                    .setTelephone(r.getTelephone())
+                    .setWebsite(r.getWebsite());
 
 
-        CreateRestaurant_2 cr2 = new CreateRestaurant_2();
-        //Pass to CreateRestaurant_2 fragment the id of the restaurant
-        Bundle b = new Bundle();
-        b.putString("rid",this.restaurant.getRid());
-        b.putString("uid",this.restaurant.getUid());
-        cr2.setArguments(b);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_CreateRestaurant,cr2)
-                .addToBackStack(null)
-                .commit();
+            CreateRestaurant_2 cr2 = new CreateRestaurant_2();
+            //Pass to CreateRestaurant_2 fragment the id of the restaurant
+            Bundle b = new Bundle();
+            b.putString("rid",this.restaurant.getRid());
+            b.putString("uid",this.restaurant.getUid());
+            cr2.setArguments(b);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_CreateRestaurant,cr2)
+                    .addToBackStack(null)
+                    .commit();
+        } catch (RestaurantException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        }
     }
 
     @Override
@@ -86,12 +85,12 @@ public class CreateRestaurant
         this.restaurant.setAddress(r.getAddress());
 
         //TODO set XCoord and YCoord in the future when we will know about GMaps
-        //this.restaurant.setXcoord(r.getXcoord());
-        //this.restaurant.setYcoord(r.getYcoord());
-        this.restaurant.setZip(r.getZip());
-
-        this.restaurant.setState(r.getState());
-        this.restaurant.setCity(r.getCity());
+        this.restaurant
+//                .setXCoord(r.getXCoord())
+//                .setYCoord(r.getYCoord())
+                .setZip(r.getZip())
+                .setState(r.getState())
+                .setCity(r.getCity());
 
         CreateRestaurant_3 cr3 = new CreateRestaurant_3();
         //Pass to CreateRestaurant_3 fragment the id of the restaurant
@@ -110,11 +109,7 @@ public class CreateRestaurant
     public void onChangeFrag3(Restaurant r) {
         final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag3";
 
-        try {
-            this.restaurant.setTimetableLunch(r.getTimetableLunch());
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-        }
+        this.restaurant.setTimetableLunch(r.getTimetableLunch());
 
         CreateRestaurant_4 cr4 = new CreateRestaurant_4();
         //Pass to CreateRestaurant_4 fragment the id of the restaurant
@@ -133,11 +128,7 @@ public class CreateRestaurant
     public void onChangeFrag4(Restaurant r) {
         final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag4";
 
-        try {
-            this.restaurant.setTimetableDinner(r.getTimetableDinner());
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-        }
+        this.restaurant.setTimetableDinner(r.getTimetableDinner());
 
         CreateRestaurant_5 cr5 = new CreateRestaurant_5();
         //Pass to CreateRestaurant_5 fragment the id of the restaurant
@@ -161,11 +152,11 @@ public class CreateRestaurant
         FirebaseStorage storage = FirebaseStorage.getInstance();
         this.storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/"+this.restaurant.getRid());
         try {
-            InputStream is = getContentResolver().openInputStream(Uri.parse(this.restaurant.getImageLocal()));
+            InputStream is = getContentResolver().openInputStream(Uri.parse(this.restaurant.getImageLocalPath()));
             this.storageRoot.putStream(is).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.i(METHOD_NAME+" - onSuccess","Image upload successful");
+                    Log.i(METHOD_NAME,"Image upload successful");
                     SharedPreferences sharedPreferences=getSharedPreferences(getString(R.string.user_pref),CreateRestaurant.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("rid",restaurant.getRid());
@@ -184,19 +175,27 @@ public class CreateRestaurant
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_create_restaurant, mlay);
+        SharedPreferences sp = this.getSharedPreferences(getString(R.string.user_pref),CreateRestaurant.MODE_PRIVATE);
+        this.db = FirebaseDatabase.getInstance();
+        this.dbRoot = this.db.getReference().child("restaurant");
+        this.rid = this.dbRoot.push().getKey();
+        this.uid = sp.getString("uid",null);
+        this.dbRoot = this.dbRoot.child(rid);
 
         //Fetch data -> edit mode
-        String rid;
-        if((rid=this.getIntent().getExtras().getString("rid",null))!= null){
-            this.restaurant=new Restaurant();
-            edit=true;
-        }
+//        if((rid=this.getIntent().getExtras().getString("rid",null))!= null){
+//            this.restaurant=new Restaurant();
+//            edit=true;
+//        }
         if(findViewById(R.id.fragment_CreateRestaurant) != null){
             //For more info see: http://developer.android.com/training/basics/fragments/fragment-ui.html
             if(savedInstanceState != null)
                 return;
             CreateRestaurant_1 cr1 = new CreateRestaurant_1();
-
+            Bundle b = new Bundle();
+            b.putString("rid",this.rid);
+            b.putString("uid",this.uid);
+            cr1.setArguments(b);
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_CreateRestaurant,cr1)
