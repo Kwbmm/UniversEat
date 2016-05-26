@@ -44,6 +44,9 @@ public class Review {
         this.rid = rid;
         this.revID = revID;
     }
+    public Review(){
+
+    }
 
     /**
      * Creates a Map of this Object, ready to be put as value inside Firebase DB.

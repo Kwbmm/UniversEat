@@ -89,11 +89,8 @@ public class Restaurant_info_user extends Fragment {
 
     public void getRestaurantData(View v){
         restaurant=data.getRestaurant();
-        try {
-            restaurant.getData();
-        } catch (RestaurantException e) {
-            e.printStackTrace();
-        }
+
+
         TextView rest_rev_det =(TextView)v.findViewById(R.id.restaurant_rev_details);
         rest_rev_det.setText("Based on "+restaurant.getReviews().size()+" Reviews");
         TextView restname= (TextView) v.findViewById(R.id.restaurant_name);
@@ -105,11 +102,11 @@ public class Restaurant_info_user extends Fragment {
         RatingBar restrating= (RatingBar) v.findViewById(R.id.restaurant_rating);
         restrating.setRating(restaurant.getRating());
         ImageView restImage=(ImageView)v.findViewById(R.id.restaurant_image);
-        restImage.setImageBitmap(restaurant.getImageBitmap());
+        //restImage.setImageBitmap(restaurant.getImageBitmap());
 
         LinearLayout ll = (LinearLayout) v.findViewById(R.id.restaurant_time_t);
         int count=0;
-        for(String weekday : getResources().getStringArray(R.array.week)){
+        /*for(String weekday : getResources().getStringArray(R.array.week)){
             LayoutInflater li = LayoutInflater.from(v.getContext());
             View timetableItem = li.inflate(R.layout.timetable_view,null);
             TextView dow= (TextView) timetableItem.findViewById(R.id.dow);
@@ -129,7 +126,7 @@ public class Restaurant_info_user extends Fragment {
             }
             ll.addView(timetableItem);
             count++;
-        }
+        }*/
 
 
     }

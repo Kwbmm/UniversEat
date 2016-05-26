@@ -94,7 +94,7 @@ public class Restaurant_management extends NavigationDrawer {
         if ((rid=sharedPreferences.getString("rid",null))!=null){
             uid=sharedPreferences.getString("uid",null);
             try {
-                restaurant=new Restaurant(getBaseContext(),rid);
+                restaurant=new Restaurant(rid);
             } catch (RestaurantException e) {
                 e.printStackTrace();
             }
@@ -134,11 +134,9 @@ public class Restaurant_management extends NavigationDrawer {
     private boolean getResaurantdata(){
         final String METHOD_NAME = this.getClass().getName()+" - readFiles";
 
-        try {
-            this.restaurant.getData();
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-        }
+
+            //this.restaurant.getData();
+
         TextView rname= (TextView)findViewById(R.id.restaurant_name);
         TextView raddress= (TextView)findViewById(R.id.restaurant_address);
         RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
@@ -150,7 +148,7 @@ public class Restaurant_management extends NavigationDrawer {
         edit.setOnClickListener( new onEditclick(1));
 
         try {
-            rmimw.setImageBitmap(restaurant.getImageBitmap());
+          //  rmimw.setImageBitmap(restaurant.getImageBitmap());
         } catch (NullPointerException e){
             Log.e("immagine non caricata"," ");
         }
@@ -162,11 +160,9 @@ public class Restaurant_management extends NavigationDrawer {
     }
     private void update()  {
 
-        try {
-            this.restaurant.getData();
-        } catch (RestaurantException e) {
-            e.printStackTrace();
-        }
+
+           // this.restaurant.getData();
+
         TextView rname= (TextView)findViewById(R.id.restaurant_name);
         TextView raddress= (TextView)findViewById(R.id.restaurant_address);
         RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
@@ -174,7 +170,7 @@ public class Restaurant_management extends NavigationDrawer {
         rname.setText(restaurant.getName());
         raddress.setText(restaurant.getAddress());
         rbar.setRating(restaurant.getRating());
-        rmimw.setImageBitmap(restaurant.getImageBitmap());
+       // rmimw.setImageBitmap(restaurant.getImageBitmap());
 
     }
 

@@ -23,6 +23,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -102,6 +105,47 @@ public class Create_simple_menu2 extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        data=sData.getdata();
+        menu=sData.getdata().getMenu();
+        FirebaseDatabase db=FirebaseDatabase.getInstance();
+        DatabaseReference ref=db.getReference("course");
+        ref.orderByChild("mid").equalTo(sData.getdata().getMenu().getMid()).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Course course= new Course();
+                course.setName(dataSnapshot.child("name").getValue().toString());
+                course.setGlutenFree((boolean)dataSnapshot.child("glutenFree").getValue());
+                course.setVegan((boolean)dataSnapshot.child("vegan").getValue());
+                course.setCid(dataSnapshot.child("cid").getValue().toString());
+                course.setSpicy((boolean)dataSnapshot.child("spicy").getValue());
+                course.setVegetarian((boolean)dataSnapshot.child("vegetarian").getValue());
+
+
+                menu.getCourses().add(course);
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override
@@ -132,8 +176,7 @@ public class Create_simple_menu2 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        data=sData.getdata();
-        menu=sData.getdata().getMenu();
+
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_create_simple_menu2, container, false);
         setUpData(v);
@@ -291,6 +334,9 @@ public class Create_simple_menu2 extends Fragment {
             }
             @Override
             public void onClick(View v) {
+                FirebaseDatabase db =FirebaseDatabase.getInstance();
+                DatabaseReference ref=db.getReference("course");
+                ref.child(alc.get(position).getCid()).removeValue();
                 alc.remove(position);
                 adp.notifyItemRemoved(position);
                 adp.notifyDataSetChanged();

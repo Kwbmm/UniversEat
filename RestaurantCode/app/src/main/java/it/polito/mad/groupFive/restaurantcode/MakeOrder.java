@@ -27,7 +27,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
 public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Listener, DatePickerFragment.Listener{
 
     private String rid;
-    private int mid;
+    private String mid;
     private String uid;
     private Restaurant restaurant;
     private String name;
@@ -41,14 +41,13 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.make_order, mlay);
         rid=getIntent().getExtras().getString("rid");
-        mid=getIntent().getExtras().getInt("mid");
+        mid=getIntent().getExtras().getString("mid");
         uid=getIntent().getExtras().getString("uid");
         Log.e("RID MID UID",rid+" "+mid+" "+uid);
         date=Calendar.getInstance();
         months=getResources().getStringArray(R.array.months);
         try {
-            restaurant=new Restaurant(getBaseContext(),rid);
-            restaurant.getData();
+            restaurant=new Restaurant(rid);
         } catch (RestaurantException e) {
             e.printStackTrace();
         }
@@ -75,8 +74,8 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
             else if(date.before(Calendar.getInstance())){
                 Toast.makeText(getBaseContext(), getString(R.string.MakeOrder_past), Toast.LENGTH_SHORT).show();
             }
-            else try {
-                    Order order = new Order(restaurant);
+            else {
+                    Order order = new Order();
                     order.setRid(rid);
                     order.setMid(mid);
                     order.setDate(date.getTime());
@@ -84,13 +83,9 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
                     order.setNotes(notes);
                     order.setUid(uid);
                     restaurant.getOrders().add(order);
-                    restaurant.saveData();
                     Toast.makeText(getBaseContext(), getString(R.string.MakeOrder_successful), Toast.LENGTH_SHORT).show();
                     finish();
-                } catch (OrderException e) {
-                    e.printStackTrace();
-                } catch (RestaurantException e) {
-                    e.printStackTrace();
+
                 }
         }
         return super.onOptionsItemSelected(item);

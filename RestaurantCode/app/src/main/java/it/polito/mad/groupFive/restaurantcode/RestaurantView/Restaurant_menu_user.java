@@ -182,10 +182,10 @@ public class Restaurant_menu_user extends Fragment {
             Collections.sort(this.menus, new Comparator<Menu>() {
                 @Override
                 public int compare(Menu lhs, Menu rhs) {
-                    if(lhs.getMid()==mid){
+                    if(lhs.getMid().toString().equals(mid)){
                         return -3;
                     }
-                    if (rhs.getMid()==mid){
+                    if (rhs.getMid().toString().equals(mid)){
                         return +3;
                     }
 
@@ -207,14 +207,14 @@ public class Restaurant_menu_user extends Fragment {
         @Override
         public void onBindViewHolder(MenuViewHolder holder, int position) {
             Menu menu =menus.get(position);
-            if(menu.getMid()==mid){
+            if(menu.getMid().toString().equals(mid)){
                 holder.card.setCardBackgroundColor(Color.YELLOW);
             }
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
             try {
-                holder.menu_image.setImageBitmap(menu.getImageBitmap());
+                //holder.menu_image.setImageBitmap(menu.getImageBitmap());
             } catch (NullPointerException e){
                 Log.e("immagine non caricata"," ");
             }
@@ -232,11 +232,7 @@ public class Restaurant_menu_user extends Fragment {
         public void remove(int position){
             menus.remove(position);
             rest.setMenus(menus);
-            try {
-                rest.saveData();
-            } catch (RestaurantException e) {
-                e.printStackTrace();
-            }
+             //save
             menusshared=menus;
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, menus.size());

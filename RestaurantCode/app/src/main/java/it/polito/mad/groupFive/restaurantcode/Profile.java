@@ -134,8 +134,7 @@ public class Profile extends NavigationDrawer {
             convertView = LayoutInflater.from(context).inflate(R.layout.restaurant_view, null);
             String restaurantID = restaurantIDs.get(position);
             try {
-                restaurant = new Restaurant(getBaseContext(),restaurantID);
-                restaurant.getData();
+                restaurant = new Restaurant(restaurantID);
             } catch (RestaurantException e) {
                 e.printStackTrace();
             }
@@ -148,7 +147,7 @@ public class Profile extends NavigationDrawer {
             address.setText(restaurant.getAddress());
             rbar.setRating(restaurant.getRating());
             try {
-                img.setImageBitmap(restaurant.getImageBitmap());
+              //  img.setImageBitmap(restaurant.getImageBitmap());
             } catch (NullPointerException e){
                 Log.e("immagine non caricata"," ");
             }

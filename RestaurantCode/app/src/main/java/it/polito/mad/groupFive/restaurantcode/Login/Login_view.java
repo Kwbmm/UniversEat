@@ -20,7 +20,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import it.polito.mad.groupFive.restaurantcode.Profile;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
@@ -119,30 +125,63 @@ public class Login_view extends Fragment {
 
                             FirebaseUser firebaseUser=auth.getCurrentUser();
                                 User customer=new User(firebaseUser.getUid());
+                            FirebaseDatabase db;
+                            db = FirebaseDatabase.getInstance();
+                            DatabaseReference Myref = db.getReference("User");
+
+                            //Myref.child("Owner").addValueEventListener(new UserDataListener(this));
+                            Myref.orderByChild("uid").equalTo(firebaseUser.getUid()).addChildEventListener(new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                    own=(Boolean)dataSnapshot.child("manager").getValue();
                                     SharedPreferences.Editor editor=sharedPreferences.edit();
-                                    editor.putBoolean("owner",customer.isManager());
+                                    editor.putBoolean("owner",own);
                                     editor.commit();
-                                own=customer.isManager();
+                                    FirebaseAuth auth=FirebaseAuth.getInstance();
+                                    FirebaseUser firebaseUser=auth.getCurrentUser();
+
+                                    if(!own){
+
+                                        editor=sharedPreferences.edit();
+                                        editor.putBoolean("logged",true);
+                                        editor.putBoolean("owner",false);
+                                        editor.putString("uid",firebaseUser.getUid());
+                                        editor.commit();
+                                        mListener.onFragmentInteraction();
+                                        getFragmentManager().popBackStack();
+                                    }else{
+                                        editor=sharedPreferences.edit();
+                                        editor.putBoolean("logged",true);
+                                        editor.putBoolean("owner",true);
+                                        editor.putString("uid",firebaseUser.getUid());
+                                        editor.commit();
+                                        Log.v("pws",password.getText().toString());
+                                        mListener.onFragmentInteraction();
+                                        getFragmentManager().popBackStack();}
 
 
+                                }
 
-                            if(!own){
+                                @Override
+                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                                editor=sharedPreferences.edit();
-                                editor.putBoolean("logged",true);
-                                editor.putString("uid",firebaseUser.getUid());
-                                editor.commit();
-                                mListener.onFragmentInteraction();
-                                getFragmentManager().popBackStack();
-                            }else{
-                                editor=sharedPreferences.edit();
-                                editor.putBoolean("logged",true);
-                                editor.putString("uid",firebaseUser.getUid());
-                                editor.commit();
-                                Log.v("pws",password.getText().toString());
-                                mListener.onFragmentInteraction();
-                                getFragmentManager().popBackStack();}
+                                }
 
+                                @Override
+                                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                }
+
+                                @Override
+                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
 
 
                         }

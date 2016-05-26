@@ -45,8 +45,7 @@ public class Order_management extends NavigationDrawer {
         String rid=sharedPreferences.getString("rid",null);
         Log.e("RID E UID",""+rid+" "+uid);
         try {
-            restaurant=new Restaurant(this,rid);
-            restaurant.getData();
+            restaurant=new Restaurant(rid);
         } catch (RestaurantException e) {
             Log.e("Exception",e.toString());
         }
@@ -135,11 +134,12 @@ public class Order_management extends NavigationDrawer {
                             if (which==0){
                                 orders.remove(deletecheck);
                                 restaurant.setOrders(orders);
-                                try {
+                                /*try {
                                     restaurant.saveData();
                                 } catch (RestaurantException e) {
                                     e.printStackTrace();
                                 }
+                                */
                                 showOrders();
                             }else{
                                 deletecheck=0;
@@ -150,12 +150,10 @@ public class Order_management extends NavigationDrawer {
                     });
 
                     dialog.show();
-                    try {
-                        restaurant.saveData();
+
+                        //restaurant.saveData();
                         showOrders();
-                    } catch (RestaurantException e) {
-                        e.printStackTrace();
-                    }
+
 
                 }
             });
@@ -171,12 +169,9 @@ public class Order_management extends NavigationDrawer {
             date.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))+" "+months[calendar.get(Calendar.MONTH)]);
             oid.setText("Order ID: "+String.valueOf(order.getOid()));
             String mealID="#"+String.valueOf(order.getMid());
-            try {
                 if(restaurant.getMenuByID(order.getMid())!=null)
                     mealID=restaurant.getMenuByID(order.getMid()).getName();
-            } catch (RestaurantException e) {
-                e.printStackTrace();
-            }
+
             meal.setText("Menu: "+mealID);
             return convertView;
         }

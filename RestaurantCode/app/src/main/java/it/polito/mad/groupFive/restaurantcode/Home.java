@@ -124,8 +124,8 @@ public class Home extends NavigationDrawer {
          */
         if(Intent.ACTION_SEARCH.equals(intent.getAction())){
             CheckBox cb = (CheckBox) findViewById(R.id.checkBox_searchByRestaurant);
-            if(cb != null && cb.isChecked())
-                intent.putExtra(SearchResult.RESTAURANT_SEARCH,true);
+            if(cb != null && cb.isChecked()){}
+               // intent.putExtra(SearchResult.RESTAURANT_SEARCH,true);
         }
         super.startActivity(intent);
     }
@@ -138,7 +138,7 @@ public class Home extends NavigationDrawer {
         user=uid;
         Log.v("uid",uid+" ");
         try {if(uid!=null){
-            menusshared = new Restaurant(getBaseContext(),rid).getMenus();}else menusshared=null;
+            menusshared = new Restaurant(rid).getMenus();}else menusshared=null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -178,12 +178,12 @@ public class Home extends NavigationDrawer {
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
             try {
-                holder.menu_image.setImageBitmap(menu.getImageBitmap());
+               // holder.menu_image.setImageBitmap(menu.getImageBitmap());
             } catch (NullPointerException e){
                 Log.e("immagine non caricata"," ");
             }
             String rid =menus.get(position).getRid();
-            holder.card.setOnClickListener(new onCardClick(position,rid,menu.getMid()));
+            holder.card.setOnClickListener(new onCardClick(position,rest.getRid(),menu.getMid()));
         }
 
         @Override
@@ -195,9 +195,9 @@ public class Home extends NavigationDrawer {
     public class onCardClick implements View.OnClickListener{
         private int position;
         private String rid;
-        private int mid;
+        private String mid;
 
-        public onCardClick(int position, String rid, int mid){
+        public onCardClick(int position, String rid, String mid){
             this.position=position;
             this.rid=rid;
             this.mid=mid;

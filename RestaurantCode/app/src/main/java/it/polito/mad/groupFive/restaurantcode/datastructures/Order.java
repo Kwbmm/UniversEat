@@ -22,6 +22,22 @@ public class Order {
     private String notes;
     private String name;
 
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setRid(String rid) {
+        this.rid = rid;
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid;
+    }
+
     /**
      * Create a new Order object.
      *
@@ -40,10 +56,14 @@ public class Order {
             throw new OrderException("User ID cannot be null");
         if(oid == null)
             throw new OrderException("Order ID cannot be null");
+
         this.rid = rid;
         this.mid = mid;
         this.uid = uid;
         this.oid = oid;
+    }
+    public Order(){
+
     }
 
     /**

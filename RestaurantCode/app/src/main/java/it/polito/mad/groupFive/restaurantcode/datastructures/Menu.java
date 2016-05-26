@@ -45,6 +45,13 @@ public class Menu {
             throw new MenuException("Menu ID cannot be null");
         this.mid = mid;
     }
+    public Menu(){
+
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid;
+    }
 
     /**
      * Creates a Map of this Object, ready to be put as value inside Firebase DB.
@@ -58,6 +65,7 @@ public class Menu {
         output.put("mid",this.mid);
         output.put("rid",this.rid);
         output.put("name",this.name);
+
         output.put("description",this.description);
         output.put("price",this.price);
         output.put("imageLocalPath",this.imageLocalPath);

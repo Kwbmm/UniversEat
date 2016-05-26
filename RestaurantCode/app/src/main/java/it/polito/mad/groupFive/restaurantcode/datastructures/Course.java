@@ -23,6 +23,14 @@ public class Course {
     private boolean spicy;
     private ArrayList<String> tags = new ArrayList<>();
 
+    public void setCid(String cid) {
+        this.cid = cid;
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid;
+    }
+
     /**
      * Create a new Course object.
      *
@@ -37,6 +45,10 @@ public class Course {
             throw new CourseException("Course ID cannot be null");
         this.mid = mid;
         this.cid = cid;
+
+    }
+    public Course(){
+
     }
 
     /**

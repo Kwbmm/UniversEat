@@ -19,6 +19,12 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,6 +33,8 @@ import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Create_simple_men
 import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Simple_menu_add_tags;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.User;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 
@@ -34,15 +42,17 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
  * Created by MacBookRetina on 12/04/16.
  */
 public class Menu_view_edit extends NavigationDrawer {
-    private ArrayList<Menu> menusshared;
+    private ArrayList<Menu> menus;
     private MenuAdapter adp;
     private Restaurant rest;
     private SharedPreferences sharedPreferences;
     private RecyclerView recyclerView;
+    private String rid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        menus=new ArrayList<>();
         readdata();
 
 
@@ -70,26 +80,29 @@ public class Menu_view_edit extends NavigationDrawer {
 
     public void readdata() {
         sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
-        String rid, uid;
+       String uid;
         uid = sharedPreferences.getString("uid", null);
         rid = sharedPreferences.getString("rid", null);
         try {
+            FirebaseDatabase db;
+            db = FirebaseDatabase.getInstance();
+            DatabaseReference myref = db.getReference("menu");
 
-            rest = new Restaurant(getBaseContext(),rid);
-            rest.getData();
+            //Myref.child("Owner").addValueEventListener(new UserDataListener(this));
+            myref.orderByChild("rid").equalTo(rid).addChildEventListener(new MenuList());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        menusshared = rest.getMenus();
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.menulist, mlay);
-        adp= new MenuAdapter(menusshared);
+        adp= new MenuAdapter();
         recyclerView=(RecyclerView)findViewById(R.id.my_recycler_view);
         recyclerView.setAdapter(adp);
         LinearLayoutManager llm=new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
+
 
 
     }
@@ -143,7 +156,7 @@ public class Menu_view_edit extends NavigationDrawer {
         return true;
     }
 
-    public static class MenuViewHoder extends RecyclerView.ViewHolder {
+    public class MenuEditViewHolder extends RecyclerView.ViewHolder {
         protected TextView menu_name;
         protected TextView menu_desctiprion;
         protected TextView menu_price;
@@ -151,7 +164,7 @@ public class Menu_view_edit extends NavigationDrawer {
         protected CardView card;
         protected ImageView menu_image;
 
-        public MenuViewHoder(View itemView) {
+        public MenuEditViewHolder(View itemView) {
             super(itemView);
             this.menu_name =(TextView)itemView.findViewById(R.id.menu_name);
             this.menu_desctiprion=(TextView)itemView.findViewById(R.id.menu_description);
@@ -162,16 +175,14 @@ public class Menu_view_edit extends NavigationDrawer {
         }
     }
 
-    public class MenuAdapter extends RecyclerView.Adapter<MenuViewHoder>{
-        private ArrayList<Menu> menus;
+    public class MenuAdapter extends RecyclerView.Adapter<MenuEditViewHolder>{
 
-        public MenuAdapter(ArrayList<Menu> menus){
-            this.menus=menus;
-            sort();
+        public MenuAdapter(){
+
 
         }
         public void sort(){
-            Collections.sort(this.menus, new Comparator<Menu>() {
+            Collections.sort(menus, new Comparator<Menu>() {
                 @Override
                 public int compare(Menu lhs, Menu rhs) {
 
@@ -179,32 +190,25 @@ public class Menu_view_edit extends NavigationDrawer {
                 }});
         }
         public void update(){
-            try {
-                rest.getData();
-            } catch (RestaurantException e) {
-                e.printStackTrace();
-            }
-            menusshared=rest.getMenus();
-            menus=menusshared;
-            sort();
+            //sort();
             adp.notifyDataSetChanged();
         }
 
         @Override
-        public MenuViewHoder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MenuEditViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View menu_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_view_edit,null);
-            return new MenuViewHoder(menu_view);
+            return new MenuEditViewHolder(menu_view);
         }
 
         @Override
-        public void onBindViewHolder(MenuViewHoder holder,int position) {
+        public void onBindViewHolder(MenuEditViewHolder holder,int position) {
             Menu menu =menus.get(position);
             holder.menu_desctiprion.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
-            holder.edit.setOnClickListener(new onEditclick(position));
+            holder.edit.setOnClickListener(new onEditclick(menu));
             try {
-                holder.menu_image.setImageBitmap(menu.getImageBitmap());
+               // holder.menu_image.setImageBitmap(menu.getImageBitmap());
             } catch (NullPointerException e){
                 Log.e("immagine non caricata"," ");
             }
@@ -216,22 +220,23 @@ public class Menu_view_edit extends NavigationDrawer {
             return menus.size();
         }
 
-        public void remove(int position){
+        public void remove(Menu position){
+           String removeMid= position.getMid();
+            Log.v("remove",removeMid);
+            FirebaseDatabase db= FirebaseDatabase.getInstance();
+            DatabaseReference ref=db.getReference("menu");
+            ref.child(removeMid).removeValue();
+            int pos=menus.indexOf(position);
             menus.remove(position);
-            rest.setMenus(menus);
-            try {
-                rest.saveData();
-            } catch (RestaurantException e) {
-                e.printStackTrace();
-            }
-            menusshared=menus;
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, menus.size());
+
+            notifyItemRemoved(pos);
+
+
         }
 
         public class onEditclick implements View.OnClickListener{
-            private int position;
-            public onEditclick(int position){
+            private Menu position;
+            public onEditclick(Menu position){
                 this.position=position;
             }
 
@@ -247,9 +252,9 @@ public class Menu_view_edit extends NavigationDrawer {
         }
 
         public class onPositionClickDialog implements DialogInterface.OnClickListener{
-            private int position;
+            private Menu position;
 
-            public onPositionClickDialog(int position){
+            public onPositionClickDialog(Menu position){
                 this.position=position;
             }
 
@@ -259,7 +264,7 @@ public class Menu_view_edit extends NavigationDrawer {
                     case 0:{
                         //TODO:edit intent
                         Intent edit_menu=new Intent(getBaseContext(),Create_simple_menu.class);
-                        edit_menu.putExtra("mid",menusshared.get(position).getMid());
+                        edit_menu.putExtra("mid",position.getMid());
                         startActivityForResult(edit_menu,3);
                         break;
                     }
@@ -276,6 +281,85 @@ public class Menu_view_edit extends NavigationDrawer {
             }
         }
     }
+public class MenuList implements ChildEventListener{
 
+    public  MenuList (){
+
+    }
+
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                Menu  menu = new Menu();
+        Log.v("rid",(String)dataSnapshot.child("name").getValue());
+                menu.setRid((String)dataSnapshot.child("rid").getValue());
+        menu.setName((String) dataSnapshot.child("name").getValue());
+                Log.v("name",menu.getName());
+        menu.setMid(dataSnapshot.child("mid").getValue().toString());
+        menu.setBeverage((Boolean) dataSnapshot.child("beverage").getValue());
+        menu.setDescription((String) dataSnapshot.child("description").getValue());
+        menu.setPrice(Float.parseFloat(dataSnapshot.child("price").getValue().toString()));
+        menu.setServiceFee((Boolean) dataSnapshot.child("serviceFee").getValue());
+        menu.setType(Integer.parseInt(dataSnapshot.child("type").getValue().toString()));
+        menu.setImageLocal((String) dataSnapshot.child("imageLocalPath").getValue());
+        menus.add(menu);
+                adp.notifyDataSetChanged();
+
+
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+       String mid=dataSnapshot.child("mid").getValue().toString();
+        FirebaseDatabase db=FirebaseDatabase.getInstance();
+        DatabaseReference reference=db.getReference("course");
+        reference.orderByChild("mid").equalTo(mid).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String cid=dataSnapshot.child("cid").getValue().toString();
+                FirebaseDatabase db=FirebaseDatabase.getInstance();
+                DatabaseReference ref=db.getReference("course");
+                ref.child(cid).removeValue();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
+}
 }
 

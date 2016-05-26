@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -83,7 +84,40 @@ public class RestaurantManagement extends NavigationDrawer {
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         v=mlay.inflate(this, R.layout.restaurant_view_edit, mlay);
-        showRestaurant();
+        FirebaseDatabase db=FirebaseDatabase.getInstance();
+        DatabaseReference myref=db.getReference("restaurant");
+        uid=sharedPreferences.getString("uid",null);
+        myref.orderByChild("uid").equalTo(uid).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                SharedPreferences.Editor editor=sharedPreferences.edit();
+                editor.putString("rid",(String)dataSnapshot.child("rid").getValue());
+                editor.commit();
+                showRestaurant();
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 
@@ -122,6 +156,7 @@ public class RestaurantManagement extends NavigationDrawer {
             LinearLayout rview= (LinearLayout) findViewById(R.id.fl_redit);
             v=rview.inflate(this,R.layout.resturant_view_edit_fragment,rview);
             ImageButton modify = (ImageButton) findViewById(R.id.restaurant_edit);
+            modify.setOnClickListener(new onEditclick(1));
             visible=true;
             RelativeLayout rl = (RelativeLayout) findViewById(R.id.restaurant_view_layout);
             if (rl != null) {
@@ -300,6 +335,70 @@ public class RestaurantManagement extends NavigationDrawer {
                     //TOdo delete from server
                     editor.remove("rid");
                     editor.commit();
+                    final FirebaseDatabase db=FirebaseDatabase.getInstance();
+                    DatabaseReference ref=db.getReference("restaurant");
+                    ref.child(rid).removeValue();
+
+                    ref=db.getReference("menu");
+                    ref.orderByChild("rid").equalTo(rid).addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            String mid=dataSnapshot.child("mid").getValue().toString();
+                           DatabaseReference ref=db.getReference("menu");
+                            ref.child(mid).removeValue();
+                            ref=db.getReference("course");
+                            ref.orderByChild("mid").equalTo(mid).addChildEventListener(new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                    String cid=dataSnapshot.child("cid").getValue().toString();
+                                    DatabaseReference ref=db.getReference("course");
+                                    ref.child(cid).removeValue();
+
+                                }
+
+                                @Override
+                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                }
+
+                                @Override
+                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
                     v.setVisibility(View.INVISIBLE);
                     plus.setVisible(true);
                     break;
