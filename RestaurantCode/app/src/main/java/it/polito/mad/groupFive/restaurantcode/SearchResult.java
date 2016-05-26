@@ -29,11 +29,8 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
-import it.polito.mad.groupFive.restaurantcode.datastructures.DataManager;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.DataManagerException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
 import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
 
@@ -66,7 +63,7 @@ public class SearchResult extends NavigationDrawer {
             }
             else{
                 this.menus = new ArrayList<>();
-//                showMenus();
+                showMenus();
             }
         }
     }
@@ -228,13 +225,19 @@ public class SearchResult extends NavigationDrawer {
         final String METHOD_NAME = this.getClass().getName()+" - showRestaurants";
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         this.dbRoot = db.getReference().child("restaurant");
-        Log.d(METHOD_NAME,"Query is: "+this.query);
-        Query restaurantQuery = this.dbRoot.orderByChild("name").equalTo("zia lalla");
+        Query restaurantQuery = this.dbRoot.orderByChild("tickets");
         restaurantQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d(METHOD_NAME,"String is: "+s);
                 Log.d(METHOD_NAME,"DS count: "+dataSnapshot.getChildrenCount());
+                for (DataSnapshot ds : dataSnapshot.getChildren()){
+                    Log.d(METHOD_NAME,"Key: "+ds.getKey()+" Value: "+ds.getValue());
+                }
+                if(restaurants.size() == 0)
+                    Toast.makeText(getApplicationContext(),
+                            getString(R.string.SearchResult_toastNoRestaurants),
+                            Toast.LENGTH_LONG)
+                            .show();
             }
 
             @Override
@@ -257,34 +260,45 @@ public class SearchResult extends NavigationDrawer {
 
             }
         });
-        if(this.restaurants.size() == 0)
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.SearchResult_toastNoRestaurants),
-                    Toast.LENGTH_LONG)
-                    .show();
-        else{
-            this.rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
-            if (rv != null){
-                rv.setAdapter(new RestaurantAdapter(this.restaurants));
-                LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-                llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-                rv.setLayoutManager(llmVertical);
-            }
-        }
     }
-/*
+
     private void showMenus(){
         final String METHOD_NAME = this.getClass().getName()+" - showMenus";
-        this.dbRoot = db.getReference().child("menu");
-        this.dbRoot.addListenerForSingleValueEvent();
-        if(dm.getMenus().size() == 0)
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        this.dbRoot = db.getReference().child("tags").child(this.query).child("menu");
+        this.dbRoot.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    FirebaseDatabase menuDB = FirebaseDatabase.getInstance();
+                    DatabaseReference dr = menuDB.getReference("menu/"+ds.getKey());
+                    dr.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Log.d("onDChange2",(String)dataSnapshot.child("mid").getValue());
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        if(this.menus.size() == 0)
             Toast.makeText(getApplicationContext(),
                     getString(R.string.SearchResult_toastNoMenus),
                     Toast.LENGTH_LONG)
                     .show();
         else{
             this.menus = new ArrayList<>();
-            for(Menu m : this.dm.getMenus()){
+            for(Menu m : this.menus){
                 for(String s : m.getTags()){
                     if(s.equalsIgnoreCase(this.query)){
                         this.menus.add(m);
@@ -304,7 +318,7 @@ public class SearchResult extends NavigationDrawer {
             }
         }
     }
-*/
+
     public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder>{
         private ArrayList<Restaurant> restaurants;
         private ArrayList<Restaurant> queryResult;
