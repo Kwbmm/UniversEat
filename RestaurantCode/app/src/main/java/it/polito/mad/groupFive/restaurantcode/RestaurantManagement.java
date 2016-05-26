@@ -180,7 +180,7 @@ public class RestaurantManagement extends NavigationDrawer {
         if(item.getItemId()==R.id.add_ab){
             Log.v("intent","newRest");
             Intent intent=new Intent(getApplicationContext(),CreateRestaurant.class);
-            intent.putExtra("rid",-1);
+            intent.putExtra("rid","-1");
             item.setVisible(false);
             startActivityForResult(intent,CREATE_RESTAURANT);
 
@@ -215,11 +215,11 @@ public class RestaurantManagement extends NavigationDrawer {
                         .setTelephone((String)dataSnapshot.child("telephone").getValue())
                         .setZip((String)dataSnapshot.child("zip").getValue())
                         .setImageLocalPath((String)dataSnapshot.child("imageLocalPath").getValue());
-                float rating = ((Long)dataSnapshot.child("rating").getValue()).floatValue();
+                float rating = Float.parseFloat(dataSnapshot.child("rating").getValue().toString());
                 restaurant.setRating(rating);
-                double xcoord = ((Long)dataSnapshot.child("xcoord").getValue()).doubleValue();
+                double xcoord = Double.parseDouble(dataSnapshot.child("xcoord").getValue().toString());
                 restaurant.setXCoord(xcoord);
-                double ycoord = ((Long)dataSnapshot.child("ycoord").getValue()).doubleValue();
+                double ycoord = Double.parseDouble(dataSnapshot.child("ycoord").getValue().toString());
                 restaurant.setYCoord(ycoord);
 
                 TextView rname= (TextView)findViewById(R.id.restaurant_name);

@@ -100,8 +100,9 @@ public class CreateRestaurant_3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_3, container, false);
-        this.rid = getArguments().getString("rid");
-        this.uid = getArguments().getString("uid");
+        this.rid = getR.getRest().getRid();
+        this.uid = getR.getRest().getUid();
+        this.restaurant=getR.getRest();
         weekDays[0] = getResources().getString(R.string.monday);
         weekDays[1] = getResources().getString(R.string.tuesday);
         weekDays[2] = getResources().getString(R.string.wednesday);
@@ -181,6 +182,7 @@ public class CreateRestaurant_3 extends Fragment {
                 }
             });
 
+
             final Button btnTo = (Button) timetableItem.findViewById(R.id.textClockTo);
             btnTo.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -207,11 +209,24 @@ public class CreateRestaurant_3 extends Fragment {
                     ctpd.show();
                 }
             });
+            if (getR.editmode()){
+                if(!restaurant.getTimetableLunch().isEmpty()){
+                    if (restaurant.getTimetableLunch().containsKey(weekDays[count])){
+                        cb.setChecked(true);
+                        timetableItem.findViewById(R.id.from).setVisibility(View.VISIBLE);
+                        timetableItem.findViewById(R.id.textClockFrom).setVisibility(View.VISIBLE);
+                        timetableItem.findViewById(R.id.to).setVisibility(View.VISIBLE);
+                        timetableItem.findViewById(R.id.textClockTo).setVisibility(View.VISIBLE);
+                        btnFrom.setText(restaurant.getTimetableLunch().get(weekDays[count]).get("start"));
+                        btnTo.setText(restaurant.getTimetableLunch().get(weekDays[count]).get("end"));
+                    }
+                }
+                count++;
+            }
 
             timetableItem.findViewById(R.id.RL_timeTableItem).setId(weekdayToRL_IDs.get(weekday));
             ll.addView(timetableItem);
 
-            count++;
         }
         Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {

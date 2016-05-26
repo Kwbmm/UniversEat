@@ -90,8 +90,9 @@ public class CreateRestaurant_5 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_5, container, false);
-        this.rid = getArguments().getString("rid");
-        this.uid = getArguments().getString("uid");
+        this.rid = getR.getRest().getRid();
+        this.uid = getR.getRest().getUid();
+        this.restaurant=getR.getRest();
 
         Button btnFinish = (Button) this.parentView.findViewById(R.id.Button_Finish);
         btnFinish.setOnClickListener(new View.OnClickListener() {
@@ -118,8 +119,7 @@ public class CreateRestaurant_5 extends Fragment {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
 
 
-        try {
-            restaurant=new Restaurant(this.uid,this.rid);
+
             //Get all the tickets
             ArrayList<CheckBox> ticketCBs = new ArrayList<>();
             //TODO wanna add more tickets??
@@ -133,10 +133,6 @@ public class CreateRestaurant_5 extends Fragment {
             }
             restaurant.setTickets(ticketMap);
             return true;
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            return false;
-        }
     }
 
     @Override
@@ -144,6 +140,7 @@ public class CreateRestaurant_5 extends Fragment {
         super.onAttach(context);
         if (context instanceof onFragInteractionListener) {
             mListener = (onFragInteractionListener) context;
+            getR=(getRestaurant) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement onFragInteractionListener");

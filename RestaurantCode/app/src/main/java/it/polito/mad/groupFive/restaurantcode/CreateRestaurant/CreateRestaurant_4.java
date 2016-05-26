@@ -100,8 +100,9 @@ public class CreateRestaurant_4 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_4, container, false);
-        this.uid = getArguments().getString("uid");
-        this.rid = getArguments().getString("rid");
+        this.uid = getR.getRest().getUid();
+        this.rid = getR.getRest().getRid();
+        this.restaurant=getR.getRest();
         weekDays[0] = getResources().getString(R.string.monday);
         weekDays[1] = getResources().getString(R.string.tuesday);
         weekDays[2] = getResources().getString(R.string.wednesday);
@@ -110,8 +111,6 @@ public class CreateRestaurant_4 extends Fragment {
         weekDays[5] = getResources().getString(R.string.saturday);
         weekDays[6] = getResources().getString(R.string.sunday);
         this.weekdayToRL_IDs = new ArrayMap<>();
-        this.rid = getArguments().getString("rid");
-        this.uid = getArguments().getString("uid");
         LinearLayout ll = (LinearLayout) this.parentView.findViewById(R.id.FL_timetableDinner);
         int count=0;
         for(String weekday : this.weekDays){
@@ -245,8 +244,7 @@ public class CreateRestaurant_4 extends Fragment {
 
     private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
-        try {
-            this.restaurant = new Restaurant(this.uid,this.rid);
+            this.restaurant = getR.getRest();
             for (String weekDay : this.weekDays) {
                 CheckBox cb = (CheckBox) this.parentView.findViewById(this.weekdayToRL_IDs.get(weekDay)).findViewById(R.id.checkBox);
                 if (cb.isChecked()) {
@@ -256,10 +254,6 @@ public class CreateRestaurant_4 extends Fragment {
                 }
             }
             return true;
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            return false;
-        }
     }
     private int randInt() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
