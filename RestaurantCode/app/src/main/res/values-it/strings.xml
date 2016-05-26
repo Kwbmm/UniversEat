@@ -339,6 +339,14 @@
         <item>Contorno</item>
         <item>Secondo</item>
     </array>
+
+    <string name="title_review">Scrivi poche parole</string>
+    <string name="rating_service">Servizio</string>
+    <string name="rating_place">Posto</string>
+    <string name="rating_food">Cibo</string>
+    <string name="rating_pqr">Qualità/Prezzo</string>
+    <string name="rating_comment">Commenti</string>
+
     <string name="toastRegisterPasswordFail">Le password inserite non coincidono</string>
     <string name="sortTitle">Ordina per</string>
     <string name="frg_create_restaurant_2_editView_AddressHint">Indirizzo del ristorante</string>

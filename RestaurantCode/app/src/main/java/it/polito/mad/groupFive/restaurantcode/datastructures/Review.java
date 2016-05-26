@@ -38,6 +38,10 @@ public class Review {
 
     private ArrayList<String> replies = new ArrayList<>();
     private float rating;
+    private float food;
+    private float place;
+    private float service;
+    private float pricequality;
 
     /**
      * Create an instance of Review: requires, as parameter, its restaurant object and the user
@@ -131,6 +135,7 @@ public class Review {
         this.rating = dummy.getRating();
         this.title=dummy.getTitle();
         this.date=dummy.getDate();
+        this.pricequality=dummy.getPricequality();
     }
 
     /**
@@ -234,4 +239,36 @@ public class Review {
 
     public Date getDate(){return this.date;}
     public void setDate(Date d){this.date=d;}
+
+    public float getFood() {
+        return food;
+    }
+
+    public void setFood(float food) {
+        this.food = food;
+    }
+
+    public float getPlace() {
+        return place;
+    }
+
+    public void setPlace(float place) {
+        this.place = place;
+    }
+
+    public float getService() {
+        return service;
+    }
+
+    public void setService(float service) {
+        this.service = service;
+    }
+
+    public float getPricequality() {
+        return pricequality;
+    }
+
+    public void setPricequality(float pricequality) {
+        this.pricequality = pricequality;
+    }
 }

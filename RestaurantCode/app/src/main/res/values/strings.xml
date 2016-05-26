@@ -363,6 +363,12 @@
     <!--Restaurant_info_user-->
     <string name="closed">Closed</string>
 
+    <string name="title_review">Write few words</string>
+    <string name="rating_service">Service</string>
+    <string name="rating_place">Place</string>
+    <string name="rating_food">Food</string>
+    <string name="rating_pqr">Price/Quality</string>
+    <string name="rating_comment">Comments</string>
 
     <array name="tags">
         <item>Pizza</item>
