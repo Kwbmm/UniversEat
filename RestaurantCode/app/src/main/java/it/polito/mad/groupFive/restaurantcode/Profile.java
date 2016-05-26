@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -73,7 +74,8 @@ public class Profile extends NavigationDrawer {
         super.onCreate(savedInstanceState);
         mlay= (FrameLayout) findViewById(R.id.frame);
         sharedPreferences=this.getSharedPreferences("RestaurantCode.Userdata",this.MODE_PRIVATE);
-        if((uid=sharedPreferences.getString("uid",null))==null) finish();
+        uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if(uid==null) finish();
         restOwner=sharedPreferences.getBoolean("owner",Boolean.FALSE);
             db = FirebaseDatabase.getInstance();
             DatabaseReference Myref = db.getReference("User");
@@ -181,7 +183,7 @@ public class Profile extends NavigationDrawer {
                 try {
                     FirebaseStorage storage=FirebaseStorage.getInstance();
                     StorageReference user_img=storage.getReference("Users");
-                    StorageReference img = user_img.child(user.getUid());
+                    StorageReference img = user_img.child(user.getUid()+".jpg");
 
                     final long ONE_MEGABYTE = 1024 * 1024;
                     img.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
