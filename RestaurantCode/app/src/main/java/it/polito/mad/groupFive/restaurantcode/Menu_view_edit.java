@@ -118,13 +118,13 @@ public class Menu_view_edit extends NavigationDrawer {
                 switch (item.getItemId()) {
                     case R.id.nfpm: {
                         Intent intent = new Intent(getBaseContext(), Create_simple_menu.class);
-                        intent.putExtra("mid",-1);
+                        intent.putExtra("mid","-1");
                         startActivityForResult(intent,1);
                         break;
                     }
                     case R.id.ndm: {
                         Intent intent = new Intent(getBaseContext(), Create_simple_menu.class);
-                        intent.putExtra("mid",-1);
+                        intent.putExtra("mid","-1");
                         startActivityForResult(intent,2);
 
                         break;

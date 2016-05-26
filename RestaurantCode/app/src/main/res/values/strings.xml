@@ -10,14 +10,14 @@
         <item>Register</item>
     </string-array>
     <string-array name="drawer_option_logged_manager">
-        <item>Search</item>
+        <item>Home</item>
         <item>Profile</item>
         <item>Orders</item>
         <item>Manage Restaurant</item>
         <item>Logout</item>
     </string-array>
     <string-array name="drawer_option_logged_user">
-        <item>Search</item>
+        <item>Home</item>
         <item>Profile</item>
         <item>Logout</item>
     </string-array>
@@ -293,7 +293,7 @@
     <string name="fragment_delete_dish_complete">Complete</string>
 
     <!-- fragment_login_view.xml-->
-    <string name="fragment_login_view_Username">Username</string>
+    <string name="fragment_login_view_Username">Email</string>
     <string name="fragment_login_view_Password">Password</string>
     <string name="fragment_login_view_Login">Login</string>
     <string name="fragment_login_view_Register">Register</string>

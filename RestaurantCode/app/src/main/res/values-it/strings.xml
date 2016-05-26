@@ -253,7 +253,7 @@
     <string name="fragment_delete_dish_complete">Completa</string>
 
     <!-- fragment_login_view.xml-->
-    <string name="fragment_login_view_Username">Username</string>
+    <string name="fragment_login_view_Username">Email</string>
     <string name="fragment_login_view_Password">Password</string>
     <string name="fragment_login_view_Login">Login</string>
     <string name="fragment_login_view_Register">Registrati</string>

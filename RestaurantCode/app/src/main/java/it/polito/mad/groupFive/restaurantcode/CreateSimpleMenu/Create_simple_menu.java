@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 
 import it.polito.mad.groupFive.restaurantcode.NavigationDrawer;
@@ -32,16 +33,16 @@ public class Create_simple_menu extends NavigationDrawer implements Create_simpl
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_create_simple_menu, mlay);
-        if (getIntent().getExtras().getInt("mid",-1)!=-1){
+        if (!getIntent().getExtras().getString("mid",null).equals("-1")){
             mid=getIntent().getExtras().getString("mid",null);
            fetchData();
         }else{
-        getData();}
+        getData();
         Create_simple_menu1 csm1=new Create_simple_menu1();
         getSupportFragmentManager().
                 beginTransaction().
                 add(R.id.fragment_holder,csm1).
-                commit();
+                commit();}
 
 
     }
@@ -67,23 +68,45 @@ public class Create_simple_menu extends NavigationDrawer implements Create_simpl
         SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
         String rid=sp.getString("rid",null);
 
-            /*
-            FirebaseDatabase db=FirebaseDatabase.getInstance();
-            DatabaseReference ref=db.getReference("restaurant");
-            rest=new Restaurant(rid);
-            ref.orderByKey().equalTo(rid).addChildEventListener(new fetchRest(rest));
-            */
+        menuData=new MenuData(rid);
+        menuData.setEdit(true);
 
-            menuData=new MenuData(rid);
+
             FirebaseDatabase db=FirebaseDatabase.getInstance();
             DatabaseReference ref=db.getReference("menu");
-        Menu menu= null;
-        try {
-            menu = new Menu(mid);
-        } catch (MenuException e) {
-            e.printStackTrace();
-        }
-        ref.orderByKey().equalTo(mid).addChildEventListener(new menuFetch(menu));
+
+        ref.child(mid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+
+                  Menu  m = new Menu(mid);
+
+                m.setRid(dataSnapshot.child("rid").getValue().toString());
+                m.setName(dataSnapshot.child("name").getValue().toString());
+                m.setServiceFee((boolean)dataSnapshot.child("serviceFee").getValue());
+                m.setType(Integer.parseInt(dataSnapshot.child("type").getValue().toString()));
+                m.setPrice(Float.parseFloat(dataSnapshot.child("price").getValue().toString()));
+                m.setDescription(dataSnapshot.child("description").getValue().toString());
+                m.setBeverage((boolean)dataSnapshot.child("beverage").getValue());
+                    menuData.setMenu(m);
+
+                    Create_simple_menu1 csm1=new Create_simple_menu1();
+                    getSupportFragmentManager().
+                            beginTransaction().
+                            add(R.id.fragment_holder,csm1).
+                            commit();
+                } catch (MenuException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
 
 

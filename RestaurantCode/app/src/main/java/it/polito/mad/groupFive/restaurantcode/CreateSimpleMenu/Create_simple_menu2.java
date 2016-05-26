@@ -122,7 +122,7 @@ public class Create_simple_menu2 extends Fragment {
 
 
                 menu.getCourses().add(course);
-
+                adp.notifyDataSetChanged();
             }
 
             @Override
