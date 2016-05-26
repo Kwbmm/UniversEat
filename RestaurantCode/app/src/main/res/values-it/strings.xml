@@ -190,7 +190,6 @@
     <string name="login1">Spunta qui se sei un RISTORATORE:</string>
     <string name="login_rest">RISTORATORE</string>
 
-    <string name="SearchResult_toastFailLoadDM">Il Data Manager non è riuscito a caricare i file… :(</string>
     <string name="SearchResult_toastNoMenus">Non ci sono menù da mostrare.</string>
     <string name="SearchResult_toastNoRestaurants">Non ci sono ristoranti da mostrare.</string>
 
@@ -353,5 +352,8 @@
     <string name="featureUnavail">Questa funzionalità è ancora in fase di sviluppo</string>
     <string name="filterTitle">Filtra per…</string>
     <string name="Ticket_Restaurant"></string>
+    <string name="SearchResult_toastFailLoadData">Non riusciamo a caricare i dati..</string>
+    <string name="toastRestaurantImageLoadFail">Non siamo riusciti a scaricare l\'immagine dalla rete :(</string>
+    <string name="toastRestaurantLoadDataFail">Non siamo riusciti a scaricare i dati dalla rete :(</string>
 
 </resources>

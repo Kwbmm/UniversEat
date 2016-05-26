@@ -132,7 +132,6 @@ public class Add_simple_dish extends Fragment{
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
                     newDish.setName(name.getText().toString());
                     newDish.setVegan(vegan.isChecked());
                     newDish.setGlutenFree(glutenFree.isChecked());
@@ -141,13 +140,9 @@ public class Add_simple_dish extends Fragment{
                     ArrayList<Course> alc=data.getMenu().getCourses();
                     alc.add(newDish);
                     data.getMenu().setCourses(alc);
-                    data.getRest().saveData();
+//                    data.getRest().saveData();
                     Log.v("back","back");
                     getFragmentManager().popBackStack();
-                }  catch (RestaurantException e) {
-                    e.printStackTrace();
-                }
-
 
             }
         });

@@ -18,6 +18,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,7 +45,7 @@ public class Home extends NavigationDrawer {
     private Restaurant rest;
     private SharedPreferences sharedPreferences;
     private View parent;
-    private int user;
+    private String user;
     private SearchView searchView;
     private LinearLayout dropdown;
     private boolean drop_visible;
@@ -61,7 +63,6 @@ public class Home extends NavigationDrawer {
         getMenus();
         adapterData();
 
-
         /**
          * These lines of code are for setting up the searchView and let it know about the activity
          * used to performed searches (SearchResult.java).
@@ -70,13 +71,13 @@ public class Home extends NavigationDrawer {
          */
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) findViewById(R.id.search_view);
-        dropdown= (LinearLayout) findViewById(R.id.dropdown_option);
-        drop_visible=false;
         if(searchView != null){
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchView.setIconifiedByDefault(false);
         }
 
+        dropdown= (LinearLayout) findViewById(R.id.dropdown_option);
+        drop_visible=false;
         ImageButton option= (ImageButton)findViewById(R.id.opt);
         if(option != null)
             option.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +92,7 @@ public class Home extends NavigationDrawer {
                                 @Override
                                 public void onClick(View v) {
                                     final String METHOD_NAME = this.getClass().getName()+" - onClick";
-                                    int count=1;
+/*                                    int count=1;
                                     try {
                                         Restaurant rest = new Restaurant(v.getContext());
                                         RestaurantOwner ro= new RestaurantOwner(getBaseContext(),2);
@@ -163,6 +164,7 @@ public class Home extends NavigationDrawer {
                                             RestaurantOwnerException e) {
                                         Log.e(METHOD_NAME, e.getMessage());
                                     }
+*/
                                 }
                             });
                         }
@@ -207,16 +209,10 @@ public class Home extends NavigationDrawer {
 
     private void getMenus(){
         sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
-        int rid, uid;
-        uid = sharedPreferences.getInt("uid", -1);
-        rid = sharedPreferences.getInt("rid", -1);
+        String rid, uid;
+        uid = sharedPreferences.getString("uid", null);
+        rid = sharedPreferences.getString("rid", null);
         user=uid;
-        Log.v("uid",uid+" ");
-        try {if(uid>0){
-            menusshared = new Restaurant(getBaseContext(),rid).getMenus();}else menusshared=null;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
@@ -252,13 +248,6 @@ public class Home extends NavigationDrawer {
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
-            try {
-                holder.menu_image.setImageBitmap(menu.getImageBitmap());
-            } catch (NullPointerException e){
-                Log.e("immagine non caricata"," ");
-            }
-            int rid =menus.get(position).getRid();
-            holder.card.setOnClickListener(new onCardClick(position,rid,menu.getMid()));
         }
 
         @Override

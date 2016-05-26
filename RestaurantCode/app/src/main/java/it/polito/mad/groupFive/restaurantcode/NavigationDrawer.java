@@ -54,14 +54,14 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         if(phase==1){
             if (usertype){
                 try {
-                    rowner= new RestaurantOwner(getBaseContext(),sharedPreferences.getInt("uid",-1));
+                    rowner= new RestaurantOwner(getBaseContext(),sharedPreferences.getString("uid",null));
                     this.imageView.setImageBitmap(rowner.getImageBitmap());
                 } catch (RestaurantOwnerException e) {
                     Log.e(METHOD_NAME,e.getMessage());
                 }
             }else{
                 try {
-                    user=new Customer(getBaseContext(),sharedPreferences.getInt("uid",-1));
+                    user=new Customer(getBaseContext(),sharedPreferences.getString("uid",null));
                     this.imageView.setImageBitmap(user.getImageBitmap());
                 } catch (CustomerException e) {
                     Log.e(METHOD_NAME,e.getMessage());
@@ -233,7 +233,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
 
                     }
                     if (position == 3) {
-                        Intent intent = new Intent(view.getContext(), Restaurant_management.class);
+                        Intent intent = new Intent(view.getContext(), RestaurantManagement.class);
                         startActivity(intent);
                     }
                     if (position == 2) {

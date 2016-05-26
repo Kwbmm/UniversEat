@@ -31,7 +31,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
  */
 public class Profile extends NavigationDrawer {
     
-    int uid;
+    String uid;
     RestaurantOwner restaurantOwner;
     Customer customer;
     SharedPreferences sharedPreferences;
@@ -41,7 +41,7 @@ public class Profile extends NavigationDrawer {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         sharedPreferences=this.getSharedPreferences("RestaurantCode.Userdata",this.MODE_PRIVATE);
-        if((uid=sharedPreferences.getInt("uid",-1))==-1) finish();
+        if((uid=sharedPreferences.getString("uid",null))== null ) finish();
         restOwner=sharedPreferences.getBoolean("owner",Boolean.FALSE);
         if(restOwner) {
             try {
@@ -140,14 +140,10 @@ public class Profile extends NavigationDrawer {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            final String METHOD_NAME = this.getClass().getName()+" - getView";
             convertView = LayoutInflater.from(context).inflate(R.layout.restaurant_view, null);
             int restaurantID = restaurantIDs.get(position);
-            try {
-                restaurant = new Restaurant(getBaseContext(),restaurantID);
-                restaurant.getData();
-            } catch (RestaurantException e) {
-                e.printStackTrace();
-            }
+
             TextView name= (TextView)convertView.findViewById(R.id.restaurant_name);
             TextView address= (TextView)convertView.findViewById(R.id.restaurant_address);
             RatingBar rbar=(RatingBar)convertView.findViewById(R.id.restaurant_rating);
@@ -156,11 +152,7 @@ public class Profile extends NavigationDrawer {
             name.setText(restaurant.getName());
             address.setText(restaurant.getAddress());
             rbar.setRating(restaurant.getRating());
-            try {
-                img.setImageBitmap(restaurant.getImageBitmap());
-            } catch (NullPointerException e){
-                Log.e("immagine non caricata"," ");
-            }
+
             card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

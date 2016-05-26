@@ -81,7 +81,7 @@
     <string name="finish">Finish</string>
 
     <!-- SearchResult.java -->
-    <string name="SearchResult_toastFailLoadDM">Data Manager failed loading files.. :(</string>
+    <string name="SearchResult_toastFailLoadData">We are unable to download data.. :(</string>
     <string name="SearchResult_toastNoRestaurants">There are no restaurants to show.</string>
     <string name="SearchResult_toastNoMenus">There are no menus to show.</string>
 

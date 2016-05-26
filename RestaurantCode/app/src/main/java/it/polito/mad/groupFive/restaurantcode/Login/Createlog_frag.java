@@ -128,12 +128,12 @@ public class Createlog_frag extends Fragment{
         try {
             if(owner) {
                 user_r = new RestaurantOwner(getActivity());
-                editor.putInt("uid",user_r.getUid());
+                editor.putString("uid",user_r.getUid());
                 editor.apply();
             }
             else{
                 user = new Customer(getActivity());
-                editor.putInt("uid",user.getUid());
+                editor.putString("uid",user.getUid());
                 editor.apply();
             }
         } catch (UserException e) {

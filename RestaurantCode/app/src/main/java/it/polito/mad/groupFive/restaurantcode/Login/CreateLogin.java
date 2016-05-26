@@ -20,7 +20,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
  * Created by Giovanni on 22/04/16.
  */
 public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFragmentInteractionListener, Createlog_frag1.OnFragmentInteractionListener{
-    private int uid;
+    private String uid;
     private boolean owner;
     private RestaurantOwner user_r=null;
     private Customer user=null;
@@ -40,7 +40,7 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
     public void onChangeFrag0(boolean o){
         final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag0";
         SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
-        uid=sp.getInt("uid",-1);
+        uid=sp.getString("uid",null);
         this.owner=o;
         try {
             if (owner)

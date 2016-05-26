@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,12 +89,9 @@ public class Restaurant_info_user extends Fragment {
     }
 
     public void getRestaurantData(View v){
+        final String METHOD_NAME = this.getClass().getName()+" - getRestaurantData";
         restaurant=data.getRestaurant();
-        try {
-            restaurant.getData();
-        } catch (RestaurantException e) {
-            e.printStackTrace();
-        }
+
         TextView rest_rev_det =(TextView)v.findViewById(R.id.restaurant_rev_details);
         rest_rev_det.setText("Based on "+restaurant.getReviews().size()+" Reviews");
         TextView restname= (TextView) v.findViewById(R.id.restaurant_name);
@@ -105,7 +103,8 @@ public class Restaurant_info_user extends Fragment {
         RatingBar restrating= (RatingBar) v.findViewById(R.id.restaurant_rating);
         restrating.setRating(restaurant.getRating());
         ImageView restImage=(ImageView)v.findViewById(R.id.restaurant_image);
-        restImage.setImageBitmap(restaurant.getImageBitmap());
+
+
 
         LinearLayout ll = (LinearLayout) v.findViewById(R.id.restaurant_time_t);
         int count=0;
@@ -115,23 +114,20 @@ public class Restaurant_info_user extends Fragment {
             TextView dow= (TextView) timetableItem.findViewById(R.id.dow);
             dow.setText(weekday);
             TextView dinner= (TextView) timetableItem.findViewById(R.id.time_dinner);
-            SimpleDateFormat sd=new SimpleDateFormat("HH:mm");
-            if (restaurant.getTimetableDinner().containsKey(count)){
-            dinner.setText(sd.format(restaurant.getTimetableDinner().get(count)[0])+"-"+sd.format(restaurant.getTimetableDinner().get(count)[1]));}
+            if (restaurant.getTimetableDinner().containsKey(weekday)){
+                dinner.setText(restaurant.getTimetableDinner().get(weekday).get("start")+"-"+restaurant.getTimetableDinner().get(weekday).get("end"));}
             else {
                 dinner.setText(getResources().getString(R.string.closed));
             }
             TextView lunch=(TextView)timetableItem.findViewById(R.id.time_lunch);
-            if (restaurant.getTimetableLunch().containsKey(count)){
-                lunch.setText(sd.format(restaurant.getTimetableLunch().get(count)[0])+"-"+sd.format(restaurant.getTimetableLunch().get(count)[1]));}
+            if (restaurant.getTimetableLunch().containsKey(weekday)){
+                lunch.setText(restaurant.getTimetableLunch().get(weekday).get("start")+"-"+restaurant.getTimetableLunch().get(weekday).get("end"));}
             else {
                 lunch.setText(getResources().getString(R.string.closed));
             }
             ll.addView(timetableItem);
             count++;
         }
-
-
     }
 
 

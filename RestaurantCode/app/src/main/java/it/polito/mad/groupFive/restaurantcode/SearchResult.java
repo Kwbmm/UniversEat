@@ -15,6 +15,15 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,17 +33,19 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.DataManager;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.DataManagerException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
 import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
 
 public class SearchResult extends NavigationDrawer {
     public static final String RESTAURANT_SEARCH = "restaurant";
-    private DataManager dm;
     private ArrayList<Menu> menus;
     private ArrayList<Restaurant> restaurants;
     private String query;
     private RecyclerView rv;
     private boolean isRestaurant;
+    private DatabaseReference dbRoot;
+    private StorageReference storageRoot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +59,14 @@ public class SearchResult extends NavigationDrawer {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             this.isRestaurant = intent.getBooleanExtra(SearchResult.RESTAURANT_SEARCH,false);
             this.query = intent.getStringExtra(SearchManager.QUERY).trim().toLowerCase();
-            try {
-                this.dm = new DataManager(getApplicationContext());
-                if(isRestaurant) //Restaurant search
-                    this.showRestaurants();
-                else{ //Menu search
-                    this.showMenus();
-                }
-            } catch (DataManagerException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        getString(R.string.SearchResult_toastFailLoadDM),
-                        Toast.LENGTH_LONG)
-                        .show();
+            //Either show the menus or the restaurants, based on the value of isRestaurant
+            if(this.isRestaurant){
+                this.restaurants = new ArrayList<>();
+                showRestaurants();
+            }
+            else{
+                this.menus = new ArrayList<>();
+//                showMenus();
             }
         }
     }
@@ -220,17 +226,43 @@ public class SearchResult extends NavigationDrawer {
 
     private void showRestaurants(){
         final String METHOD_NAME = this.getClass().getName()+" - showRestaurants";
-        if(dm.getRestaurants().size() == 0)
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        this.dbRoot = db.getReference().child("restaurant");
+        Log.d(METHOD_NAME,"Query is: "+this.query);
+        Query restaurantQuery = this.dbRoot.orderByChild("name").equalTo("zia lalla");
+        restaurantQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(METHOD_NAME,"String is: "+s);
+                Log.d(METHOD_NAME,"DS count: "+dataSnapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        if(this.restaurants.size() == 0)
             Toast.makeText(getApplicationContext(),
                     getString(R.string.SearchResult_toastNoRestaurants),
                     Toast.LENGTH_LONG)
                     .show();
         else{
-            this.restaurants = new ArrayList<>();
-            for(Restaurant r : this.dm.getRestaurants()){
-                if(r.getName().toLowerCase().contains(this.query))
-                    this.restaurants.add(r);
-            }
             this.rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
             if (rv != null){
                 rv.setAdapter(new RestaurantAdapter(this.restaurants));
@@ -240,9 +272,11 @@ public class SearchResult extends NavigationDrawer {
             }
         }
     }
-
+/*
     private void showMenus(){
         final String METHOD_NAME = this.getClass().getName()+" - showMenus";
+        this.dbRoot = db.getReference().child("menu");
+        this.dbRoot.addListenerForSingleValueEvent();
         if(dm.getMenus().size() == 0)
             Toast.makeText(getApplicationContext(),
                     getString(R.string.SearchResult_toastNoMenus),
@@ -270,7 +304,7 @@ public class SearchResult extends NavigationDrawer {
             }
         }
     }
-
+*/
     public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder>{
         private ArrayList<Restaurant> restaurants;
         private ArrayList<Restaurant> queryResult;
@@ -341,11 +375,6 @@ public class SearchResult extends NavigationDrawer {
                     ArrayList<Menu> menus = this.restaurants.get(i).getMenus();
                     for(int j = 0; j < menus.size(); j++){
                         Menu m = menus.get(j);
-                        if(m.acceptTicket()){
-                            hasMenusWithTicket = true;
-                            break; //Go to next restaurant
-                        }
-                        else hasMenusWithTicket = false;
                     }
                     if(!hasMenusWithTicket){
                         this.restaurants.remove(i);
@@ -359,10 +388,6 @@ public class SearchResult extends NavigationDrawer {
                     ArrayList<Menu> menus = this.restaurants.get(i).getMenus();
                     for (int j = 0; j < menus.size(); j++) {
                         Menu m = menus.get(j);
-                        if (!m.acceptTicket()) {
-                            hasMenusWithTicket = false;
-                            break; //Go to next restaurant
-                        } else hasMenusWithTicket = true;
                     }
                     if (hasMenusWithTicket) {
                         this.restaurants.remove(i);
@@ -473,13 +498,11 @@ public class SearchResult extends NavigationDrawer {
 
         @Override
         public void onBindViewHolder(RestaurantViewHolder holder, int position) {
+            final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
             Restaurant restaurant = restaurants.get(position);
             holder.restaurant_name.setText(restaurant.getName());
             holder.restaurant_address.setText(restaurant.getAddress());
             holder.restaurant_rating.setRating(restaurant.getRating());
-            holder.restaurant_image.setImageBitmap(restaurant.getImageBitmap());
-            int rid = restaurants.get(position).getRid();
-            holder.card.setOnClickListener(new onCardClick(position,rid,-1));
         }
 
         @Override
@@ -561,19 +584,11 @@ public class SearchResult extends NavigationDrawer {
             if(ticket){
                 for(int i = 0; i < this.getItemCount(); i++){
                     Menu m = this.menus.get(i);
-                    if(!m.acceptTicket()){
-                        this.menus.remove(i);
-                        i--;
-                    }
                 }
             }
             else{
                 for(int i = 0; i < this.getItemCount(); i++){
                     Menu m = this.menus.get(i);
-                    if(m.acceptTicket()){
-                        this.menus.remove(i);
-                        i--;
-                    }
                 }
             }
             notifyDataSetChanged();
@@ -637,9 +652,7 @@ public class SearchResult extends NavigationDrawer {
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
-            holder.menu_image.setImageBitmap(menu.getImageBitmap());
-            int rid = menus.get(position).getRid();
-            holder.card.setOnClickListener(new onCardClick(position,rid,menu.getMid()));
+
         }
 
         @Override

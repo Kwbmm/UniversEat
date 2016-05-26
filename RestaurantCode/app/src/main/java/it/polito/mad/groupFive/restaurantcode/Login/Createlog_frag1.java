@@ -174,10 +174,10 @@ public class Createlog_frag1 extends Fragment{
     public boolean setUserData() {
         final String METHOD_NAME = this.getClass().getName()+" - setUserData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
-        int uid = sp.getInt("uid",-1);
+        String uid = sp.getString("uid",null);
         if(owner){
             try {
-                user_r = new RestaurantOwner(getActivity(), uid);
+                user_r = new RestaurantOwner(getActivity(), "asdasd");
             } catch (RestaurantOwnerException e) {
                 Log.e(METHOD_NAME,e.getMessage());
                 return false;

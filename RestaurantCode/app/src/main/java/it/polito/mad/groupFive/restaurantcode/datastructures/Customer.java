@@ -43,7 +43,7 @@ public class Customer extends User {
      * @throws CustomerException If customer ID is negative or JSON file read fails.
      */
     public Customer(Context c) throws CustomerException {
-        this(c,Customer.randInt());
+        this(c,"asdasd");
     }
 
     /**
@@ -55,11 +55,11 @@ public class Customer extends User {
      * @param uid Positive Integer unique identifier
      * @throws CustomerException If customer id is negative or instantiation fails.
      */
-    public Customer(Context c, int uid) throws CustomerException {
+    public Customer(Context c, String uid) throws CustomerException {
         final String METHOD_NAME = this.getClass().getName()+" - constructor";
 
-        if(uid < 0)
-            throw new CustomerException("Customer ID must be positive");
+        if(uid == null)
+            throw new CustomerException("Customer ID cannot be null");
         this.uid = uid;
         this.appContext = c;
 

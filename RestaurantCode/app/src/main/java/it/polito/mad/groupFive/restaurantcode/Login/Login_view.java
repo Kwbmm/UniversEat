@@ -97,14 +97,14 @@ public class Login_view extends Fragment {
         if(sharedPreferences.getBoolean("owner",false)){
             try {
 
-                owner=new RestaurantOwner(getContext(),sharedPreferences.getInt("uid",-1));
+                owner=new RestaurantOwner(getContext(),sharedPreferences.getString("uid",null));
                 own=true;
             } catch (RestaurantOwnerException e) {
                 e.printStackTrace();
             }
         }else {
             try {
-                user=new Customer(getContext(),sharedPreferences.getInt("uid",-1));
+                user=new Customer(getContext(),sharedPreferences.getString("uid",null));
                 own=false;
             } catch (CustomerException e) {
                 e.printStackTrace();
@@ -117,7 +117,7 @@ public class Login_view extends Fragment {
             public void onClick(View v) {
 
     if(!own){
-        if ((sharedPreferences.getInt("uid",-1)!=-1)&&username.getText().toString().equals(user.getUserName())&&password.getText().toString().equals(user.getPassword())){
+        if ((sharedPreferences.getString("uid",null)!=null)&&username.getText().toString().equals(user.getUserName())&&password.getText().toString().equals(user.getPassword())){
             SharedPreferences.Editor editor=sharedPreferences.edit();
             editor.putBoolean("logged",true);
             editor.commit();
@@ -130,7 +130,7 @@ public class Login_view extends Fragment {
             incorrect_log.addView(view);}
     }
                 if(own){
-                    if((sharedPreferences.getInt("uid",-1)!=-1)&&username.getText().toString().equals(owner.getUserName())&&password.getText().toString().equals(owner.getPassword())){
+                    if((sharedPreferences.getString("uid",null)!= null)&&username.getText().toString().equals(owner.getUserName())&&password.getText().toString().equals(owner.getPassword())){
                         SharedPreferences.Editor editor=sharedPreferences.edit();
                         editor.putBoolean("logged",true);
                         editor.commit();
@@ -169,7 +169,7 @@ public class Login_view extends Fragment {
         if(sharedPreferences.getBoolean("owner",false)){
             try {
                 Log.v("owner", "tr");
-                owner=new RestaurantOwner(getContext(),sharedPreferences.getInt("uid",-1));
+                owner=new RestaurantOwner(getContext(),sharedPreferences.getString("uid",null));
                 own=true;
             } catch (RestaurantOwnerException e) {
                 e.printStackTrace();
@@ -177,7 +177,7 @@ public class Login_view extends Fragment {
         }else {
             try {
                 Log.v("owner", "fl");
-                user=new Customer(getContext(),sharedPreferences.getInt("uid",-1));
+                user=new Customer(getContext(),sharedPreferences.getString("uid",null));
                 own=false;
             } catch (CustomerException e) {
                 e.printStackTrace();

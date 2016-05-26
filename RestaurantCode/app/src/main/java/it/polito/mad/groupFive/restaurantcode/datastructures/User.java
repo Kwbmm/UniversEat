@@ -31,7 +31,7 @@ public abstract class User {
 
     transient protected Context appContext;
 
-    protected int uid;
+    protected String uid;
     protected String name;
     protected String surname;
     protected String userName;
@@ -40,22 +40,6 @@ public abstract class User {
     protected String email;
     protected byte[] image;
     protected ArrayList<Review> reviews = new ArrayList<>();
-
-    /**
-     * Generate a random integer in the range [1, Integer.MAX_VALUE]
-     * @return In integer in the range [1, Integer.MAX_VALUE]
-     */
-    protected static int randInt() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
-        else{
-            Random rand= new Random();
-            int result;
-            if((result=rand.nextInt(Integer.MAX_VALUE)) == 0)
-                return Restaurant.randInt();
-            return result;
-        }
-    }
 
     /**
      * Reads the JSON file corresponding to this user and fills this class with the data found
@@ -106,7 +90,7 @@ public abstract class User {
      *
      * @return The unique identifier of this User object
      */
-    public int getUid() {
+    public String getUid() {
         return this.uid;
     }
 
@@ -188,9 +172,8 @@ public abstract class User {
      * @return A review object matching the input id, or null if nothing is found.
      * @throws UserException If review id is negative
      */
-    public Review getReviewByID(int revID) throws UserException {
-        if(revID < 0)
-            throw new UserException("Review ID must be positive");
+    public Review getReviewByID(String revID) throws UserException {
+        //TODO Fix this
         for(Review r : this.reviews)
             if(r.getRevID() == revID)
                 return r;
@@ -205,25 +188,12 @@ public abstract class User {
      * @return An ArrayList of Review objects
      * @throws UserException If restaurant id is negative.
      */
-    public ArrayList<Review> getReviewsByRestaurantID(int rid) throws UserException {
-        if(rid < 0)
-            throw new UserException("Restaurant ID must be positive");
+    public ArrayList<Review> getReviewsByRestaurantID(String rid) throws UserException {
         ArrayList<Review> returnRes = new ArrayList<>();
         for(Review r : this.reviews)
-            if(r.getRid() == rid)
+            if(r.getRid() == rid) //TODO Fix this
                 returnRes.add(r);
         return returnRes;
-    }
-
-    /**
-     *
-     * @param uid Positive integer uniquely identifying the user
-     * @throws UserException If user id is negative
-     */
-    public void setUid(int uid) throws UserException {
-        if(uid < 0)
-            throw new UserException("User ID must be positive");
-        this.uid = uid;
     }
 
     /**

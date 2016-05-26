@@ -43,7 +43,7 @@ public class RestaurantOwner extends User{
      * @throws RestaurantOwnerException If restaurant owner ID is negative or JSON file read fails.
      */
     public RestaurantOwner(Context c) throws RestaurantOwnerException {
-        this(c,RestaurantOwner.randInt());
+        this(c,"asdasd");
     }
 
     /**
@@ -55,11 +55,11 @@ public class RestaurantOwner extends User{
      * @param uid Positive Integer unique identifier
      * @throws RestaurantOwnerException If restaurant owner id is negative or instantiation fails.
      */
-    public RestaurantOwner(Context c, int uid) throws RestaurantOwnerException {
+    public RestaurantOwner(Context c, String uid) throws RestaurantOwnerException {
         final String METHOD_NAME = this.getClass().getName()+" - constructor";
 
-        if(uid < 0)
-            throw new RestaurantOwnerException("Restaurant Owner ID must be positive");
+        if(uid == null)
+            throw new RestaurantOwnerException("Restaurant Owner ID cannot be null");
         this.uid = uid;
         this.appContext = c;
 
@@ -105,7 +105,8 @@ public class RestaurantOwner extends User{
                     .registerTypeHierarchyAdapter(byte[].class, new CustomByteArrayAdapter())
                     .create();
             Log.i(METHOD_NAME, "Loading data into structure...");
-            return root.fromJson(stringBuilder.toString(), RestaurantOwner.class);
+            return null;
+            //root.fromJson(stringBuilder.toString(), RestaurantOwner.class);
         } catch (FileNotFoundException e) {
             this.createJSONFile();
             return this.readJSONFile();

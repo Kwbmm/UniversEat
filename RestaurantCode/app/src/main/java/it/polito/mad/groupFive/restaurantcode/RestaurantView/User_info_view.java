@@ -22,13 +22,7 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        try {
-            restaurant=new Restaurant(getBaseContext(),getIntent().getExtras().getInt("rid"));
-            mid=getIntent().getExtras().getInt("mid");
-            restaurant.getData();
-        } catch (RestaurantException e) {
-            e.printStackTrace();
-        }
+
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_user_info_view, mlay);

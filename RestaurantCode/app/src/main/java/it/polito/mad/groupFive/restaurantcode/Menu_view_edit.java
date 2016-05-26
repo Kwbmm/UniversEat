@@ -24,12 +24,9 @@ import java.util.Collections;
 import java.util.Comparator;
 
 
-import it.polito.mad.groupFive.restaurantcode.CreateMenu.Create_menu;
 import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Create_simple_menu;
-import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Simple_menu_add_tags;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 
 /**
@@ -75,13 +72,6 @@ public class Menu_view_edit extends NavigationDrawer {
         int rid, uid;
         uid = sharedPreferences.getInt("uid", -1);
         rid = sharedPreferences.getInt("rid", -1);
-        try {
-
-            rest = new Restaurant(getBaseContext(),rid);
-            rest.getData();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         menusshared = rest.getMenus();
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
@@ -181,11 +171,6 @@ public class Menu_view_edit extends NavigationDrawer {
                 }});
         }
         public void update(){
-            try {
-                rest.getData();
-            } catch (RestaurantException e) {
-                e.printStackTrace();
-            }
             menusshared=rest.getMenus();
             menus=menusshared;
             sort();
@@ -205,12 +190,6 @@ public class Menu_view_edit extends NavigationDrawer {
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
             holder.edit.setOnClickListener(new onEditclick(position));
-            try {
-                holder.menu_image.setImageBitmap(menu.getImageBitmap());
-            } catch (NullPointerException e){
-                Log.e("immagine non caricata"," ");
-            }
-            //Log.v("image",menu.getImageByteArray().toString());
         }
 
         @Override
@@ -221,11 +200,6 @@ public class Menu_view_edit extends NavigationDrawer {
         public void remove(int position){
             menus.remove(position);
             rest.setMenus(menus);
-            try {
-                rest.saveData();
-            } catch (RestaurantException e) {
-                e.printStackTrace();
-            }
             menusshared=menus;
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, menus.size());

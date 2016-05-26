@@ -40,13 +40,6 @@ public class Menu_details extends NavigationDrawer {
         mid=getIntent().getExtras().getInt("mid");
         rid=getIntent().getExtras().getInt("rid");
         Log.e("RID E MID",""+rid+" "+mid);
-        try {
-            restaurant=new Restaurant(getBaseContext(),rid);
-            restaurant.getData();
-            menu=restaurant.getMenuByID(mid);
-        } catch (RestaurantException e) {
-            e.printStackTrace();
-        }
         super.onCreate(savedInstanceState);
         sharedPreferences=this.getSharedPreferences("RestaurantCode.Userdata",this.MODE_PRIVATE);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
@@ -54,44 +47,6 @@ public class Menu_details extends NavigationDrawer {
         showmenu();
     }
 
-    private void generamenufittizio(){
-        try {
-            Course c1 = new Course(restaurant,1);
-            c1.setName("Pane");
-            c1.setVegetarian(Boolean.TRUE);
-            Course c2 = new Course(restaurant,2);
-            c2.setName("Patatine");
-            c2.setVegetarian(Boolean.TRUE);
-            c2.setVegan(Boolean.TRUE);
-            Course c3 = new Course(restaurant,3);
-            c3.setName("Jalapenos");
-            c3.setSpicy(Boolean.TRUE);
-            c3.setVegetarian(Boolean.TRUE);
-            c3.setVegan(Boolean.TRUE);
-            Course c4 = new Course(restaurant,4);
-            c4.setName("Bistecca");
-            c4.setGlutenFree(Boolean.TRUE);
-            ArrayList<Course> courses1 = new ArrayList<>();
-            courses1.add(c1);
-            courses1.add(c2);
-            courses1.add(c3);
-            courses1.add(c4);
-            it.polito.mad.groupFive.restaurantcode.datastructures.Menu m = new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(restaurant,mid);
-            m.setCourses(courses1);
-            m.setName("Menu buonissimo");
-            m.setPrice((float)13.99);
-            m.setBeverage(Boolean.TRUE);
-            m.setServiceFee(Boolean.FALSE);
-            restaurant.addMenu(m);
-            restaurant.saveData();
-        } catch (CourseException e) {
-            e.printStackTrace();
-        } catch (RestaurantException e) {
-            e.printStackTrace();
-        } catch (MenuException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -133,11 +88,6 @@ public class Menu_details extends NavigationDrawer {
         if(menu.isServiceFee()) servicefee.setText(getString(R.string.Menu_details_service_fee_incl));
         else servicefee.setText(getString(R.string.Menu_details_service_fee_not));
         price.setText(String.format("%.2f", menu.getPrice())+"€");
-        try {
-            pic.setImageBitmap(menu.getImageBitmap());
-        } catch (NullPointerException e){
-            Log.e("immagine non caricata"," ");
-        }
         Log.e("numero di courses",courses.size()+" ");
         CourseAdapter courseAdapter = new CourseAdapter(this,courses);
         listView.setAdapter(courseAdapter);
