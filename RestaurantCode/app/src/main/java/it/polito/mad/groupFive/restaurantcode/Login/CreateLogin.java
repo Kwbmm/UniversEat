@@ -126,6 +126,10 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
                 myRef = db.getReference("User");
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 auth.signInWithEmailAndPassword(user.getEmail(), user.getPassword());
+                SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.user_pref),MODE_PRIVATE);
+                SharedPreferences.Editor editor= sharedPreferences.edit();
+                editor.putString("uid",auth.getCurrentUser().getUid());
+
 
 
 

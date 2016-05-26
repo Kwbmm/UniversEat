@@ -83,6 +83,15 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==REGISTRATION){
+            this.onFragmentInteraction();
+        }
+    }
+
+
+    @Override
     protected void onStop() {
         drawerLayout.closeDrawers();
         super.onStop();
