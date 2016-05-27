@@ -21,7 +21,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
 import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
+import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusFromTagListener;
 
 public class SearchResult extends NavigationDrawer {
     public static final String RESTAURANT_SEARCH = "restaurant";
@@ -266,31 +266,7 @@ public class SearchResult extends NavigationDrawer {
         final String METHOD_NAME = this.getClass().getName()+" - showMenus";
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         this.dbRoot = db.getReference().child("tags").child(this.query).child("menu");
-        this.dbRoot.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds : dataSnapshot.getChildren()){
-                    FirebaseDatabase menuDB = FirebaseDatabase.getInstance();
-                    DatabaseReference dr = menuDB.getReference("menu/"+ds.getKey());
-                    dr.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Log.d("onDChange2",(String)dataSnapshot.child("mid").getValue());
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        this.dbRoot.addListenerForSingleValueEvent(new GetMenusFromTagListener(this.menus));
         if(this.menus.size() == 0)
             Toast.makeText(getApplicationContext(),
                     getString(R.string.SearchResult_toastNoMenus),
