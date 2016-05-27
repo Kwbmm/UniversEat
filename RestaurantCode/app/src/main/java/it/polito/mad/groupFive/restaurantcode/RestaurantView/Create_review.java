@@ -22,6 +22,8 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.ReviewException;
 
+
+
 public class Create_review extends NavigationDrawer {
     Restaurant rest;
     EditText title;
