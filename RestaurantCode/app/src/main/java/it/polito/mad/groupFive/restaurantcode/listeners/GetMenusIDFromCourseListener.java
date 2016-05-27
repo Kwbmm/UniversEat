@@ -8,26 +8,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
+import it.polito.mad.groupFive.restaurantcode.SearchResult;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 
-public class GetMenusFromTagListener implements ValueEventListener {
+public class GetMenusIDFromCourseListener implements ValueEventListener {
 
-    private ArrayList<Menu> menus;
-    public GetMenusFromTagListener(ArrayList<Menu> menus) {
-        this.menus = menus;
+    private SearchResult.MenuAdapter ma;
+
+    public GetMenusIDFromCourseListener(SearchResult.MenuAdapter ma){
+        this.ma = ma;
     }
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
+        final String METHOD_NAME = this.getClass().getName()+" - onDCh";
         for(DataSnapshot ds : dataSnapshot.getChildren()){
-            FirebaseDatabase menuDB = FirebaseDatabase.getInstance();
-            DatabaseReference dr = menuDB.getReference("menu/"+ds.getKey());
-            GetMenuListener getMenuListener = new GetMenuListener(this.menus);
-            dr.addListenerForSingleValueEvent(getMenuListener);
-            this.menus = getMenuListener.getMenus();
+            String menuID = (String)ds.child("mid").getValue();
+            FirebaseDatabase db = FirebaseDatabase.getInstance();
+            DatabaseReference menuRef = db.getReference("menu").child(menuID);
+            menuRef.addListenerForSingleValueEvent(new GetMenuListener(this.ma));
         }
     }
 
@@ -38,14 +38,15 @@ public class GetMenusFromTagListener implements ValueEventListener {
 }
 
 class GetMenuListener implements ValueEventListener{
-    private ArrayList<Menu> menus;
-    GetMenuListener(ArrayList<Menu> menus){
-        this.menus = menus;
+
+    private SearchResult.MenuAdapter ma;
+    GetMenuListener(SearchResult.MenuAdapter ma){
+        this.ma = ma;
     }
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-        final String METHOD_NAME = this.getClass().getName()+" - onDataChange";
+        final String METHOD_NAME = this.getClass().getName()+" - onDCh";
         try {
             Menu m = new Menu(
                     (String) dataSnapshot.child("rid").getValue(),
@@ -54,10 +55,12 @@ class GetMenuListener implements ValueEventListener{
             m.setBeverage((boolean) dataSnapshot.child("beverage").getValue())
                     .setDescription((String) dataSnapshot.child("description").getValue())
                     .setName((String) dataSnapshot.child("name").getValue())
-                    .setServiceFee((boolean) dataSnapshot.child("serviceFee").getValue())
-                    .setType((int) dataSnapshot.child("type").getValue());
+                    .setServiceFee((boolean) dataSnapshot.child("serviceFee").getValue());
+            int type = ((Long) dataSnapshot.child("type").getValue()).intValue();
+            m.setType(type);
             float price = ((Long)dataSnapshot.child("price").getValue()).floatValue();
             m.setPrice(price);
+            ma.onAddChild(m);
         } catch (MenuException e) {
             Log.e(METHOD_NAME, e.getMessage());
         }
@@ -67,6 +70,4 @@ class GetMenuListener implements ValueEventListener{
     public void onCancelled(DatabaseError databaseError) {
 
     }
-
-    public ArrayList<Menu> getMenus(){ return this.menus; }
 }

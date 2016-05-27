@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -30,15 +31,16 @@ import java.util.Comparator;
 import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
 import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
-import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusFromTagListener;
+import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusIDFromCourseListener;
 
 public class SearchResult extends NavigationDrawer {
     public static final String RESTAURANT_SEARCH = "restaurant";
     private ArrayList<Menu> menus;
     private ArrayList<Restaurant> restaurants;
-    private String query;
+    private String[] query;
     private RecyclerView rv;
     private boolean isRestaurant;
     private DatabaseReference dbRoot;
@@ -55,7 +57,7 @@ public class SearchResult extends NavigationDrawer {
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             this.isRestaurant = intent.getBooleanExtra(SearchResult.RESTAURANT_SEARCH,false);
-            this.query = intent.getStringExtra(SearchManager.QUERY).trim().toLowerCase();
+            this.query = intent.getStringExtra(SearchManager.QUERY).trim().toLowerCase().split(" ");
             //Either show the menus or the restaurants, based on the value of isRestaurant
             if(this.isRestaurant){
                 this.restaurants = new ArrayList<>();
@@ -264,34 +266,17 @@ public class SearchResult extends NavigationDrawer {
 
     private void showMenus(){
         final String METHOD_NAME = this.getClass().getName()+" - showMenus";
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        this.dbRoot = db.getReference().child("tags").child(this.query).child("menu");
-        this.dbRoot.addListenerForSingleValueEvent(new GetMenusFromTagListener(this.menus));
-        if(this.menus.size() == 0)
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.SearchResult_toastNoMenus),
-                    Toast.LENGTH_LONG)
-                    .show();
-        else{
-            this.menus = new ArrayList<>();
-            for(Menu m : this.menus){
-                for(String s : m.getTags()){
-                    if(s.equalsIgnoreCase(this.query)){
-                        this.menus.add(m);
-                        break; //Go to next menu
-                    }
-                }
-                //TODO Look also by name??
-                //if(m.getName().toLowerCase().contains(this.query))
-                //    this.menus.add(m);
-            }
-            this.rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
-            if (rv != null){
-                rv.setAdapter(new MenuAdapter(this.menus));
-                LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-                llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-                rv.setLayoutManager(llmVertical);
-            }
+        this.rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
+        if (rv != null){
+            MenuAdapter ma = new MenuAdapter();
+            rv.setAdapter(ma);
+            LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+            llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+            rv.setLayoutManager(llmVertical);
+            FirebaseDatabase db = FirebaseDatabase.getInstance();
+            this.dbRoot = db.getReference("course");
+            Query menuQuery = this.dbRoot.orderByChild(this.query[0]).equalTo(true);
+            menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromCourseListener(ma));
         }
     }
 
@@ -504,14 +489,15 @@ public class SearchResult extends NavigationDrawer {
 
     public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
         private ArrayList<Menu> menus;
-        private ArrayList<Menu> queryResult;
 
-        public MenuAdapter(ArrayList<Menu> menus){
-            this.queryResult = menus;
-            this.menus = new ArrayList<>(this.queryResult);
-            sortByType();
+        public MenuAdapter(){
+            this.menus = new ArrayList<>();
         }
 
+        public void onAddChild(Menu m){
+            this.menus.add(m);
+            notifyItemInserted(this.getItemCount());
+        }
         public void sortByName(boolean asc){
             final String METHOD_NAME = this.getClass().getName()+" - sortByName";
             if(asc){ //A-Z sorting
@@ -570,7 +556,6 @@ public class SearchResult extends NavigationDrawer {
 
         public void filterByTicket(boolean ticket){
             final String METHOD_NAME = this.getClass().getName()+" - filterByTicket";
-            this.menus = new ArrayList<>(this.queryResult);
             if(ticket){
                 for(int i = 0; i < this.getItemCount(); i++){
                     Menu m = this.menus.get(i);
@@ -585,7 +570,6 @@ public class SearchResult extends NavigationDrawer {
         }
 
         public void filterByBeverage(boolean beverageIncluded) {
-            this.menus = new ArrayList<>(this.queryResult);
             if(beverageIncluded){
                 for(int i = 0; i < this.getItemCount(); i++){
                     Menu m = this.menus.get(i);
@@ -608,7 +592,6 @@ public class SearchResult extends NavigationDrawer {
         }
 
         public void filterByServiceFee(boolean fee) {
-            this.menus = new ArrayList<>(this.queryResult);
             if(fee){
                 for(int i = 0; i < this.getItemCount(); i++){
                     Menu m = this.menus.get(i);
@@ -671,4 +654,5 @@ public class SearchResult extends NavigationDrawer {
             startActivity(restinfo);
         }
     }
+
 }
