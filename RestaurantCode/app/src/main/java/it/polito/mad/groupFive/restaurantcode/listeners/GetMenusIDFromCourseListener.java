@@ -15,19 +15,28 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuExce
 public class GetMenusIDFromCourseListener implements ValueEventListener {
 
     private SearchResult.MenuAdapter ma;
+    private String[] query;
 
-    public GetMenusIDFromCourseListener(SearchResult.MenuAdapter ma){
+    public GetMenusIDFromCourseListener(SearchResult.MenuAdapter ma, String[] query){
         this.ma = ma;
+        this.query = query;
     }
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         final String METHOD_NAME = this.getClass().getName()+" - onDCh";
         for(DataSnapshot ds : dataSnapshot.getChildren()){
+            int weight = 0;
+            for(String keyword : this.query){
+                if(ds.child(keyword).getValue() == null){
+                    //If the keyword is not found, the element has less relevance, so we increase its weight
+                    weight++;
+                }
+            }
             String menuID = (String)ds.child("mid").getValue();
             FirebaseDatabase db = FirebaseDatabase.getInstance();
             DatabaseReference menuRef = db.getReference("menu").child(menuID);
-            menuRef.addListenerForSingleValueEvent(new GetMenuListener(this.ma));
+            menuRef.addListenerForSingleValueEvent(new GetMenuListener(this.ma,weight));
         }
     }
 
@@ -40,8 +49,10 @@ public class GetMenusIDFromCourseListener implements ValueEventListener {
 class GetMenuListener implements ValueEventListener{
 
     private SearchResult.MenuAdapter ma;
-    GetMenuListener(SearchResult.MenuAdapter ma){
+    private int weight;
+    GetMenuListener(SearchResult.MenuAdapter ma, int weight){
         this.ma = ma;
+        this.weight = weight;
     }
 
     @Override
@@ -60,7 +71,7 @@ class GetMenuListener implements ValueEventListener{
             m.setType(type);
             float price = ((Long)dataSnapshot.child("price").getValue()).floatValue();
             m.setPrice(price);
-            ma.onAddChild(m);
+            ma.addChild(m,this.weight);
         } catch (MenuException e) {
             Log.e(METHOD_NAME, e.getMessage());
         }

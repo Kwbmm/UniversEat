@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.util.SortedListAdapterCallback;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,6 +29,12 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
@@ -276,7 +284,7 @@ public class SearchResult extends NavigationDrawer {
             FirebaseDatabase db = FirebaseDatabase.getInstance();
             this.dbRoot = db.getReference("course");
             Query menuQuery = this.dbRoot.orderByChild(this.query[0]).equalTo(true);
-            menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromCourseListener(ma));
+            menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromCourseListener(ma, this.query));
         }
     }
 
@@ -488,43 +496,121 @@ public class SearchResult extends NavigationDrawer {
     }
 
     public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
-        private ArrayList<Menu> menus;
+        private class WeightedMenu extends Menu{
 
+            private int weight;
+
+            public WeightedMenu(Menu m,int weight) throws MenuException {
+                super(m.getRid(), m.getMid());
+                super.setBeverage(m.isBeverage())
+                        .setDescription(m.getDescription())
+                        .setName(m.getName())
+                        .setPrice(m.getPrice())
+                        .setServiceFee(m.isServiceFee()).setType(m.getType());
+                this.weight = weight;
+            }
+
+            public int getWeight(){ return this.weight; }
+        }
+
+        private SortedList<WeightedMenu> menus;
         public MenuAdapter(){
-            this.menus = new ArrayList<>();
+            this.menus = new SortedList<WeightedMenu>(WeightedMenu.class,
+                    new SortedList.Callback<WeightedMenu>() {
+                        @Override
+                        public int compare(WeightedMenu o1, WeightedMenu o2) {
+                            return o1.getWeight() <= o2.getWeight() ? -1 : 1;
+                        }
+
+                        @Override
+                        public void onInserted(int position, int count) {
+                            notifyItemRangeInserted(position,count);
+                        }
+
+                        @Override
+                        public void onRemoved(int position, int count) {
+                            notifyItemRangeRemoved(position,count);
+                        }
+
+                        @Override
+                        public void onMoved(int fromPosition, int toPosition) {
+                            notifyItemMoved(fromPosition,toPosition);
+                        }
+
+                        @Override
+                        public void onChanged(int position, int count) {
+                            notifyItemRangeChanged(position,count);
+                        }
+
+                        @Override
+                        public boolean areContentsTheSame(WeightedMenu oldItem, WeightedMenu newItem) {
+                            return oldItem.getMid().equals(newItem.getMid());
+                        }
+
+                        @Override
+                        public boolean areItemsTheSame(WeightedMenu item1, WeightedMenu item2) {
+                            return item1.getMid().equals(item2.getMid());
+                        }
+                    });
         }
 
-        public void onAddChild(Menu m){
-            this.menus.add(m);
-            notifyItemInserted(this.getItemCount());
+        /**
+         * Add a new child to the adapter. Elements are added according to their weights: elements
+         * with lower weight are displayed before those with higher weight.
+         *
+         * @param m Object to insert
+         * @param weight Weight of the object
+         */
+        public void addChild(Menu m,int weight){
+            final String METHOD_NAME = this.getClass().getName()+" - filterByTicket";
+            try {
+                WeightedMenu wm = new WeightedMenu(m,weight);
+                this.menus.add(wm);
+            } catch (MenuException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+            }
         }
+
         public void sortByName(boolean asc){
             final String METHOD_NAME = this.getClass().getName()+" - sortByName";
+            boolean swapped=true;
+            int n=this.getItemCount()-1;
+            int limit=0;
+            WeightedMenu temp;
             if(asc){ //A-Z sorting
-                Collections.sort(this.menus, new Comparator<Menu>() {
-                    @Override
-                    public int compare(Menu lhs, Menu rhs) {
-                        return lhs.getName().compareToIgnoreCase(rhs.getName());
-                    }
-                });
+
+                this.menus.beginBatchedUpdates();
+
+                this.menus.endBatchedUpdates();
             }
             else{ //Z-A sorting
-                Collections.sort(this.menus, new Comparator<Menu>() {
-                    @Override
-                    public int compare(Menu lhs, Menu rhs) {
-                        return rhs.getName().compareToIgnoreCase(lhs.getName());
+                this.menus.beginBatchedUpdates();
+                while (swapped && n>0){
+                    swapped=false;
+                    for (int i=0;i<n;i++){
+                        WeightedMenu a = this.menus.get(i);
+                        WeightedMenu b = this.menus.get(i+1);
+                        if(a.getName().compareToIgnoreCase(b.getName()) < 0){    //scambiare il '>' con '<' per ottenere un ordinamento decrescente
+                            temp = a;
+                            this.menus.updateItemAt(i,b);
+                            this.menus.updateItemAt(i+1,temp);
+                            swapped=true;
+                            limit=i;
+                        }
                     }
-                });
+                    n=limit;
+                }
+                this.menus.endBatchedUpdates();
             }
-            notifyDataSetChanged();
+//            notifyDataSetChanged();
         }
 
         public void sortByPrice(boolean asc){
             final String METHOD_NAME = this.getClass().getName()+" - sortByPrice";
             if(asc){ //Sort by less expensive to most expensive
-                Collections.sort(this.menus, new Comparator<Menu>() {
+                Collections.sort((List<WeightedMenu>) this.menus, new Comparator<WeightedMenu>() {
                     @Override
-                    public int compare(Menu lhs, Menu rhs) {
+                    public int compare(WeightedMenu lhs, WeightedMenu rhs) {
                         if(rhs.getPrice() - lhs.getPrice() >= 0)
                             return -1;
                         else
@@ -533,9 +619,9 @@ public class SearchResult extends NavigationDrawer {
                 });
             }
             else{
-                Collections.sort(this.menus, new Comparator<Menu>() {
+                Collections.sort((List<WeightedMenu>) this.menus, new Comparator<WeightedMenu>() {
                     @Override
-                    public int compare(Menu lhs, Menu rhs) {
+                    public int compare(WeightedMenu lhs, WeightedMenu rhs) {
                         if(rhs.getPrice() - lhs.getPrice() >= 0)
                             return 1;
                         else
@@ -547,9 +633,9 @@ public class SearchResult extends NavigationDrawer {
         }
 
         public void sortByType(){
-            Collections.sort(this.menus, new Comparator<Menu>() {
+            Collections.sort((List<WeightedMenu>) this.menus, new Comparator<WeightedMenu>() {
                 @Override
-                public int compare(Menu lhs, Menu rhs) {
+                public int compare(WeightedMenu lhs, WeightedMenu rhs) {
                     return rhs.getType()-lhs.getType();
                 }});
         }
@@ -557,58 +643,24 @@ public class SearchResult extends NavigationDrawer {
         public void filterByTicket(boolean ticket){
             final String METHOD_NAME = this.getClass().getName()+" - filterByTicket";
             if(ticket){
-                for(int i = 0; i < this.getItemCount(); i++){
-                    Menu m = this.menus.get(i);
-                }
             }
             else{
-                for(int i = 0; i < this.getItemCount(); i++){
-                    Menu m = this.menus.get(i);
-                }
             }
             notifyDataSetChanged();
         }
 
         public void filterByBeverage(boolean beverageIncluded) {
             if(beverageIncluded){
-                for(int i = 0; i < this.getItemCount(); i++){
-                    Menu m = this.menus.get(i);
-                    if(!m.isBeverage()){
-                        this.menus.remove(i);
-                        i--;
-                    }
-                }
             }
             else {
-                for(int i = 0; i < this.getItemCount(); i++){
-                    Menu m = this.menus.get(i);
-                    if(m.isBeverage()){
-                        this.menus.remove(i);
-                        i--;
-                    }
-                }
             }
             notifyDataSetChanged();
         }
 
         public void filterByServiceFee(boolean fee) {
             if(fee){
-                for(int i = 0; i < this.getItemCount(); i++){
-                    Menu m = this.menus.get(i);
-                    if(!m.isServiceFee()){
-                        this.menus.remove(i);
-                        i--;
-                    }
-                }
             }
             else {
-                for(int i = 0; i < this.getItemCount(); i++){
-                    Menu m = this.menus.get(i);
-                    if(m.isServiceFee()){
-                        this.menus.remove(i);
-                        i--;
-                    }
-                }
             }
             notifyDataSetChanged();
         }
