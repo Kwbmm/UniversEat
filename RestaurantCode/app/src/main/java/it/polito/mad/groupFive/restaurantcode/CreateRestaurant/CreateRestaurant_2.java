@@ -50,6 +50,7 @@ public class CreateRestaurant_2 extends Fragment {
     private TextView city;
     private TextView ZIPCode;
     private TextView state;
+    private LatLng latLng;
     private Restaurant restaurant=null;
     int PLACE_PICKER_REQUEST = 1;
 
@@ -183,10 +184,16 @@ public class CreateRestaurant_2 extends Fragment {
             }
             restaurant.setState(state.getText().toString());
 
-            //TODO Manage GMaps to set this data
-            //restaurant.setXcoord();
-            //restaurant.setYcoord();
+            try{
+                if(latLng.equals(null)) return false;
+            } catch (NullPointerException e){
+                return false;
+            }
+            restaurant.setXcoord(latLng.latitude);
+            restaurant.setYcoord(latLng.longitude);
+            Log.v("lat e long",latLng.latitude+" "+latLng.longitude);
             return true;
+
         } catch (RestaurantException e) {
             Log.e(METHOD_NAME, e.getMessage());
             return false;
@@ -197,8 +204,9 @@ public class CreateRestaurant_2 extends Fragment {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
                 Place place = PlacePicker.getPlace(getContext(),data);
-                String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(getActivity(), toastMsg, Toast.LENGTH_LONG).show();
+                latLng = place.getLatLng();
+                String msg = place.getName()+" "+latLng.toString();
+                mapPickerText.setText(msg);
             }
         }
     }

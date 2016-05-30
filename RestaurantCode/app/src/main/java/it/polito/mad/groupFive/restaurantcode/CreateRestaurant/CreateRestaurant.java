@@ -61,9 +61,8 @@ public class CreateRestaurant
         final String METHOD_NAME = this.getClass().getName()+" - onChangeFrag2";
         this.restaurant.setAddress(r.getAddress());
 
-        //TODO set XCoord and YCoord in the future when we will know about GMaps
-        //this.restaurant.setXcoord(r.getXcoord());
-        //this.restaurant.setYcoord(r.getYcoord());
+        this.restaurant.setXcoord(r.getXcoord());
+        this.restaurant.setYcoord(r.getYcoord());
         this.restaurant.setZIPCode(r.getZIPCode());
 
         this.restaurant.setState(r.getState());

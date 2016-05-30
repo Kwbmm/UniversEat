@@ -1,6 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -99,8 +100,6 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
         mapView = (MapView) v.findViewById(R.id.gmap);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-        restaurant.setXcoord(40.758896);
-        restaurant.setYcoord(-73.985130);
         //SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.gmap);
         //mapFragment.getMapAsync(this);
         return v;
@@ -123,8 +122,22 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
         restaddr.setText(restaurant.getAddress()+", "+restaurant.getCity()+" "+restaurant.getZIPCode());
         TextView resttel=(TextView)v.findViewById(R.id.restaurant_tel);
         resttel.setText(restaurant.getTelephone());
+        resttel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent dialIntent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+restaurant.getTelephone()));
+                startActivity(dialIntent);
+            }
+        });
         TextView restweb=(TextView)v.findViewById(R.id.restaurant_web);
         restweb.setText(restaurant.getWebsite());
+        restweb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent webIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://"+restaurant.getWebsite()));
+                startActivity(webIntent);
+            }
+        });
         RatingBar restrating= (RatingBar) v.findViewById(R.id.restaurant_rating);
         restrating.setRating(restaurant.getRating());
         ImageView restImage=(ImageView)v.findViewById(R.id.restaurant_image);
