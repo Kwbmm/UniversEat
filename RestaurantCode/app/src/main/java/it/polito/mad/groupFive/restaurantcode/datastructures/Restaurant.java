@@ -295,12 +295,7 @@ public class Restaurant {
      * @param revID The ID corresponding to a Review object
      * @return The Review objectd corresponding to the supplied review ID.
      */
-    public Review getReviewByRevID(String revID) {
-        for(Review r : this.reviews)
-            if(r.getRevID().equals(revID))
-                return r;
-        return null;
-    }
+
 
     /**
      * Get an ArrayList of Reviews made by the user matching the specified user id.
