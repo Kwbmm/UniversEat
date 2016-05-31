@@ -84,6 +84,8 @@
     <string name="SearchResult_toastFailLoadData">We are unable to download data.. :(</string>
     <string name="SearchResult_toastNoRestaurants">There are no restaurants to show.</string>
     <string name="SearchResult_toastNoMenus">There are no menus to show.</string>
+    <string name="SearchResult_filterConfirmButtonText">Filter</string>
+    <string name="SearchResult_filterCancelButtonText">Cancel</string>
 
     <string-array name="sortCurtainMenuItems">
         <item>A-Z</item>
@@ -101,12 +103,8 @@
     </string-array>
 
     <string-array name="filterCurtainMenuItems">
-        <item>Ticket only</item>
-        <item>No ticket</item>
         <item>Beverage included</item>
-        <item>Beverage not included</item>
-        <item>Service Fee: yes</item>
-        <item>Service Fee: no</item>
+        <item>No Service Fee</item>
     </string-array>
 
     <string-array name="filterCurtainRestaurantItems">

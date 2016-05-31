@@ -22,7 +22,11 @@
     <dimen name="frg_textView_textSize">20sp</dimen>
     <!-- END fragment_create_restaurant_1.xml -->
 
-    <!-- timetable_restaurant_itemaurant_item.xml -->
+    <!-- timetable_restaurant_item.xml -->
     <dimen name="working_h_item_textView_marginBottom">10dp</dimen>
     <!-- END timetable_restaurant_item.xmlnt_item.xml -->
+
+    <!-- SearchResult.java -->
+    <dimen name="progressBar_size">100dp</dimen>
+    <!-- END SearchResult.java -->
 </resources>
