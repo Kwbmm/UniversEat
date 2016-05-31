@@ -3,6 +3,7 @@ package it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,6 +30,11 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -183,6 +189,14 @@ public class Create_simple_menu1 extends Fragment {
             //restaurantImg.setImageBitmap(sData.getdata().getMenu().getImageBitmap());
             description.setText(sData.getdata().getMenu().getDescription());
             name.setText(sData.getdata().getMenu().getName());
+            FirebaseStorage storage=FirebaseStorage.getInstance();
+            StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");
+            try {
+                getFromNetwork(imageref,sData.getdata().getMenu().getMid(),restaurantImg);
+                isImageSet=true;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -324,5 +338,25 @@ public class Create_simple_menu1 extends Fragment {
                 this.isImageSet = true;
             } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
+    }
+
+    private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
+        ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
+        final File dir = cw.getDir("images", Context.MODE_PRIVATE);
+        File filePath = new File(dir,id);
+        storageRoot.child(id).getFile(filePath).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                File img = new File(dir, id);
+                Uri imgPath = Uri.fromFile(img);
+                menuPicUri=imgPath;
+                try {
+                    Bitmap b = new Picture(imgPath,getActivity().getContentResolver()).getBitmap();
+                    imView.setImageBitmap(b);
+                } catch (IOException e) {
+                    Log.e("getFromNet",e.getMessage());
+                }
+            }
+        });
     }
 }

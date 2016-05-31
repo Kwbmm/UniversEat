@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 
@@ -28,10 +29,11 @@ public class Create_simple_menu extends NavigationDrawer implements Create_simpl
     Restaurant rest;
     MenuData menuData;
     String mid;
+    FrameLayout mlay;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
+      mlay = (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_create_simple_menu, mlay);
         if (!getIntent().getExtras().getString("mid",null).equals("-1")){
             mid=getIntent().getExtras().getString("mid",null);
@@ -120,6 +122,12 @@ public class Create_simple_menu extends NavigationDrawer implements Create_simpl
     @Override
     public MenuData getdata() {
         return menuData;
+    }
+
+    @Override
+    public void loading() {
+        mlay.addView(getLayoutInflater().inflate(R.layout.loading_bar,null));
+
     }
 
     public class fetchRest implements ChildEventListener{
@@ -216,5 +224,10 @@ public class Create_simple_menu extends NavigationDrawer implements Create_simpl
         public void onCancelled(DatabaseError databaseError) {
 
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        //super.onSaveInstanceState(outState, outPersistentState);
     }
 }

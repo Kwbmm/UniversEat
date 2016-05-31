@@ -60,6 +60,7 @@ public class Create_simple_menu2 extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     public interface shareData{
         MenuData getdata();
+        void loading();
     }
     private shareData sData;
     private it.polito.mad.groupFive.restaurantcode.datastructures.Menu menu;
@@ -70,6 +71,8 @@ public class Create_simple_menu2 extends Fragment {
     private EditText price;
     private CheckBox fee;
     private CheckBox drink;
+    private ViewGroup viewGroup;
+    private View load;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -185,6 +188,7 @@ public class Create_simple_menu2 extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
+        viewGroup=container;
         View v=inflater.inflate(R.layout.fragment_create_simple_menu2, container, false);
         setUpData(v);
         fetchData();
@@ -206,6 +210,7 @@ public class Create_simple_menu2 extends Fragment {
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sData.loading();
                     if(price.getText().toString().length()>0) {
                         menu.setPrice(Float.valueOf(price.getText().toString()));
                         menu.setServiceFee(fee.isChecked());
