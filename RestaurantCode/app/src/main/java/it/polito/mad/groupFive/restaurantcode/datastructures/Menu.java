@@ -25,6 +25,7 @@ public class Menu {
     private boolean serviceFee;
     private ArrayList<Course> courses = new ArrayList<>();
 
+
     /**
      * Creates a new Menu object.
      *
@@ -35,6 +36,7 @@ public class Menu {
     public Menu(String rid, String mid) throws MenuException {
         if(rid == null)
             throw new MenuException("Restaurant ID cannot be null");
+
         if(mid == null)
             throw new MenuException("Menu ID cannot be null");
         this.rid = rid;

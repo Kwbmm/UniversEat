@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,28 +73,35 @@ public class RestaurantManagement extends NavigationDrawer {
     private DatabaseReference dbRoot;
     private StorageReference storageRoot;
     private String uid,rid;
+    private FrameLayout mlay;
 
     private SharedPreferences sharedPreferences;
-    private Boolean visible=false;
+    private Boolean visible=true;
     private View v;
     private MenuItem plus;
+    private View load;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),RestaurantManagement.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
-        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-        v=mlay.inflate(this, R.layout.restaurant_view_edit, mlay);
+        mlay= (FrameLayout) findViewById(R.id.frame);
+        v=mlay.inflate(getBaseContext(), R.layout.restaurant_view_edit, mlay);
+        load= LayoutInflater.from(this).inflate(R.layout.loading_bar,null);
+        mlay.addView(load);
+
         FirebaseDatabase db=FirebaseDatabase.getInstance();
         DatabaseReference myref=db.getReference("restaurant");
         uid=sharedPreferences.getString("uid",null);
         myref.orderByChild("uid").equalTo(uid).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
                 SharedPreferences.Editor editor=sharedPreferences.edit();
                 editor.putString("rid",(String)dataSnapshot.child("rid").getValue());
                 editor.commit();
                 showRestaurant();
+
 
             }
 
@@ -136,20 +144,16 @@ public class RestaurantManagement extends NavigationDrawer {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_add, menu);
-        String rid;
         MenuItem item=menu.findItem(R.id.add_ab);
         plus=item;
-        if ((rid=sharedPreferences.getString("rid",null))!= null){
-            item.setEnabled(false);
-            item.setVisible(false);
-        }
         return true;
     }
 
     private boolean showRestaurant() {
         final SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),RestaurantManagement.MODE_PRIVATE);
         final String METHOD_NAME = this.getClass().getName() + " - showRestaurant";
-
+        if(plus!=null){
+        plus.setVisible(false);}
         this.rid = sharedPreferences.getString("rid",null);
         if ( this.rid != null){
             this.uid=sharedPreferences.getString("uid",null);
@@ -222,6 +226,7 @@ public class RestaurantManagement extends NavigationDrawer {
                 double ycoord = Double.parseDouble(dataSnapshot.child("ycoord").getValue().toString());
                 restaurant.setYCoord(ycoord);
 
+
                 TextView rname= (TextView)findViewById(R.id.restaurant_name);
                 TextView raddress= (TextView)findViewById(R.id.restaurant_address);
                 RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
@@ -272,6 +277,7 @@ public class RestaurantManagement extends NavigationDrawer {
                 try {
                     Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
+                    mlay.removeView(load);
                 } catch (IOException e) {
                     Log.e("getFromNet",e.getMessage());
                 }

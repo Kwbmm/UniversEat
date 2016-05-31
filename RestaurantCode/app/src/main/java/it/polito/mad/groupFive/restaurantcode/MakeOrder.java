@@ -13,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Calendar;
 
 
@@ -34,6 +37,7 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
     private Calendar date;
     private String notes;
     private String[] months;
+    private String menuName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +47,13 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
         rid=getIntent().getExtras().getString("rid");
         mid=getIntent().getExtras().getString("mid");
         uid=getIntent().getExtras().getString("uid");
+        menuName=getIntent().getExtras().getString("name");
         Log.e("RID MID UID",rid+" "+mid+" "+uid);
         date=Calendar.getInstance();
         months=getResources().getStringArray(R.array.months);
-        try {
-            restaurant=new Restaurant(rid);
-        } catch (RestaurantException e) {
-            e.printStackTrace();
-        }
+
+
+
         setupview();
     }
 
@@ -82,7 +85,13 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
                     order.setName(name);
                     order.setNotes(notes);
                     order.setUid(uid);
-                    restaurant.getOrders().add(order);
+                    order.setMenuName(menuName);
+                     FirebaseDatabase db;
+                     db=FirebaseDatabase.getInstance();
+                      DatabaseReference reference=db.getReference("order");
+                    String key= reference.push().getKey();
+                reference.child(key).setValue(order.toMap());
+
                     Toast.makeText(getBaseContext(), getString(R.string.MakeOrder_successful), Toast.LENGTH_SHORT).show();
                     finish();
 

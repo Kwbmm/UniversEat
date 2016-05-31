@@ -203,22 +203,8 @@
         <item>Carne</item>
         <item>Pesce</item>
         <item>Vino</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Carne</item>
-        <item>Pesce</item>
-        <item>Vino</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Carne</item>
-        <item>Pesce</item>
-        <item>Vino</item>
-        <item>Cake</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Meat</item>
-        <item>Fish</item>
-        <item>Cocktail</item>
+        <item>Pomodoro</item>
+        <item>Basilico</item>
     </array>
     <string name="restaurantView_textViewRestaurantAddress">Indirizzo</string>
     <string name="restaurantView_textViewRestaurantName">Nome del Ristorante</string>

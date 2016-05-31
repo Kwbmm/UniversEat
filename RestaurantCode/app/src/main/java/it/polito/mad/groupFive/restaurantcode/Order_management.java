@@ -20,8 +20,17 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -30,29 +39,74 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 public class Order_management extends NavigationDrawer {
-    private Restaurant restaurant;
     private SharedPreferences sharedPreferences;
     private ArrayList<Order> orders;
     private String[] months;
     private int deletecheck;
+    private  String uid;
+    private String rid;
+    private OrderAdapter orderAdapter;
+    private FirebaseDatabase db;
+    private DatabaseReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         months=getResources().getStringArray(R.array.months);
+        orders=new ArrayList<>();
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
-        String uid=sharedPreferences.getString("uid",null);
-        String rid=sharedPreferences.getString("rid",null);
+        uid=sharedPreferences.getString("uid",null);
+        rid=sharedPreferences.getString("rid",null);
         Log.e("RID E UID",""+rid+" "+uid);
-        try {
-            restaurant=new Restaurant(rid);
-        } catch (RestaurantException e) {
-            Log.e("Exception",e.toString());
-        }
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.reservationlist, mlay);
-        //generaordinifittizi();
-        showOrders();
+
+        db=FirebaseDatabase.getInstance();
+        ref=db.getReference("order");
+        ref.orderByChild("rid").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Order order=new Order();
+                SimpleDateFormat format=new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+                order.setOid(dataSnapshot.getKey());
+                order.setUid(dataSnapshot.child("uid").getValue().toString());
+                order.setMid(dataSnapshot.child("mid").getValue().toString());
+                order.setRid(rid);
+                try {
+                    order.setDate(format.parse(dataSnapshot.child("date").getValue().toString()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                order.setMenuName(dataSnapshot.child("menuname").getValue().toString());
+                order.setName(dataSnapshot.child("name").getValue().toString());
+                order.setNotes(dataSnapshot.child("notes").getValue().toString());
+                orders.add(order);
+                showOrders();
+                orderAdapter.notifyDataSetChanged();
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -65,12 +119,11 @@ public class Order_management extends NavigationDrawer {
     private boolean showOrders() {
         TextView noitems = (TextView)findViewById(R.id.noItemsTextView);
         ListView lview = (ListView) findViewById(R.id.listView);
-        orders=restaurant.getOrders();
         Log.v("Order",String.valueOf(orders.size()));
         if (orders.size()>0) {
             noitems.setVisibility(View.INVISIBLE);
             lview.setVisibility(View.VISIBLE);
-            OrderAdapter orderAdapter = new OrderAdapter(this, orders);
+            orderAdapter= new OrderAdapter();
             lview.setAdapter(orderAdapter);
             return true;
         } else {
@@ -89,19 +142,17 @@ public class Order_management extends NavigationDrawer {
     }
 
     public class OrderAdapter extends BaseAdapter {
-        ArrayList<Order> orderlist;
-        Context context;
-        public OrderAdapter(Context context,ArrayList<Order> orders){
-            this.orderlist=orders;
-            this.context=context;
+
+        public OrderAdapter(){
+
         }
 
         @Override
-        public int getCount() { return orderlist.size(); }
+        public int getCount() { return orders.size(); }
 
         @Override
         public Object getItem(int position) {
-            return orderlist.get(position);
+            return orders.get(position);
         }
 
         @Override
@@ -111,7 +162,7 @@ public class Order_management extends NavigationDrawer {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView= LayoutInflater.from(context).inflate(R.layout.reservation,null);
+            convertView= LayoutInflater.from(getBaseContext()).inflate(R.layout.reservation,null);
             TextView username= (TextView) convertView.findViewById(R.id.order_username);
             TextView userID= (TextView) convertView.findViewById(R.id.order_userID);
             TextView hour=(TextView) convertView.findViewById(R.id.hour);
@@ -132,14 +183,9 @@ public class Order_management extends NavigationDrawer {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (which==0){
+                                ref.child(orders.get(deletecheck).getOid()).removeValue();
                                 orders.remove(deletecheck);
-                                restaurant.setOrders(orders);
-                                /*try {
-                                    restaurant.saveData();
-                                } catch (RestaurantException e) {
-                                    e.printStackTrace();
-                                }
-                                */
+                                orderAdapter.notifyDataSetChanged();
                                 showOrders();
                             }else{
                                 deletecheck=0;
@@ -151,14 +197,13 @@ public class Order_management extends NavigationDrawer {
 
                     dialog.show();
 
-                        //restaurant.saveData();
                         showOrders();
 
 
                 }
             });
 
-            Order order= orderlist.get(position);
+            Order order= orders.get(position);
             Calendar calendar= Calendar.getInstance();
             calendar.setTime(order.getDate());
             username.setText(order.getName());
@@ -168,9 +213,7 @@ public class Order_management extends NavigationDrawer {
             minutes.setText(String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MINUTE)));
             date.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))+" "+months[calendar.get(Calendar.MONTH)]);
             oid.setText("Order ID: "+String.valueOf(order.getOid()));
-            String mealID="#"+String.valueOf(order.getMid());
-                if(restaurant.getMenuByID(order.getMid())!=null)
-                    mealID=restaurant.getMenuByID(order.getMid()).getName();
+            String mealID="#"+String.valueOf(order.getMenuName());
 
             meal.setText("Menu: "+mealID);
             return convertView;

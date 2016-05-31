@@ -146,11 +146,12 @@ public class Create_simple_menu1 extends Fragment {
                         if(boolean_name && boolean_descr && isImageSet) {
                             data.getMenu().setName(name.getText().toString());
                             data.getMenu().setDescription(description.getText().toString());
+                            data.getMenu().setImageLocal(menuPicUri.toString());
 
                             if (!sData.getdata().isEdit()) {
                                 //data.getMenu().setImageFromDrawable(menuPicView.getDrawable());
                             } else {
-                               // data.getMenu().setImageFromDrawable(restaurantImg.getDrawable());
+
                             }
 
                             Create_simple_menu2 csm2 = new Create_simple_menu2();

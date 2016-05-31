@@ -37,6 +37,7 @@
         <activity
             android:name=".NavigationDrawer"
             android:screenOrientation="portrait"
+            android:noHistory="true"
             />
         <activity
             android:name=".RestaurantManagement"
@@ -45,36 +46,50 @@
             />
         <activity
             android:name=".CreateRestaurant.CreateRestaurant"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".Menu_details"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
+        <activity
+            android:name=".Menu_details_view"
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
         <activity
             android:name=".MakeOrder"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
         <activity
             android:name=".Menu_view_edit"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".Profile"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:noHistory="true"
             />
         <activity
             android:name=".Order_management"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
+
             />
         <activity android:name=".RestaurantView.User_info_view"
             android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
         <activity android:name=".Login.CreateLogin"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:noHistory="true"
             />
-        <activity android:name=".RestaurantView.Create_review" />
-        <activity android:name=".CreateSimpleMenu.Create_simple_menu" />
+        <activity android:name=".RestaurantView.Create_review"
+            />
+        <activity android:name=".CreateSimpleMenu.Create_simple_menu"
+            />
     </application>
 
 </manifest>

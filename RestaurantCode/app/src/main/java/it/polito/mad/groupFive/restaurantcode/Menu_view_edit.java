@@ -1,8 +1,12 @@
 package it.polito.mad.groupFive.restaurantcode;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -19,19 +23,30 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Create_simple_menu;
 import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Simple_menu_add_tags;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
@@ -48,10 +63,15 @@ public class Menu_view_edit extends NavigationDrawer {
     private SharedPreferences sharedPreferences;
     private RecyclerView recyclerView;
     private String rid;
+    private FrameLayout mlay;
+    private View load;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mlay= (FrameLayout) findViewById(R.id.frame);
+        load= LayoutInflater.from(this).inflate(R.layout.loading_bar,null);
+        mlay.addView(load);
         menus=new ArrayList<>();
         readdata();
 
@@ -94,7 +114,6 @@ public class Menu_view_edit extends NavigationDrawer {
             e.printStackTrace();
         }
 
-        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.menulist, mlay);
         adp= new MenuAdapter();
         recyclerView=(RecyclerView)findViewById(R.id.my_recycler_view);
@@ -203,14 +222,21 @@ public class Menu_view_edit extends NavigationDrawer {
         @Override
         public void onBindViewHolder(MenuEditViewHolder holder,int position) {
             Menu menu =menus.get(position);
+            holder.card.setOnClickListener(new CardListener(menu.getRid(),menu.getMid()));
             holder.menu_desctiprion.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
             holder.edit.setOnClickListener(new onEditclick(menu));
             try {
+
+                FirebaseStorage storage=FirebaseStorage.getInstance();
+                StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");
+                getFromNetwork(imageref,menu.getMid(),holder.menu_image);
                // holder.menu_image.setImageBitmap(menu.getImageBitmap());
             } catch (NullPointerException e){
                 Log.e("immagine non caricata"," ");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
             //Log.v("image",menu.getImageByteArray().toString());
         }
@@ -221,13 +247,15 @@ public class Menu_view_edit extends NavigationDrawer {
         }
 
         public void remove(Menu position){
+            FirebaseDatabase db= FirebaseDatabase.getInstance();
            String removeMid= position.getMid();
             Log.v("remove",removeMid);
-            FirebaseDatabase db= FirebaseDatabase.getInstance();
+
             DatabaseReference ref=db.getReference("menu");
             ref.child(removeMid).removeValue();
             int pos=menus.indexOf(position);
             menus.remove(position);
+
 
             notifyItemRemoved(pos);
 
@@ -303,6 +331,7 @@ public class MenuList implements ChildEventListener{
         menu.setType(Integer.parseInt(dataSnapshot.child("type").getValue().toString()));
         menu.setImageLocal((String) dataSnapshot.child("imageLocalPath").getValue());
         menus.add(menu);
+        mlay.removeView(load);
                 adp.notifyDataSetChanged();
 
 
@@ -348,7 +377,6 @@ public class MenuList implements ChildEventListener{
             }
         });
 
-
     }
 
     @Override
@@ -361,5 +389,40 @@ public class MenuList implements ChildEventListener{
 
     }
 }
+    private class CardListener implements View.OnClickListener{
+        String rid,mid;
+        public CardListener(String rid,String mid){
+           this.rid=rid;
+            this.mid=mid;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent menu_view=new Intent(getBaseContext(),Menu_details_view.class);
+            menu_view.putExtra("rid",rid);
+            menu_view.putExtra("mid",mid);
+            startActivity(menu_view);
+
+        }
+    }
+
+    private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        final File dir = cw.getDir("images", Context.MODE_PRIVATE);
+        File filePath = new File(dir,id);
+        storageRoot.child(id).getFile(filePath).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                File img = new File(dir, id);
+                Uri imgPath = Uri.fromFile(img);
+                try {
+                    Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
+                    imView.setImageBitmap(b);
+                } catch (IOException e) {
+                    Log.e("getFromNet",e.getMessage());
+                }
+            }
+        });
+    }
 }
 

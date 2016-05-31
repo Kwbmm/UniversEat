@@ -204,6 +204,13 @@ public class CreateRestaurant
                        restaurant.setTimetableDinner((HashMap)dataSnapshot.child("timetableDinner").getValue());
                        restaurant.setTimetableLunch((HashMap)dataSnapshot.child("timetableLunch").getValue());
 
+                       if(restaurant.getTimetableLunch()==null){
+                           restaurant.setTimetableLunch(new HashMap<String, Map<String, String>>());
+                       }
+                       if(restaurant.getTimetableDinner()==null){
+                           restaurant.setTimetableDinner(new HashMap<String, Map<String, String>>());
+                       }
+
                        edit=true;
 
                        if(findViewById(R.id.fragment_CreateRestaurant) != null){

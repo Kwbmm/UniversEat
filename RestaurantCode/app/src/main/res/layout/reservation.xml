@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="200dp"
     card_view:cardElevation="5dp"
     card_view:cardCornerRadius="5dp"
     card_view:cardUseCompatPadding="true">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="190dp"
         android:background="#ffffff"
         android:paddingLeft="10dp"
         android:paddingTop="5dp"
@@ -94,9 +94,17 @@
             android:id="@+id/date"
             android:gravity="center_horizontal"
             android:textSize="20dp"
-            android:layout_alignParentTop="true"
+            android:layout_below="@id/order_meal"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/order_userID"
+            android:layout_above="@+id/order_OID"
+            android:textSize="10dp"
+            android:text="123123" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -109,18 +117,9 @@
             android:textSize="17dp"
             android:layout_toLeftOf="@+id/hour"
             android:layout_toStartOf="@+id/hour"
-            android:layout_above="@+id/order_OID" />
+            android:layout_above="@+id/order_userID" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/order_userID"
-            android:layout_above="@+id/order_meal"
-            android:layout_toRightOf="@+id/order_username"
-            android:layout_toEndOf="@+id/order_username"
-            android:textSize="20dp"
-            android:text="123123" />
+
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

@@ -22,13 +22,13 @@
         <item>Logout</item>
     </string-array>
     <string-array name="week">
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-        <item>Sunday</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
     </string-array>
 
     <!-- activity_home.xml -->
@@ -376,22 +376,11 @@
         <item>Cake</item>
         <item>Pizza</item>
         <item>Pasta</item>
-        <item>Meat</item>
-        <item>Fish</item>
-        <item>Cocktail</item>
-        <item>Cake</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Meat</item>
-        <item>Fish</item>
-        <item>Cocktail</item>
-        <item>Cake</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Meat</item>
-        <item>Fish</item>
-        <item>Cocktail</item>
-        <item>Cake</item>
+        <item>Carne</item>
+        <item>Pesce</item>
+        <item>Vino</item>
+        <item>Pomodoro</item>
+        <item>Basilico</item>
     </array>
 
     <array name="cuisine">

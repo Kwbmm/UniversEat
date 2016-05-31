@@ -154,10 +154,6 @@ public class Add_simple_dish extends Fragment{
                         }
                     });
 
-                    //ArrayList<Course> alc=data.getMenu().getCourses();
-                    //alc.add(newDish);
-
-
 
 
 

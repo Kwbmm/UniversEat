@@ -20,7 +20,9 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -206,6 +208,7 @@ public class CreateRestaurant_4 extends Fragment {
                 }
             });
             if (getR.editmode()){
+
                 if(!restaurant.getTimetableDinner().isEmpty()){
                     if (restaurant.getTimetableDinner().containsKey(weekDays[count])){
                         cb.setChecked(true);

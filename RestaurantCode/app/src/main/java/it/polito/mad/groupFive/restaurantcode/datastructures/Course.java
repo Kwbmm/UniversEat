@@ -66,11 +66,11 @@ public class Course {
         output.put("vegetarian",this.vegetarian);
         output.put("spicy",this.spicy);
 
-        HashMap<String, Boolean> tagMap = new HashMap<>();
+       // HashMap<String, Boolean> tagMap = new HashMap<>();
         for(String tag : this.tags){
-            tagMap.put(tag,true);
+            output.put(tag.toLowerCase(),true);
         }
-        output.put("tags",tagMap);
+        //output.put("tags",tagMap);
         return output;
     }
 

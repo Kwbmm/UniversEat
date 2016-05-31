@@ -1,11 +1,15 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.text.Layout;
@@ -35,12 +39,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
 
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
@@ -68,13 +74,17 @@ public class Profile extends NavigationDrawer {
     TextView header;
     ImageView image;
     ListView list;
+    ProfileAdapter profileAdapter;
+    List<Restaurant> re;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle("Profile");
         mlay= (FrameLayout) findViewById(R.id.frame);
         sharedPreferences=this.getSharedPreferences("RestaurantCode.Userdata",this.MODE_PRIVATE);
         uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        re=new ArrayList<Restaurant>();
         if(uid==null) finish();
         restOwner=sharedPreferences.getBoolean("owner",Boolean.FALSE);
             db = FirebaseDatabase.getInstance();
@@ -110,20 +120,18 @@ public class Profile extends NavigationDrawer {
 
     }
     public class ProfileAdapter extends BaseAdapter {
-        List<String> restaurantIDs;
         Context context;
         Restaurant restaurant;
-        public ProfileAdapter(Context context, List<String> restaurantIDs){
-            this.restaurantIDs=restaurantIDs;
-            this.context=context;
+        public ProfileAdapter(Context context){
+
         }
 
         @Override
-        public int getCount() { return restaurantIDs.size(); }
+        public int getCount() { return re.size(); }
 
         @Override
         public Object getItem(int position) {
-            return restaurantIDs.get(position);
+            return re.get(position);
         }
 
         @Override
@@ -133,31 +141,34 @@ public class Profile extends NavigationDrawer {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.restaurant_view, null);
-            String restaurantID = restaurantIDs.get(position);
-            try {
-                restaurant = new Restaurant(restaurantID);
-            } catch (RestaurantException e) {
-                e.printStackTrace();
-            }
+            convertView = LayoutInflater.from(getBaseContext()).inflate(R.layout.restaurant_view, null);
+            final Restaurant rest = re.get(position);
+
             TextView name= (TextView)convertView.findViewById(R.id.restaurant_name);
             TextView address= (TextView)convertView.findViewById(R.id.restaurant_address);
             RatingBar rbar=(RatingBar)convertView.findViewById(R.id.restaurant_rating);
             ImageView img = (ImageView) convertView.findViewById(R.id.restaurant_image);
             CardView card = (CardView) convertView.findViewById(R.id.restaurant_card);
-            name.setText(restaurant.getName());
-            address.setText(restaurant.getAddress());
-            rbar.setRating(restaurant.getRating());
+            name.setText(rest.getName());
+            address.setText(rest.getAddress());
+            rbar.setRating(rest.getRating());
             try {
+
+                FirebaseStorage storage=FirebaseStorage.getInstance();
+                StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
+                getFromNetwork(imageref,rest.getRid(),img);
               //  img.setImageBitmap(restaurant.getImageBitmap());
             } catch (NullPointerException e){
                 Log.e("immagine non caricata"," ");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
             card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getBaseContext(), User_info_view.class);
-                    intent.putExtra("rid",restaurant.getRid());
+                    intent.putExtra("rid",rest.getRid());
+                    intent.putExtra("mid","-1");
                     startActivity(intent);
                 }
             });
@@ -198,8 +209,65 @@ public class Profile extends NavigationDrawer {
                                 email.setText(user.getEmail());
                                 header.setText("My Restaurant");
                             image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-                            ProfileAdapter profileAdapter = new ProfileAdapter(getBaseContext(),user.getRestaurantIDs());
+                            DatabaseReference rf= db.getReference("restaurant");
+                            profileAdapter= new ProfileAdapter(getBaseContext());
                             list.setAdapter(profileAdapter);
+                            rf.orderByChild("uid").equalTo(uid).addChildEventListener(new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                                    try {
+                                        Restaurant r = new Restaurant(
+                                                (String)dataSnapshot.child("uid").getValue(),
+                                                (String)dataSnapshot.child("rid").getValue()
+                                        );
+
+                                        r
+                                                .setName((String)dataSnapshot.child("name").getValue())
+                                                .setDescription((String)dataSnapshot.child("description").getValue())
+                                                .setAddress((String)dataSnapshot.child("address").getValue())
+                                                .setState((String)dataSnapshot.child("state").getValue())
+                                                .setCity((String)dataSnapshot.child("city").getValue())
+                                                .setWebsite((String)dataSnapshot.child("website").getValue())
+                                                .setTelephone((String)dataSnapshot.child("telephone").getValue())
+                                                .setZip((String)dataSnapshot.child("zip").getValue())
+                                                .setImageLocalPath((String)dataSnapshot.child("imageLocalPath").getValue());
+                                        float rating = Float.parseFloat(dataSnapshot.child("rating").getValue().toString());
+                                        r.setRating(rating);
+                                        double xcoord = Double.parseDouble(dataSnapshot.child("xcoord").getValue().toString());
+                                        r.setXCoord(xcoord);
+                                        double ycoord = Double.parseDouble(dataSnapshot.child("ycoord").getValue().toString());
+                                        r.setYCoord(ycoord);
+
+                                        re.add(r);
+                                        profileAdapter.notifyDataSetChanged();
+                                    } catch (RestaurantException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+
+                                @Override
+                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                }
+
+                                @Override
+                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -239,7 +307,7 @@ public class Profile extends NavigationDrawer {
                             email.setText(user.getEmail());
                             header.setText("My Favourites");
                             image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-                            ProfileAdapter profileAdapter = new ProfileAdapter(getBaseContext(),user.getRestaurantIDs());
+                            ProfileAdapter profileAdapter = new ProfileAdapter(getBaseContext());
                             list.setAdapter(profileAdapter);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -275,5 +343,24 @@ public class Profile extends NavigationDrawer {
         public void onCancelled(DatabaseError databaseError) {
 
         }
+    }
+
+    private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        final File dir = cw.getDir("images", Context.MODE_PRIVATE);
+        File filePath = new File(dir,id);
+        storageRoot.child(id).getFile(filePath).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                File img = new File(dir, id);
+                Uri imgPath = Uri.fromFile(img);
+                try {
+                    Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
+                    imView.setImageBitmap(b);
+                } catch (IOException e) {
+                    Log.e("getFromNet",e.getMessage());
+                }
+            }
+        });
     }
 }

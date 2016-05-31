@@ -21,9 +21,18 @@ public class Order {
     private Date date=null;
     private String notes;
     private String name;
+    private String menuName;
 
     public void setOid(String oid) {
         this.oid = oid;
+    }
+
+    public String getMenuName() {
+        return menuName;
+    }
+
+    public void setMenuName(String menuNmae) {
+        this.menuName = menuNmae;
     }
 
     public void setUid(String uid) {
@@ -77,9 +86,10 @@ public class Order {
         output.put("uid",this.uid);
         output.put("mid",this.mid);
         output.put("rid",this.rid);
-        output.put("date",this.date);
+        output.put("date",this.date.toString());
         output.put("notes",this.notes);
         output.put("name",this.name);
+        output.put("menuname",this.menuName);
         return output;
     }
 
