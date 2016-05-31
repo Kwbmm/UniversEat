@@ -341,5 +341,7 @@
     <string name="SearchResult_toastFailLoadData">Non riusciamo a caricare i dati..</string>
     <string name="toastRestaurantImageLoadFail">Non siamo riusciti a scaricare l\'immagine dalla rete :(</string>
     <string name="toastRestaurantLoadDataFail">Non siamo riusciti a scaricare i dati dalla rete :(</string>
+    <string name="SearchResult_filterCancelButtonText">Annulla</string>
+    <string name="SearchResult_filterConfirmButtonText">Filtra</string>
 
 </resources>
