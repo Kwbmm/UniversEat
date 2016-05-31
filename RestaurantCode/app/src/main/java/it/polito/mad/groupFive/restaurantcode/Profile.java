@@ -114,9 +114,9 @@ public class Profile extends NavigationDrawer {
          name = (TextView) findViewById(R.id.user_name);
        username = (TextView) findViewById(R.id.user_username);
         email = (TextView) findViewById(R.id.user_email);
-        header = (TextView) findViewById(R.id.listHeader);
+       // header = (TextView) findViewById(R.id.listHeader);
          image= (ImageView) findViewById(R.id.user_image);
-        list= (ListView) findViewById(R.id.profileList);
+        //list= (ListView) findViewById(R.id.profileList);
 
     }
     public class ProfileAdapter extends BaseAdapter {

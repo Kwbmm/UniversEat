@@ -25,12 +25,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-<<<<<<< HEAD
+
         android:visibility="gone"
         />
-=======
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp" />
 
->>>>>>> 6a3ee69e11b48ded2d3f58c5d873c2b86b4c017b
 </RelativeLayout>

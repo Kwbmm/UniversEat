@@ -16,6 +16,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -45,6 +48,9 @@ public class CreateRestaurant_2 extends Fragment {
     private TextView city;
     private TextView ZIPCode;
     private TextView state;
+    private TextView mapPickerText;
+    private LatLng latLng;
+    private int PLACE_PICKER_REQUEST = 1;
 
     private Restaurant restaurant;
     private String rid; //The id of the restaurant, passed from the activity
@@ -217,5 +223,16 @@ public class CreateRestaurant_2 extends Fragment {
      */
     public interface onFragInteractionListener {
         void onChangeFrag2(Restaurant r);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                Place place = PlacePicker.getPlace(getContext(),data);
+                latLng = place.getLatLng();
+                String msg = place.getName()+" "+latLng.toString();
+                mapPickerText.setText(msg);
+            }
+        }
     }
 }

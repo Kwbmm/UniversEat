@@ -4,22 +4,9 @@
     android:layout_height="wrap_content"
     android:background="#ffffff"
     android:paddingLeft="5dp"
-<<<<<<< HEAD
+
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <TextView
-            android:id="@+id/course_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/menu_details_course"
-            android:textSize="20dp"
-            android:layout_toLeftOf="@+id/img_hot"
-            android:layout_toStartOf="@+id/img_hot"
-            android:gravity="center_vertical" />
-=======
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:minHeight="32dp">
->>>>>>> 6a3ee69e11b48ded2d3f58c5d873c2b86b4c017b
 
     <ImageView
         android:layout_width="wrap_content"
