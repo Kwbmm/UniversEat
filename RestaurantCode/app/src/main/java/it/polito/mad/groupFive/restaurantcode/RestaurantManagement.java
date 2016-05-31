@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,19 +73,59 @@ public class RestaurantManagement extends NavigationDrawer {
     private DatabaseReference dbRoot;
     private StorageReference storageRoot;
     private String uid,rid;
+    private FrameLayout mlay;
 
     private SharedPreferences sharedPreferences;
-    private Boolean visible=false;
+    private Boolean visible=true;
     private View v;
     private MenuItem plus;
+    private View load;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),RestaurantManagement.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
-        FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-        v=mlay.inflate(this, R.layout.restaurant_view_edit, mlay);
-        showRestaurant();
+        mlay= (FrameLayout) findViewById(R.id.frame);
+        v=mlay.inflate(getBaseContext(), R.layout.restaurant_view_edit, mlay);
+        load= LayoutInflater.from(this).inflate(R.layout.loading_bar,null);
+        mlay.addView(load);
+
+        FirebaseDatabase db=FirebaseDatabase.getInstance();
+        DatabaseReference myref=db.getReference("restaurant");
+        uid=sharedPreferences.getString("uid",null);
+        myref.orderByChild("uid").equalTo(uid).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                SharedPreferences.Editor editor=sharedPreferences.edit();
+                editor.putString("rid",(String)dataSnapshot.child("rid").getValue());
+                editor.commit();
+                showRestaurant();
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 
@@ -102,26 +144,23 @@ public class RestaurantManagement extends NavigationDrawer {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_add, menu);
-        String rid;
         MenuItem item=menu.findItem(R.id.add_ab);
         plus=item;
-        if ((rid=sharedPreferences.getString("rid",null))!= null){
-            item.setEnabled(false);
-            item.setVisible(false);
-        }
         return true;
     }
 
     private boolean showRestaurant() {
         final SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),RestaurantManagement.MODE_PRIVATE);
         final String METHOD_NAME = this.getClass().getName() + " - showRestaurant";
-
+        if(plus!=null){
+        plus.setVisible(false);}
         this.rid = sharedPreferences.getString("rid",null);
         if ( this.rid != null){
             this.uid=sharedPreferences.getString("uid",null);
             LinearLayout rview= (LinearLayout) findViewById(R.id.fl_redit);
             v=rview.inflate(this,R.layout.resturant_view_edit_fragment,rview);
             ImageButton modify = (ImageButton) findViewById(R.id.restaurant_edit);
+            modify.setOnClickListener(new onEditclick(1));
             visible=true;
             RelativeLayout rl = (RelativeLayout) findViewById(R.id.restaurant_view_layout);
             if (rl != null) {
@@ -145,7 +184,7 @@ public class RestaurantManagement extends NavigationDrawer {
         if(item.getItemId()==R.id.add_ab){
             Log.v("intent","newRest");
             Intent intent=new Intent(getApplicationContext(),CreateRestaurant.class);
-            intent.putExtra("rid",-1);
+            intent.putExtra("rid","-1");
             item.setVisible(false);
             startActivityForResult(intent,CREATE_RESTAURANT);
 
@@ -180,12 +219,13 @@ public class RestaurantManagement extends NavigationDrawer {
                         .setTelephone((String)dataSnapshot.child("telephone").getValue())
                         .setZip((String)dataSnapshot.child("zip").getValue())
                         .setImageLocalPath((String)dataSnapshot.child("imageLocalPath").getValue());
-                float rating = ((Long)dataSnapshot.child("rating").getValue()).floatValue();
+                float rating = Float.parseFloat(dataSnapshot.child("rating").getValue().toString());
                 restaurant.setRating(rating);
-                double xcoord = ((Long)dataSnapshot.child("xcoord").getValue()).doubleValue();
+                double xcoord = Double.parseDouble(dataSnapshot.child("xcoord").getValue().toString());
                 restaurant.setXCoord(xcoord);
-                double ycoord = ((Long)dataSnapshot.child("ycoord").getValue()).doubleValue();
+                double ycoord = Double.parseDouble(dataSnapshot.child("ycoord").getValue().toString());
                 restaurant.setYCoord(ycoord);
+
 
                 TextView rname= (TextView)findViewById(R.id.restaurant_name);
                 TextView raddress= (TextView)findViewById(R.id.restaurant_address);
@@ -237,6 +277,7 @@ public class RestaurantManagement extends NavigationDrawer {
                 try {
                     Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
+                    mlay.removeView(load);
                 } catch (IOException e) {
                     Log.e("getFromNet",e.getMessage());
                 }
@@ -290,7 +331,6 @@ public class RestaurantManagement extends NavigationDrawer {
         public void onClick(DialogInterface dialog, int which) {
             switch (which){
                 case 0:{
-                    //TODO:edit intent
                     Intent edit_menu=new Intent(getBaseContext(),CreateRestaurant.class);
                     edit_menu.putExtra("rid",restaurant.getRid());
                     startActivityForResult(edit_menu,3);
@@ -298,8 +338,73 @@ public class RestaurantManagement extends NavigationDrawer {
                 }
                 case 1:{
                     SharedPreferences.Editor editor=sharedPreferences.edit();
+                    //TOdo delete from server
                     editor.remove("rid");
                     editor.commit();
+                    final FirebaseDatabase db=FirebaseDatabase.getInstance();
+                    DatabaseReference ref=db.getReference("restaurant");
+                    ref.child(rid).removeValue();
+
+                    ref=db.getReference("menu");
+                    ref.orderByChild("rid").equalTo(rid).addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            String mid=dataSnapshot.child("mid").getValue().toString();
+                           DatabaseReference ref=db.getReference("menu");
+                            ref.child(mid).removeValue();
+                            ref=db.getReference("course");
+                            ref.orderByChild("mid").equalTo(mid).addChildEventListener(new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                    String cid=dataSnapshot.child("cid").getValue().toString();
+                                    DatabaseReference ref=db.getReference("course");
+                                    ref.child(cid).removeValue();
+
+                                }
+
+                                @Override
+                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                }
+
+                                @Override
+                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
                     v.setVisibility(View.INVISIBLE);
                     plus.setVisible(true);
                     break;

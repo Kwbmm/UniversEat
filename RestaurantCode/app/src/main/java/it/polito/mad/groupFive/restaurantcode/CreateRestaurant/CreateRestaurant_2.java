@@ -87,15 +87,15 @@ public class CreateRestaurant_2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_2, container, false);
-        this.rid = getArguments().getString("rid");
-        this.uid = getArguments().getString("uid");
+        this.rid = getR.getRest().getRid();
+        this.uid = getR.getRest().getUid();
         address = (TextView) parentView.findViewById(R.id.editText_Address);
         city = (TextView) parentView.findViewById(R.id.editText_City);
         ZIPCode = (TextView) parentView.findViewById(R.id.editText_ZIPCode);
         state = (TextView) parentView.findViewById(R.id.editText_State);
-        //if(getR.editmode()){
-        //    fetchData();
-        //}
+        if(getR.editmode()){
+            fetchData();
+        }
         Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,9 +129,9 @@ public class CreateRestaurant_2 extends Fragment {
     private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
 
-//        if(!getR.editmode())restaurant=new Restaurant();
-        try {
-            restaurant = new Restaurant(this.uid,this.rid);
+       if(!getR.editmode()){
+           restaurant=getR.getRest();}
+
             if(address.getText().toString().trim().equals("") || address.getText() == null){
                 Log.w(METHOD_NAME,"TextView Address is either empty or null");
                 return false;
@@ -163,10 +163,8 @@ public class CreateRestaurant_2 extends Fragment {
             //restaurant.setXcoord();
             //restaurant.setYcoord();
             return true;
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            return false;
-        }
+
+
     }
 
     @Override

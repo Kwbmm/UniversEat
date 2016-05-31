@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,8 +26,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -117,8 +124,8 @@ public class CreateRestaurant_1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
-        this.rid = getArguments().getString("rid");
-        this.uid = getArguments().getString("uid");
+        this.rid = getR.getRest().getRid();
+        this.uid = getR.getRest().getUid();
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_1, container, false);
 
         restaurantImg = (ImageView) this.parentView.findViewById(R.id.imageView_RestaurantImage);
@@ -128,7 +135,7 @@ public class CreateRestaurant_1 extends Fragment {
         telephone= (TextView) parentView.findViewById(R.id.editText_Telephone);
         website= (TextView) parentView.findViewById(R.id.editText_Website);
         if(getR.editmode()){
-//            fetchData();
+           fetchData();
         }
         restaurantImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,27 +173,35 @@ public class CreateRestaurant_1 extends Fragment {
         });
         return this.parentView;
     }
-    /*
-        private void fetchData(){
-            final String METHOD_NAME = this.getClass().getName()+" - fetchData";
-            restaurant=getR.getRest();
+
+        private void fetchData() {
+            final String METHOD_NAME = this.getClass().getName() + " - fetchData";
+            this.restaurant=getR.getRest();
             name.setText(restaurant.getName());
             description.setText(restaurant.getDescription());
             telephone.setText(restaurant.getTelephone());
             website.setText(restaurant.getWebsite());
+            FirebaseStorage storage=FirebaseStorage.getInstance();
+            StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
             try {
-                restaurantImg.setImageBitmap(restaurant.getImageBitmap());
+                getFromNetwork(imageref,restaurant.getRid(),restaurantImg);
+                this.isImageSet = true;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+          /*  try {
+                //restaurantImg.setImageBitmap(restaurant.getImageBitmap());
             } catch (RestaurantException e) {
                 Log.e(METHOD_NAME,e.getMessage());
             }
+        }*/
+
         }
-    */
     private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
-        try {
-            restaurant=new Restaurant(this.uid,this.rid);
+            restaurant=getR.getRest();
             if(name.getText().toString().trim().equals("") || name.getText() == null){
                 Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
                 return false;
@@ -223,10 +238,6 @@ public class CreateRestaurant_1 extends Fragment {
             }
             restaurant.setWebsite(website.getText().toString());
             return true;
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            return false;
-        }
     }
 
     private void pickImage(){
@@ -356,5 +367,25 @@ public class CreateRestaurant_1 extends Fragment {
 
     public interface onFragInteractionListener {
         void onChangeFrag1(Restaurant r);
+    }
+
+    private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
+        ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
+        final File dir = cw.getDir("images", Context.MODE_PRIVATE);
+        File filePath = new File(dir,id);
+        storageRoot.child(id).getFile(filePath).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                File img = new File(dir, id);
+                Uri imgPath = Uri.fromFile(img);
+                restaurantPicUri=imgPath;
+                try {
+                    Bitmap b = new Picture(imgPath,getActivity().getContentResolver()).getBitmap();
+                    imView.setImageBitmap(b);
+                } catch (IOException e) {
+                    Log.e("getFromNet",e.getMessage());
+                }
+            }
+        });
     }
 }

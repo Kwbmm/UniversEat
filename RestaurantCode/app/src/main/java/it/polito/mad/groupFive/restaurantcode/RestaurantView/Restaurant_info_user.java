@@ -1,6 +1,8 @@
 package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,9 +15,18 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import it.polito.mad.groupFive.restaurantcode.R;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
@@ -88,9 +99,9 @@ public class Restaurant_info_user extends Fragment {
         return v;
     }
 
-    public void getRestaurantData(View v){
-        final String METHOD_NAME = this.getClass().getName()+" - getRestaurantData";
+    public void getRestaurantData(View v) {
         restaurant=data.getRestaurant();
+
 
         TextView rest_rev_det =(TextView)v.findViewById(R.id.restaurant_rev_details);
         rest_rev_det.setText("Based on "+restaurant.getReviews().size()+" Reviews");
@@ -104,7 +115,14 @@ public class Restaurant_info_user extends Fragment {
         restrating.setRating(restaurant.getRating());
         ImageView restImage=(ImageView)v.findViewById(R.id.restaurant_image);
 
-
+        FirebaseStorage storage=FirebaseStorage.getInstance();
+        StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
+        try {
+            getFromNetwork(imageref,restaurant.getRid(),restImage);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        //restImage.setImageBitmap(restaurant.getImageBitmap());
 
         LinearLayout ll = (LinearLayout) v.findViewById(R.id.restaurant_time_t);
         int count=0;
@@ -114,13 +132,14 @@ public class Restaurant_info_user extends Fragment {
             TextView dow= (TextView) timetableItem.findViewById(R.id.dow);
             dow.setText(weekday);
             TextView dinner= (TextView) timetableItem.findViewById(R.id.time_dinner);
-            if (restaurant.getTimetableDinner().containsKey(weekday)){
-                dinner.setText(restaurant.getTimetableDinner().get(weekday).get("start")+"-"+restaurant.getTimetableDinner().get(weekday).get("end"));}
+            SimpleDateFormat sd=new SimpleDateFormat("HH:mm");
+            if (restaurant.getTimetableDinner()!=null&&restaurant.getTimetableDinner().containsKey(weekday)){
+            dinner.setText((restaurant.getTimetableDinner().get(weekday).get("start")+"-"+(restaurant.getTimetableDinner().get(weekday).get("end"))));}
             else {
                 dinner.setText(getResources().getString(R.string.closed));
             }
             TextView lunch=(TextView)timetableItem.findViewById(R.id.time_lunch);
-            if (restaurant.getTimetableLunch().containsKey(weekday)){
+            if (restaurant.getTimetableLunch()!=null&&restaurant.getTimetableLunch().containsKey(weekday)){
                 lunch.setText(restaurant.getTimetableLunch().get(weekday).get("start")+"-"+restaurant.getTimetableLunch().get(weekday).get("end"));}
             else {
                 lunch.setText(getResources().getString(R.string.closed));
@@ -128,6 +147,8 @@ public class Restaurant_info_user extends Fragment {
             ll.addView(timetableItem);
             count++;
         }
+
+
     }
 
 
@@ -169,5 +190,23 @@ public class Restaurant_info_user extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
+        ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
+        final File dir = cw.getDir("images", Context.MODE_PRIVATE);
+        File filePath = new File(dir,id);
+        storageRoot.child(id).getFile(filePath).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                File img = new File(dir, id);
+                Uri imgPath = Uri.fromFile(img);
+                try {
+                    Bitmap b = new Picture(imgPath,getActivity().getContentResolver()).getBitmap();
+                    imView.setImageBitmap(b);
+                } catch (IOException e) {
+                    Log.e("getFromNet",e.getMessage());
+                }
+            }
+        });
     }
 }

@@ -21,6 +21,31 @@ public class Order {
     private Date date=null;
     private String notes;
     private String name;
+    private String menuName;
+
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
+
+    public String getMenuName() {
+        return menuName;
+    }
+
+    public void setMenuName(String menuNmae) {
+        this.menuName = menuNmae;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setRid(String rid) {
+        this.rid = rid;
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid;
+    }
 
     /**
      * Create a new Order object.
@@ -40,10 +65,14 @@ public class Order {
             throw new OrderException("User ID cannot be null");
         if(oid == null)
             throw new OrderException("Order ID cannot be null");
+
         this.rid = rid;
         this.mid = mid;
         this.uid = uid;
         this.oid = oid;
+    }
+    public Order(){
+
     }
 
     /**
@@ -57,9 +86,10 @@ public class Order {
         output.put("uid",this.uid);
         output.put("mid",this.mid);
         output.put("rid",this.rid);
-        output.put("date",this.date);
+        output.put("date",this.date.toString());
         output.put("notes",this.notes);
         output.put("name",this.name);
+        output.put("menuname",this.menuName);
         return output;
     }
 

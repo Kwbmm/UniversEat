@@ -1,8 +1,12 @@
 package it.polito.mad.groupFive.restaurantcode;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,18 +21,28 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import it.polito.mad.groupFive.restaurantcode.Login.CreateLogin;
 import it.polito.mad.groupFive.restaurantcode.Login.Login_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
+import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
 
 public class NavigationDrawer extends AppCompatActivity implements Login_view.OnFragmentInteractionListener {
     private int phase;//0 Logged out 1 logged in
     private boolean usertype;// false user true restaurant manager
-    private RestaurantOwner rowner;
-    private Customer user;
+    private User user;
     private ArrayAdapter<String> adapter;
     private DrawerLayout drawerLayout;
     private static int REGISTRATION=1;
@@ -43,29 +57,26 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     protected void onCreate(Bundle savedInstanceState) {
         // not a real activity, it's used to extend toolbar and navigation drawer to all activity created
         super.onCreate(savedInstanceState);
+        FirebaseAuth auth=FirebaseAuth.getInstance();
+        sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
+        SharedPreferences.Editor editor= sharedPreferences.edit();
+        editor.putString("uid",auth.getCurrentUser().getUid());
+        editor.apply();
         getUserinfo();
         checkUser();
         createDrawer();
-        checkPic();
+        //checkPic();
     }
 
     private void checkPic(){
         final String METHOD_NAME = this.getClass().getName()+" - checkPic";
         if(phase==1){
             if (usertype){
-                try {
-                    rowner= new RestaurantOwner(getBaseContext(),sharedPreferences.getString("uid",null));
-                    this.imageView.setImageBitmap(rowner.getImageBitmap());
-                } catch (RestaurantOwnerException e) {
-                    Log.e(METHOD_NAME,e.getMessage());
-                }
-            }else{
-                try {
-                    user=new Customer(getBaseContext(),sharedPreferences.getString("uid",null));
-                    this.imageView.setImageBitmap(user.getImageBitmap());
-                } catch (CustomerException e) {
-                    Log.e(METHOD_NAME,e.getMessage());
-                }
+                //TODO Fix
+                sharedPreferences.getString("uid",null);
+                    user=new User ();
+                    //this.imageView.setImageBitmap(user.getImageBitmap());
+
             }
 
         }}
@@ -89,6 +100,15 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==REGISTRATION){
+            this.onFragmentInteraction();
+        }
+    }
+
+
+    @Override
     protected void onStop() {
         drawerLayout.closeDrawers();
         super.onStop();
@@ -97,7 +117,6 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     private void checkUser() {
         getUserinfo();
         if(phase==1){
-            SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
             usertype=sharedPreferences.getBoolean("owner",false);
         }
     }
@@ -184,17 +203,18 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
 
     @Override
     public void onFragmentInteraction() {
-        getUserinfo();
-        checkUser();
+
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putBoolean("logged",true);
         editor.apply();
+        getUserinfo();
+        checkUser();
         adapter.notifyDataSetChanged();
         dList.setAdapter(createAdapter());
         dList.deferNotifyDataSetChanged();
         Toast toast = Toast.makeText(getBaseContext(), "Login Completed", Toast.LENGTH_SHORT);
         toast.show();
-        checkPic();
+        //checkPic();
         hideSoftKeyboard();
     }
 
@@ -245,6 +265,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                         SharedPreferences.Editor editor=sharedPreferences.edit();
                         editor.putBoolean("logged",false);
                         editor.commit();
+                        FirebaseAuth.getInstance().signOut();
                         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
                         imageView.invalidate();
                         dList.setAdapter(createAdapter());
@@ -267,6 +288,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                         phase = 0;
                         SharedPreferences.Editor editor=sharedPreferences.edit();
                         editor.putBoolean("logged",false);
+                        FirebaseAuth.getInstance().signOut();
                         editor.commit();
                         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
                         imageView.invalidate();
@@ -277,5 +299,23 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                 }
             }
         }
+    }
+    private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        final File dir = cw.getDir("images", Context.MODE_PRIVATE);
+        File filePath = new File(dir,id);
+        storageRoot.child(id).getFile(filePath).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                File img = new File(dir, id);
+                Uri imgPath = Uri.fromFile(img);
+                try {
+                    Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
+                    imView.setImageBitmap(b);
+                } catch (IOException e) {
+                    Log.e("getFromNet",e.getMessage());
+                }
+            }
+        });
     }
 }

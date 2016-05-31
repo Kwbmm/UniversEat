@@ -13,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Calendar;
 
 
@@ -34,16 +37,23 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
     private Calendar date;
     private String notes;
     private String[] months;
+    private String menuName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.make_order, mlay);
-
+        rid=getIntent().getExtras().getString("rid");
+        mid=getIntent().getExtras().getString("mid");
+        uid=getIntent().getExtras().getString("uid");
+        menuName=getIntent().getExtras().getString("name");
         Log.e("RID MID UID",rid+" "+mid+" "+uid);
         date=Calendar.getInstance();
         months=getResources().getStringArray(R.array.months);
+
+
+
         setupview();
     }
 
@@ -67,6 +77,25 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
             else if(date.before(Calendar.getInstance())){
                 Toast.makeText(getBaseContext(), getString(R.string.MakeOrder_past), Toast.LENGTH_SHORT).show();
             }
+            else {
+                    Order order = new Order();
+                    order.setRid(rid);
+                    order.setMid(mid);
+                    order.setDate(date.getTime());
+                    order.setName(name);
+                    order.setNotes(notes);
+                    order.setUid(uid);
+                    order.setMenuName(menuName);
+                     FirebaseDatabase db;
+                     db=FirebaseDatabase.getInstance();
+                      DatabaseReference reference=db.getReference("order");
+                    String key= reference.push().getKey();
+                reference.child(key).setValue(order.toMap());
+
+                    Toast.makeText(getBaseContext(), getString(R.string.MakeOrder_successful), Toast.LENGTH_SHORT).show();
+                    finish();
+
+                }
         }
         return super.onOptionsItemSelected(item);
     }

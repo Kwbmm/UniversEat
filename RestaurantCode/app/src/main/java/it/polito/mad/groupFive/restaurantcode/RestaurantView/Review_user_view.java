@@ -106,6 +106,7 @@ public class Review_user_view extends Fragment {
         rest=restData.getRestaurant();
 
 
+
         alreviews=rest.getReviews();
         adp= new ReviewAdapter(alreviews);
         recyclerView=(RecyclerView)v.findViewById(R.id.review_list);

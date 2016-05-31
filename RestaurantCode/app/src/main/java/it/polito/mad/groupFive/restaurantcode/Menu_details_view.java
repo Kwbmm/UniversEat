@@ -1,8 +1,11 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,13 +20,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.*;
@@ -31,10 +41,8 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseEx
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
-/**
- * Created by Cristiano on 24/04/2016.
- */
-public class Menu_details extends NavigationDrawer {
+
+public class Menu_details_view extends NavigationDrawer {
 
     private Restaurant restaurant;
     private it.polito.mad.groupFive.restaurantcode.datastructures.Menu menu;
@@ -52,9 +60,9 @@ public class Menu_details extends NavigationDrawer {
         rid=getIntent().getExtras().getString("rid");
         Log.e("RID E MID",""+rid+" "+mid);
         courses=new ArrayList<>();
-            FirebaseDatabase db;
-            db=FirebaseDatabase.getInstance();
-            DatabaseReference ref=db.getReference("course");
+        FirebaseDatabase db;
+        db=FirebaseDatabase.getInstance();
+        DatabaseReference ref=db.getReference("course");
         DatabaseReference refmenu=db.getReference("menu");
         refmenu.child(mid).addValueEventListener(new ValueEventListener() {
             @Override
@@ -65,12 +73,12 @@ public class Menu_details extends NavigationDrawer {
                     menu.setName((String) dataSnapshot.child("name").getValue());
                     Log.v("name",menu.getName());
                     if(dataSnapshot.child("beverage").getValue()!=null){
-                    menu.setBeverage((Boolean) dataSnapshot.child("beverage").getValue());}
+                        menu.setBeverage((Boolean) dataSnapshot.child("beverage").getValue());}
                     else menu.setBeverage(false);
                     menu.setDescription((String) dataSnapshot.child("description").getValue());
                     menu.setPrice(Float.parseFloat(dataSnapshot.child("price").getValue().toString()));
                     if(dataSnapshot.child("serviceFee").getValue()!=null){
-                    menu.setServiceFee((Boolean) dataSnapshot.child("serviceFee").getValue());}
+                        menu.setServiceFee((Boolean) dataSnapshot.child("serviceFee").getValue());}
                     else menu.setServiceFee(false);
                     menu.setType(Integer.parseInt( dataSnapshot.child("type").getValue().toString()));
                     //menu.setImageLocal((String) dataSnapshot.child("imageLocalPath").getValue());
@@ -78,7 +86,7 @@ public class Menu_details extends NavigationDrawer {
 
 
                     FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-                    mlay.inflate(getBaseContext(), R.layout.menu_details, mlay);
+                    mlay.inflate(getBaseContext(), R.layout.menu_details_view, mlay);
                     showmenu();
 
                 } catch (MenuException e) {
@@ -93,39 +101,39 @@ public class Menu_details extends NavigationDrawer {
         });
 
 
-            ref.orderByChild("mid").equalTo(mid).addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        ref.orderByChild("mid").equalTo(mid).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Course c= new Course();
-                    c.setMid(dataSnapshot.child("mid").getValue().toString());
-                    c.setCid(dataSnapshot.child("cid").getValue().toString());
-                    c.setName(dataSnapshot.child("name").getValue().toString());
-                    courses.add(c);
-                    courseAdapter.notifyDataSetChanged();
+                c.setMid(dataSnapshot.child("mid").getValue().toString());
+                c.setCid(dataSnapshot.child("cid").getValue().toString());
+                c.setName(dataSnapshot.child("name").getValue().toString());
+                courses.add(c);
+                courseAdapter.notifyDataSetChanged();
 
 
-                }
+            }
 
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                }
+            }
 
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                }
+            }
 
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                }
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
+            }
+        });
 
     }
 
@@ -144,24 +152,6 @@ public class Menu_details extends NavigationDrawer {
         TextView price = (TextView) findViewById(R.id.menu_price);
         ImageView pic = (ImageView) findViewById(R.id.menu_image);
         ListView listView = (ListView) findViewById(R.id.courseList);
-        final Button ordernow = (Button) findViewById(R.id.orderButton);
-        ordernow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String uid = sharedPreferences.getString("uid",null);
-                if(uid!=null) {
-                    Intent ordernow = new Intent(getBaseContext(), MakeOrder.class);
-                    ordernow.putExtra("rid", rid);
-                    ordernow.putExtra("mid", mid);
-                    ordernow.putExtra("uid", uid);
-                    ordernow.putExtra("name",menu.getName());
-                    startActivity(ordernow);
-                }
-                else {
-                    Toast.makeText(getBaseContext(), "You need to login first!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
         name.setText(menu.getName());
         description.setText(menu.getDescription());
         if(menu.isBeverage()) beverage.setText(getString(R.string.Menu_details_beverage_incl));
@@ -170,9 +160,13 @@ public class Menu_details extends NavigationDrawer {
         else servicefee.setText(getString(R.string.Menu_details_service_fee_not));
         price.setText(String.format("%.2f", menu.getPrice())+"€");
         try {
-           // pic.setImageBitmap(menu.getImageBitmap());
+            FirebaseStorage storage=FirebaseStorage.getInstance();
+            StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");
+            getFromNetwork(imageref,menu.getMid(),pic);
         } catch (NullPointerException e){
             Log.e("immagine non caricata"," ");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
         Log.e("numero di courses",courses.size()+" ");
         courseAdapter = new CourseAdapter();
@@ -214,6 +208,25 @@ public class Menu_details extends NavigationDrawer {
             if(course.isVegan()) img_vgn.setVisibility(View.VISIBLE);
             return convertView;
         }
+    }
+
+    private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        final File dir = cw.getDir("images",Context.MODE_PRIVATE);
+        File filePath = new File(dir,id);
+        storageRoot.child(id).getFile(filePath).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                File img = new File(dir, id);
+                Uri imgPath = Uri.fromFile(img);
+                try {
+                    Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
+                    imView.setImageBitmap(b);
+                } catch (IOException e) {
+                    Log.e("getFromNet",e.getMessage());
+                }
+            }
+        });
     }
 
 }

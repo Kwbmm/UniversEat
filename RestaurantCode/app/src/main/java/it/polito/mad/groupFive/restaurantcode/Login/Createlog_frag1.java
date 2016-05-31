@@ -39,6 +39,7 @@ import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
+import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
 import it.polito.mad.groupFive.restaurantcode.libs.RealPathUtil;
@@ -64,8 +65,8 @@ public class Createlog_frag1 extends Fragment{
     private String mParam2;
 
     private Uri userPicUri = null;
-    private Customer user=null;
-    private RestaurantOwner user_r=null;
+    private User user=null;
+    private Bitmap img;
     private ImageView userPicView = null;
     private EditText txtname;
     private EditText txtsurname;
@@ -138,7 +139,7 @@ public class Createlog_frag1 extends Fragment{
                 if(a instanceof OnFragmentInteractionListener) {
                     if(setUserData()){
                         OnFragmentInteractionListener obs = (OnFragmentInteractionListener) a;
-                        obs.onChangeFrag(user,user_r);
+                        obs.onChangeFrag(user,img);
                     }
                     else {
                         Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
@@ -167,7 +168,7 @@ public class Createlog_frag1 extends Fragment{
     }
 
     public interface OnFragmentInteractionListener {
-        void onChangeFrag(Customer u, RestaurantOwner u_r);
+        void onChangeFrag(User u, Bitmap image);
     }
 
 
@@ -175,62 +176,8 @@ public class Createlog_frag1 extends Fragment{
         final String METHOD_NAME = this.getClass().getName()+" - setUserData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
         String uid = sp.getString("uid",null);
-        if(owner){
-            try {
-                user_r = new RestaurantOwner(getActivity(), "asdasd");
-            } catch (RestaurantOwnerException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-                return false;
-            }
-            if(txtname.getText().toString().trim().equals("") || txtname.getText() == null){
-                Log.w(METHOD_NAME,"TextView Name is either empty or null");
-                return false;
-            }
-            user_r.setName(txtname.getText().toString());
+        user = new User(owner);
 
-            if(txtsurname.getText().toString().trim().equals("") || txtsurname.getText() == null){
-                Log.w(METHOD_NAME,"TextView Surname is either empty or null");
-                return false;
-            }
-            user_r.setSurname(txtsurname.getText().toString());
-
-            if(txtmail.getText().toString().trim().equals("") || txtmail.getText() == null){
-                Log.w(METHOD_NAME,"TextView Email is either empty or null");
-                return false;
-            }
-            user_r.setEmail(txtmail.getText().toString());
-
-            if(nickname.getText().toString().trim().equals("") || nickname.getText() == null){
-                Log.w(METHOD_NAME, "TextView Username is either empty or null");
-                return false;
-            }
-            user_r.setUserName(nickname.getText().toString());
-
-            if(!isImageSet){
-                Log.w(METHOD_NAME,"ImageView Profile Picture is not set");
-                return false;
-            }
-            user_r.setImageFromDrawable(userPicView.getDrawable());
-
-            if(txtpassword.getText().toString().trim().equals("") || txtpassword.getText() == null){
-                Log.w(METHOD_NAME, "TextView Password is either empty or null");
-                return false;
-            }
-            if(!txtpassword.getText().toString().equals(txtrepeat.getText().toString())){
-                Toast.makeText(getContext(),getResources().getString(R.string.toastRegisterPasswordFail),Toast.LENGTH_LONG)
-                        .show();
-                return false;
-            }
-            user_r.setPassword(txtpassword.getText().toString());
-            return true;
-        }
-        else {
-            try {
-                user = new Customer(getActivity(), uid);
-            } catch (CustomerException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-                return false;
-            }
             if(txtname.getText().toString().trim().equals("") || txtname.getText() == null){
                 Log.w(METHOD_NAME,"TextView Name is either empty or null");
                 return false;
@@ -259,7 +206,8 @@ public class Createlog_frag1 extends Fragment{
                 Log.w(METHOD_NAME,"ImageView Profile Picture is not set");
                 return false;
             }
-            user.setImageFromDrawable(userPicView.getDrawable());
+            //this.img=userPicView.getDrawingCache();
+           // user.setImageFromDrawable(userPicView.getDrawable());
 
             if(txtpassword.getText().toString().trim().equals("") || txtpassword.getText() == null){
                 Log.w(METHOD_NAME, "TextView Password is either empty or null");
@@ -272,7 +220,7 @@ public class Createlog_frag1 extends Fragment{
             }
             user.setPassword(txtpassword.getText().toString());
             return true;
-        }
+
     }
 
     private void pickImage(){
@@ -369,13 +317,15 @@ public class Createlog_frag1 extends Fragment{
         if(resultCode == getActivity().RESULT_OK && requestCode == SELECT_PICTURE){
             this.userPicUri = data.getData();
             try{
-                this.userPicView.setImageBitmap(new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
+                img=new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap();
+                this.userPicView.setImageBitmap(img);
                 this.isImageSet = true;
             } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
         if(resultCode == getActivity().RESULT_OK && requestCode == CAPTURE_IMAGE){
             try{
-                this.userPicView.setImageBitmap(new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
+                img=new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap();
+                this.userPicView.setImageBitmap(img);
                 this.isImageSet = true;
             } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }

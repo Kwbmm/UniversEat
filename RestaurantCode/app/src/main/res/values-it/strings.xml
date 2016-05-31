@@ -202,22 +202,8 @@
         <item>Carne</item>
         <item>Pesce</item>
         <item>Vino</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Carne</item>
-        <item>Pesce</item>
-        <item>Vino</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Carne</item>
-        <item>Pesce</item>
-        <item>Vino</item>
-        <item>Cake</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Meat</item>
-        <item>Fish</item>
-        <item>Cocktail</item>
+        <item>Pomodoro</item>
+        <item>Basilico</item>
     </array>
     <string name="restaurantView_textViewRestaurantAddress">Indirizzo</string>
     <string name="restaurantView_textViewRestaurantName">Nome del Ristorante</string>
@@ -252,7 +238,7 @@
     <string name="fragment_delete_dish_complete">Completa</string>
 
     <!-- fragment_login_view.xml-->
-    <string name="fragment_login_view_Username">Username</string>
+    <string name="fragment_login_view_Username">Email</string>
     <string name="fragment_login_view_Password">Password</string>
     <string name="fragment_login_view_Login">Login</string>
     <string name="fragment_login_view_Register">Registrati</string>

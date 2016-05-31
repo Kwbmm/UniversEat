@@ -3,6 +3,7 @@ package it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,21 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.R;
@@ -96,6 +112,47 @@ public class Create_simple_menu2 extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        data=sData.getdata();
+        menu=sData.getdata().getMenu();
+        FirebaseDatabase db=FirebaseDatabase.getInstance();
+        DatabaseReference ref=db.getReference("course");
+        ref.orderByChild("mid").equalTo(sData.getdata().getMenu().getMid()).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Course course= new Course();
+                course.setName(dataSnapshot.child("name").getValue().toString());
+                course.setGlutenFree((boolean)dataSnapshot.child("glutenFree").getValue());
+                course.setVegan((boolean)dataSnapshot.child("vegan").getValue());
+                course.setCid(dataSnapshot.child("cid").getValue().toString());
+                course.setSpicy((boolean)dataSnapshot.child("spicy").getValue());
+                course.setVegetarian((boolean)dataSnapshot.child("vegetarian").getValue());
+
+
+                menu.getCourses().add(course);
+                adp.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override
@@ -106,6 +163,15 @@ public class Create_simple_menu2 extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
 
                         Course newDish;
+                try {
+                    FirebaseDatabase db=FirebaseDatabase.getInstance();
+                    DatabaseReference ref=db.getReference("course");
+                    String cid= ref.push().getKey();
+                    newDish=new Course(data.getMenu().getMid(),cid);
+                    data.setNewDish(newDish);
+                } catch (CourseException e) {
+                    e.printStackTrace();
+                }
                 Add_simple_dish add_dish=new Add_simple_dish();
                 getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fragment_holder,add_dish).commit();
                 return true;
@@ -117,9 +183,7 @@ public class Create_simple_menu2 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        data=sData.getdata();
-        rest=sData.getdata().getRest();
-        menu=sData.getdata().getMenu();
+
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_create_simple_menu2, container, false);
         setUpData(v);
@@ -142,6 +206,37 @@ public class Create_simple_menu2 extends Fragment {
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                    if(price.getText().toString().length()>0) {
+                        menu.setPrice(Float.valueOf(price.getText().toString()));
+                        menu.setServiceFee(fee.isChecked());
+                        menu.setBeverage(drink.isChecked());
+                        FirebaseDatabase db= FirebaseDatabase.getInstance();
+                        DatabaseReference ref=db.getReference("menu");
+                        ref.child(menu.getMid()).setValue(menu.toMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                FirebaseStorage storage = FirebaseStorage.getInstance();
+                                StorageReference storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/"+menu.getMid());
+                                try {
+                                    InputStream is = getActivity().getContentResolver().openInputStream(Uri.parse((menu.getImageLocalPath())));
+                                    storageRoot.putStream(is).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            getActivity().finish();
+                                        }
+                                    });
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+
+
+                            }
+                        });
+
+                    }
+                    else
+                        Toast.makeText(getContext(),getResources().getString(R.string.toast_empty_price), Toast.LENGTH_LONG)
+                                .show();
 
 
 
@@ -259,6 +354,9 @@ public class Create_simple_menu2 extends Fragment {
             }
             @Override
             public void onClick(View v) {
+                FirebaseDatabase db =FirebaseDatabase.getInstance();
+                DatabaseReference ref=db.getReference("course");
+                ref.child(alc.get(position).getCid()).removeValue();
                 alc.remove(position);
                 adp.notifyItemRemoved(position);
                 adp.notifyDataSetChanged();

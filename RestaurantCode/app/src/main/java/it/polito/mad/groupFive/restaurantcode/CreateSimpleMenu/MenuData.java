@@ -8,7 +8,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
  * Created by MacBookRetina on 30/04/16.
  */
 public class MenuData {
-    private Restaurant rest;
+    private String rid;
     private Menu menu;
     private Course newDish;
     private boolean edit;
@@ -34,12 +34,13 @@ public class MenuData {
         this.newDish = newDish;
     }
 
-    public Restaurant getRest() {
-        return rest;
+    public String getRid() {
+        return rid;
     }
 
-    public MenuData(Restaurant rest) {
-        this.rest = rest;
+    public MenuData(String rid) {
+        this.rid=rid;
+
     }
 
     public void setMenu(Menu menu) {

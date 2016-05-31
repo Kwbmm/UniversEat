@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
 import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
+import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
 
 /**
@@ -39,7 +40,7 @@ public class Createlog_frag extends Fragment{
 
     private Uri userPicUri = null;
     private RestaurantOwner user_r=null;
-    private Customer user=null;
+    private User user=null;
     private boolean owner=false;
 
     public Createlog_frag(){
@@ -125,19 +126,9 @@ public class Createlog_frag extends Fragment{
         final String METHOD_NAME = this.getClass().getName()+" - setUserData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
         SharedPreferences.Editor editor=sp.edit();
-        try {
-            if(owner) {
-                user_r = new RestaurantOwner(getActivity());
-                editor.putString("uid",user_r.getUid());
-                editor.apply();
+        user = new User();
+        editor.putString("uid",user.getUid());
+        editor.apply();
             }
-            else{
-                user = new Customer(getActivity());
-                editor.putString("uid",user.getUid());
-                editor.apply();
-            }
-        } catch (UserException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-        }
-    }
+
 }

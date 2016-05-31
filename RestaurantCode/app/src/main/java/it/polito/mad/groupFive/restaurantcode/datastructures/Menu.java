@@ -25,6 +25,7 @@ public class Menu {
     private boolean serviceFee;
     private ArrayList<Course> courses = new ArrayList<>();
 
+
     /**
      * Creates a new Menu object.
      *
@@ -35,9 +36,22 @@ public class Menu {
     public Menu(String rid, String mid) throws MenuException {
         if(rid == null)
             throw new MenuException("Restaurant ID cannot be null");
+
         if(mid == null)
             throw new MenuException("Menu ID cannot be null");
         this.rid = rid;
+        this.mid = mid;
+    }
+    public Menu(String mid) throws MenuException {
+        if(mid == null)
+            throw new MenuException("Menu ID cannot be null");
+        this.mid = mid;
+    }
+    public Menu(){
+
+    }
+
+    public void setMid(String mid) {
         this.mid = mid;
     }
 
@@ -53,6 +67,7 @@ public class Menu {
         output.put("mid",this.mid);
         output.put("rid",this.rid);
         output.put("name",this.name);
+
         output.put("description",this.description);
         output.put("price",this.price);
         output.put("imageLocalPath",this.imageLocalPath);
@@ -246,6 +261,10 @@ public class Menu {
         return serviceFee;
     }
 
+
+    public void setRid(String rid) {
+        this.rid = rid;
+    }
 
     /**
      * Returns the tags associated to all the Courses in this menu. If no tags are added to the
