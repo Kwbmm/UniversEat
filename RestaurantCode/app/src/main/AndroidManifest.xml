@@ -90,6 +90,9 @@
             />
         <activity android:name=".CreateSimpleMenu.Create_simple_menu"
             />
+        <activity android:name=".SearchResult">
+            
+        </activity>
     </application>
 
 </manifest>
