@@ -60,7 +60,8 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         FirebaseAuth auth=FirebaseAuth.getInstance();
         sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
         SharedPreferences.Editor editor= sharedPreferences.edit();
-        editor.putString("uid",auth.getCurrentUser().getUid());
+        if(auth.getCurrentUser()!=null){
+        editor.putString("uid",auth.getCurrentUser().getUid());}
         editor.apply();
         getUserinfo();
         checkUser();
