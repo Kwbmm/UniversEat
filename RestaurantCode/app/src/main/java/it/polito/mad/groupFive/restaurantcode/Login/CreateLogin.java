@@ -89,7 +89,6 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putBoolean("logged",true);
         editor.apply();
-        super.onFragmentInteraction();
     }
 
     @Override
