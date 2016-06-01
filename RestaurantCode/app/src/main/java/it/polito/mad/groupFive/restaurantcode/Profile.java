@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -65,9 +66,7 @@ public class Profile extends NavigationDrawer {
     TextView name;
     TextView username;
     TextView email;
-    TextView header;
     ImageView image;
-    ListView list;
     ProfileAdapter profileAdapter;
     List<Restaurant> re;
 
@@ -108,9 +107,7 @@ public class Profile extends NavigationDrawer {
          name = (TextView) findViewById(R.id.user_name);
        username = (TextView) findViewById(R.id.user_username);
         email = (TextView) findViewById(R.id.user_email);
-        header = (TextView) findViewById(R.id.listHeader);
          image= (ImageView) findViewById(R.id.user_image);
-        list= (ListView) findViewById(R.id.profileList);
 
     }
     public class ProfileAdapter extends BaseAdapter {
@@ -201,11 +198,9 @@ public class Profile extends NavigationDrawer {
                                 name.setText(user.getName()+" "+user.getSurname());
                                 username.setText(user.getUserName());
                                 email.setText(user.getEmail());
-                                header.setText("My Restaurant");
                             image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
                             DatabaseReference rf= db.getReference("restaurant");
                             profileAdapter= new ProfileAdapter(getBaseContext());
-                            list.setAdapter(profileAdapter);
                             rf.orderByChild("uid").equalTo(uid).addChildEventListener(new ChildEventListener() {
                                 @Override
                                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -302,10 +297,8 @@ public class Profile extends NavigationDrawer {
                             name.setText(user.getName()+" "+user.getSurname());
                             username.setText(user.getUserName());
                             email.setText(user.getEmail());
-                            header.setText("My Favourites");
                             image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
                             ProfileAdapter profileAdapter = new ProfileAdapter(getBaseContext());
-                            list.setAdapter(profileAdapter);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override

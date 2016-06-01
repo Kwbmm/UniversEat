@@ -10,7 +10,6 @@ android:background="@color/material_grey_100"
     android:layout_height="match_parent"
     android:divider="@android:drawable/divider_horizontal_textfield"
     android:showDividers="middle|end"
-    android:layout_above="@+id/button"
     android:background="@color/material_grey_100">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"

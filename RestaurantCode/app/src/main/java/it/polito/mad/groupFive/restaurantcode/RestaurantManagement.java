@@ -228,7 +228,7 @@ public class RestaurantManagement extends NavigationDrawer {
                     rname.setText(restaurant.getName());
                 }
                 if (raddress != null) {
-                    raddress.setText(restaurant.getAddress());
+                    raddress.setText(restaurant.getCity());
                 }
                 if (rbar != null) {
                     rbar.setRating(restaurant.getRating());
@@ -286,7 +286,7 @@ public class RestaurantManagement extends NavigationDrawer {
         RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
         ImageView rmimw = (ImageView) findViewById(R.id.restaurant_image);
         rname.setText(restaurant.getName());
-        raddress.setText(restaurant.getAddress());
+        raddress.setText(restaurant.getCity());
         rbar.setRating(restaurant.getRating());
 /*        try {
             rmimw.setImageBitmap(restaurant.getImageBitmap());
