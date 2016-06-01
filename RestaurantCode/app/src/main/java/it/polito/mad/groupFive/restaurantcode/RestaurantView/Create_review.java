@@ -3,6 +3,7 @@ package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,8 +15,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -37,6 +41,8 @@ public class Create_review extends NavigationDrawer {
     RatingBar ratingB;
     String uid;
     String rid;
+    Float ratingValue;
+    Float ratingNumber;
     HashMap<Integer,Float> ratings;
 
     SharedPreferences preferences;
@@ -70,19 +76,41 @@ public class Create_review extends NavigationDrawer {
                         rev.setPlace(rating_place.getRating());
                         rev.setPricequality(rating_pricequality.getRating());
                         rev.setService(rating_service.getRating());
-                        rev.setDate(new Date());
+                        rev.setDate(new Date().toString());
 
                     FirebaseDatabase db=FirebaseDatabase.getInstance();
                     DatabaseReference ref=db.getReference("review");
                     ref.push().setValue(rev).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            finish();
+                            FirebaseDatabase db=FirebaseDatabase.getInstance();
+                            DatabaseReference reference=db.getReference("restaurant");
+                            ratingNumber++;
+                            reference.child(rid).child("ratingNumber").setValue((ratingNumber.toString())).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    FirebaseDatabase db=FirebaseDatabase.getInstance();
+                                    DatabaseReference reference=db.getReference("restaurant");
+                                    Float tot= ratingValue+ratingB.getRating();
+                                    reference.child(rid).child("rating").setValue(tot.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            finish();
+                                        }
+                                    });
+
+                                }
+                            });
+
+
+
                         }
                     });
 
 
-                }else{
+
+
+                    } else{
                     Toast.makeText(getBaseContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
                             .show();
                 }
@@ -92,6 +120,9 @@ public class Create_review extends NavigationDrawer {
     private void getData(){
         rid=getIntent().getExtras().getString("rid");
         String restName=getIntent().getExtras().getString("restName");
+        ratingValue=getIntent().getExtras().getFloat("rat");
+        Log.v("rating",ratingValue.toString());
+        ratingNumber=getIntent().getExtras().getFloat("ratingNumber");
         TextView rest_name =(TextView)findViewById(R.id.rev_rest_name);
         rest_name.setText(restName);
         title=(EditText)findViewById(R.id.review_title);

@@ -232,6 +232,9 @@ public class Profile extends NavigationDrawer {
                                         r.setXCoord(xcoord);
                                         double ycoord = Double.parseDouble(dataSnapshot.child("ycoord").getValue().toString());
                                         r.setYCoord(ycoord);
+                                        r.setRatingNumber(Float.parseFloat(dataSnapshot.child("ratingNumber").getValue().toString()));
+
+
 
                                         re.add(r);
                                         profileAdapter.notifyDataSetChanged();

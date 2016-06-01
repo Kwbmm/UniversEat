@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -99,7 +101,10 @@ public class Review_user_view extends Fragment {
                 Intent new_rew= new Intent(getContext(),Create_review.class);
                 new_rew.putExtra("rid",rest.getRid());
                 new_rew.putExtra("restName",rest.getName());
+                new_rew.putExtra("rat",rest.getRatingNumber());
+                new_rew.putExtra("ratingNumber",rest.getRatingNumber());
                 startActivityForResult(new_rew,1);
+
                 return true;
             }
         });
@@ -117,11 +122,12 @@ public class Review_user_view extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         TextView r_count= (TextView)v.findViewById(R.id.review_counter);
-        r_count.setText(adp.getItemCount()+" reviews");
+        r_count.setText(((int)rest.getRatingNumber())+" reviews");
         TextView r_name=(TextView)v.findViewById(R.id.restaurant_name);
         r_name.setText(rest.getName());
         RatingBar rate=(RatingBar)v.findViewById(R.id.rate);
         rate.setRating(rest.getRating());
+
 
 
     }
@@ -234,8 +240,13 @@ public class Review_user_view extends Fragment {
             holder.rating.setRating(rev.getRating());
             holder.title.setText(rev.getTitle());
             holder.review.setText(rev.getReviewText());
+            SimpleDateFormat dateFormat=new SimpleDateFormat("dd mm yy");
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(rev.getDate());
+            try {
+                calendar.setTime(dateFormat.parse(rev.getDate()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             String time = String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.HOUR_OF_DAY))+":"+
                     String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MINUTE));
             String date = String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.DAY_OF_MONTH))+"/"+

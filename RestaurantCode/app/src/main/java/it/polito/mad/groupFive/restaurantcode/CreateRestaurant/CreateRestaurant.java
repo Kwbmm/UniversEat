@@ -203,6 +203,7 @@ public class CreateRestaurant
                        restaurant.setYCoord(ycoord);
                        restaurant.setTimetableDinner((HashMap)dataSnapshot.child("timetableDinner").getValue());
                        restaurant.setTimetableLunch((HashMap)dataSnapshot.child("timetableLunch").getValue());
+                       restaurant.setRatingNumber(Float.parseFloat(dataSnapshot.child("ratingNumber").getValue().toString()));
 
                        if(restaurant.getTimetableLunch()==null){
                            restaurant.setTimetableLunch(new HashMap<String, Map<String, String>>());
@@ -240,6 +241,8 @@ public class CreateRestaurant
        else{
            try {
                this.restaurant=new Restaurant(uid,rid);
+               restaurant.setRating(0);
+               restaurant.setRatingNumber(0);
            } catch (RestaurantException e) {
                e.printStackTrace();
            }
