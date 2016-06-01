@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchRestaurants extends Fragment {
+public class SearchRestaurants extends Fragment  {
 
 
     public SearchRestaurants() {

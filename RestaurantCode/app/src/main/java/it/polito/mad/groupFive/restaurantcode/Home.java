@@ -48,14 +48,18 @@ public class Home extends NavigationDrawer {
     private FirebaseDatabase db;
     private DatabaseReference dbRoot;
     private StorageReference storageRoot;
+    private  FrameLayout mlay;
+    private View home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Every activity should extend navigation drawer activity, no set content view must be called, layout must be inflated using inflate function
 
         super.onCreate(savedInstanceState);
-        final FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-        mlay.inflate(this, R.layout.activity_home, mlay);
+        mlay= (FrameLayout) findViewById(R.id.frame);
+        home=getLayoutInflater().inflate(R.layout.activity_home,null);
+        mlay.addView(home);
+        //mlay.inflate(this, R.layout.activity_home, mlay);
         parent=mlay;
 
         this.db = FirebaseDatabase.getInstance();
@@ -99,6 +103,7 @@ public class Home extends NavigationDrawer {
             searchRestaurantsBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mlay.removeView(home);
                     SearchRestaurants sr = new SearchRestaurants();
                     getSupportFragmentManager()
                             .beginTransaction()
