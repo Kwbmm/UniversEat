@@ -2,6 +2,7 @@ package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,10 +16,19 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,7 +38,6 @@ import java.text.SimpleDateFormat;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 
 /**
@@ -39,13 +48,15 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
  * Use the {@link Restaurant_info_user#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Restaurant_info_user extends Fragment {
+public class Restaurant_info_user extends Fragment implements OnMapReadyCallback {
 
     public interface restaurantData{
         public Restaurant getRestaurant();
     }
     restaurantData data;
     Restaurant restaurant;
+    GoogleMap myMap;
+    MapView mapView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -96,6 +107,11 @@ public class Restaurant_info_user extends Fragment {
 
         View v=inflater.inflate(R.layout.fragment_restaurant_info_user, container, false);
         getRestaurantData(v);
+        //init map
+        MapsInitializer.initialize(this.getActivity());
+        mapView = (MapView) v.findViewById(R.id.gmap);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
         return v;
     }
 
@@ -107,10 +123,28 @@ public class Restaurant_info_user extends Fragment {
         rest_rev_det.setText("Based on "+restaurant.getReviews().size()+" Reviews");
         TextView restname= (TextView) v.findViewById(R.id.restaurant_name);
         restname.setText(restaurant.getName());
+        TextView restdescr = (TextView)v.findViewById(R.id.restaurant_description);
+        restdescr.setText(restaurant.getDescription());
         TextView restaddr=(TextView) v.findViewById(R.id.restaurant_address);
-        restaddr.setText(restaurant.getAddress());
+        restaddr.setText(restaurant.getAddress()+", "+restaurant.getCity()+" "+restaurant.getZip());
         TextView resttel=(TextView)v.findViewById(R.id.restaurant_tel);
         resttel.setText(restaurant.getTelephone());
+        resttel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent dialIntent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+restaurant.getTelephone()));
+                startActivity(dialIntent);
+            }
+        });
+        TextView restweb=(TextView)v.findViewById(R.id.restaurant_web);
+        restweb.setText(restaurant.getWebsite());
+        restweb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent webIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://"+restaurant.getWebsite()));
+                startActivity(webIntent);
+            }
+        });
         RatingBar restrating= (RatingBar) v.findViewById(R.id.restaurant_rating);
         restrating.setRating(restaurant.getRating());
         ImageView restImage=(ImageView)v.findViewById(R.id.restaurant_image);
@@ -208,5 +242,45 @@ public class Restaurant_info_user extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onLowMemory(){
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map){
+        LatLng latLng = new LatLng(restaurant.getXCoord(),restaurant.getYCoord());
+        map.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title(restaurant.getName()));
+        map.moveCamera(CameraUpdateFactory.zoomTo(15));
+        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 }

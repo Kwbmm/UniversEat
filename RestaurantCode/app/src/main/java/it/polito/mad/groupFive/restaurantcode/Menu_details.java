@@ -149,7 +149,9 @@ public class Menu_details extends NavigationDrawer {
             @Override
             public void onClick(View v) {
                 String uid = sharedPreferences.getString("uid",null);
-                if(uid!=null) {
+
+                Boolean logged = sharedPreferences.getBoolean("logged",false);
+                if(uid!=null && logged==true) {
                     Intent ordernow = new Intent(getBaseContext(), MakeOrder.class);
                     ordernow.putExtra("rid", rid);
                     ordernow.putExtra("mid", mid);

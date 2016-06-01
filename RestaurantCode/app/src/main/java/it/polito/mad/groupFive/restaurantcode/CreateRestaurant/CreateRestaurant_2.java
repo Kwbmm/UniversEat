@@ -185,9 +185,13 @@ public class CreateRestaurant_2 extends Fragment {
             }
             restaurant.setState(state.getText().toString());
 
-            //TODO Manage GMaps to set this data
-            //restaurant.setXcoord();
-            //restaurant.setYcoord();
+            try{
+                if(latLng.equals(null)) return false;
+            } catch(NullPointerException e){
+                return false;
+            }
+            restaurant.setXCoord(latLng.latitude);
+            restaurant.setYCoord(latLng.longitude);
             return true;
 
 
