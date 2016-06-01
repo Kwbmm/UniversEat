@@ -23,7 +23,7 @@ public class Review {
     private String rid;
     private String reviewText;
     private String title;
-    private Date date;
+    private String date;
     private float rating;
     private float food;
     private float place;
@@ -70,11 +70,11 @@ public Review(String uid,String rid){
         this.title = title;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

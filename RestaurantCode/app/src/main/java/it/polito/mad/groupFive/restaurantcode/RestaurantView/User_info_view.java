@@ -1,5 +1,6 @@
 package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
+import android.app.FragmentManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -38,7 +39,8 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
+
 
         try {
             rid=getIntent().getExtras().getString("rid");
@@ -46,7 +48,7 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
             menus=new ArrayList<>();
             db=FirebaseDatabase.getInstance();
             DatabaseReference reference=db.getReference("restaurant");
-            reference.child(rid).addValueEventListener(new ValueEventListener() {
+            reference.child(rid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     restaurant
@@ -67,6 +69,7 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                     restaurant.setYCoord(ycoord);
                     restaurant.setTimetableDinner((HashMap)dataSnapshot.child("timetableDinner").getValue());
                     restaurant.setTimetableLunch((HashMap)dataSnapshot.child("timetableLunch").getValue());
+                    restaurant.setRatingNumber(Float.parseFloat(dataSnapshot.child("ratingNumber").getValue().toString()));
                     rest_i= (ImageButton) findViewById(R.id.info_b);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         rest_i.getDrawable().setTint(Color.parseColor("#ffffff"));
@@ -118,6 +121,8 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
                         }});
 
+
+
                     if(mid.equals("-1")){
                         rest_i.setColorFilter(Color.parseColor("#ffffff"));
                         rest_r.setColorFilter(Color.parseColor("#000000"));
@@ -140,10 +145,9 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                                 .beginTransaction()
                                 .add(R.id.uif_fragment,menu_view)
                                 .commit();
-                    }
+                    }}
 
 
-                }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {

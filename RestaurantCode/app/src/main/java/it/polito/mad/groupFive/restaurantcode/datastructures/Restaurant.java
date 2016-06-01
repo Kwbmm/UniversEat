@@ -32,6 +32,7 @@ public class Restaurant {
     private String zip;
     private String imageLocalPath;
     private float rating;
+    private float ratingNumber;
     private double xcoord;
     private double ycoord;
     private ArrayList<Menu> menus=new ArrayList<>();
@@ -41,11 +42,16 @@ public class Restaurant {
     private Map<String, Map<String,String>> timetableDinner = new HashMap<>();
     private ArrayList<Review> reviews = new ArrayList<>();
 
+    public void setRatingNumber(float ratingNumber) {
+        this.ratingNumber = ratingNumber;
+    }
+
     public Restaurant(String uid, String rid) throws RestaurantException {
         if(uid == null)
             throw new RestaurantException("User ID cannot be null");
         if(rid == null)
             throw new RestaurantException("Restaurant canno be null");
+
         this.uid = uid;
         this.rid = rid;
     }
@@ -55,6 +61,10 @@ public class Restaurant {
             throw new RestaurantException("Restaurant canno be null");
         this.rid = rid;
 
+    }
+
+    public void setRid(String rid) {
+        this.rid = rid;
     }
 
     /**
@@ -81,6 +91,7 @@ public class Restaurant {
         output.put("timetableLunch",this.timetableLunch);
         output.put("timetableDinner",this.timetableDinner);
         output.put("tickets",this.tickets);
+        output.put("ratingNumber",this.ratingNumber);
 
         return output;
     }
@@ -160,13 +171,7 @@ public class Restaurant {
      * @return the rating of restaurant
      */
     public float getRating() {
-        float value=0,total;
-        for (Review rev:reviews){
-            value=value+rev.getRating();
-        }
-        total=value/reviews.size();
-        this.rating=total;
-        return this.rating; }
+        return rating/ratingNumber;}
 
     /**
      *
@@ -180,10 +185,15 @@ public class Restaurant {
      */
     public String getZip() { return this.zip; }
 
+    public float getRatingNumber() {
+        return ratingNumber;
+    }
+
     /**
      *
      * @return a string with the restaurant's website
      */
+
     public String getWebsite() { return this.website; }
 
     /**
@@ -601,4 +611,5 @@ public class Restaurant {
      * @param reviews An ArrayList of Review(s) to assign to this restaurant object.
      */
     public Restaurant setReviews(ArrayList<Review> reviews){ this.reviews = reviews; return this; }
+
 }

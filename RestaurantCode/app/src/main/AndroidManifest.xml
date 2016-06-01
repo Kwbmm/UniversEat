@@ -97,11 +97,10 @@
         <activity android:name=".RestaurantView.User_info_view"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
-            android:noHistory="true"/>
+            />
         <activity android:name=".Login.CreateLogin"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
-            android:noHistory="true"
             />
         <activity android:name=".RestaurantView.Create_review"
             />

@@ -88,7 +88,7 @@ public class RestaurantManagement extends NavigationDrawer {
         mlay= (FrameLayout) findViewById(R.id.frame);
         v=mlay.inflate(getBaseContext(), R.layout.restaurant_view_edit, mlay);
         load= LayoutInflater.from(this).inflate(R.layout.loading_bar,null);
-        mlay.addView(load);
+
 
         FirebaseDatabase db=FirebaseDatabase.getInstance();
         DatabaseReference myref=db.getReference("restaurant");
@@ -96,7 +96,9 @@ public class RestaurantManagement extends NavigationDrawer {
         myref.orderByChild("uid").equalTo(uid).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
+                mlay.addView(load);
+                if(plus!=null){
+                    plus.setVisible(false);}
                 SharedPreferences.Editor editor=sharedPreferences.edit();
                 editor.putString("rid",(String)dataSnapshot.child("rid").getValue());
                 editor.commit();
@@ -122,7 +124,7 @@ public class RestaurantManagement extends NavigationDrawer {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+               // mlay.removeView(load);
             }
         });
 
@@ -152,8 +154,6 @@ public class RestaurantManagement extends NavigationDrawer {
     private boolean showRestaurant() {
         final SharedPreferences sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),RestaurantManagement.MODE_PRIVATE);
         final String METHOD_NAME = this.getClass().getName() + " - showRestaurant";
-        if(plus!=null){
-        plus.setVisible(false);}
         this.rid = sharedPreferences.getString("rid",null);
         if ( this.rid != null){
             this.uid=sharedPreferences.getString("uid",null);
@@ -225,6 +225,7 @@ public class RestaurantManagement extends NavigationDrawer {
                 restaurant.setXCoord(xcoord);
                 double ycoord = Double.parseDouble(dataSnapshot.child("ycoord").getValue().toString());
                 restaurant.setYCoord(ycoord);
+                restaurant.setRatingNumber(Float.parseFloat(dataSnapshot.child("ratingNumber").getValue().toString()));
 
 
                 TextView rname= (TextView)findViewById(R.id.restaurant_name);
