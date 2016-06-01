@@ -6,37 +6,40 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import it.polito.mad.groupFive.restaurantcode.SearchResult;
+import it.polito.mad.groupFive.restaurantcode.Home;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 
-public class GetMenusIDFromCourseListener implements ValueEventListener {
+public class GetMenusIDFromRestaurantListener implements ValueEventListener {
 
-    private SearchResult.MenuAdapter ma;
-    private String[] query;
+    private Home.MenuAdapter ma;
 
-    public GetMenusIDFromCourseListener(SearchResult.MenuAdapter ma, String[] query){
+    public GetMenusIDFromRestaurantListener(Home.MenuAdapter ma){
         this.ma = ma;
-        this.query = query;
     }
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         final String METHOD_NAME = this.getClass().getName()+" - onDCh";
-        for(DataSnapshot ds : dataSnapshot.getChildren()){
-            int weight = 0;
-            for(String keyword : this.query){
-                if(ds.child(keyword).getValue() == null){
-                    //If the keyword is not found, the element has less relevance, so we increase its weight
-                    weight++;
-                }
-            }
-            String menuID = (String)ds.child("mid").getValue();
+        for(DataSnapshot ds : dataSnapshot.getChildren()) {
+            String rid = (String) ds.child("rid").getValue();
+            float x = (float) ds.child("xcoord").getValue();
+            float y = (float) ds.child("ycoord").getValue();
+            /**
+             * Get the coords of your location and compute the distance from each restaurant.
+             * Keep the distance and supply it to the query for fetching the menus, together with
+             * the mid.
+             * That distance will be used to order the menus.
+             */
+            //float distance;
+
             FirebaseDatabase db = FirebaseDatabase.getInstance();
-            DatabaseReference menuRef = db.getReference("menu").child(menuID);
-            menuRef.addListenerForSingleValueEvent(new GetMenuFromCourseListener(this.ma,weight));
+            DatabaseReference menuRef = db.getReference("menu");
+            Query menuQuery = menuRef.orderByChild("rid").equalTo(rid);
+            menuQuery.addListenerForSingleValueEvent(new GetMenuFromRestaurantListener(ma, -1)); //HERE pass the distance
         }
     }
 
@@ -46,13 +49,14 @@ public class GetMenusIDFromCourseListener implements ValueEventListener {
     }
 }
 
-class GetMenuFromCourseListener implements ValueEventListener{
+class GetMenuFromRestaurantListener implements ValueEventListener{
 
-    private SearchResult.MenuAdapter ma;
-    private int weight;
-    GetMenuFromCourseListener(SearchResult.MenuAdapter ma, int weight){
+    private Home.MenuAdapter ma;
+    private float distance;
+
+    GetMenuFromRestaurantListener(Home.MenuAdapter ma, float distance){
         this.ma = ma;
-        this.weight = weight;
+        this.distance = distance;
     }
 
     @Override
@@ -71,7 +75,7 @@ class GetMenuFromCourseListener implements ValueEventListener{
             m.setType(type);
             float price = ((Long)dataSnapshot.child("price").getValue()).floatValue();
             m.setPrice(price);
-            ma.addChild(m,this.weight);
+            ma.addChild(m,this.distance);
         } catch (MenuException e) {
             Log.e(METHOD_NAME, e.getMessage());
         }

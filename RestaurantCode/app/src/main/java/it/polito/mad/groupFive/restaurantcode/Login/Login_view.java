@@ -27,13 +27,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import it.polito.mad.groupFive.restaurantcode.Profile;
 import it.polito.mad.groupFive.restaurantcode.R;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
-import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,7 +52,6 @@ public class Login_view extends Fragment {
     private EditText username;
     private EditText password;
     private User user;
-    private RestaurantOwner owner;
     private boolean own;
     private OnFragmentInteractionListener mListener;
     private int counter=0;

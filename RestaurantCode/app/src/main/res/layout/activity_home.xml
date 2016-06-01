@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.polito.mad.groupFive.restaurantcode.Home"
+    tools:context=".Home"
     android:id="@+id/main"
     android:background="@color/material_grey_100">
 
@@ -22,8 +22,8 @@
     <android.support.v7.widget.SearchView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/search_view"
-        android:queryHint="@string/search_hello"
+        android:id="@+id/search_viewMenu"
+        android:queryHint="@string/search_helloMenu"
         android:divider="#000000"
         android:dividerPadding="1dp"
         android:layout_marginTop="5dp"
@@ -32,23 +32,56 @@
         android:focusable="false"
         />
 
+    <android.support.v7.widget.SearchView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_viewRestaurants"
+        android:queryHint="@string/search_helloRestaurant"
+        android:divider="#000000"
+        android:dividerPadding="1dp"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@id/opt"
+        android:layout_toStartOf="@id/opt"
+        android:focusable="false"
+        android:visibility="gone"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/dropdown_option"
-        android:layout_below="@id/search_view"
+        android:layout_below="@id/search_viewMenu"
         android:orientation="vertical">
 
     </LinearLayout>
 
+    <!-- Loading bar -->
+    <ProgressBar
+        android:layout_width="@dimen/progressBar_size"
+        android:layout_height="@dimen/progressBar_size"
+        android:layout_below="@id/dropdown_option"
+        android:id="@+id/progressBar_loadingData"
+        android:indeterminate="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        />
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/home_menu_rw"
         android:layout_below="@id/dropdown_option"
         android:focusable="false"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_marginRight="5dp"
+        android:visibility="gone"
+        />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/buttonRestaurant"
+        android:text="@string/button_btnSearchRestaurant"
+        />
 </RelativeLayout>

@@ -12,7 +12,7 @@
         android:layout_alignParentBottom="true"
         android:minHeight="?attr/actionBarSize"
         android:id="@+id/bottom_bar"
-        ></android.support.v7.widget.Toolbar>
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"

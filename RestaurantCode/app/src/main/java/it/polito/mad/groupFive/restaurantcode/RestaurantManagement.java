@@ -40,7 +40,6 @@ import java.io.IOException;
 import it.polito.mad.groupFive.restaurantcode.CreateRestaurant.CreateRestaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 public class RestaurantManagement extends NavigationDrawer {
@@ -62,7 +61,6 @@ public class RestaurantManagement extends NavigationDrawer {
 
     */
     private static final int CREATE_RESTAURANT = 1;
-    private RestaurantOwner user;
     private Restaurant restaurant;
     private DatabaseReference dbRoot;
     private StorageReference storageRoot;
