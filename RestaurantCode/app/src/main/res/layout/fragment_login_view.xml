@@ -27,27 +27,27 @@
                 android:layout_height="50dp"
                 android:id="@+id/app_logo"
                 android:src="@mipmap/ic_launcher"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/fragment_login_view_Username"
-        android:id="@+id/username"
-        android:layout_margin="5dp"
-        android:layout_below="@id/app_logo"
-        android:singleLine="true"
-
-        />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/fragment_login_view_Password"
-            android:id="@+id/password"
-            android:layout_margin="5dp"
-            android:layout_below="@id/username"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:inputType="textPassword"
-            />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fragment_login_view_Email"
+                android:id="@+id/emailAddress"
+                android:layout_margin="5dp"
+                android:layout_below="@id/app_logo"
+                android:singleLine="true"
+                android:inputType="textEmailAddress"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fragment_login_view_Password"
+                android:id="@+id/password"
+                android:layout_margin="5dp"
+                android:layout_below="@id/emailAddress"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:inputType="textPassword"
+                />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,21 +56,21 @@
                 android:orientation="vertical">
             </LinearLayout>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/login"
-            android:text="@string/fragment_login_view_Login"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/ll_incorrect"
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/login"
+                android:text="@string/fragment_login_view_Login"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/ll_incorrect"
 
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/register"
-            android:text="@string/fragment_login_view_Register"
-            android:layout_below="@id/ll_incorrect"/>
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/register"
+                android:text="@string/fragment_login_view_Register"
+                android:layout_below="@id/ll_incorrect"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </RelativeLayout>

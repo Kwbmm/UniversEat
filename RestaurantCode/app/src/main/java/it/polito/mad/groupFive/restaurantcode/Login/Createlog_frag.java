@@ -87,8 +87,6 @@ public class Createlog_frag extends Fragment{
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(METHOD_NAME,"Press Next: OK");
-
                 Activity a = getActivity();
                 if(a instanceof OnFragmentInteractionListener) {
                     setUserData();
@@ -129,6 +127,5 @@ public class Createlog_frag extends Fragment{
         user = new User();
         editor.putString("uid",user.getUid());
         editor.apply();
-            }
-
+    }
 }

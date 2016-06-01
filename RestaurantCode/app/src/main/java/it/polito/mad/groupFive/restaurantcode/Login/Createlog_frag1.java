@@ -89,6 +89,7 @@ public class Createlog_frag1 extends Fragment{
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,8 +98,8 @@ public class Createlog_frag1 extends Fragment{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -148,79 +149,6 @@ public class Createlog_frag1 extends Fragment{
                 }}});
 
         return v;
-
-    }
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onChangeFrag(User u, Bitmap image);
-    }
-
-
-    public boolean setUserData() {
-        final String METHOD_NAME = this.getClass().getName()+" - setUserData";
-        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
-        String uid = sp.getString("uid",null);
-        user = new User(owner);
-
-            if(txtname.getText().toString().trim().equals("") || txtname.getText() == null){
-                Log.w(METHOD_NAME,"TextView Name is either empty or null");
-                return false;
-            }
-            user.setName(txtname.getText().toString());
-
-            if(txtsurname.getText().toString().trim().equals("") || txtsurname.getText() == null){
-                Log.w(METHOD_NAME,"TextView Surname is either empty or null");
-                return false;
-            }
-            user.setSurname(txtsurname.getText().toString());
-
-            if(txtmail.getText().toString().trim().equals("") || txtmail.getText() == null){
-                Log.w(METHOD_NAME,"TextView Email is either empty or null");
-                return false;
-            }
-            user.setEmail(txtmail.getText().toString());
-
-            if(nickname.getText().toString().trim().equals("") || nickname.getText() == null){
-                Log.w(METHOD_NAME, "TextView Username is either empty or null");
-                return false;
-            }
-            user.setUserName(nickname.getText().toString());
-
-            if(!isImageSet){
-                Log.w(METHOD_NAME,"ImageView Profile Picture is not set");
-                return false;
-            }
-            //this.img=userPicView.getDrawingCache();
-           // user.setImageFromDrawable(userPicView.getDrawable());
-
-            if(txtpassword.getText().toString().trim().equals("") || txtpassword.getText() == null){
-                Log.w(METHOD_NAME, "TextView Password is either empty or null");
-                return false;
-            }
-            if(!txtpassword.getText().toString().equals(txtrepeat.getText().toString())){
-                Toast.makeText(getContext(),getResources().getString(R.string.toastRegisterPasswordFail),Toast.LENGTH_LONG)
-                        .show();
-                return false;
-            }
-            user.setPassword(txtpassword.getText().toString());
-            return true;
-
     }
 
     private void pickImage(){
@@ -229,15 +157,13 @@ public class Createlog_frag1 extends Fragment{
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getResources().getString(R.string.alertBox_photo_title));
-        builder.setItems(choices, new DialogInterface.OnClickListener() {
+        builder.setItems(choices,new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (choices[which].equals(getResources().getString(R.string.take_picture)) &&
-                        getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                if (choices[which].equals(getResources().getString(R.string.take_picture)) && getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
                     //Take photo
                     Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-
                         File photo = null;
                         try {
                             photo = createImageFile();
@@ -252,14 +178,65 @@ public class Createlog_frag1 extends Fragment{
                     }
                 } else if (choices[which].equals(getResources().getString(R.string.pick_gallery))) {
                     //Choose from gallery
-                    Intent intent = new Intent();
-                    intent.setType(IMAGE_TYPE);
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.intentChooser_select_image)), SELECT_PICTURE);
+                }
+                else{
+                    Log.d(METHOD_NAME,"here");
                 }
             }
         });
         builder.show();
+    }
+
+    public boolean setUserData() {
+        final String METHOD_NAME = this.getClass().getName()+" - setUserData";
+        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
+        String uid = sp.getString("uid",null);
+        user = new User(owner);
+
+        if(txtname.getText().toString().trim().equals("") || txtname.getText() == null){
+            Log.w(METHOD_NAME,"TextView Name is either empty or null");
+            return false;
+        }
+        user.setName(txtname.getText().toString());
+
+        if(txtsurname.getText().toString().trim().equals("") || txtsurname.getText() == null){
+            Log.w(METHOD_NAME,"TextView Surname is either empty or null");
+            return false;
+        }
+        user.setSurname(txtsurname.getText().toString());
+
+        if(txtmail.getText().toString().trim().equals("") || txtmail.getText() == null){
+            Log.w(METHOD_NAME,"TextView Email is either empty or null");
+            return false;
+        }
+        user.setEmail(txtmail.getText().toString());
+
+        if(nickname.getText().toString().trim().equals("") || nickname.getText() == null){
+            Log.w(METHOD_NAME, "TextView Username is either empty or null");
+            return false;
+        }
+        user.setUserName(nickname.getText().toString());
+
+        if(!isImageSet){
+            Log.w(METHOD_NAME,"ImageView Profile Picture is not set");
+            return false;
+        }
+        //this.img=userPicView.getDrawingCache();
+        // user.setImageFromDrawable(userPicView.getDrawable());
+
+        if(txtpassword.getText().toString().trim().equals("") || txtpassword.getText() == null){
+            Log.w(METHOD_NAME, "TextView Password is either empty or null");
+            return false;
+        }
+        if(!txtpassword.getText().toString().equals(txtrepeat.getText().toString())){
+            Toast.makeText(getContext(),getResources().getString(R.string.toastRegisterPasswordFail),Toast.LENGTH_LONG)
+                    .show();
+            return false;
+        }
+        user.setPassword(txtpassword.getText().toString());
+        return true;
     }
 
     public boolean isStoragePermissionGranted() {
@@ -282,18 +259,6 @@ public class Createlog_frag1 extends Fragment{
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        final String METHOD_NAME = this.getClass().getName()+" - onRequestPermissionResult";
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-            Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
-            pickImage();
-        }
-        else
-            Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
-    }
-
     private File createImageFile() throws IOException {
         final String METHOD_NAME = this.getClass().getName()+" - createImageFile";
         // Create an image file name
@@ -311,9 +276,8 @@ public class Createlog_frag1 extends Fragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         final String METHOD_NAME = this.getClass().getName()+" - onActivityResult";
-        super.onActivityResult(requestCode, resultCode, data);
-        int imageWidth = 400;
-        int imageHeight = 400;
+        int imageWidth = 600;
+        int imageHeight = 600;
         if(resultCode == getActivity().RESULT_OK && requestCode == SELECT_PICTURE){
             this.userPicUri = data.getData();
             try{
@@ -329,5 +293,38 @@ public class Createlog_frag1 extends Fragment{
                 this.isImageSet = true;
             } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        final String METHOD_NAME = this.getClass().getName()+" - onRequestPermissionResult";
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+            Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+            pickImage();
+        }
+        else
+            Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onChangeFrag(User u, Bitmap image);
     }
 }

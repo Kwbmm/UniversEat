@@ -291,7 +291,7 @@
     <string name="fragment_delete_dish_complete">Complete</string>
 
     <!-- fragment_login_view.xml-->
-    <string name="fragment_login_view_Username">Email</string>
+    <string name="fragment_login_view_Email">Email</string>
     <string name="fragment_login_view_Password">Password</string>
     <string name="fragment_login_view_Login">Login</string>
     <string name="fragment_login_view_Register">Register</string>

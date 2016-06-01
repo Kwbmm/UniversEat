@@ -107,7 +107,7 @@ public class Login_view extends Fragment {
                 startActivityForResult(register,5);
             }
         });
-        username=(EditText)v.findViewById(R.id.username);
+        username=(EditText)v.findViewById(R.id.emailAddress);
         password=(EditText)v.findViewById(R.id.password);
 
         incorrect_log= (LinearLayout) v.findViewById(R.id.ll_incorrect);

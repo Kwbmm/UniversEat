@@ -61,7 +61,6 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
         this.owner=o;
         user = new User(owner);
 
-
         bundle = new Bundle();
         bundle.putBoolean("owner", owner);
         SharedPreferences.Editor editor=sp.edit();
@@ -77,23 +76,20 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
         SharedPreferences sharedPreferences;
         sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
 
+        this.image=image;
+        user.setName(u.getName());
+        user.setSurname(u.getSurname());
+        user.setEmail(u.getEmail());
+        user.setUserName(u.getUserName());
+        user.setPassword(u.getPassword());
 
-            this.image=image;
-            user.setName(u.getName());
-            user.setSurname(u.getSurname());
-            user.setEmail(u.getEmail());
-            user.setUserName(u.getUserName());
-            user.setPassword(u.getPassword());
-
-            FirebaseAuth auth = FirebaseAuth.getInstance();
-            auth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(new Created(user));
-
-
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(new Created(user));
 
         SharedPreferences.Editor editor=sharedPreferences.edit();
-            editor.putBoolean("logged",true);
-            editor.apply();
-            super.onFragmentInteraction();
+        editor.putBoolean("logged",true);
+        editor.apply();
+        super.onFragmentInteraction();
     }
 
     @Override
@@ -131,8 +127,6 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
                 editor.putString("uid",auth.getCurrentUser().getUid());
 
 
-
-
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 FirebaseUser firebaseUser = auth.getCurrentUser();
@@ -157,16 +151,10 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                         Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         finish();
-
                     }
                 });
-
-
-
-
-
             } else {
-                Log.v("login", "Failed");
+                Log.d("login", "Failed");
             }
         }
     }
