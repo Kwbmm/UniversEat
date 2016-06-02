@@ -151,7 +151,8 @@ public class Review_user_view extends Fragment {
         View v =inflater.inflate(R.layout.fragment_review_user_view, container, false);
         FirebaseDatabase db=FirebaseDatabase.getInstance();
         DatabaseReference reference=db.getReference("review");
-        reference.orderByChild("rid").addChildEventListener(new ChildEventListener() {
+        Log.v("rev id ",rest.getRid());
+        reference.orderByChild("rid").equalTo(rest.getRid()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Review nrev=dataSnapshot.getValue(Review.class);

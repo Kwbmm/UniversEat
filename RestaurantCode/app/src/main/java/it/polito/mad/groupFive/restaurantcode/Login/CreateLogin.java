@@ -115,6 +115,9 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
                 SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.user_pref),MODE_PRIVATE);
                 SharedPreferences.Editor editor= sharedPreferences.edit();
                 editor.putString("uid",auth.getCurrentUser().getUid());
+                editor.putString("psw",user.getPassword());
+                editor.putString("email",user.getEmail());
+                editor.commit();
 
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();

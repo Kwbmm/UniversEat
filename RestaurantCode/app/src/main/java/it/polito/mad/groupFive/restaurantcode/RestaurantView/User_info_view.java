@@ -44,6 +44,7 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
         try {
             rid=getIntent().getExtras().getString("rid");
+            Log.v("rid",rid);
             restaurant=new Restaurant(rid);
             menus=new ArrayList<>();
             db=FirebaseDatabase.getInstance();
