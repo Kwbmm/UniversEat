@@ -236,7 +236,7 @@ public class RestaurantManagement extends NavigationDrawer {
                 if (rmimw != null ){
                     //Try to load the image from internal storage
                     try {
-                        Bitmap b = new Picture(Uri.parse(restaurant.getImageLocalPath()+"e"),getContentResolver()).getBitmap();
+                        Bitmap b = new Picture(Uri.parse(restaurant.getImageLocalPath()),getContentResolver()).getBitmap();
                         rmimw.setImageBitmap(b);
                     } catch (Exception e) { //Load from storage failed, try load from network
                         Log.w(METHOD_NAME+" - onDataChange",e.getMessage());
