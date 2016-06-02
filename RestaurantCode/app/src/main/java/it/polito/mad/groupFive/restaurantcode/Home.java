@@ -1,10 +1,17 @@
 package it.polito.mad.groupFive.restaurantcode;
 
+import android.*;
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +32,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
@@ -32,8 +40,9 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
 import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusIDFromRestaurantListener;
+import it.polito.mad.groupFive.restaurantcode.listeners.LocationListener;
 
-public class Home extends NavigationDrawer{
+public class Home extends NavigationDrawer {
     private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menusshared;
     private MenuAdapter adp;
     private Restaurant rest;
@@ -49,17 +58,21 @@ public class Home extends NavigationDrawer{
     private StorageReference storageRoot;
     private FrameLayout mlay;
     private View home;
+    private static final int GPS_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Every activity should extend navigation drawer activity, no set content view must be called, layout must be inflated using inflate function
 
         super.onCreate(savedInstanceState);
-        mlay= (FrameLayout) findViewById(R.id.frame);
+        mlay = (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_home, mlay);
-        parent=mlay;
+        parent = mlay;
 
         this.db = FirebaseDatabase.getInstance();
+
+        //Get location
+        getLocation();
         getMenus();
 
         /**
@@ -70,25 +83,25 @@ public class Home extends NavigationDrawer{
          */
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchViewMenu = (SearchView) findViewById(R.id.search_viewMenu);
-        if(searchViewMenu != null){
+        if (searchViewMenu != null) {
             searchViewMenu.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchViewMenu.setIconifiedByDefault(false);
         }
 
-        dropdown= (LinearLayout) findViewById(R.id.dropdown_option);
-        drop_visible=false;
-        ImageButton option= (ImageButton)findViewById(R.id.opt);
-        if(option != null){
+        dropdown = (LinearLayout) findViewById(R.id.dropdown_option);
+        drop_visible = false;
+        ImageButton option = (ImageButton) findViewById(R.id.opt);
+        if (option != null) {
             option.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!drop_visible){
-                        View options=LayoutInflater.from(getBaseContext()).inflate(R.layout.dropdown_options,null);
+                    if (!drop_visible) {
+                        View options = LayoutInflater.from(getBaseContext()).inflate(R.layout.dropdown_options, null);
                         dropdown.addView(options);
-                        drop_visible=true;
+                        drop_visible = true;
 
-                    }else {
-                        drop_visible=false;
+                    } else {
+                        drop_visible = false;
                         dropdown.removeAllViews();
                     }
                 }
@@ -98,7 +111,7 @@ public class Home extends NavigationDrawer{
 
     @Override
     public void startActivity(Intent intent) {
-        final String METHOD_NAME = this.getClass().getName()+" - startActivity";
+        final String METHOD_NAME = this.getClass().getName() + " - startActivity";
         /**
          * After spending 3 hours just by trying to send extra parameters to SearchMenuResults activity
          * as explained by the android documentation with no success, I found out that the method
@@ -107,27 +120,76 @@ public class Home extends NavigationDrawer{
          * extra data.
          * For more info, see: http://stackoverflow.com/q/26991594/5261306
          */
-        if(Intent.ACTION_SEARCH.equals(intent.getAction())){
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             CheckBox cb = (CheckBox) findViewById(R.id.checkBox_searchByRestaurant);
-            if(cb != null && cb.isChecked()){
-                intent.putExtra(SearchMenuResults.RESTAURANT_SEARCH,true);
+            if (cb != null && cb.isChecked()) {
+                intent.putExtra(SearchMenuResults.RESTAURANT_SEARCH, true);
             }
         }
         super.startActivity(intent);
     }
 
-    private void getMenus(){
+    private void getMenus() {
         this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingSearchViewData);
         this.rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
         this.dbRoot = this.db.getReference("restaurant");
-        if(rv != null){
-            MenuAdapter ma = new MenuAdapter(this.rv,this.pb);
+        if (rv != null) {
+            MenuAdapter ma = new MenuAdapter(this.rv, this.pb);
             rv.setAdapter(ma);
             LinearLayoutManager llmVertical = new LinearLayoutManager(this);
             llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
             rv.setLayoutManager(llmVertical);
             Query menuQuery = this.dbRoot.limitToFirst(10); //Get the first 10 restaurants
             menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromRestaurantListener(ma));
+        }
+    }
+
+    public void getLocation() {
+        final String METHOD_NAME = this.getClass().getName() + " - getLocation";
+        //Request permission
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.v(METHOD_NAME, "Requesting permission..");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, GPS_REQUEST_CODE);
+        } else {
+            Log.v(METHOD_NAME, "Permission already granted");
+            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener());
+            Location loc = getLastKnownLocation(lm);
+            if(loc != null)
+                Log.d(METHOD_NAME, "Lat: " + loc.getLatitude() + "\nLong: " + loc.getLongitude());
+        }
+    }
+
+    private Location getLastKnownLocation(LocationManager mLocationManager) {
+        mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            Location l = mLocationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+        return bestLocation;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        final String METHOD_NAME = this.getClass().getName()+" - onRequestPermissionResult";
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == GPS_REQUEST_CODE){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Log.v(METHOD_NAME,"GPS Permission granted");
+                getLocation();
+            }
+            else{
+                Log.v(METHOD_NAME,"GPS Permission not granted");
+            }
         }
     }
 
