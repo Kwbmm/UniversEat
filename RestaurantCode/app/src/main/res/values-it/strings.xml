@@ -354,4 +354,7 @@
     <string name="button_btnSearchRestaurant">Cerca Ristorante</string>
     <string name="search_helloRestaurant">Dove ti trovi?</string>
 
+    <string name="password6">La password deve essere di almeno 6 caratteri</string>
+    <string name="email">L\' indirizzo mail non è corretto</string>
+
 </resources>
