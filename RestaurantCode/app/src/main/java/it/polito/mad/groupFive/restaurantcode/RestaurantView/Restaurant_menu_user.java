@@ -98,9 +98,7 @@ public class Restaurant_menu_user extends Fragment {
     }
     public void readdata(View v) {
 
-
         rest=restData.getRestaurant();
-        menusshared = rest.getMenus();
         adp= new MenuAdapter(menusshared,mid);
         RecyclerView recyclerView=(RecyclerView)v.findViewById(R.id.my_recycler_view);
         recyclerView.setAdapter(adp);
@@ -126,6 +124,7 @@ public class Restaurant_menu_user extends Fragment {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_restaurant_menu_user, container, false);
         mid=restData.getMid();
+        menusshared=new ArrayList<>();
         FirebaseDatabase db=FirebaseDatabase.getInstance();
         DatabaseReference ref2=db.getReference("menu");
         ref2.orderByChild("rid").addChildEventListener(new ChildEventListener() {
