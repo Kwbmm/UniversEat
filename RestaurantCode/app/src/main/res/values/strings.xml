@@ -373,6 +373,9 @@
     <string name="rating_pqr">Price/Quality</string>
     <string name="rating_comment">Comments</string>
 
+    <string name="password6">Password must be at least 6 char</string>
+    <string name="email">The mail address is not correct</string>
+
     <array name="tags">
         <item>Pizza</item>
         <item>Pasta</item>

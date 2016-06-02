@@ -65,6 +65,7 @@ public class Createlog_frag1 extends Fragment{
     private EditText txtrepeat;
     private boolean owner;
     private boolean isImageSet=false;
+    private boolean toast=false;
 
     public Createlog_frag1(){
         //void constructor
@@ -132,6 +133,7 @@ public class Createlog_frag1 extends Fragment{
                         obs.onChangeFrag(user,img);
                     }
                     else {
+                        if(!toast)
                         Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
                                 .show();
                     }
@@ -183,6 +185,7 @@ public class Createlog_frag1 extends Fragment{
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
         String uid = sp.getString("uid",null);
         user = new User(owner);
+        toast=false;
 
         if(txtname.getText().toString().trim().equals("") || txtname.getText() == null){
             Log.w(METHOD_NAME,"TextView Name is either empty or null");
@@ -198,6 +201,12 @@ public class Createlog_frag1 extends Fragment{
 
         if(txtmail.getText().toString().trim().equals("") || txtmail.getText() == null){
             Log.w(METHOD_NAME,"TextView Email is either empty or null");
+            return false;
+        }
+        if(!isValidEmailAddress(txtmail.getText().toString())){
+            Toast.makeText(getContext(),getResources().getString(R.string.email),Toast.LENGTH_LONG)
+                    .show();
+            toast=true;
             return false;
         }
         user.setEmail(txtmail.getText().toString());
@@ -219,9 +228,16 @@ public class Createlog_frag1 extends Fragment{
             Log.w(METHOD_NAME, "TextView Password is either empty or null");
             return false;
         }
+        if (txtpassword.getText().length()<6){
+            Toast.makeText(getContext(),getResources().getString(R.string.password6),Toast.LENGTH_LONG)
+                    .show();
+            toast=true;
+            return false;
+        }
         if(!txtpassword.getText().toString().equals(txtrepeat.getText().toString())){
             Toast.makeText(getContext(),getResources().getString(R.string.toastRegisterPasswordFail),Toast.LENGTH_LONG)
                     .show();
+            toast=true;
             return false;
         }
         user.setPassword(txtpassword.getText().toString());
@@ -315,5 +331,12 @@ public class Createlog_frag1 extends Fragment{
 
     public interface OnFragmentInteractionListener {
         void onChangeFrag(User u, Bitmap image);
+    }
+
+    public boolean isValidEmailAddress(String email) {
+        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+        java.util.regex.Matcher m = p.matcher(email);
+        return m.matches();
     }
 }
