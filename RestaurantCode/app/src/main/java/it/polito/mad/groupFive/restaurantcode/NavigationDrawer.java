@@ -57,8 +57,14 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
         SharedPreferences.Editor editor= sharedPreferences.edit();
         if(auth.getCurrentUser()!=null){
-        editor.putString("uid",auth.getCurrentUser().getUid());}
-        editor.apply();
+        editor.putString("uid",auth.getCurrentUser().getUid());
+        editor.apply();}
+            else{
+            String mail =sharedPreferences.getString("mail",null);
+            String psw =sharedPreferences.getString("psw",null);
+            if (mail!=null&&psw!=null){
+            auth.signInWithEmailAndPassword(mail,psw);}
+            }
         getUserinfo();
         checkUser();
         createDrawer();
@@ -260,6 +266,8 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     if (position == 4) {
                         phase = 0;
                         SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.clear();
+                        editor.apply();
                         editor.putBoolean("logged",false);
                         editor.commit();
                         FirebaseAuth.getInstance().signOut();
@@ -284,6 +292,8 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     if (position == 2) {
                         phase = 0;
                         SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.clear();
+                        editor.apply();
                         editor.putBoolean("logged",false);
                         FirebaseAuth.getInstance().signOut();
                         editor.commit();

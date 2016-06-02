@@ -143,6 +143,8 @@ public class Login_view extends Fragment {
                                             editor.putBoolean("logged", true);
                                             editor.putBoolean("owner", false);
                                             editor.putString("uid", firebaseUser.getUid());
+                                            editor.putString("psw",password.getText().toString());
+                                            editor.putString("email",username.getText().toString());
                                             editor.commit();
                                             mListener.onFragmentInteraction();
                                             getFragmentManager().popBackStack();
@@ -151,6 +153,8 @@ public class Login_view extends Fragment {
                                             editor.putBoolean("logged", true);
                                             editor.putBoolean("owner", true);
                                             editor.putString("uid", firebaseUser.getUid());
+                                            editor.putString("psw",password.getText().toString());
+                                            editor.putString("email",username.getText().toString());
                                             editor.commit();
                                             Log.v("pws", password.getText().toString());
                                             mListener.onFragmentInteraction();

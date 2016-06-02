@@ -68,7 +68,7 @@ public class Create_review extends NavigationDrawer {
             public void onClick(View v) {
                 if(title.getText().length()>0){
 
-                        Review rev=new Review(rid,uid);
+                        Review rev=new Review(uid,rid);
                         rev.setRating(ratingB.getRating());
                         rev.setTitle(title.getText().toString());
                         rev.setReviewText(comments.getText().toString());

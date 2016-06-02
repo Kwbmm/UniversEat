@@ -127,7 +127,7 @@ public class Restaurant_menu_user extends Fragment {
         menusshared=new ArrayList<>();
         FirebaseDatabase db=FirebaseDatabase.getInstance();
         DatabaseReference ref2=db.getReference("menu");
-        ref2.orderByChild("rid").addChildEventListener(new ChildEventListener() {
+        ref2.orderByChild("rid").equalTo(restData.getRestaurant().getRid()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
@@ -377,6 +377,9 @@ public class Restaurant_menu_user extends Fragment {
                     imView.setImageBitmap(b);
                 } catch (IOException e) {
                     Log.e("getFromNet",e.getMessage());
+                }
+                catch (NullPointerException e){
+
                 }
             }
         });
