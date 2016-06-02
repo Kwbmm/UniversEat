@@ -1,12 +1,20 @@
 package it.polito.mad.groupFive.restaurantcode.listeners;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
 
 import it.polito.mad.groupFive.restaurantcode.SearchMenuResults;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
@@ -16,10 +24,12 @@ public class GetMenusIDFromCourseListener implements ValueEventListener {
 
     private SearchMenuResults.MenuAdapter ma;
     private String[] query;
+    private Context context;
 
-    public GetMenusIDFromCourseListener(SearchMenuResults.MenuAdapter ma, String[] query){
+    public GetMenusIDFromCourseListener(SearchMenuResults.MenuAdapter ma, String[] query,Context context){
         this.ma = ma;
         this.query = query;
+        this.context = context;
     }
 
     @Override
@@ -36,7 +46,7 @@ public class GetMenusIDFromCourseListener implements ValueEventListener {
             String menuID = (String)ds.child("mid").getValue();
             FirebaseDatabase db = FirebaseDatabase.getInstance();
             DatabaseReference menuRef = db.getReference("menu").child(menuID);
-            menuRef.addListenerForSingleValueEvent(new GetMenuFromCourseListener(this.ma,weight));
+            menuRef.addListenerForSingleValueEvent(new GetMenuFromCourseListener(this.ma,weight,this.context));
         }
     }
 
@@ -50,16 +60,19 @@ class GetMenuFromCourseListener implements ValueEventListener{
 
     private SearchMenuResults.MenuAdapter ma;
     private int weight;
-    GetMenuFromCourseListener(SearchMenuResults.MenuAdapter ma, int weight){
+    private Context context;
+
+    GetMenuFromCourseListener(SearchMenuResults.MenuAdapter ma, int weight, Context context){
         this.ma = ma;
         this.weight = weight;
+        this.context = context;
     }
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         final String METHOD_NAME = this.getClass().getName()+" - onDCh";
         try {
-            Menu m = new Menu(
+            final Menu m = new Menu(
                     (String) dataSnapshot.child("rid").getValue(),
                     (String) dataSnapshot.child("mid").getValue()
             );
@@ -71,7 +84,18 @@ class GetMenuFromCourseListener implements ValueEventListener{
             m.setType(type);
             float price = ((Long)dataSnapshot.child("price").getValue()).floatValue();
             m.setPrice(price);
-            ma.addChild(m,this.weight);
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");
+            ContextWrapper cw = new ContextWrapper(this.context);
+            File dir = cw.getDir("images", Context.MODE_PRIVATE);
+            final File filePath = new File(dir,m.getMid());
+            storageRoot.child(m.getMid()).getFile(filePath).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    m.setImageLocal(filePath.getAbsolutePath());
+                    ma.addChild(m,weight);
+                }
+            });
         } catch (MenuException e) {
             Log.e(METHOD_NAME, e.getMessage());
         }

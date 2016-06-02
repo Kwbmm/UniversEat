@@ -4,6 +4,9 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.util.SortedList;
@@ -26,6 +29,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,6 +38,7 @@ import java.util.Comparator;
 
 import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
@@ -133,7 +139,7 @@ public class SearchMenuResults extends NavigationDrawer {
             llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
             rv.setLayoutManager(llmVertical);
             Query menuQuery = this.dbRoot.orderByChild(this.query[0]).equalTo(true);
-            menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromCourseListener(ma, this.query));
+            menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromCourseListener(ma, this.query,getApplicationContext()));
             lastSortMethod = 4;
         }
     }
@@ -532,7 +538,9 @@ public class SearchMenuResults extends NavigationDrawer {
                         .setDescription(m.getDescription())
                         .setName(m.getName())
                         .setPrice(m.getPrice())
-                        .setServiceFee(m.isServiceFee()).setType(m.getType());
+                        .setImageLocal(m.getImageLocalPath())
+                        .setServiceFee(m.isServiceFee())
+                        .setType(m.getType());
                 this.weight = weight;
             }
 
@@ -951,10 +959,17 @@ public class SearchMenuResults extends NavigationDrawer {
 
         @Override
         public void onBindViewHolder(final MenuViewHolder holder, int position) {
+            final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
             final Menu menu = menus.get(position);
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
+            File img = new File(menu.getImageLocalPath());
+            try {
+                holder.menu_image.setImageBitmap(new Picture(Uri.fromFile(img),context.getContentResolver(),300,300).getBitmap());
+            } catch (IOException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+            }
             holder.card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
