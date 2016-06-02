@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -34,7 +33,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuExce
 import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
 import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusIDFromRestaurantListener;
 
-public class Home extends NavigationDrawer {
+public class Home extends NavigationDrawer{
     private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menusshared;
     private MenuAdapter adp;
     private Restaurant rest;
@@ -48,7 +47,7 @@ public class Home extends NavigationDrawer {
     private FirebaseDatabase db;
     private DatabaseReference dbRoot;
     private StorageReference storageRoot;
-    private  FrameLayout mlay;
+    private FrameLayout mlay;
     private View home;
 
     @Override
@@ -57,9 +56,7 @@ public class Home extends NavigationDrawer {
 
         super.onCreate(savedInstanceState);
         mlay= (FrameLayout) findViewById(R.id.frame);
-        home=getLayoutInflater().inflate(R.layout.activity_home,null);
-        mlay.addView(home);
-        //mlay.inflate(this, R.layout.activity_home, mlay);
+        mlay.inflate(this, R.layout.activity_home, mlay);
         parent=mlay;
 
         this.db = FirebaseDatabase.getInstance();
@@ -67,12 +64,12 @@ public class Home extends NavigationDrawer {
 
         /**
          * These lines of code are for setting up the searchViewMenu and let it know about the activity
-         * used to performed searches (SearchResult.java).
+         * used to performed searches (SearchMenuResults.java).
          * More info:
          *  http://developer.android.com/guide/topics/search/search-dialog.html#UsingSearchWidget
          */
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchViewMenu = (SearchView) findViewById(R.id.search_viewMenu);
+        final SearchView searchViewMenu = (SearchView) findViewById(R.id.search_viewMenu);
         if(searchViewMenu != null){
             searchViewMenu.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchViewMenu.setIconifiedByDefault(false);
@@ -97,39 +94,25 @@ public class Home extends NavigationDrawer {
                 }
             });
         }
-
-        Button searchRestaurantsBtn = (Button) findViewById(R.id.buttonRestaurant);
-        if(searchRestaurantsBtn != null ){
-            searchRestaurantsBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mlay.removeView(home);
-                    SearchRestaurants sr = new SearchRestaurants();
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .add(R.id.frame,sr)
-                            .commit();
-                }
-            });
-        }
     }
 
     @Override
     public void startActivity(Intent intent) {
         final String METHOD_NAME = this.getClass().getName()+" - startActivity";
         /**
-         * After spending 3 hours just by trying to send extra parameters to SearchResult activity
+         * After spending 3 hours just by trying to send extra parameters to SearchMenuResults activity
          * as explained by the android documentation with no success, I found out that the method
          * onSearchRequested is not available for AppCompat activities. So we need to override
          * startActivity to catch the intent, check if it's an ACTION_SEARCH intent and, if so, add
          * extra data.
          * For more info, see: http://stackoverflow.com/q/26991594/5261306
          */
-        /*if(Intent.ACTION_SEARCH.equals(intent.getAction())){
+        if(Intent.ACTION_SEARCH.equals(intent.getAction())){
             CheckBox cb = (CheckBox) findViewById(R.id.checkBox_searchByRestaurant);
-            if(cb != null && cb.isChecked()){}
-            intent.putExtra(SearchResult.RESTAURANT_SEARCH,true);
-        }*/
+            if(cb != null && cb.isChecked()){
+                intent.putExtra(SearchMenuResults.RESTAURANT_SEARCH,true);
+            }
+        }
         super.startActivity(intent);
     }
 

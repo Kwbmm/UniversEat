@@ -82,7 +82,7 @@
     <string name="reviewlist_textViewName">Restaurant Name</string>
     <string name="finish">Finish</string>
 
-    <!-- SearchResult.java -->
+    <!-- SearchMenuResults.java -->
     <string name="SearchResult_toastFailLoadData">We are unable to download data.. :(</string>
     <string name="SearchResult_toastNoRestaurants">There are no restaurants to show.</string>
     <string name="SearchResult_toastNoMenus">There are no menus to show.</string>
@@ -118,7 +118,7 @@
         <item>Service Fee: no</item>
         <item>Open now</item>
     </string-array>
-    <!-- END SearchResult.java -->
+    <!-- END SearchMenuResults.java -->
 
     <!-- toolbar_search_data.xml -->
     <string name="sortTitle">Sort by</string>

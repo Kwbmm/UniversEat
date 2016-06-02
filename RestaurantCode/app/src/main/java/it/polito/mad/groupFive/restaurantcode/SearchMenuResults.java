@@ -39,7 +39,7 @@ import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
 import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
 import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusIDFromCourseListener;
 
-public class SearchResult extends NavigationDrawer {
+public class SearchMenuResults extends NavigationDrawer {
     public static final String RESTAURANT_SEARCH = "restaurant";
     private SortedList<MenuAdapter.WeightedMenu> menus;
     private ArrayList<Restaurant> restaurants;
@@ -63,7 +63,7 @@ public class SearchResult extends NavigationDrawer {
         this.context=this;
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            this.isRestaurant = intent.getBooleanExtra(SearchResult.RESTAURANT_SEARCH,false);
+            this.isRestaurant = intent.getBooleanExtra(SearchMenuResults.RESTAURANT_SEARCH,false);
             this.query = intent.getStringExtra(SearchManager.QUERY).trim().toLowerCase().split(" ");
             this.db = FirebaseDatabase.getInstance();
 //            this.db.setPersistenceEnabled(true);
@@ -150,7 +150,7 @@ public class SearchResult extends NavigationDrawer {
                 public boolean onMenuItemClick(MenuItem item) {
                     final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
                     String[] items = getResources().getStringArray(R.array.sortCurtainRestaurantItems);
-                    AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchResult.this);
+                    AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchMenuResults.this);
                     sortCurtain.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -186,7 +186,7 @@ public class SearchResult extends NavigationDrawer {
                 public boolean onMenuItemClick(MenuItem item) {
                     final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
                     String[] items = getResources().getStringArray(R.array.filterCurtainRestaurantItems);
-                    AlertDialog.Builder filterCurtain = new AlertDialog.Builder(SearchResult.this);
+                    AlertDialog.Builder filterCurtain = new AlertDialog.Builder(SearchMenuResults.this);
                     filterCurtain.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -228,7 +228,7 @@ public class SearchResult extends NavigationDrawer {
                 public boolean onMenuItemClick(MenuItem item) {
                     final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
                     String[] items = getResources().getStringArray(R.array.sortCurtainMenuItems);
-                    AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchResult.this);
+                    AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchMenuResults.this);
                     sortCurtain.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -278,7 +278,7 @@ public class SearchResult extends NavigationDrawer {
                     final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
                     String[] items = getResources().getStringArray(R.array.filterCurtainMenuItems);
                     final boolean[] selectedItems = new boolean[items.length];
-                    AlertDialog.Builder filterCurtain = new AlertDialog.Builder(SearchResult.this);
+                    AlertDialog.Builder filterCurtain = new AlertDialog.Builder(SearchMenuResults.this);
                     filterCurtain
                             .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
                                 @Override

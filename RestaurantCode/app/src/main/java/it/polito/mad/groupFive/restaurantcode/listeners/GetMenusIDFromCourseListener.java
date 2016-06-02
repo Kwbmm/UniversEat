@@ -8,16 +8,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import it.polito.mad.groupFive.restaurantcode.SearchResult;
+import it.polito.mad.groupFive.restaurantcode.SearchMenuResults;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 
 public class GetMenusIDFromCourseListener implements ValueEventListener {
 
-    private SearchResult.MenuAdapter ma;
+    private SearchMenuResults.MenuAdapter ma;
     private String[] query;
 
-    public GetMenusIDFromCourseListener(SearchResult.MenuAdapter ma, String[] query){
+    public GetMenusIDFromCourseListener(SearchMenuResults.MenuAdapter ma, String[] query){
         this.ma = ma;
         this.query = query;
     }
@@ -48,9 +48,9 @@ public class GetMenusIDFromCourseListener implements ValueEventListener {
 
 class GetMenuFromCourseListener implements ValueEventListener{
 
-    private SearchResult.MenuAdapter ma;
+    private SearchMenuResults.MenuAdapter ma;
     private int weight;
-    GetMenuFromCourseListener(SearchResult.MenuAdapter ma, int weight){
+    GetMenuFromCourseListener(SearchMenuResults.MenuAdapter ma, int weight){
         this.ma = ma;
         this.weight = weight;
     }
