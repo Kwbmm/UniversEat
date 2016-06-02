@@ -68,8 +68,6 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
 
     public void onChangeFrag(User u, Bitmap image) {
         final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag";
-        SharedPreferences sharedPreferences;
-        sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
 
         this.image=image;
         user.setName(u.getName());
@@ -81,9 +79,7 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(new Created(user));
 
-        SharedPreferences.Editor editor=sharedPreferences.edit();
-        editor.putBoolean("logged",true);
-        editor.apply();
+
     }
 
     @Override
@@ -144,6 +140,12 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                         Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        SharedPreferences sharedPreferences;
+                        sharedPreferences = getSharedPreferences(getString(R.string.user_pref), MODE_PRIVATE);
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putBoolean("logged",true);
+                        editor.apply();
+                        onFragmentInteraction();
                         finish();
                     }
                 });

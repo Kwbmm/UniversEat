@@ -195,11 +195,11 @@ public class CreateRestaurant
                                .setTelephone((String)dataSnapshot.child("telephone").getValue())
                                .setZip((String)dataSnapshot.child("zip").getValue())
                                .setImageLocalPath((String)dataSnapshot.child("imageLocalPath").getValue());
-                       float rating = ((Long)dataSnapshot.child("rating").getValue()).floatValue();
+                       float rating = Float.parseFloat(dataSnapshot.child("rating").getValue().toString());
                        restaurant.setRating(rating);
-                       double xcoord = ((Long)dataSnapshot.child("xcoord").getValue()).doubleValue();
+                       double xcoord = Double.parseDouble(dataSnapshot.child("xcoord").getValue().toString());
                        restaurant.setXCoord(xcoord);
-                       double ycoord = ((Long)dataSnapshot.child("ycoord").getValue()).doubleValue();
+                       double ycoord = Double.parseDouble(dataSnapshot.child("ycoord").getValue().toString());
                        restaurant.setYCoord(ycoord);
                        restaurant.setTimetableDinner((HashMap)dataSnapshot.child("timetableDinner").getValue());
                        restaurant.setTimetableLunch((HashMap)dataSnapshot.child("timetableLunch").getValue());

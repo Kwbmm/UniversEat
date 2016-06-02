@@ -125,11 +125,11 @@ public class Home extends NavigationDrawer {
          * extra data.
          * For more info, see: http://stackoverflow.com/q/26991594/5261306
          */
-        if(Intent.ACTION_SEARCH.equals(intent.getAction())){
+        /*if(Intent.ACTION_SEARCH.equals(intent.getAction())){
             CheckBox cb = (CheckBox) findViewById(R.id.checkBox_searchByRestaurant);
             if(cb != null && cb.isChecked()){}
             intent.putExtra(SearchResult.RESTAURANT_SEARCH,true);
-        }
+        }*/
         super.startActivity(intent);
     }
 

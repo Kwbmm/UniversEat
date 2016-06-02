@@ -1,6 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ public class SearchResult extends NavigationDrawer {
     private FirebaseDatabase db;
     private DatabaseReference dbRoot;
     private StorageReference storageRoot;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class SearchResult extends NavigationDrawer {
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_search_result, mlay);
         // Get the intent, verify the action and get the query
+        this.context=this;
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             this.isRestaurant = intent.getBooleanExtra(SearchResult.RESTAURANT_SEARCH,false);
@@ -124,7 +127,7 @@ public class SearchResult extends NavigationDrawer {
         this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingSearchViewData);
         this.rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
         if (rv != null){
-            MenuAdapter ma = MenuAdapter.getInstanceSortedByWeight(this.rv,this.pb);
+            MenuAdapter ma = MenuAdapter.getInstanceSortedByWeight(this.rv,this.pb,context);
             rv.setAdapter(ma);
             LinearLayoutManager llmVertical = new LinearLayoutManager(this);
             llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
@@ -234,7 +237,7 @@ public class SearchResult extends NavigationDrawer {
                                     if(menus == null){
                                         menus = ((MenuAdapter)rv.getAdapter()).getMenus();
                                     }
-                                    MenuAdapter maByNameAsc = MenuAdapter.getInstanceSortedByName(true,menus,rv);
+                                    MenuAdapter maByNameAsc = MenuAdapter.getInstanceSortedByName(true,menus,rv,context);
                                     rv.swapAdapter(maByNameAsc,false);
                                     lastSortMethod = 0;
                                     break;
@@ -242,7 +245,7 @@ public class SearchResult extends NavigationDrawer {
                                     if(menus == null){
                                         menus = ((MenuAdapter)rv.getAdapter()).getMenus();
                                     }
-                                    MenuAdapter maByNameDesc = MenuAdapter.getInstanceSortedByName(false,menus,rv);
+                                    MenuAdapter maByNameDesc = MenuAdapter.getInstanceSortedByName(false,menus,rv,context);
                                     rv.swapAdapter(maByNameDesc,false);
                                     lastSortMethod = 1;
                                     break;
@@ -250,7 +253,7 @@ public class SearchResult extends NavigationDrawer {
                                     if(menus == null){
                                         menus = ((MenuAdapter)rv.getAdapter()).getMenus();
                                     }
-                                    MenuAdapter maByPriceAsc = MenuAdapter.getInstanceSortedByPrice(true,menus,rv);
+                                    MenuAdapter maByPriceAsc = MenuAdapter.getInstanceSortedByPrice(true,menus,rv,context);
                                     rv.swapAdapter(maByPriceAsc,false);
                                     lastSortMethod = 2;
                                     break;
@@ -258,7 +261,7 @@ public class SearchResult extends NavigationDrawer {
                                     if(menus == null){
                                         menus = ((MenuAdapter)rv.getAdapter()).getMenus();
                                     }
-                                    MenuAdapter maByPriceDesc = MenuAdapter.getInstanceSortedByPrice(false,menus,rv);
+                                    MenuAdapter maByPriceDesc = MenuAdapter.getInstanceSortedByPrice(false,menus,rv,context);
                                     rv.swapAdapter(maByPriceDesc,false);
                                     lastSortMethod = 3;
                                     break;
@@ -289,7 +292,7 @@ public class SearchResult extends NavigationDrawer {
                                     if(menus == null){ //Save the original set
                                         menus = ((MenuAdapter)rv.getAdapter()).getMenus();
                                     }
-                                    MenuAdapter ma = MenuAdapter.getInstanceFromLastSortMethod(lastSortMethod,menus,rv);
+                                    MenuAdapter ma = MenuAdapter.getInstanceFromLastSortMethod(lastSortMethod,menus,rv,context);
                                     for (int i = 0; i < selectedItems.length; i++) {
                                         if(selectedItems[i]){
                                             ma.filter(i);
@@ -539,30 +542,32 @@ public class SearchResult extends NavigationDrawer {
         private SortedList<WeightedMenu> menus;
         private RecyclerView rv;
         private ProgressBar pb;
+        private Context context;
 
-        public static MenuAdapter getInstanceSortedByWeight(RecyclerView rv,ProgressBar pb){
-            return new MenuAdapter(0,false,null,rv,pb);
+        public static MenuAdapter getInstanceSortedByWeight(RecyclerView rv,ProgressBar pb,Context context){
+            return new MenuAdapter(0,false,null,rv,pb,context);
         }
 
-        public static MenuAdapter getInstanceSortedByWeight(SortedList<WeightedMenu> menus,RecyclerView rv){
-            return new MenuAdapter(4,false,menus,rv,null);
+        public static MenuAdapter getInstanceSortedByWeight(SortedList<WeightedMenu> menus,RecyclerView rv,Context context){
+            return new MenuAdapter(4,false,menus,rv,null,context);
         }
 
-        public static MenuAdapter getInstanceSortedByName(boolean asc,SortedList<WeightedMenu> menus,RecyclerView rv){
-            return new MenuAdapter(1,asc,menus,rv,null);
+        public static MenuAdapter getInstanceSortedByName(boolean asc,SortedList<WeightedMenu> menus,RecyclerView rv,Context context){
+            return new MenuAdapter(1,asc,menus,rv,null,context);
         }
 
-        public static MenuAdapter getInstanceSortedByPrice(boolean asc,SortedList<WeightedMenu> menus,RecyclerView rv){
-            return new MenuAdapter(2,asc,menus,rv,null);
+        public static MenuAdapter getInstanceSortedByPrice(boolean asc,SortedList<WeightedMenu> menus,RecyclerView rv,Context context){
+            return new MenuAdapter(2,asc,menus,rv,null,context);
         }
 
-        public static MenuAdapter getInstanceSortedByType(SortedList<WeightedMenu> menus, RecyclerView rv){
-            return new MenuAdapter(3,false,menus,rv,null);
+        public static MenuAdapter getInstanceSortedByType(SortedList<WeightedMenu> menus, RecyclerView rv,Context context){
+            return new MenuAdapter(3,false,menus,rv,null,context);
         }
 
-        private MenuAdapter(int sortType, boolean asc, SortedList<WeightedMenu> menus,RecyclerView rv,ProgressBar pb){
+        private MenuAdapter(int sortType, boolean asc, SortedList<WeightedMenu> menus,RecyclerView rv,ProgressBar pb,Context context){
             this.rv = rv;
             this.pb = pb;
+            this.context=context;
             switch (sortType){
                 case 0:{//Sort by weight
                     this.menus = new SortedList<WeightedMenu>(WeightedMenu.class,
@@ -891,18 +896,18 @@ public class SearchResult extends NavigationDrawer {
         }
 
         //Filtering methods
-        public static MenuAdapter getInstanceFromLastSortMethod(int lastSort,SortedList<WeightedMenu> menus, RecyclerView rv){
+        public static MenuAdapter getInstanceFromLastSortMethod(int lastSort,SortedList<WeightedMenu> menus, RecyclerView rv,Context context){
             switch (lastSort){
                 case 0:
-                    return MenuAdapter.getInstanceSortedByName(true,menus,rv);
+                    return MenuAdapter.getInstanceSortedByName(true,menus,rv,context);
                 case 1:
-                    return MenuAdapter.getInstanceSortedByName(false,menus,rv);
+                    return MenuAdapter.getInstanceSortedByName(false,menus,rv,context);
                 case 2:
-                    return MenuAdapter.getInstanceSortedByPrice(true,menus,rv);
+                    return MenuAdapter.getInstanceSortedByPrice(true,menus,rv,context);
                 case 3:
-                    return MenuAdapter.getInstanceSortedByPrice(false,menus,rv);
+                    return MenuAdapter.getInstanceSortedByPrice(false,menus,rv,context);
                 case 4:
-                    return MenuAdapter.getInstanceSortedByWeight(menus,rv);
+                    return MenuAdapter.getInstanceSortedByWeight(menus,rv,context);
             }
             return null;
         }
@@ -946,10 +951,19 @@ public class SearchResult extends NavigationDrawer {
 
         @Override
         public void onBindViewHolder(final MenuViewHolder holder, int position) {
-            Menu menu = menus.get(position);
+            final Menu menu = menus.get(position);
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
+            holder.card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent menu_view =new Intent(context,User_info_view.class);
+                    menu_view.putExtra("mid",menu.getMid());
+                    menu_view.putExtra("rid",menu.getRid());
+                    context.startActivity(menu_view);
+                }
+            });
         }
 
         @Override
