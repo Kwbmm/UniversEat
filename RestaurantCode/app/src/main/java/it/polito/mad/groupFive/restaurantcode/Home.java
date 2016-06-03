@@ -49,39 +49,29 @@ import it.polito.mad.groupFive.restaurantcode.listeners.LocationListener;
 
 public class Home extends NavigationDrawer {
     private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menusshared;
-    private MenuAdapter ma;
-    private Restaurant rest;
-    private SharedPreferences sharedPreferences;
     private View parent;
-    private String user;
-    private LinearLayout dropdown;
-    private boolean drop_visible;
     private RecyclerView rv;
     private ProgressBar pb;
     private FirebaseDatabase db;
     private DatabaseReference dbRoot;
-    private StorageReference storageRoot;
     private FrameLayout mlay;
-    private View home;
 
     private static final int GPS_REQUEST_CODE = 1;
-    private Location location;
+    private Location lastKnown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //Every activity should extend navigation drawer activity, no set content view must be called, layout must be inflated using inflate function
-
         super.onCreate(savedInstanceState);
         mlay = (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_home, mlay);
         parent = mlay;
+
         this.db = FirebaseDatabase.getInstance();
         this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
         this.rv = (RecyclerView) findViewById(R.id.home_recyclerViewHome);
 
         //Get location
-        int locationResult = getLocation();
-        getMenus(locationResult);
+        checkGPSPermission();
 
         /**
          * These lines of code are for setting up the searchViewMenu and let it know about the activity
@@ -95,143 +85,20 @@ public class Home extends NavigationDrawer {
             searchViewMenu.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchViewMenu.setIconifiedByDefault(false);
         }
-
-        dropdown = (LinearLayout) findViewById(R.id.dropdown_option);
-        drop_visible = false;
-        ImageButton option = (ImageButton) findViewById(R.id.opt);
-        if (option != null) {
-            option.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!drop_visible) {
-                        View options = LayoutInflater.from(getBaseContext()).inflate(R.layout.dropdown_options, null);
-                        dropdown.addView(options);
-                        drop_visible = true;
-
-                    } else {
-                        drop_visible = false;
-                        dropdown.removeAllViews();
-                    }
-                }
-            });
-        }
     }
 
-    @Override
-    public void startActivity(Intent intent) {
-        final String METHOD_NAME = this.getClass().getName() + " - startActivity";
-        /**
-         * After spending 3 hours just by trying to send extra parameters to SearchMenuResults activity
-         * as explained by the android documentation with no success, I found out that the method
-         * onSearchRequested is not available for AppCompat activities. So we need to override
-         * startActivity to catch the intent, check if it's an ACTION_SEARCH intent and, if so, add
-         * extra data.
-         * For more info, see: http://stackoverflow.com/q/26991594/5261306
-         */
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            CheckBox cb = (CheckBox) findViewById(R.id.checkBox_searchByRestaurant);
-            if (cb != null && cb.isChecked()) {
-                intent.putExtra(SearchMenuResults.RESTAURANT_SEARCH, true);
-            }
-        }
-        super.startActivity(intent);
-    }
-
-    private void getMenus(int locationResult) {
-        final String METHOD_NAME = this.getClass().getName() + " - getMenus";
-        final int LOCATION_LAST_KNOWN = 0;
-        final int LOCATION_UNKNOWN_OR_NOT_GRANTED = -1;
-        switch (locationResult){
-            case LOCATION_UNKNOWN_OR_NOT_GRANTED: { //Fetch data from most recent to least recent, regardless of the location
-                Log.w(METHOD_NAME,"Location is unknown, I'm fetching according to most recent data first.");
-                this.dbRoot = this.db.getReference("menu");
-                if(rv != null){
-                    this.ma = new MenuAdapter(this.rv,this.pb,this);
-                    rv.setAdapter(ma);
-                    LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-                    llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-                    rv.setLayoutManager(llmVertical);
-                    Query menuQuery = this.dbRoot.limitToFirst(30); //Get the first 10 menus
-                    menuQuery.addListenerForSingleValueEvent(new GetMenusListener(this.ma,this));
-                    Log.d(METHOD_NAME,"Listener attached");
-                }
-                break;
-            }
-            case LOCATION_LAST_KNOWN:{ //Fetch data from most recent to least recent, but put nearest menus first.
-                Log.d(METHOD_NAME,"Location last known");
-                this.dbRoot = this.db.getReference("restaurant");
-                if (rv != null) {
-                    this.ma = new MenuAdapter(this.rv, this.pb,this);
-                    rv.setAdapter(ma);
-                    LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-                    llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-                    rv.setLayoutManager(llmVertical);
-                    Query menuQuery = this.dbRoot.limitToFirst(10); //Get the first 10 restaurants
-                    menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromRestaurantListener(this.ma,this.location,this));
-                }
-                break;
-            }
-            default:
-                Log.w(METHOD_NAME,"Entering 'default' case, display error message");
-                this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
-                this.pb.setVisibility(View.GONE);
-                Toast
-                        .makeText(
-                                getApplicationContext(),
-                                getResources().getString(R.string.toast_getMenusUnexpectedError),
-                                Toast.LENGTH_LONG)
-                        .show();
-        }
-
-    }
-
-    private int getLocation() {
-        final String METHOD_NAME = this.getClass().getName() + " - getLocation";
-        //Request permission
+    private void checkGPSPermission(){
+        final String METHOD_NAME = this.getClass().getName() + " - checkGPSPermission";
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.v(METHOD_NAME, "Requesting permission..");
+            Log.i(METHOD_NAME, "Requesting permission..");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, GPS_REQUEST_CODE);
-            return -2; //Requesting permission
         }
-        else {
-            Log.v(METHOD_NAME, "Permission already granted");
-            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            //Get the current location
-            if(this.rv != null){
-                this.ma = new MenuAdapter(this.rv,this.pb,this);
-                this.rv.setAdapter(this.ma);
-                LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-                llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-                this.rv.setLayoutManager(llmVertical);
-                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener(lm,this.ma,this));
-            }
-            //While we look for the current location, get the last known one
-            this.location = getLastKnownLocation(lm);
-            if(this.location != null){ //If we have a last known location, return 0
-                return 0;
-            }
-            else{ //Otherwise return -1
-                return -1;
-            }
+        else{
+            Log.i(METHOD_NAME, "Permission granted");
+            getAccurateLocation();
+            getLastKnownLocation();
         }
-    }
-
-    private Location getLastKnownLocation(LocationManager mLocationManager) {
-        mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        List<String> providers = mLocationManager.getProviders(true);
-        Location bestLocation = null;
-        for (String provider : providers) {
-            Location l = mLocationManager.getLastKnownLocation(provider);
-            if (l == null) {
-                continue;
-            }
-            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                // Found best last known location: %s", l);
-                bestLocation = l;
-            }
-        }
-        return bestLocation;
     }
 
     @Override
@@ -241,12 +108,95 @@ public class Home extends NavigationDrawer {
         if(requestCode == GPS_REQUEST_CODE){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 Log.v(METHOD_NAME,"GPS Permission granted");
-                getLocation();
+                checkGPSPermission();
             }
             else{
                 Log.v(METHOD_NAME,"GPS Permission not granted");
                 getMenus(-1);
             }
+        }
+    }
+
+    private void getAccurateLocation() {
+        final String METHOD_NAME = this.getClass().getName() + " - getLocation";
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //Get the current location
+        if(this.rv != null){
+            MenuAdapter ma = new MenuAdapter(this.rv,this.pb,this);
+            this.rv.setAdapter(ma);
+            LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+            llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+            this.rv.setLayoutManager(llmVertical);
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener(lm,ma,this));
+        }
+    }
+
+    private void getLastKnownLocation() {
+        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        this.lastKnown = null;
+        for (String provider : providers) {
+            Location l = mLocationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (this.lastKnown == null || l.getAccuracy() < this.lastKnown.getAccuracy()) {
+                // Found best last known location: %s", l);
+                this.lastKnown = l;
+            }
+        }
+
+        if(this.lastKnown != null){ //If we have a last known location, return 0
+            getMenus(0);
+        }
+        else{ //Otherwise return -1
+            getMenus(-1);
+        }
+    }
+
+    private void getMenus(int locationResult) {
+        final String METHOD_NAME = this.getClass().getName() + " - getMenus";
+        final int LOCATION_LAST_KNOWN = 0;
+        final int LOCATION_UNKNOWN_OR_NOT_GRANTED = -1;
+        MenuAdapter ma;
+        switch (locationResult){
+            case LOCATION_UNKNOWN_OR_NOT_GRANTED: { //Fetch data from most recent to least recent, regardless of the location
+                Log.w(METHOD_NAME,"Location is unknown, I'm fetching according to most recent data first.");
+                this.dbRoot = this.db.getReference("menu");
+                if(rv != null){
+                    ma = new MenuAdapter(this.rv,this.pb,this);
+                    rv.setAdapter(ma);
+                    LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+                    llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+                    rv.setLayoutManager(llmVertical);
+                    Query menuQuery = this.dbRoot.limitToFirst(30); //Get the first 10 menus
+                    menuQuery.addListenerForSingleValueEvent(new GetMenusListener(ma,this));
+                }
+                break;
+            }
+            case LOCATION_LAST_KNOWN:{ //Fetch data from most recent to least recent, but put nearest menus first.
+                Log.d(METHOD_NAME,"Location last known");
+                this.dbRoot = this.db.getReference("restaurant");
+                if (rv != null) {
+                    ma = new MenuAdapter(this.rv, this.pb,this);
+                    rv.setAdapter(ma);
+                    LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+                    llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+                    rv.setLayoutManager(llmVertical);
+                    Query menuQuery = this.dbRoot.limitToFirst(10); //Get the first 10 restaurants
+                    menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromRestaurantListener(ma,this.lastKnown,this));
+                }
+                break;
+            }
+            default:
+                Log.w(METHOD_NAME,"Entering 'default' case, display error message. Location code was: "+locationResult);
+                this.pb.setVisibility(View.GONE);
+                Toast
+                        .makeText(
+                                getApplicationContext(),
+                                getResources().getString(R.string.toast_getMenusUnexpectedError),
+                                Toast.LENGTH_LONG)
+                        .show();
         }
     }
 

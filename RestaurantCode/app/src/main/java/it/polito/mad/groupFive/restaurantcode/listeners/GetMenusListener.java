@@ -30,9 +30,7 @@ public class GetMenusListener implements ValueEventListener {
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         final String METHOD_NAME = this.getClass().getName() + " - onDataChange";
-        Log.d(METHOD_NAME,"Getting data");
         for(DataSnapshot ds : dataSnapshot.getChildren()){
-            Log.d(METHOD_NAME,"Data:\n\t"+ds.toString());
             try {
                 final Menu m = new Menu(
                         (String) ds.child("rid").getValue(),
@@ -68,7 +66,5 @@ public class GetMenusListener implements ValueEventListener {
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
-        final String METHOD_NAME = this.getClass().getName() + " - onCanc";
-        Log.d(METHOD_NAME,"Cancelled\n"+databaseError.toString());
     }
 }

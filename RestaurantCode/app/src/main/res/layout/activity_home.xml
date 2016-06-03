@@ -7,18 +7,6 @@
     android:id="@+id/main"
     android:background="@color/material_grey_100">
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/opt"
-        android:contextClickable="true"
-        android:src="@drawable/ic_settings_black"
-        android:backgroundTint="@color/material_grey_100"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:contentDescription="@string/home_imageButtonOpt_contentDesc"
-        />
-
     <android.support.v7.widget.SearchView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,25 +15,15 @@
         android:divider="#000000"
         android:dividerPadding="1dp"
         android:layout_marginTop="5dp"
-        android:layout_toLeftOf="@id/opt"
-        android:layout_toStartOf="@id/opt"
+        android:layout_alignParentTop="true"
         android:focusable="false"
         />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/dropdown_option"
-        android:layout_below="@id/search_viewMenu"
-        android:orientation="vertical">
-
-    </LinearLayout>
 
     <!-- Loading bar -->
     <ProgressBar
         android:layout_width="@dimen/progressBar_size"
         android:layout_height="@dimen/progressBar_size"
-        android:layout_below="@id/dropdown_option"
+        android:layout_below="@id/search_viewMenu"
         android:id="@+id/progressBar_loadingDataHome"
         android:indeterminate="true"
         android:layout_centerHorizontal="true"
@@ -56,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/home_recyclerViewHome"
-        android:layout_below="@id/dropdown_option"
+        android:layout_below="@id/search_viewMenu"
         android:focusable="false"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
