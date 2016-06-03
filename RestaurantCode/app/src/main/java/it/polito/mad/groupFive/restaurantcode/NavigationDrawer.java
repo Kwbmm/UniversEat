@@ -66,7 +66,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
             }
 
         editor.apply();
-            String mail =sharedPreferences.getString("mail",null);
+            String mail =sharedPreferences.getString("email",null);
             String psw =sharedPreferences.getString("psw",null);
             if (mail!=null&&psw!=null){
             auth.signInWithEmailAndPassword(mail,psw);

@@ -10,6 +10,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
@@ -30,7 +34,7 @@ public class Notification_Listener extends IntentService {
     public Notification_Listener() {
         super("Notification_Listener");
     }
-
+    private int count=0;
     /**
      * Starts this service to perform action Foo with the given parameters. If
      * the service is already performing a task this action will be queued.
@@ -78,12 +82,25 @@ public class Notification_Listener extends IntentService {
                         String name = (String) dataSnapshot.child("menuname").getValue();
                         String date = (String) dataSnapshot.child("date").getValue();
                         if (noty == false) {
-                            Notification_new_order.notify(getBaseContext(), name, date, key.hashCode());
+                            try {
+                            SimpleDateFormat format=new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy");
+                            SimpleDateFormat formatback=new SimpleDateFormat("EEE d MMM HH:mm");
+
+                              Date  date2 = format.parse(date);
+                                String fdate=formatback.format(date2);
+                                Notification_new_order.notify(getBaseContext(), name, fdate, count);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+
+                            }
+                            count++;
                             FirebaseDatabase db;
                             db = FirebaseDatabase.getInstance();
                             DatabaseReference ref = db.getReference("order");
                             ref.child(key).child("notified").setValue(true);
-                        }
+
                     }
 
                     @Override
@@ -107,7 +124,7 @@ public class Notification_Listener extends IntentService {
                     }
                 });
                 try {
-                    Thread.sleep(300000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

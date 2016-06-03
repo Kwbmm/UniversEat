@@ -13,6 +13,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Helper class for showing and canceling  new order
  * notifications.
@@ -42,17 +46,18 @@ public class Notification_new_order {
      * @see #cancel(Context)
      */
     public static void notify(final Context context,
-                              final String exampleString,final String date, final int number) {
+                              final String exampleString,final String date, final int number) throws ParseException {
         final Resources res = context.getResources();
 
         // This image is used as the notification's large icon (thumbnail).
         // TODO: Remove this if your notification has no relevant thumbnail.
-        final Bitmap picture = BitmapFactory.decodeResource(res, R.mipmap.logo2);
+        final Bitmap picture = BitmapFactory.decodeResource(res, R.mipmap.ic_launcher);
 
 
         final String ticker = exampleString;
-        final String title = "New Order:"+exampleString;
-        final String text = "Order on"+date;
+        final String title = "New Order: "+exampleString;
+        final String text = "For: "+date;
+
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 
@@ -97,8 +102,8 @@ public class Notification_new_order {
                 .setContentIntent(
                         PendingIntent.getActivity(
                                 context,
-                                0,
-                                new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com")),
+                                number,
+                                new Intent(context,Order_management.class),
                                 PendingIntent.FLAG_UPDATE_CURRENT))
 
                 // Example additional actions for this notification. These will
@@ -106,6 +111,7 @@ public class Notification_new_order {
                 // should ensure that the activity in this notification's
                 // content intent provides access to the same actions in
                 // another way.
+                /*
                 .addAction(
                         R.drawable.ic_action_stat_share,
                         res.getString(R.string.action_share),
@@ -120,7 +126,7 @@ public class Notification_new_order {
                         R.drawable.ic_action_stat_reply,
                         res.getString(R.string.action_reply),
                         null)
-
+                */
                 // Automatically dismiss the notification when it is touched.
                 .setAutoCancel(true);
 
