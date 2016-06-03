@@ -68,7 +68,6 @@ class GetMenuFromRestaurantListener implements ValueEventListener{
     GetMenuFromRestaurantListener(Home.MenuAdapter ma, float distance,Context context){
         this.ma = ma;
         this.distance = distance;
-        Log.d("constructor","D: "+distance);
         this.context = context;
     }
 
@@ -86,7 +85,6 @@ class GetMenuFromRestaurantListener implements ValueEventListener{
                         .setName((String) ds.child("name").getValue())
                         .setServiceFee((boolean) ds.child("serviceFee").getValue())
                         .setImageLocal((String) ds.child("imageLocalPath").getValue());
-                Log.d("constructor","Distance: "+this.distance+" Name: "+m.getName());
                 int type = ((Long) ds.child("type").getValue()).intValue();
                 m.setType(type);
                 float price = ((Long)ds.child("price").getValue()).floatValue();
