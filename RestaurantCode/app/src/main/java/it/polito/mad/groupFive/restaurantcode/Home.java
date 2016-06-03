@@ -1,6 +1,5 @@
 package it.polito.mad.groupFive.restaurantcode;
 
-import android.*;
 import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
@@ -50,7 +49,7 @@ import it.polito.mad.groupFive.restaurantcode.listeners.LocationListener;
 
 public class Home extends NavigationDrawer {
     private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menusshared;
-    private MenuAdapter adp;
+    private MenuAdapter ma;
     private Restaurant rest;
     private SharedPreferences sharedPreferences;
     private View parent;
@@ -64,7 +63,9 @@ public class Home extends NavigationDrawer {
     private StorageReference storageRoot;
     private FrameLayout mlay;
     private View home;
+
     private static final int GPS_REQUEST_CODE = 1;
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,8 @@ public class Home extends NavigationDrawer {
         parent = mlay;
 
         this.db = FirebaseDatabase.getInstance();
+        this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
+        this.rv = (RecyclerView) findViewById(R.id.home_recyclerViewHome);
 
         //Get location
         int locationResult = getLocation();
@@ -138,42 +141,35 @@ public class Home extends NavigationDrawer {
     private void getMenus(int locationResult) {
         final String METHOD_NAME = this.getClass().getName() + " - getMenus";
         final int LOCATION_LAST_KNOWN = 0;
-        final int LOCATION_CURRENT = 1;
-        final int LOCATION_UNKNOWN = -1;
+        final int LOCATION_UNKNOWN_OR_NOT_GRANTED = -1;
         switch (locationResult){
-            case LOCATION_UNKNOWN:{ //Fetch data from most recent to least recent, regardless of the location
+            case LOCATION_UNKNOWN_OR_NOT_GRANTED: { //Fetch data from most recent to least recent, regardless of the location
                 Log.w(METHOD_NAME,"Location is unknown, I'm fetching according to most recent data first.");
-                this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
-                this.rv = (RecyclerView) findViewById(R.id.home_recyclerViewHome);
                 this.dbRoot = this.db.getReference("menu");
                 if(rv != null){
-                    MenuAdapter ma = new MenuAdapter(this.rv,this.pb,this);
+                    this.ma = new MenuAdapter(this.rv,this.pb,this);
                     rv.setAdapter(ma);
                     LinearLayoutManager llmVertical = new LinearLayoutManager(this);
                     llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
                     rv.setLayoutManager(llmVertical);
                     Query menuQuery = this.dbRoot.limitToFirst(30); //Get the first 10 menus
-                    menuQuery.addListenerForSingleValueEvent(new GetMenusListener(ma,this));
+                    menuQuery.addListenerForSingleValueEvent(new GetMenusListener(this.ma,this));
                     Log.d(METHOD_NAME,"Listener attached");
                 }
                 break;
             }
             case LOCATION_LAST_KNOWN:{ //Fetch data from most recent to least recent, but put nearest menus first.
-                this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
-                this.rv = (RecyclerView) findViewById(R.id.home_recyclerViewHome);
+                Log.d(METHOD_NAME,"Location last known");
                 this.dbRoot = this.db.getReference("restaurant");
                 if (rv != null) {
-                    MenuAdapter ma = new MenuAdapter(this.rv, this.pb,this);
+                    this.ma = new MenuAdapter(this.rv, this.pb,this);
                     rv.setAdapter(ma);
                     LinearLayoutManager llmVertical = new LinearLayoutManager(this);
                     llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
                     rv.setLayoutManager(llmVertical);
                     Query menuQuery = this.dbRoot.limitToFirst(10); //Get the first 10 restaurants
-                    menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromRestaurantListener(ma));
+                    menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromRestaurantListener(this.ma,this.location,this));
                 }
-                break;
-            }
-            case LOCATION_CURRENT:{ //Fetch data as LOCATION_LAST_KNOW. Here we have an updated location
                 break;
             }
             default:
@@ -190,7 +186,7 @@ public class Home extends NavigationDrawer {
 
     }
 
-    public int getLocation() {
+    private int getLocation() {
         final String METHOD_NAME = this.getClass().getName() + " - getLocation";
         //Request permission
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -203,10 +199,17 @@ public class Home extends NavigationDrawer {
             Log.v(METHOD_NAME, "Permission already granted");
             LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             //Get the current location
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener());
+            if(this.rv != null){
+                this.ma = new MenuAdapter(this.rv,this.pb,this);
+                this.rv.setAdapter(this.ma);
+                LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+                llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+                this.rv.setLayoutManager(llmVertical);
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener(lm,this.ma,this));
+            }
             //While we look for the current location, get the last known one
-            Location loc = getLastKnownLocation(lm);
-            if(loc != null){ //If we have a last known location, return 0
+            this.location = getLastKnownLocation(lm);
+            if(this.location != null){ //If we have a last known location, return 0
                 return 0;
             }
             else{ //Otherwise return -1
@@ -243,6 +246,7 @@ public class Home extends NavigationDrawer {
             }
             else{
                 Log.v(METHOD_NAME,"GPS Permission not granted");
+                getMenus(-1);
             }
         }
     }
@@ -284,7 +288,7 @@ public class Home extends NavigationDrawer {
                                 //If the distance is not set, we order by insertion time in the db.
                                 return o2.getMid().compareTo(o1.getMid());
                             }
-                            return (o1.getDistance() - o2.getDistance() >= 0) ? -1 : 1;
+                            return (o2.getDistance() - o1.getDistance() >= 0) ? -1 : 1;
                         }
 
                         @Override
