@@ -1,6 +1,5 @@
 package it.polito.mad.groupFive.restaurantcode;
 
-import android.*;
 import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
@@ -9,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -25,26 +25,31 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
 import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusIDFromRestaurantListener;
+import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusListener;
 import it.polito.mad.groupFive.restaurantcode.listeners.LocationListener;
 
 public class Home extends NavigationDrawer {
     private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menusshared;
-    private MenuAdapter adp;
+    private MenuAdapter ma;
     private Restaurant rest;
     private SharedPreferences sharedPreferences;
     private View parent;
@@ -58,7 +63,9 @@ public class Home extends NavigationDrawer {
     private StorageReference storageRoot;
     private FrameLayout mlay;
     private View home;
+
     private static final int GPS_REQUEST_CODE = 1;
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +76,12 @@ public class Home extends NavigationDrawer {
         mlay.inflate(this, R.layout.activity_home, mlay);
         parent = mlay;
         this.db = FirebaseDatabase.getInstance();
+        this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
+        this.rv = (RecyclerView) findViewById(R.id.home_recyclerViewHome);
 
         //Get location
-        getLocation();
-        getMenus();
+        int locationResult = getLocation();
+        getMenus(locationResult);
 
         /**
          * These lines of code are for setting up the searchViewMenu and let it know about the activity
@@ -128,35 +137,83 @@ public class Home extends NavigationDrawer {
         super.startActivity(intent);
     }
 
-    private void getMenus() {
-        this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingSearchViewData);
-        this.rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
-        this.dbRoot = this.db.getReference("restaurant");
-        if (rv != null) {
-            MenuAdapter ma = new MenuAdapter(this.rv, this.pb);
-            rv.setAdapter(ma);
-            LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-            llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-            rv.setLayoutManager(llmVertical);
-            Query menuQuery = this.dbRoot.limitToFirst(10); //Get the first 10 restaurants
-            menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromRestaurantListener(ma));
+    private void getMenus(int locationResult) {
+        final String METHOD_NAME = this.getClass().getName() + " - getMenus";
+        final int LOCATION_LAST_KNOWN = 0;
+        final int LOCATION_UNKNOWN_OR_NOT_GRANTED = -1;
+        switch (locationResult){
+            case LOCATION_UNKNOWN_OR_NOT_GRANTED: { //Fetch data from most recent to least recent, regardless of the location
+                Log.w(METHOD_NAME,"Location is unknown, I'm fetching according to most recent data first.");
+                this.dbRoot = this.db.getReference("menu");
+                if(rv != null){
+                    this.ma = new MenuAdapter(this.rv,this.pb,this);
+                    rv.setAdapter(ma);
+                    LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+                    llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+                    rv.setLayoutManager(llmVertical);
+                    Query menuQuery = this.dbRoot.limitToFirst(30); //Get the first 10 menus
+                    menuQuery.addListenerForSingleValueEvent(new GetMenusListener(this.ma,this));
+                    Log.d(METHOD_NAME,"Listener attached");
+                }
+                break;
+            }
+            case LOCATION_LAST_KNOWN:{ //Fetch data from most recent to least recent, but put nearest menus first.
+                Log.d(METHOD_NAME,"Location last known");
+                this.dbRoot = this.db.getReference("restaurant");
+                if (rv != null) {
+                    this.ma = new MenuAdapter(this.rv, this.pb,this);
+                    rv.setAdapter(ma);
+                    LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+                    llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+                    rv.setLayoutManager(llmVertical);
+                    Query menuQuery = this.dbRoot.limitToFirst(10); //Get the first 10 restaurants
+                    menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromRestaurantListener(this.ma,this.location,this));
+                }
+                break;
+            }
+            default:
+                Log.w(METHOD_NAME,"Entering 'default' case, display error message");
+                this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
+                this.pb.setVisibility(View.GONE);
+                Toast
+                        .makeText(
+                                getApplicationContext(),
+                                getResources().getString(R.string.toast_getMenusUnexpectedError),
+                                Toast.LENGTH_LONG)
+                        .show();
         }
+
     }
 
-    public void getLocation() {
+    private int getLocation() {
         final String METHOD_NAME = this.getClass().getName() + " - getLocation";
         //Request permission
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.v(METHOD_NAME, "Requesting permission..");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, GPS_REQUEST_CODE);
-        } else {
+            return -2; //Requesting permission
+        }
+        else {
             Log.v(METHOD_NAME, "Permission already granted");
             LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener());
-            Location loc = getLastKnownLocation(lm);
-            if(loc != null)
-                Log.d(METHOD_NAME, "Lat: " + loc.getLatitude() + "\nLong: " + loc.getLongitude());
+            //Get the current location
+            if(this.rv != null){
+                this.ma = new MenuAdapter(this.rv,this.pb,this);
+                this.rv.setAdapter(this.ma);
+                LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+                llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+                this.rv.setLayoutManager(llmVertical);
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener(lm,this.ma,this));
+            }
+            //While we look for the current location, get the last known one
+            this.location = getLastKnownLocation(lm);
+            if(this.location != null){ //If we have a last known location, return 0
+                return 0;
+            }
+            else{ //Otherwise return -1
+                return -1;
+            }
         }
     }
 
@@ -188,6 +245,7 @@ public class Home extends NavigationDrawer {
             }
             else{
                 Log.v(METHOD_NAME,"GPS Permission not granted");
+                getMenus(-1);
             }
         }
     }
@@ -198,11 +256,14 @@ public class Home extends NavigationDrawer {
             private float distance;
             public DistanceMenu(Menu m,float distance) throws MenuException {
                 super(m.getRid(), m.getMid());
-                super.setBeverage(m.isBeverage())
+                super
+                        .setBeverage(m.isBeverage())
                         .setDescription(m.getDescription())
+                        .setImageLocal(m.getImageLocalPath())
                         .setName(m.getName())
+                        .setServiceFee(m.isServiceFee())
                         .setPrice(m.getPrice())
-                        .setServiceFee(m.isServiceFee()).setType(m.getType());
+                        .setType(m.getType());
                 this.distance = distance;
             }
 
@@ -212,15 +273,21 @@ public class Home extends NavigationDrawer {
         private SortedList<DistanceMenu> menus;
         private RecyclerView rv;
         private ProgressBar pb;
+        private Context context;
 
-        private MenuAdapter(RecyclerView rv,ProgressBar pb){
+        private MenuAdapter(RecyclerView rv,ProgressBar pb,Context context){
             this.rv = rv;
             this.pb = pb;
+            this.context = context;
             this.menus = new SortedList<DistanceMenu>(DistanceMenu.class,
                     new SortedList.Callback<DistanceMenu>() {
                         @Override
                         public int compare(DistanceMenu o1, DistanceMenu o2) {
-                            return (o1.getDistance() - o2.getDistance() >= 0) ? -1 : 1;
+                            if(o1.getDistance() == Float.MIN_VALUE || o2.getDistance() == Float.MIN_VALUE){
+                                //If the distance is not set, we order by insertion time in the db.
+                                return o2.getMid().compareTo(o1.getMid());
+                            }
+                            return (o2.getDistance() - o1.getDistance() >= 0) ? -1 : 1;
                         }
 
                         @Override
@@ -262,10 +329,24 @@ public class Home extends NavigationDrawer {
          * @param m Object to insert
          * @param distance Distance of the object with respect to your location
          */
-        public void addChild(Menu m,float distance){
-            final String METHOD_NAME = this.getClass().getName()+" - filterByTicket";
+        public void addChildWithDistance(Menu m,float distance){
+            final String METHOD_NAME = this.getClass().getName()+" - addChildWithDistance";
             try {
                 DistanceMenu wm = new DistanceMenu(m,distance);
+                this.menus.add(wm);
+                if(rv.getVisibility() == View.GONE){
+                    pb.setVisibility(View.GONE);
+                    rv.setVisibility(View.VISIBLE);
+                }
+            } catch (MenuException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+            }
+        }
+
+        public void addChildNoDistance(Menu m){
+            final String METHOD_NAME = this.getClass().getName()+" - addChildWithDistance";
+            try {
+                DistanceMenu wm = new DistanceMenu(m,Float.MIN_VALUE);
                 this.menus.add(wm);
                 if(rv.getVisibility() == View.GONE){
                     pb.setVisibility(View.GONE);
@@ -284,10 +365,27 @@ public class Home extends NavigationDrawer {
 
         @Override
         public void onBindViewHolder(final MenuViewHolder holder, int position) {
-            Menu menu = menus.get(position);
+            final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
+            final Menu menu = menus.get(position);
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
+            holder.menu_price.setText(menu.getPrice()+"€");
+            File img = new File(menu.getImageLocalPath());
+            try {
+                holder.menu_image.setImageBitmap(new Picture(Uri.fromFile(img),context.getContentResolver(),300,300).getBitmap());
+            } catch (IOException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+            }
+            holder.card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent menu_view =new Intent(context,User_info_view.class);
+                    menu_view.putExtra("mid",menu.getMid());
+                    menu_view.putExtra("rid",menu.getRid());
+                    context.startActivity(menu_view);
+                }
+            });
         }
 
         @Override

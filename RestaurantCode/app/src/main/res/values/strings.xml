@@ -38,6 +38,7 @@
     <string name="checkbox_searchByRestaurant">Search by Restaurant</string>
     <string name="checkbox_searchByDish">Search by Dish</string>
     <string name="button_btnSearchRestaurant">Search Restaurant</string>
+    <string name="toast_getMenusUnexpectedError">It seems like you\'re going to starve… I wasn\'t able to fetch any menu…</string>
     <!-- END activity_home.xml -->
 
     <!-- fragment_creatlog_1.xml -->
