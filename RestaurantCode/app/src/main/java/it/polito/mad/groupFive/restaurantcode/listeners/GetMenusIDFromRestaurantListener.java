@@ -75,7 +75,7 @@ class GetMenuFromRestaurantListener implements ValueEventListener{
             m.setType(type);
             float price = ((Long)dataSnapshot.child("price").getValue()).floatValue();
             m.setPrice(price);
-            ma.addChild(m,this.distance);
+            ma.addChildWithDistance(m,this.distance);
         } catch (MenuException e) {
             Log.e(METHOD_NAME, e.getMessage());
         }
