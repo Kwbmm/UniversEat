@@ -68,7 +68,6 @@ public class Home extends NavigationDrawer {
         mlay = (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_home, mlay);
         parent = mlay;
-
         this.db = FirebaseDatabase.getInstance();
 
         //Get location

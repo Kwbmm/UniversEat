@@ -30,10 +30,7 @@ public class User {
     protected String address;
     protected String email;
     protected String ImagePath;
-    protected List<String> reviewsIDs = new ArrayList<>();
     protected boolean manager;
-    protected List<String> favouriteIDs=new ArrayList<>();
-    protected List<String> restaurantIDs=new ArrayList<>();
 
     public User(){
 
@@ -55,21 +52,7 @@ public class User {
         FireID = fireID;
     }
 
-    public List<String> getRestaurantIDs() {
-        return restaurantIDs;
-    }
 
-    public void setRestaurantIDs(List<String> restaurantIDs) {
-        this.restaurantIDs = restaurantIDs;
-    }
-
-    public List<String> getFavouriteIDs() {
-        return favouriteIDs;
-    }
-
-    public void setFavouriteIDs(List<String> favouriteIDs) {
-        this.favouriteIDs = favouriteIDs;
-    }
 
     public boolean isManager() {
         return manager;
@@ -79,13 +62,6 @@ public class User {
         manager = manager;
     }
 
-    public List<String> getReviewsIDs() {
-        return reviewsIDs;
-    }
-
-    public void setReviewsIDs(List<String> reviewsIDs) {
-        this.reviewsIDs = reviewsIDs;
-    }
 
     public String getEmail() {
         return email;
@@ -134,11 +110,5 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
-    public String getImagePath() {
-        return ImagePath;
-    }
 
-    public void setImagePath(String imagePath) {
-        ImagePath = imagePath;
-    }
 }

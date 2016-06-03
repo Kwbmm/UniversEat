@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
@@ -78,14 +79,16 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
                 Toast.makeText(getBaseContext(), getString(R.string.MakeOrder_past), Toast.LENGTH_SHORT).show();
             }
             else {
+                SimpleDateFormat format=new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy");
                     Order order = new Order();
                     order.setRid(rid);
                     order.setMid(mid);
-                    order.setDate(date.getTime());
+                    order.setDate(format.format(date.getTime()));
                     order.setName(name);
                     order.setNotes(notes);
                     order.setUid(uid);
                     order.setMenuName(menuName);
+                    order.setNotified(false);
                      FirebaseDatabase db;
                      db=FirebaseDatabase.getInstance();
                       DatabaseReference reference=db.getReference("order");

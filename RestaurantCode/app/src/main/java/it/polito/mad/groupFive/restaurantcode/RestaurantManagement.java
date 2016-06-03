@@ -193,6 +193,7 @@ public class RestaurantManagement extends NavigationDrawer {
         this.dbRoot.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                mlay.removeView(load);
                 try {
                     restaurant = new Restaurant(
                             (String)dataSnapshot.child("uid").getValue(),
@@ -270,7 +271,6 @@ public class RestaurantManagement extends NavigationDrawer {
                 try {
                     Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
-                    mlay.removeView(load);
                 } catch (IOException e) {
                     Log.e("getFromNet",e.getMessage());
                 }

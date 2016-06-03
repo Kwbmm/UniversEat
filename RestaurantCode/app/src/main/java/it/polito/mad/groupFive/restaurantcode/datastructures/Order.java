@@ -18,11 +18,22 @@ public class Order {
     private String uid;
     private String mid;
     private String rid;
-    private Date date=null;
+    private String date;
+
+
+
     private String notes;
     private String name;
     private String menuName;
+    private Boolean notified;
 
+    public Boolean getNotified() {
+        return notified;
+    }
+
+    public void setNotified(Boolean notified) {
+        this.notified = notified;
+    }
     public void setOid(String oid) {
         this.oid = oid;
     }
@@ -90,6 +101,7 @@ public class Order {
         output.put("notes",this.notes);
         output.put("name",this.name);
         output.put("menuname",this.menuName);
+        output.put("notified",this.notified);
         return output;
     }
 
@@ -127,7 +139,7 @@ public class Order {
      *
      * @return The date of the order
      */
-    public Date getDate(){ return this.date;}
+    public String getDate(){ return this.date;}
 
     /**
      *
@@ -147,7 +159,7 @@ public class Order {
      *
      * @param d Date of the order
      */
-    public Order setDate(Date d){ this.date = d; return this;}
+    public Order setDate(String d){ this.date = d; return this;}
 
     /**
      *

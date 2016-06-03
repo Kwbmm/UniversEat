@@ -23,7 +23,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
@@ -44,6 +47,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     private static int REGISTRATION=1;
     private ImageView imageView;
     SharedPreferences sharedPreferences;
+    private Notification_Listener notify;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView dList;
@@ -56,19 +60,21 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         FirebaseAuth auth=FirebaseAuth.getInstance();
         sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
         SharedPreferences.Editor editor= sharedPreferences.edit();
-        if(auth.getCurrentUser()!=null){
-        editor.putString("uid",auth.getCurrentUser().getUid());
-        editor.apply();}
-            else{
+            String ridc=sharedPreferences.getString("rid",null);
+            if(ridc!=null){
+                notify.startActionBaz(getBaseContext(),ridc,null);
+            }
+
+        editor.apply();
             String mail =sharedPreferences.getString("mail",null);
             String psw =sharedPreferences.getString("psw",null);
             if (mail!=null&&psw!=null){
-            auth.signInWithEmailAndPassword(mail,psw);}
-            }
+            auth.signInWithEmailAndPassword(mail,psw);
+                editor.putString("uid",auth.getCurrentUser().getUid());}
         getUserinfo();
         checkUser();
         createDrawer();
-        //checkPic();
+        checkPic();
     }
 
     private void checkPic(){
@@ -76,9 +82,17 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         if(phase==1){
             if (usertype){
                 //TODO Fix
-                sharedPreferences.getString("uid",null);
+                String uid=sharedPreferences.getString("uid",null);
                     user=new User ();
-                    //this.imageView.setImageBitmap(user.getImageBitmap());
+                if(uid!=null){
+                FirebaseStorage storage=FirebaseStorage.getInstance();
+                StorageReference ref=storage.getReference("Users");
+                try {
+                    getFromNetwork(ref,uid+".jpg",imageView);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }}
+                //this.imageView.setImageBitmap(user.getImageBitmap());
 
             }
 
@@ -217,7 +231,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         dList.deferNotifyDataSetChanged();
         Toast toast = Toast.makeText(getBaseContext(), "Login Completed", Toast.LENGTH_SHORT);
         toast.show();
-        //checkPic();
+        checkPic();
         hideSoftKeyboard();
     }
 
@@ -273,6 +287,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                         FirebaseAuth.getInstance().signOut();
                         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
                         imageView.invalidate();
+                        notify.stopSelf();
                         dList.setAdapter(createAdapter());
                         dList.deferNotifyDataSetChanged();
                         //todo remove user from preferences
@@ -321,6 +336,8 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     imView.setImageBitmap(b);
                 } catch (IOException e) {
                     Log.e("getFromNet",e.getMessage());
+                }catch (NullPointerException e){
+
                 }
             }
         });

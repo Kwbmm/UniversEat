@@ -63,20 +63,16 @@ public class Order_management extends NavigationDrawer {
 
         db=FirebaseDatabase.getInstance();
         ref=db.getReference("order");
-        ref.orderByChild("rid").addChildEventListener(new ChildEventListener() {
+        ref.orderByChild("rid").equalTo(rid).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Order order=new Order();
-                SimpleDateFormat format=new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
                 order.setOid(dataSnapshot.getKey());
                 order.setUid(dataSnapshot.child("uid").getValue().toString());
                 order.setMid(dataSnapshot.child("mid").getValue().toString());
                 order.setRid(rid);
-                try {
-                    order.setDate(format.parse(dataSnapshot.child("date").getValue().toString()));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+
+                order.setDate(dataSnapshot.child("date").getValue().toString());
                 order.setMenuName(dataSnapshot.child("menuname").getValue().toString());
                 order.setName(dataSnapshot.child("name").getValue().toString());
                 order.setNotes(dataSnapshot.child("notes").getValue().toString());
@@ -204,8 +200,14 @@ public class Order_management extends NavigationDrawer {
             });
 
             Order order= orders.get(position);
+            SimpleDateFormat format=new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy");
             Calendar calendar= Calendar.getInstance();
-            calendar.setTime(order.getDate());
+            try {
+                Log.v("date",order.getDate());
+                calendar.setTime(format.parse(order.getDate()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             username.setText(order.getName());
             userID.setText(" (User #"+String.valueOf(order.getUid())+")");
             notes.setText(order.getNotes());
