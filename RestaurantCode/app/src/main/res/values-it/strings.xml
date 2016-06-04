@@ -357,4 +357,8 @@
     <string name="password6">La password deve essere di almeno 6 caratteri</string>
     <string name="email">L\' indirizzo mail non è corretto</string>
 
+    <string name="emailaddressold">Inserisci la vecchia mail</string>
+    <string name="emailaddressnew">Inserisci la nuova mail</string>
+    <string name="passwordwrong">La password non è corretta</string>
+    <string name="mailwrong">La vecchia mail non è corretta</string>
 </resources>

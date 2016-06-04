@@ -377,6 +377,12 @@
     <string name="password6">Password must be at least 6 char</string>
     <string name="email">The mail address is not correct</string>
 
+    <string name="emailaddressold">Insert old mail address</string>
+    <string name="emailaddressnew">Insert new mail address</string>
+
+    <string name="passwordwrong">The password is not correct</string>
+    <string name="mailwrong">The old mail address is not correct</string>
+
     <array name="tags">
         <item>Pizza</item>
         <item>Pasta</item>
