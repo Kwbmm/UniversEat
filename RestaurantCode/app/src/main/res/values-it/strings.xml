@@ -5,17 +5,20 @@
     <string name="close">Chiuso</string>
     <string name="user_pref">RestaurantCode.Userdata</string>
     <string-array name="drawer_option_login">
-        <item>Ricerca</item>
+        <item>Cerca Menu</item>
+        <item>Cerca Ristoranti</item>
         <item>Login</item>
         <item>Registrati</item>
     </string-array>
     <string-array name="drawer_option_logged_user">
-        <item>Search</item>
-        <item>Profile</item>
+        <item>Cerca Menu</item>
+        <item>Cerca Ristoranti</item>
+        <item>Profilo</item>
         <item>Logout</item>
     </string-array>
     <string-array name="drawer_option_logged_manager">
-        <item>Ricerca</item>
+        <item>Cerca Menu</item>
+        <item>Cerca Ristoranti</item>
         <item>Profilo</item>
         <item>Ordini</item>
         <item>Gestione Ristorante</item>
@@ -356,5 +359,6 @@
 
     <string name="password6">La password deve essere di almeno 6 caratteri</string>
     <string name="email">L\' indirizzo mail non è corretto</string>
+    <string name="toast_getMenusUnexpectedError">Sembra che morira di fame… Non sono riuscito a scaricare menu</string>
 
 </resources>

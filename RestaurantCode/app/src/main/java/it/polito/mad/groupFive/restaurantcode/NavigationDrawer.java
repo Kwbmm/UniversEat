@@ -60,17 +60,17 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         FirebaseAuth auth=FirebaseAuth.getInstance();
         sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
         SharedPreferences.Editor editor= sharedPreferences.edit();
-            String ridc=sharedPreferences.getString("rid",null);
-            if(ridc!=null){
-                notify.startActionBaz(getBaseContext(),ridc,null);
-            }
+        String ridc=sharedPreferences.getString("rid",null);
+        if(ridc!=null){
+            notify.startActionBaz(getBaseContext(),ridc,null);
+        }
 
         editor.apply();
-            String mail =sharedPreferences.getString("email",null);
-            String psw =sharedPreferences.getString("psw",null);
-            if (mail!=null&&psw!=null){
+        String mail =sharedPreferences.getString("email",null);
+        String psw =sharedPreferences.getString("psw",null);
+        if (mail!=null&&psw!=null){
             auth.signInWithEmailAndPassword(mail,psw);
-                editor.putString("uid",auth.getCurrentUser().getUid());}
+            editor.putString("uid",auth.getCurrentUser().getUid());}
         getUserinfo();
         checkUser();
         createDrawer();
@@ -83,20 +83,21 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
             if (usertype){
                 //TODO Fix
                 String uid=sharedPreferences.getString("uid",null);
-                    user=new User ();
+                user=new User ();
                 if(uid!=null){
-                FirebaseStorage storage=FirebaseStorage.getInstance();
-                StorageReference ref=storage.getReference("Users");
-                try {
-                    getFromNetwork(ref,uid+".jpg",imageView);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }}
+                    FirebaseStorage storage=FirebaseStorage.getInstance();
+                    StorageReference ref=storage.getReference("Users");
+                    try {
+                        getFromNetwork(ref,uid+".jpg",imageView);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }}
                 //this.imageView.setImageBitmap(user.getImageBitmap());
 
             }
 
-        }}
+        }
+    }
 
     public ArrayAdapter<String> createAdapter() {
         ArrayAdapter<String> adp;
@@ -107,7 +108,6 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
             else{
                 options=getResources().getStringArray(R.array.drawer_option_logged_user);
             }
-
         } else {
             options = getResources().getStringArray(R.array.drawer_option_login);
 
@@ -244,7 +244,11 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     Intent home = new Intent(getBaseContext(), Home.class);
                     startActivity(home);
                 }
-                if (position == 1) {
+                if(position == 1){
+                    Intent searchRestaurants = new Intent(getBaseContext(), SearchRestaurants.class);
+                    startActivity(searchRestaurants);
+                }
+                if (position == 2) {
                     dList.setAdapter(createAdapter());
                     dList.deferNotifyDataSetChanged();
                     drawerLayout.closeDrawers();
@@ -253,7 +257,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.frame,lw).commit();
                     //Todo intent create profile
                 }
-                if (position==2){
+                if (position==3){
                     Intent registration=new Intent(getBaseContext(), CreateLogin.class);
                     startActivityForResult(registration,REGISTRATION);
                 }
@@ -264,20 +268,25 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                         Intent home = new Intent(getBaseContext(), Home.class);
                         startActivity(home);
                     }
-                    if (position == 1) {
+                    if(position == 1){
+                        Intent searchRestaurants = new Intent(getBaseContext(), SearchRestaurants.class);
+                        startActivity(searchRestaurants);
+                    }
+
+                    if (position == 2) {
                         Intent profile = new Intent(getBaseContext(), Profile.class);
                         startActivity(profile);
 
                     }
                     if (position == 3) {
-                        Intent intent = new Intent(view.getContext(), RestaurantManagement.class);
-                        startActivity(intent);
-                    }
-                    if (position == 2) {
                         Intent intent = new Intent(view.getContext(), Order_management.class);
                         startActivity(intent);
                     }
                     if (position == 4) {
+                        Intent intent = new Intent(view.getContext(), RestaurantManagement.class);
+                        startActivity(intent);
+                    }
+                    if (position == 5) {
                         phase = 0;
                         SharedPreferences.Editor editor=sharedPreferences.edit();
                         editor.clear();
@@ -297,14 +306,18 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                         Intent home = new Intent(getBaseContext(), Home.class);
                         startActivity(home);
                     }
-                    if (position == 1) {
 
-                        Intent profile = new Intent(getBaseContext(), Profile.class);
-                        startActivity(profile);
-
+                    if(position == 1){
+                        Intent searchRestaurants = new Intent(getBaseContext(), SearchRestaurants.class);
+                        startActivity(searchRestaurants);
                     }
 
                     if (position == 2) {
+                        Intent profile = new Intent(getBaseContext(), Profile.class);
+                        startActivity(profile);
+                    }
+
+                    if (position == 3) {
                         phase = 0;
                         SharedPreferences.Editor editor=sharedPreferences.edit();
                         editor.clear();
