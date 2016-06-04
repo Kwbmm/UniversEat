@@ -70,8 +70,7 @@ public class Menu_view_edit extends NavigationDrawer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mlay= (FrameLayout) findViewById(R.id.frame);
-        load= LayoutInflater.from(this).inflate(R.layout.loading_bar,null);
-        mlay.addView(load);
+
         menus=new ArrayList<>();
         readdata();
 
@@ -318,6 +317,8 @@ public class MenuList implements ChildEventListener{
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
+        load= LayoutInflater.from(getBaseContext()).inflate(R.layout.loading_bar,null);
+        mlay.addView(load);
                 Menu  menu = new Menu();
         Log.v("rid",(String)dataSnapshot.child("name").getValue());
                 menu.setRid((String)dataSnapshot.child("rid").getValue());
@@ -331,7 +332,7 @@ public class MenuList implements ChildEventListener{
         menu.setType(Integer.parseInt(dataSnapshot.child("type").getValue().toString()));
         menu.setImageLocal((String) dataSnapshot.child("imageLocalPath").getValue());
         menus.add(menu);
-        mlay.removeView(load);
+
                 adp.notifyDataSetChanged();
 
 
@@ -418,8 +419,11 @@ public class MenuList implements ChildEventListener{
                 try {
                     Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
+                    mlay.removeView(load);
                 } catch (IOException e) {
                     Log.e("getFromNet",e.getMessage());
+                }catch (NullPointerException e){
+                    Log.v("Image Not Loaded",this.getClass().getName());
                 }
             }
         });

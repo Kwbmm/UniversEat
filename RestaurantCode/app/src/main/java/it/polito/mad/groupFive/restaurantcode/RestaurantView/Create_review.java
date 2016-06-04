@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -67,7 +68,7 @@ public class Create_review extends NavigationDrawer {
             @Override
             public void onClick(View v) {
                 if(title.getText().length()>0){
-
+                    SimpleDateFormat format=new SimpleDateFormat("dd mm yy");
                         Review rev=new Review(uid,rid);
                         rev.setRating(ratingB.getRating());
                         rev.setTitle(title.getText().toString());
@@ -76,7 +77,7 @@ public class Create_review extends NavigationDrawer {
                         rev.setPlace(rating_place.getRating());
                         rev.setPricequality(rating_pricequality.getRating());
                         rev.setService(rating_service.getRating());
-                        rev.setDate(new Date().toString());
+                        rev.setDate(format.format(new Date()));
 
                     FirebaseDatabase db=FirebaseDatabase.getInstance();
                     DatabaseReference ref=db.getReference("review");

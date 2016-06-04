@@ -241,19 +241,17 @@ public class Review_user_view extends Fragment {
             holder.rating.setRating(rev.getRating());
             holder.title.setText(rev.getTitle());
             holder.review.setText(rev.getReviewText());
-            SimpleDateFormat dateFormat=new SimpleDateFormat("dd mm yy");
+            SimpleDateFormat dateFormat=new SimpleDateFormat("d M yy");
             Calendar calendar = Calendar.getInstance();
             try {
                 calendar.setTime(dateFormat.parse(rev.getDate()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            String time = String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.HOUR_OF_DAY))+":"+
-                    String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MINUTE));
             String date = String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.DAY_OF_MONTH))+"/"+
                     String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MONTH))+"/"+
                     String.format(Locale.getDefault(),"%04d",calendar.get(Calendar.YEAR));
-            holder.dat.setText(time+" "+date);
+            holder.dat.setText(" "+date);
 
         }
 
