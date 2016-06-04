@@ -16,7 +16,7 @@
             android:textSize="@dimen/frg_textView_textSize"
             android:textStyle="bold"
             android:gravity="center_horizontal"
-            />
+            android:layout_marginTop="10dp" />
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

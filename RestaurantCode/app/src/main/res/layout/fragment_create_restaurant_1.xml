@@ -17,7 +17,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:textStyle="bold"
-                />
+                android:layout_marginTop="5dp" />
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -25,7 +25,8 @@
                 android:layout_below="@id/textView_RestaurantName"
                 android:inputType="text"
                 android:hint="@string/frg_create_restaurant_1_editView_RestaurantNameHint"
-                />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <!-- Restaurant Image -->
             <TextView
@@ -37,7 +38,7 @@
                 android:textSize="@dimen/frg_textView_textSize"
                 android:layout_centerHorizontal="true"
                 android:textStyle="bold"
-                />
+                android:layout_marginTop="5dp" />
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/frg_imageView_containerHeight"
@@ -45,11 +46,10 @@
                 android:maxWidth="@dimen/frg_imageView_maxWidth"
                 android:maxHeight="@dimen/frg_imageView_maxHeight"
                 android:id="@+id/imageView_RestaurantImage"
-                android:src="@drawable/ic_add_a_photo_black_24dp"
+                android:src="@drawable/ic_picture_black"
                 android:background="#fefeff"
                 android:layout_marginBottom="10dp"
-                android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc"
-                />
+                android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc" />
 
             <!-- Restaurant Description -->
             <TextView
@@ -61,7 +61,7 @@
                 android:textSize="@dimen/frg_textView_textSize"
                 android:layout_centerHorizontal="true"
                 android:textStyle="bold"
-                />
+                android:layout_marginTop="5dp" />
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,7 +69,8 @@
                 android:layout_below="@id/textView_Description"
                 android:inputType="text"
                 android:hint="@string/frg_create_restaurant_1_editView_DescriptionHint"
-                />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <!-- Restaurant Telephone -->
             <TextView
@@ -81,7 +82,7 @@
                 android:layout_below="@id/editText_Description"
                 android:layout_centerHorizontal="true"
                 android:textStyle="bold"
-                />
+                android:layout_marginTop="5dp" />
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,7 +90,8 @@
                 android:layout_below="@id/textView_Telephone"
                 android:inputType="phone"
                 android:hint="@string/frg_create_restaurant_1_editView_TelephoneHint"
-                />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <!-- Restaurant Website -->
             <TextView
@@ -101,7 +103,7 @@
                 android:layout_below="@id/editText_Telephone"
                 android:layout_centerHorizontal="true"
                 android:textStyle="bold"
-                />
+                android:layout_marginTop="5dp" />
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -109,7 +111,8 @@
                 android:layout_below="@id/textView_Website"
                 android:inputType="textUri"
                 android:hint="@string/frg_create_restaurant_1_editView_WebsiteHint"
-                />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <!-- Next button -->
             <Button

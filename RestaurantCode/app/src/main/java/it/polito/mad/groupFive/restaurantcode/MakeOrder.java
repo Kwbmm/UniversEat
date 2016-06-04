@@ -43,6 +43,7 @@ public class MakeOrder extends NavigationDrawer implements TimePickerFragment.Li
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(R.string.actionBar_makeOrder);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.make_order, mlay);
         rid=getIntent().getExtras().getString("rid");

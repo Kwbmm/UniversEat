@@ -5,20 +5,17 @@
     <string name="close">Chiuso</string>
     <string name="user_pref">RestaurantCode.Userdata</string>
     <string-array name="drawer_option_login">
-        <item>Cerca Menu</item>
-        <item>Cerca Ristoranti</item>
+        <item>Ricerca</item>
         <item>Login</item>
         <item>Registrati</item>
     </string-array>
     <string-array name="drawer_option_logged_user">
-        <item>Cerca Menu</item>
-        <item>Cerca Ristoranti</item>
-        <item>Profilo</item>
+        <item>Search</item>
+        <item>Profile</item>
         <item>Logout</item>
     </string-array>
     <string-array name="drawer_option_logged_manager">
-        <item>Cerca Menu</item>
-        <item>Cerca Ristoranti</item>
+        <item>Ricerca</item>
         <item>Profilo</item>
         <item>Ordini</item>
         <item>Gestione Ristorante</item>
@@ -189,8 +186,8 @@
     <string name="button_end">FINE</string>
     <string name="restaurantowner">Proprietario di ristorante</string>
 
-    <string name="login">Creazione nuovo account</string>
-    <string name="login1">Spunta qui se sei un RISTORATORE:</string>
+    <string name="login">Crea un nuovo account</string>
+    <string name="login1">Spunta qui se sei un Ristoratore:</string>
     <string name="login_rest">RISTORATORE</string>
 
     <string name="SearchResult_toastNoMenus">Non ci sono menù da mostrare.</string>
@@ -308,7 +305,7 @@
     <!-- Menu_view_edit.java-->
     <string name="Menu_view_edit_Edit">Modifica</string>
     <string name="Menu_view_edit_Delete">Elimina</string>
-    <string name="Menu_view_edit_Cancel">Cancella</string>
+    <string name="Menu_view_edit_Cancel">Annulla</string>
     <string name="Menu_view_edit_options">Opzioni modifica</string>
 
     <array name="cuisine">
@@ -359,6 +356,17 @@
 
     <string name="password6">La password deve essere di almeno 6 caratteri</string>
     <string name="email">L\' indirizzo mail non è corretto</string>
-    <string name="toast_getMenusUnexpectedError">Sembra che morira di fame… Non sono riuscito a scaricare menu</string>
-
+    <string name="actionBar_profile">Profilo</string>
+    <string name="actionBar_restaurantManagement">Gestione Ristorante</string>
+    <string name="actionBar_makeOrder">Ordina</string>
+    <string name="actionBar_restaurantInfo">Info Ristorante</string>
+    <string name="actionBar_restaurantMenus">Menu</string>
+    <string name="actionBar_restaurantReviews">Recensioni</string>
+    <string name="actionBar_menu">Info Menu</string>
+    <string name="actionBar_makeReview">Scrivi una Recensione</string>
+    <string name="actionBar_orders">Ordini</string>
+    <string name="actionBar_myMenus">I Miei Menu</string>
+    <string name="actionBar_createMenu">Crea Menu</string>
+    <string name="actionBar_createRestaurant">Crea Ristorante</string>
+    <string name="actionBar_signUp">Crea un Account</string>
 </resources>

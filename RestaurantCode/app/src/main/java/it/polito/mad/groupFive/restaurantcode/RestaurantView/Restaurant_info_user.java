@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,6 +108,7 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
         // Inflate the layout for this fragment
 
         View v=inflater.inflate(R.layout.fragment_restaurant_info_user, container, false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.actionBar_restaurantInfo);
         getRestaurantData(v);
         //init map
         MapsInitializer.initialize(this.getActivity());

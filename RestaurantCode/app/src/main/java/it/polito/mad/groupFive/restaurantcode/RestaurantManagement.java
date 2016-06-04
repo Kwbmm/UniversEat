@@ -77,6 +77,7 @@ public class RestaurantManagement extends NavigationDrawer {
     protected void onCreate(Bundle savedInstanceState) {
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),RestaurantManagement.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(R.string.actionBar_restaurantManagement);
         mlay= (FrameLayout) findViewById(R.id.frame);
         v=mlay.inflate(getBaseContext(), R.layout.restaurant_view_edit, mlay);
         load= LayoutInflater.from(this).inflate(R.layout.loading_bar,null);

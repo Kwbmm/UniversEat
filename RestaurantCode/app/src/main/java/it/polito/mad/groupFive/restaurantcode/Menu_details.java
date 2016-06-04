@@ -47,6 +47,7 @@ public class Menu_details extends NavigationDrawer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(R.string.actionBar_menu);
         sharedPreferences=this.getSharedPreferences("RestaurantCode.Userdata",this.MODE_PRIVATE);
         mid=getIntent().getExtras().getString("mid");
         rid=getIntent().getExtras().getString("rid");
