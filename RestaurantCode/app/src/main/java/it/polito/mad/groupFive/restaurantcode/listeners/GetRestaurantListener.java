@@ -54,8 +54,8 @@ public class GetRestaurantListener implements ValueEventListener {
                         .setTelephone((String)ds.child("telephone").getValue())
                         .setWebsite((String)ds.child("website").getValue())
                         .setZip((String)ds.child("zip").getValue());
-                float rating = Float.parseFloat((String)ds.child("rating").getValue());
-                float ratingNum = Float.parseFloat((String)ds.child("ratingNumber").getValue());
+                float rating = Float.parseFloat(ds.child("rating").getValue().toString());
+                float ratingNum = Float.parseFloat(ds.child("ratingNumber").getValue().toString());
                 Map<String,Boolean> tickets = (Map<String,Boolean>) ds.child("tickets").getValue();
                 r.setTickets(tickets);
                 Map<String,Map<String,String>> timetableLunch = (Map<String,Map<String,String>>) ds.child("timetableLunch").getValue();
