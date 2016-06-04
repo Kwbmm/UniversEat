@@ -56,7 +56,6 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
     private static final int LOCATION_REQUEST_CODE = 1;
     private static final long LOCATION_UPDATE_TIME_MS = 3000;
     private static final long LOCATION_UPDATE_FASTEST_TIME_MS = 5000;
-    private View parent;
     private RecyclerView rv;
     private ProgressBar pb;
     private FirebaseDatabase db;
@@ -72,7 +71,6 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         super.onCreate(savedInstanceState);
         mlay = (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_home, mlay);
-        parent = mlay;
 
         this.gac = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
