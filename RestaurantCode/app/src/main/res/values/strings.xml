@@ -252,8 +252,8 @@
     <string name="button_end">END</string>
     <string name="restaurantowner">Restaurant owner</string>
 
-    <string name="login">Here you create a new account</string>
-    <string name="login1">Check the box if you are a RESTAURANT OWNER:</string>
+    <string name="login">Create a new account</string>
+    <string name="login1">Check the box if you are a Restaurant Owner:</string>
     <string name="login_rest">RESTAURANT OWNER</string>
 
     <string name="toastRegisterPasswordFail">Entered passwords do not match!</string>
@@ -426,4 +426,17 @@
 
     <string name="action_share">Share</string>
     <string name="action_reply">Reply</string>
+    <string name="actionBar_profile">Profile</string>
+    <string name="actionBar_restaurantManagement">Restaurant management</string>
+    <string name="actionBar_makeOrder">Make an order</string>
+    <string name="actionBar_restaurantInfo">Restaurant Infos</string>
+    <string name="actionBar_restaurantMenus">Menus</string>
+    <string name="actionBar_restaurantReviews">Reviews</string>
+    <string name="actionBar_menu">Menu Infos</string>
+    <string name="actionBar_makeReview">Make a Review</string>
+    <string name="actionBar_orders">Orders</string>
+    <string name="actionBar_myMenus">My Menus</string>
+    <string name="actionBar_createMenu">Create Menu</string>
+    <string name="actionBar_createRestaurant">Create Restaurant</string>
+    <string name="actionBar_signUp">Sign Up</string>
 </resources>

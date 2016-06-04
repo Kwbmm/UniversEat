@@ -43,6 +43,7 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
     protected void onCreate(Bundle savedInstanceState) {
         final String METHOD_NAME =this.getClass().getName()+" - OnCreate";
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(R.string.actionBar_signUp);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_createlogin, mlay);
         Createlog_frag fragment= new Createlog_frag();

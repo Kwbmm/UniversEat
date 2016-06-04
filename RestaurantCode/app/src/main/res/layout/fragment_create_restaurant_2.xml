@@ -18,7 +18,7 @@
             android:textStyle="bold"
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
-            />
+            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +28,8 @@
             android:layout_alignParentStart="true"
             android:inputType="text"
             android:hint="@string/frg_create_restaurant_2_editView_AddressHint"
-            />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
         <!--
             For now we are just using a fixed image, as suggest by Prof. Malnati.
@@ -54,7 +55,7 @@
             android:text="@string/frg_create_restaurant_2_textView_City"
             android:textStyle="bold"
             android:layout_centerHorizontal="true"
-            />
+            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +65,8 @@
             android:layout_alignParentStart="true"
             android:inputType="text"
             android:hint="@string/frg_create_restaurant_2_editView_CityHint"
-            />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
         <!-- Restaurant ZIP Code -->
         <TextView
@@ -76,7 +78,7 @@
             android:text="@string/frg_create_restaurant_2_textView_ZIPCode"
             android:layout_centerHorizontal="true"
             android:textStyle="bold"
-            />
+            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,7 +88,8 @@
             android:layout_alignParentStart="true"
             android:inputType="number"
             android:hint="@string/frg_create_restaurant_2_editView_ZIPCodeHint"
-            />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
         <!-- Restaurant State -->
         <TextView
@@ -98,7 +101,7 @@
             android:text="@string/frg_create_restaurant_2_textView_State"
             android:textStyle="bold"
             android:layout_centerHorizontal="true"
-            />
+            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -108,7 +111,8 @@
             android:layout_alignParentStart="true"
             android:inputType="text"
             android:hint="@string/frg_create_restaurant_2_editView_StateHint"
-            />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
         <Button
             android:layout_width="wrap_content"

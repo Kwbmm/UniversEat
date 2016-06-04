@@ -33,6 +33,7 @@ public class Create_simple_menu extends NavigationDrawer implements Create_simpl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(R.string.actionBar_createMenu);
       mlay = (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_create_simple_menu, mlay);
         if (!getIntent().getExtras().getString("mid",null).equals("-1")){

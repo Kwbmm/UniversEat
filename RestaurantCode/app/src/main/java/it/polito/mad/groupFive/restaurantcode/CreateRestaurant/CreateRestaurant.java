@@ -156,6 +156,7 @@ public class CreateRestaurant
     protected void onCreate(Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreate";
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(R.string.actionBar_createRestaurant);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_create_restaurant, mlay);
         SharedPreferences sp = this.getSharedPreferences(getString(R.string.user_pref),CreateRestaurant.MODE_PRIVATE);

@@ -73,7 +73,7 @@ public class Profile extends NavigationDrawer {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("Profile");
+        getSupportActionBar().setTitle(R.string.actionBar_profile);
         mlay= (FrameLayout) findViewById(R.id.frame);
         sharedPreferences=this.getSharedPreferences("RestaurantCode.Userdata",this.MODE_PRIVATE);
         uid= FirebaseAuth.getInstance().getCurrentUser().getUid();

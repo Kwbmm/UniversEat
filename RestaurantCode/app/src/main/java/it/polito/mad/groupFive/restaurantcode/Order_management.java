@@ -52,6 +52,7 @@ public class Order_management extends NavigationDrawer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(R.string.actionBar_orders);
         months=getResources().getStringArray(R.array.months);
         orders=new ArrayList<>();
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);

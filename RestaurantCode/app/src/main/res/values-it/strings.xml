@@ -186,8 +186,8 @@
     <string name="button_end">FINE</string>
     <string name="restaurantowner">Proprietario di ristorante</string>
 
-    <string name="login">Creazione nuovo account</string>
-    <string name="login1">Spunta qui se sei un RISTORATORE:</string>
+    <string name="login">Crea un nuovo account</string>
+    <string name="login1">Spunta qui se sei un Ristoratore:</string>
     <string name="login_rest">RISTORATORE</string>
 
     <string name="SearchResult_toastNoMenus">Non ci sono menù da mostrare.</string>
@@ -305,7 +305,7 @@
     <!-- Menu_view_edit.java-->
     <string name="Menu_view_edit_Edit">Modifica</string>
     <string name="Menu_view_edit_Delete">Elimina</string>
-    <string name="Menu_view_edit_Cancel">Cancella</string>
+    <string name="Menu_view_edit_Cancel">Annulla</string>
     <string name="Menu_view_edit_options">Opzioni modifica</string>
 
     <array name="cuisine">
@@ -356,5 +356,17 @@
 
     <string name="password6">La password deve essere di almeno 6 caratteri</string>
     <string name="email">L\' indirizzo mail non è corretto</string>
-
+    <string name="actionBar_profile">Profilo</string>
+    <string name="actionBar_restaurantManagement">Gestione Ristorante</string>
+    <string name="actionBar_makeOrder">Ordina</string>
+    <string name="actionBar_restaurantInfo">Info Ristorante</string>
+    <string name="actionBar_restaurantMenus">Menu</string>
+    <string name="actionBar_restaurantReviews">Recensioni</string>
+    <string name="actionBar_menu">Info Menu</string>
+    <string name="actionBar_makeReview">Scrivi una Recensione</string>
+    <string name="actionBar_orders">Ordini</string>
+    <string name="actionBar_myMenus">I Miei Menu</string>
+    <string name="actionBar_createMenu">Crea Menu</string>
+    <string name="actionBar_createRestaurant">Crea Ristorante</string>
+    <string name="actionBar_signUp">Crea un Account</string>
 </resources>
