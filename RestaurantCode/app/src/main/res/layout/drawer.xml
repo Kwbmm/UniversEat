@@ -21,9 +21,10 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="230dp"
             android:id="@+id/iw"
-            android:background="#f1f0f0" />
+            android:background="#f1f0f0"
+            />
 
         <ListView android:id="@+id/left_drawer"
             android:layout_width="match_parent"

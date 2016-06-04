@@ -1,6 +1,8 @@
 package it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,9 +35,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.R;
@@ -223,8 +228,13 @@ public class Create_simple_menu2 extends Fragment {
                                 FirebaseStorage storage = FirebaseStorage.getInstance();
                                 StorageReference storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/"+menu.getMid());
                                 try {
+
                                     InputStream is = getActivity().getContentResolver().openInputStream(Uri.parse((menu.getImageLocalPath())));
-                                    storageRoot.putStream(is).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    Bitmap image=BitmapFactory.decodeStream(is);
+                                    ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+                                    image.compress(Bitmap.CompressFormat.JPEG,20,outputStream);
+                                    ByteArrayInputStream inputStream=new ByteArrayInputStream(outputStream.toByteArray());
+                                    storageRoot.putStream(inputStream).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                         @Override
                                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                             getActivity().finish();

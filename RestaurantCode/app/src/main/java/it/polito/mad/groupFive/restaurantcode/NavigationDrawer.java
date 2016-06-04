@@ -145,7 +145,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         this.imageView = (ImageView) findViewById(R.id.iw);
-        this.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
+        this.imageView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
         dList = (ListView) findViewById(R.id.left_drawer);
         dList.setAdapter(adapter);
         dList.setOnItemClickListener(new DrawerListener());
@@ -287,7 +287,8 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                         FirebaseAuth.getInstance().signOut();
                         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
                         imageView.invalidate();
-                        notify.stopSelf();
+                        if (notify!=null){
+                        notify.stopSelf();}
                         dList.setAdapter(createAdapter());
                         dList.deferNotifyDataSetChanged();
                         //todo remove user from preferences

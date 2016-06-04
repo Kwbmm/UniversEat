@@ -334,7 +334,7 @@ public class MenuList implements ChildEventListener{
         menus.add(menu);
 
                 adp.notifyDataSetChanged();
-
+        mlay.removeView(load);
 
     }
 
@@ -419,7 +419,6 @@ public class MenuList implements ChildEventListener{
                 try {
                     Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
-                    mlay.removeView(load);
                 } catch (IOException e) {
                     Log.e("getFromNet",e.getMessage());
                 }catch (NullPointerException e){

@@ -120,7 +120,6 @@ public class Login_view extends Fragment {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             final FirebaseAuth auth = FirebaseAuth.getInstance();
                             if (task.isSuccessful()) {
-
                                 FirebaseUser firebaseUser = auth.getCurrentUser();
                                 User customer = new User(firebaseUser.getUid());
                                 FirebaseDatabase db;

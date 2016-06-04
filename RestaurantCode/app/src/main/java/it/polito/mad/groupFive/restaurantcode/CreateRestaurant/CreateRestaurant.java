@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +28,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -136,7 +139,11 @@ public class CreateRestaurant
         this.storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/"+this.restaurant.getRid());
         try {
             InputStream is = getContentResolver().openInputStream(Uri.parse(this.restaurant.getImageLocalPath()));
-            this.storageRoot.putStream(is).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            Bitmap image= BitmapFactory.decodeStream(is);
+            ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG,20,outputStream);
+            ByteArrayInputStream inputStream=new ByteArrayInputStream(outputStream.toByteArray());
+            this.storageRoot.putStream(inputStream).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Log.i(METHOD_NAME,"Image upload successful");
