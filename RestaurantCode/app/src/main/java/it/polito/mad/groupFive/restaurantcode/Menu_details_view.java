@@ -71,7 +71,6 @@ public class Menu_details_view extends NavigationDrawer {
                     menu= new it.polito.mad.groupFive.restaurantcode.datastructures.Menu(mid);
                     menu.setRid((String)dataSnapshot.child("rid").getValue());
                     menu.setName((String) dataSnapshot.child("name").getValue());
-                    Log.v("name",menu.getName());
                     if(dataSnapshot.child("beverage").getValue()!=null){
                         menu.setBeverage((Boolean) dataSnapshot.child("beverage").getValue());}
                     else menu.setBeverage(false);
