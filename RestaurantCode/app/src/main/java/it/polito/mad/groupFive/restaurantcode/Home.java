@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -21,10 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -35,28 +31,23 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
 import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusIDFromRestaurantListener;
 import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusListener;
-import it.polito.mad.groupFive.restaurantcode.listeners.LocationListener;
+import it.polito.mad.groupFive.restaurantcode.listeners.LocationListenerForMenus;
 
 public class Home extends NavigationDrawer implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int LOCATION_REQUEST_CODE = 1;
     private static final long LOCATION_UPDATE_TIME_MS = 3000;
     private static final long LOCATION_UPDATE_FASTEST_TIME_MS = 5000;
-    private View parent;
     private RecyclerView rv;
     private ProgressBar pb;
     private FirebaseDatabase db;
@@ -72,7 +63,6 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         super.onCreate(savedInstanceState);
         mlay = (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_home, mlay);
-        parent = mlay;
 
         this.gac = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -142,7 +132,7 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
             locationReq.setInterval(LOCATION_UPDATE_TIME_MS);
             locationReq.setFastestInterval(LOCATION_UPDATE_FASTEST_TIME_MS);
             locationReq.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            LocationServices.FusedLocationApi.requestLocationUpdates(this.gac,locationReq,new LocationListener(this.gac,ma,this));
+            LocationServices.FusedLocationApi.requestLocationUpdates(this.gac,locationReq,new LocationListenerForMenus(this.gac,ma,this));
         }
     }
 

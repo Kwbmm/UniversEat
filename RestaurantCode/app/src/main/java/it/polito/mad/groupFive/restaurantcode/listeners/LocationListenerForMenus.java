@@ -13,13 +13,13 @@ import com.google.firebase.database.Query;
 
 import it.polito.mad.groupFive.restaurantcode.Home;
 
-public class LocationListener implements com.google.android.gms.location.LocationListener {
+public class LocationListenerForMenus implements com.google.android.gms.location.LocationListener {
     private GoogleApiClient gac;
     private Home.MenuAdapter ma;
     private Context context;
 
 
-    public LocationListener(GoogleApiClient gac, Home.MenuAdapter ma,Context context) {
+    public LocationListenerForMenus(GoogleApiClient gac, Home.MenuAdapter ma, Context context) {
         this.gac = gac;
         this.ma = ma;
         this.context = context;

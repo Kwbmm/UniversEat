@@ -9,4 +9,37 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="it.polito.mad.groupFive.restaurantcode.SearchRestaurants">
 
+    <android.support.v7.widget.SearchView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_viewRestaurant"
+        android:queryHint="@string/search_helloRestaurant"
+        android:divider="#000000"
+        android:dividerPadding="1dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentTop="true"
+        android:focusable="false"
+        />
+
+    <!-- Loading bar -->
+    <ProgressBar
+        android:layout_width="@dimen/progressBar_size"
+        android:layout_height="@dimen/progressBar_size"
+        android:layout_below="@id/search_viewRestaurant"
+        android:id="@+id/progressBar_loadingDataRestaurant"
+        android:indeterminate="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchRestaurants_recyclerView"
+        android:layout_below="@id/search_viewRestaurant"
+        android:focusable="false"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:visibility="gone"
+        />
 </RelativeLayout>
