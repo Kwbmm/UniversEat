@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +28,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -47,8 +52,10 @@ import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusIDFromRestaurant
 import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusListener;
 import it.polito.mad.groupFive.restaurantcode.listeners.LocationListener;
 
-public class Home extends NavigationDrawer {
-    private ArrayList<it.polito.mad.groupFive.restaurantcode.datastructures.Menu> menusshared;
+public class Home extends NavigationDrawer implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    private static final int LOCATION_REQUEST_CODE = 1;
+    private static final long LOCATION_UPDATE_TIME_MS = 3000;
+    private static final long LOCATION_UPDATE_FASTEST_TIME_MS = 5000;
     private View parent;
     private RecyclerView rv;
     private ProgressBar pb;
@@ -56,8 +63,9 @@ public class Home extends NavigationDrawer {
     private DatabaseReference dbRoot;
     private FrameLayout mlay;
 
-    private static final int GPS_REQUEST_CODE = 1;
+    private GoogleApiClient gac;
     private Location lastKnown;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +74,14 @@ public class Home extends NavigationDrawer {
         mlay.inflate(this, R.layout.activity_home, mlay);
         parent = mlay;
 
+        this.gac = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
         this.db = FirebaseDatabase.getInstance();
         this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
         this.rv = (RecyclerView) findViewById(R.id.home_recyclerViewHome);
-
-        //Get location
-        checkGPSPermission();
 
         /**
          * These lines of code are for setting up the searchViewMenu and let it know about the activity
@@ -87,17 +97,18 @@ public class Home extends NavigationDrawer {
         }
     }
 
-    private void checkGPSPermission(){
-        final String METHOD_NAME = this.getClass().getName() + " - checkGPSPermission";
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.i(METHOD_NAME, "Requesting permission..");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, GPS_REQUEST_CODE);
+    private void checkLocationPermissions(){
+        final String METHOD_NAME = this.getClass().getName() + " - checkLocationPermissions";
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            Log.i(METHOD_NAME,"Requesting location permissions");
+            String[] permission = new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+            ActivityCompat.requestPermissions(this,permission,LOCATION_REQUEST_CODE);
         }
         else{
-            Log.i(METHOD_NAME, "Permission granted");
+            Log.i(METHOD_NAME,"Location permissions granted");
             getAccurateLocation();
-            getLastKnownLocation();
+            //getLastKnownLocation();
         }
     }
 
@@ -105,13 +116,12 @@ public class Home extends NavigationDrawer {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         final String METHOD_NAME = this.getClass().getName()+" - onRequestPermissionResult";
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == GPS_REQUEST_CODE){
+        if(requestCode == LOCATION_REQUEST_CODE){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Log.v(METHOD_NAME,"GPS Permission granted");
-                checkGPSPermission();
+                checkLocationPermissions();
             }
             else{
-                Log.v(METHOD_NAME,"GPS Permission not granted");
+                Log.w(METHOD_NAME,"Permission was not granted");
                 getMenus(-1);
             }
         }
@@ -127,29 +137,24 @@ public class Home extends NavigationDrawer {
             LinearLayoutManager llmVertical = new LinearLayoutManager(this);
             llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
             this.rv.setLayoutManager(llmVertical);
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener(lm,ma,this));
+            //Create a location request object first
+            LocationRequest locationReq = new LocationRequest();
+            locationReq.setInterval(LOCATION_UPDATE_TIME_MS);
+            locationReq.setFastestInterval(LOCATION_UPDATE_FASTEST_TIME_MS);
+            locationReq.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            LocationServices.FusedLocationApi.requestLocationUpdates(this.gac,locationReq,new LocationListener(this.gac,ma,this));
         }
     }
 
+    
     private void getLastKnownLocation() {
-        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        List<String> providers = mLocationManager.getProviders(true);
-        this.lastKnown = null;
-        for (String provider : providers) {
-            Location l = mLocationManager.getLastKnownLocation(provider);
-            if (l == null) {
-                continue;
-            }
-            if (this.lastKnown == null || l.getAccuracy() < this.lastKnown.getAccuracy()) {
-                // Found best last known location: %s", l);
-                this.lastKnown = l;
-            }
-        }
-
-        if(this.lastKnown != null){ //If we have a last known location, return 0
+        final String METHOD_NAME = this.getClass().getName() + " - getLastKnownLocation";
+        this.lastKnown = LocationServices.FusedLocationApi.getLastLocation(this.gac);
+        if(this.lastKnown != null){
             getMenus(0);
         }
-        else{ //Otherwise return -1
+        else{
+            Log.d(METHOD_NAME,"last known location is null");
             getMenus(-1);
         }
     }
@@ -198,6 +203,34 @@ public class Home extends NavigationDrawer {
                                 Toast.LENGTH_LONG)
                         .show();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        this.gac.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        this.gac.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.i("onConnected", "Successfully connected to google API");
+        checkLocationPermissions();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.e("onConFail","GAPI con failed\n"+connectionResult.getErrorMessage());
     }
 
     public static class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
