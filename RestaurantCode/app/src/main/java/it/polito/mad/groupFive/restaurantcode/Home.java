@@ -135,7 +135,6 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
             LocationServices.FusedLocationApi.requestLocationUpdates(this.gac,locationReq,new LocationListenerForMenus(this.gac,ma,this));
         }
     }
-
     
     private void getLastKnownLocation() {
         final String METHOD_NAME = this.getClass().getName() + " - getLastKnownLocation";
@@ -164,7 +163,7 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
                     LinearLayoutManager llmVertical = new LinearLayoutManager(this);
                     llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
                     rv.setLayoutManager(llmVertical);
-                    Query menuQuery = this.dbRoot.limitToFirst(30); //Get the first 10 menus
+                    Query menuQuery = this.dbRoot.limitToLast(30); //Get the newest 10 menus
                     menuQuery.addListenerForSingleValueEvent(new GetMenusListener(ma,this));
                 }
                 break;
@@ -178,7 +177,7 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
                     LinearLayoutManager llmVertical = new LinearLayoutManager(this);
                     llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
                     rv.setLayoutManager(llmVertical);
-                    Query menuQuery = this.dbRoot.limitToFirst(10); //Get the first 10 restaurants
+                    Query menuQuery = this.dbRoot.limitToLast(10); //Get the newest 10 restaurants
                     menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromRestaurantListener(ma,this.lastKnown,this));
                 }
                 break;

@@ -46,7 +46,6 @@ import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
 import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusIDFromCourseListener;
 
 public class SearchMenuResults extends NavigationDrawer {
-    public static final String RESTAURANT_SEARCH = "restaurant";
     private SortedList<MenuAdapter.WeightedMenu> menus;
     private ArrayList<Restaurant> restaurants;
     private String[] query;
@@ -69,7 +68,6 @@ public class SearchMenuResults extends NavigationDrawer {
         this.context=this;
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            this.isRestaurant = intent.getBooleanExtra(SearchMenuResults.RESTAURANT_SEARCH,false);
             this.query = intent.getStringExtra(SearchManager.QUERY).trim().toLowerCase().split(" ");
             this.db = FirebaseDatabase.getInstance();
 //            this.db.setPersistenceEnabled(true);

@@ -43,14 +43,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SearchRestaurants"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".SearchRestaurantResults" />
-        </activity>
-        <activity
             android:name=".SearchMenuResults"
             android:launchMode="singleTop">
             <intent-filter>
@@ -62,7 +54,18 @@
                 android:resource="@xml/searchable_menu" />
         </activity>
         <activity
-            android:name=".SearchRestaurantResults"
+            android:name=".SearchRestaurants.SearchRestaurants"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".SearchRestaurants.SearchRestaurantResults" />
+        </activity>
+        <!-- Content provider for search suggestions -->
+        <provider android:name=".SearchRestaurants.RestaurantSearchSuggestionProvider"
+            android:authorities="it.polito.mad.groupFive.restaurantcode.SearchRestaurants.RestaurantSearchSuggestionProvider" />
+        <activity
+            android:name=".SearchRestaurants.SearchRestaurantResults"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

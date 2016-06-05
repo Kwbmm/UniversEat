@@ -1,4 +1,4 @@
-package it.polito.mad.groupFive.restaurantcode;
+package it.polito.mad.groupFive.restaurantcode.SearchRestaurants;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -33,6 +34,8 @@ import com.google.firebase.database.Query;
 import java.io.File;
 import java.io.IOException;
 
+import it.polito.mad.groupFive.restaurantcode.NavigationDrawer;
+import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -72,7 +75,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
 
         /**
          * These lines of code are for setting up the searchViewMenu and let it know about the activity
-         * used to performed searches (SearchMenuResults.java).
+         * used to performed searches (SearchRestaurantResults.java).
          * More info:
          *  http://developer.android.com/guide/topics/search/search-dialog.html#UsingSearchWidget
          */
@@ -81,6 +84,9 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
         if (searchViewRestaurant != null) {
             searchViewRestaurant.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchViewRestaurant.setIconifiedByDefault(false);
+            searchViewRestaurant.setQuery("Current Location",false);
+//            SearchRecentSuggestions srs = new SearchRecentSuggestions(this,RestaurantSearchSuggestionProvider.AUTHORITY,RestaurantSearchSuggestionProvider.MODE);
+//            srs.saveRecentQuery("Current Location",null);
         }
     }
 
