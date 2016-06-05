@@ -75,6 +75,7 @@ public class EditProfile extends NavigationDrawer{
     private EditText txtmailold;
     private EditText txtpassword;
     private String password;
+    private boolean changemail=true;
     FrameLayout mlay;
     private FirebaseDatabase db;
     private DatabaseReference myRef;
@@ -87,6 +88,7 @@ public class EditProfile extends NavigationDrawer{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v("EditProfile","Start EditProfile");
         getSupportActionBar().setTitle("Edit");
 
         mlay= (FrameLayout) findViewById(R.id.frame);
@@ -96,7 +98,7 @@ public class EditProfile extends NavigationDrawer{
         db = FirebaseDatabase.getInstance();
         myRef = db.getReference();
 
-
+        sp = getSharedPreferences(getString(R.string.user_pref),MODE_PRIVATE);
         user =new User(uid);
 
 
@@ -136,54 +138,58 @@ public class EditProfile extends NavigationDrawer{
 
                         final FirebaseAuth auth = FirebaseAuth.getInstance();
 
-
-
+                        Firebase.setAndroidContext(getApplicationContext());
                         Firebase ref = new Firebase("https://luminous-heat-4574.firebaseio.com/");
-                        ref.changeEmail(txtmailold.getText().toString(), txtpassword.getText().toString(), txtmailnew.getText().toString(), new Firebase.ResultHandler() {
-                            @Override
-                            public void onSuccess() {
-                                // email changed
-                                user.setEmail(txtmailnew.getText().toString());
-                                sp = getSharedPreferences(getString(R.string.user_pref),MODE_PRIVATE);
-                                SharedPreferences.Editor editor= sharedPreferences.edit();
-                                editor.putString("email", txtmailnew.getText().toString());
-                                editor.commit();
+                        if(isImageSet) {
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            img.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            FirebaseUser firebaseUser = auth.getCurrentUser();
+                            user.setUid(firebaseUser.getUid());
+                            myRef.push().setValue(user);
+                            byte[] data = baos.toByteArray();
 
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                img.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                                FirebaseUser firebaseUser = auth.getCurrentUser();
-                                user.setUid(firebaseUser.getUid());
-                                myRef.push().setValue(user);
-                                byte[] data = baos.toByteArray();
+                            FirebaseStorage storage=FirebaseStorage.getInstance();
+                            StorageReference storageRef = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com");
+                            final StorageReference userImg =storageRef.child("Users/"+user.getUid()+".jpg");
 
+                            UploadTask uploadTask = userImg.putBytes(data);
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
 
+                                }
 
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
+                                }
+                            });
+                        }
 
+                        if(changemail) {
+                            ref.changeEmail(txtmailold.getText().toString(), txtpassword.getText().toString(), txtmailnew.getText().toString(), new Firebase.ResultHandler() {
+                                @Override
+                                public void onSuccess() {
+                                    // email changed
+                                    Log.v("Change mail correct", "Mail changed");
+                                    user.setEmail(txtmailnew.getText().toString());
+                                    SharedPreferences.Editor editor = sp.edit();
+                                    editor.putString("email", txtmailnew.getText().toString());
+                                    editor.commit();
 
-                                Intent profile = new Intent(getBaseContext(), Profile.class);
-                                startActivity(profile);
-                            }
+                                }
 
-                            @Override
-                            public void onError(FirebaseError firebaseError) {
-                                // error encountered
-                            }
-                        });
-
-                        /*
-                        myref.changeEmail("oldemail@firebase.com", "password", "newemail@firebase.com", new Firebase.ResultHandler() {
-                            @Override
-                            public void onSuccess() {
-                                // email changed
-                            }
-
-                            @Override
-                            public void onError(FirebaseError firebaseError) {
-                                // error encountered
-                            }
-                        });
-                        */
+                                @Override
+                                public void onError(FirebaseError firebaseError) {
+                                    // error encountered
+                                }
+                            });
+                        }
+                        Intent profile = new Intent(getBaseContext(), Profile.class);
+                        startActivity(profile);
 
                     }
                     else {
@@ -254,29 +260,39 @@ public class EditProfile extends NavigationDrawer{
             return false;
         }
 
-        //password sbagliata
-        if (!txtpassword.getText().toString().trim().equals(user.getPassword())){
+        //password wrong
+        if (!txtpassword.getText().toString().equals(sp.getString("psw","-1"))){
             Toast.makeText(getApplicationContext(),getResources().getString(R.string.passwordwrong),Toast.LENGTH_LONG)
                     .show();
             toast=true;
             return false;
         }
+        if(txtmailold.getText().toString().trim().equals("") || txtmailold.getText() == null){
+            changemail=false;
 
-        if(!txtmailold.getText().toString().trim().equals(user.getEmail())){
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.mailwrong),Toast.LENGTH_SHORT).show();
-            toast=true;
-            return false;
         }
+        if(!txtmailold.getText().toString().equals(sp.getString("email","-1"))){
+            if (changemail) {
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.mailwrong), Toast.LENGTH_SHORT).show();
+                toast = true;
+                return false;
+            }
+        }
+
 
         if(txtmailnew.getText().toString().trim().equals("") || txtmailnew.getText() == null){
-            Log.w(METHOD_NAME,"TextView Email is either empty or null");
-            return false;
+            if(changemail) {
+                Log.w(METHOD_NAME, "TextView Email is either empty or null");
+                return false;
+            }
         }
         if(!isValidEmailAddress(txtmailnew.getText().toString())){
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.email),Toast.LENGTH_LONG)
-                    .show();
-            toast=true;
-            return false;
+            if(changemail) {
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.email), Toast.LENGTH_LONG)
+                        .show();
+                toast = true;
+                return false;
+            }
         }
 
 

@@ -99,6 +99,9 @@
             android:name=".Menu_view_edit"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".EditProfile"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".Profile"
             android:launchMode="singleTop"
             android:noHistory="true"
