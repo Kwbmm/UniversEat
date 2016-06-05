@@ -10,7 +10,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import it.polito.mad.groupFive.restaurantcode.SearchRestaurants;
+import it.polito.mad.groupFive.restaurantcode.SearchRestaurants.SearchRestaurants;
 
 public class LocationListenerForRestaurants implements LocationListener {
 

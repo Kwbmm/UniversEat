@@ -23,8 +23,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -35,6 +33,7 @@ import java.io.IOException;
 
 import it.polito.mad.groupFive.restaurantcode.Login.CreateLogin;
 import it.polito.mad.groupFive.restaurantcode.Login.Login_view;
+import it.polito.mad.groupFive.restaurantcode.SearchRestaurants.SearchRestaurants;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 

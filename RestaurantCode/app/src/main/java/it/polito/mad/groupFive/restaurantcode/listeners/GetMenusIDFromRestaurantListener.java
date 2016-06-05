@@ -3,8 +3,10 @@ package it.polito.mad.groupFive.restaurantcode.listeners;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -99,6 +101,11 @@ class GetMenuFromRestaurantListener implements ValueEventListener{
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         m.setImageLocal(filePath.getAbsolutePath());
                         ma.addChildWithDistance(m,distance);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("onFailure",e.getMessage());
                     }
                 });
             } catch (MenuException e) {
