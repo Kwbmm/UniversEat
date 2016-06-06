@@ -22,7 +22,7 @@
         android:id="@+id/filterMenu"
         app:showAsAction="ifRoom"
         android:title="@string/filterTitle"
-        android:icon="@drawable/ic_filter_list_white_24px"
+        android:icon="@drawable/ic_filter"
         android:visible="false"
         />
     <item
