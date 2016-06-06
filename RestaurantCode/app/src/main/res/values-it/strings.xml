@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">App Ristoranti n5</string>
+    <string name="app_name">UniversEat</string>
     <string name="open">Aperto</string>
     <string name="close">Chiuso</string>
     <string name="user_pref">RestaurantCode.Userdata</string>

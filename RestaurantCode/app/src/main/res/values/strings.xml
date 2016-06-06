@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Restaurant App n5</string>
+    <string name="app_name">UniversEat</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="featureUnavail">This feature is still under development…</string>
