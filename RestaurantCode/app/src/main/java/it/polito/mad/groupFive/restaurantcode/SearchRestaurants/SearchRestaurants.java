@@ -1,20 +1,17 @@
 package it.polito.mad.groupFive.restaurantcode.SearchRestaurants;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +22,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -57,6 +58,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
 
     private GoogleApiClient gac;
     private Location lastKnown;
+    SupportPlaceAutocompleteFragment paf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +74,26 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
         this.db = FirebaseDatabase.getInstance();
         this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataRestaurant);
         this.rv = (RecyclerView) findViewById(R.id.searchRestaurants_recyclerView);
+        this.paf = (SupportPlaceAutocompleteFragment) getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        this.paf.setHint(getResources().getString(R.string.search_helloRestaurant));
+        this.paf.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                //Open SearchRestaurantResults activity
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.e("onError",status.getStatusMessage());
+            }
+        });
 
         /**
          * These lines of code are for setting up the searchViewMenu and let it know about the activity
          * used to performed searches (SearchRestaurantResults.java).
          * More info:
          *  http://developer.android.com/guide/topics/search/search-dialog.html#UsingSearchWidget
-         */
+
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchViewRestaurant = (SearchView) findViewById(R.id.search_viewRestaurant);
         if (searchViewRestaurant != null) {
@@ -87,7 +102,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
             searchViewRestaurant.setQuery("Current Location",false);
 //            SearchRecentSuggestions srs = new SearchRecentSuggestions(this,RestaurantSearchSuggestionProvider.AUTHORITY,RestaurantSearchSuggestionProvider.MODE);
 //            srs.saveRecentQuery("Current Location",null);
-        }
+        }*/
     }
 
     private void checkLocationPermissions(){
@@ -122,6 +137,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
 
     private void getAccurateLocation() {
         final String METHOD_NAME = this.getClass().getName() + " - getLocation";
+
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //Get the current location
         if(this.rv != null){
@@ -135,7 +151,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
             locationReq.setInterval(LOCATION_UPDATE_TIME_MS);
             locationReq.setFastestInterval(LOCATION_UPDATE_FASTEST_TIME_MS);
             locationReq.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            LocationServices.FusedLocationApi.requestLocationUpdates(this.gac,locationReq,new LocationListenerForRestaurants(this.gac,ra,this));
+            LocationServices.FusedLocationApi.requestLocationUpdates(this.gac,locationReq,new LocationListenerForRestaurants(this.gac,ra,this,this.paf));
         }
     }
 
@@ -160,7 +176,6 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
                 break;
             }
             case LOCATION_LAST_KNOWN:{ //Fetch data from most recent to least recent, but put nearest restaurants first.
-                Log.d(METHOD_NAME,"Location last known");
                 this.dbRoot = this.db.getReference("restaurant");
                 if (rv != null) {
                     ra = new RestaurantAdapter(this.rv, this.pb,this);

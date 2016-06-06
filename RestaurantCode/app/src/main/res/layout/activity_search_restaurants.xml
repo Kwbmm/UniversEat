@@ -3,29 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SearchRestaurants.SearchRestaurants">
 
-    <android.support.v7.widget.SearchView
+    <fragment
+        android:id="@+id/place_autocomplete_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/search_viewRestaurant"
-        android:queryHint="@string/search_helloRestaurant"
-        android:divider="#000000"
-        android:dividerPadding="1dp"
         android:layout_marginTop="5dp"
         android:layout_alignParentTop="true"
-        android:focusable="false"
+        android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
         />
 
     <!-- Loading bar -->
     <ProgressBar
         android:layout_width="@dimen/progressBar_size"
         android:layout_height="@dimen/progressBar_size"
-        android:layout_below="@id/search_viewRestaurant"
+        android:layout_below="@id/place_autocomplete_fragment"
         android:id="@+id/progressBar_loadingDataRestaurant"
         android:indeterminate="true"
         android:layout_centerInParent="true"
@@ -35,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/searchRestaurants_recyclerView"
-        android:layout_below="@id/search_viewRestaurant"
+        android:layout_below="@id/place_autocomplete_fragment"
         android:focusable="false"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
