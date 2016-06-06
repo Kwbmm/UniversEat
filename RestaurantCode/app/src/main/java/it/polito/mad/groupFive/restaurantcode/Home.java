@@ -48,6 +48,7 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
     private static final int LOCATION_REQUEST_CODE = 1;
     private static final long LOCATION_UPDATE_TIME_MS = 3000;
     private static final long LOCATION_UPDATE_FASTEST_TIME_MS = 5000;
+    private static boolean isDBPersistanceEnabled = false;
     private RecyclerView rv;
     private ProgressBar pb;
     private FirebaseDatabase db;
@@ -70,6 +71,10 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
                 .addApi(LocationServices.API)
                 .build();
         this.db = FirebaseDatabase.getInstance();
+        if(!isDBPersistanceEnabled){
+            this.db.setPersistenceEnabled(true);
+            isDBPersistanceEnabled = true;
+        }
         this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
         this.rv = (RecyclerView) findViewById(R.id.home_recyclerViewHome);
 
