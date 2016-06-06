@@ -23,6 +23,10 @@ public class Menu {
     private int type;
     private boolean beverage;
     private boolean serviceFee;
+    private boolean vegetarian;
+    private boolean vegan;
+    private boolean spicy;
+    private boolean glutenfree;
     private ArrayList<Course> courses = new ArrayList<>();
 
 
@@ -74,6 +78,10 @@ public class Menu {
         output.put("type",this.type);
         output.put("beverage",this.beverage);
         output.put("serviceFee",this.serviceFee);
+        output.put("spicy",this.spicy);
+        output.put("vegan",this.vegan);
+        output.put("vegetarian",this.vegetarian);
+        output.put("glutenfree",this.glutenfree);
 
         HashMap<String,Boolean> tagMap = new HashMap<>();
         for(String tag : this.getTags()){
@@ -359,4 +367,12 @@ public class Menu {
      * @param serviceFee true or false
      */
     public Menu setServiceFee(boolean serviceFee) { this.serviceFee = serviceFee; return this; }
+    public boolean isVegetarian(){return this.vegetarian;};
+    public boolean isVegan(){return this.vegan;};
+    public boolean isSpicy(){return this.spicy;};
+    public boolean isGlutenfree(){return this.glutenfree;};
+    public Menu setVegetarian(boolean vegetarian){this.vegetarian=vegetarian; return this;};
+    public Menu setVegan(boolean vegan){this.vegan=vegan; return this;};
+    public Menu setSpicy(boolean spicy){this.spicy=spicy; return this;};
+    public Menu setGlutenfree(boolean glutenfree){this.glutenfree=glutenfree; return this;};
 }

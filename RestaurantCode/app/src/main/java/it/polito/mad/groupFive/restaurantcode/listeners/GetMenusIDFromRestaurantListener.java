@@ -86,10 +86,14 @@ class GetMenuFromRestaurantListener implements ValueEventListener{
                         .setDescription((String) ds.child("description").getValue())
                         .setName((String) ds.child("name").getValue())
                         .setServiceFee((boolean) ds.child("serviceFee").getValue())
-                        .setImageLocal((String) ds.child("imageLocalPath").getValue());
+                        .setImageLocal((String) ds.child("imageLocalPath").getValue())
+                        .setSpicy((boolean)ds.child("spicy").getValue())
+                        .setGlutenfree((boolean)ds.child("glutenfree").getValue())
+                        .setVegan((boolean)ds.child("vegan").getValue())
+                        .setVegetarian((boolean)ds.child("vegetarian").getValue());
                 int type = ((Long) ds.child("type").getValue()).intValue();
                 m.setType(type);
-                float price = ((Long)ds.child("price").getValue()).floatValue();
+                float price = Float.parseFloat(ds.child("price").getValue().toString());
                 m.setPrice(price);
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 StorageReference storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");

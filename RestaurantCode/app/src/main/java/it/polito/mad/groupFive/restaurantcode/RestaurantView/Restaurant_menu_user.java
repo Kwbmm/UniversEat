@@ -146,6 +146,10 @@ public class Restaurant_menu_user extends Fragment {
                 menu.setServiceFee((Boolean) dataSnapshot.child("serviceFee").getValue());
                 menu.setType(Integer.parseInt(dataSnapshot.child("type").getValue().toString()));
                 menu.setImageLocal((String) dataSnapshot.child("imageLocalPath").getValue());
+                menu.setSpicy((Boolean) dataSnapshot.child("spicy").getValue());
+                menu.setVegetarian((Boolean) dataSnapshot.child("vegetarian").getValue());
+                menu.setVegan((Boolean) dataSnapshot.child("vegan").getValue());
+                menu.setGlutenfree((Boolean) dataSnapshot.child("glutenfree").getValue());
                 menusshared.add(menu);
                 adp.notifyDataSetChanged();
 
@@ -275,7 +279,11 @@ public class Restaurant_menu_user extends Fragment {
             }
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
-            holder.menu_price.setText(menu.getPrice()+"€");
+            holder.menu_price.setText(String.format("%.2f", menu.getPrice())+"€");
+            if(!menu.isSpicy()) holder.spicy_icon.setVisibility(View.INVISIBLE);
+            if(!menu.isVegan()) holder.vegan_icon.setVisibility(View.INVISIBLE);
+            if(!menu.isVegetarian()) holder.vegetarian_icon.setVisibility(View.INVISIBLE);
+            if(!menu.isGlutenfree()) holder.glutenfree_icon.setVisibility(View.INVISIBLE);
             try {
                 FirebaseStorage storage=FirebaseStorage.getInstance();
                 StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");

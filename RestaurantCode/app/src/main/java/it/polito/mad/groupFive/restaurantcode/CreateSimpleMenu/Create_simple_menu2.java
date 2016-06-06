@@ -78,6 +78,7 @@ public class Create_simple_menu2 extends Fragment {
     private CheckBox drink;
     private ViewGroup viewGroup;
     private View load;
+    ArrayList<Course> courselist = new ArrayList<Course>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -217,6 +218,17 @@ public class Create_simple_menu2 extends Fragment {
             public void onClick(View v) {
                 sData.loading();
                     if(price.getText().toString().length()>0) {
+                        courselist=menu.getCourses();
+                        menu.setGlutenfree(true);
+                        menu.setVegan(true);
+                        menu.setVegetarian(true);
+                        menu.setSpicy(false);
+                        for(Course c:courselist) {
+                            if (!c.isGlutenFree()) menu.setGlutenfree(false);
+                            if(!c.isVegan()) menu.setVegan(false);
+                            if(!c.isVegetarian()) menu.setVegetarian(false);
+                            if(c.isSpicy()) menu.setSpicy(true);
+                        }
                         menu.setPrice(Float.valueOf(price.getText().toString()));
                         menu.setServiceFee(fee.isChecked());
                         menu.setBeverage(drink.isChecked());

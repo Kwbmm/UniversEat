@@ -41,7 +41,11 @@ public class GetMenusListener implements ValueEventListener {
                         .setDescription((String)ds.child("description").getValue())
                         .setImageLocal((String)ds.child("imageLocalPath").getValue())
                         .setName((String)ds.child("name").getValue())
-                        .setServiceFee((boolean)ds.child("serviceFee").getValue());
+                        .setServiceFee((boolean)ds.child("serviceFee").getValue())
+                        .setSpicy((boolean)ds.child("spicy").getValue())
+                        .setGlutenfree((boolean)ds.child("glutenfree").getValue())
+                        .setVegetarian((boolean)ds.child("vegetarian").getValue())
+                        .setVegan((boolean)ds.child("vegan").getValue());
                 int type = ((Long) ds.child("type").getValue()).intValue();
                 m.setType(type);
                 float price = ((Long)ds.child("price").getValue()).floatValue();

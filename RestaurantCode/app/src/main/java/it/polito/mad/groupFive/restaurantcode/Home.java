@@ -241,6 +241,10 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
                         .setServiceFee(m.isServiceFee())
                         .setPrice(m.getPrice())
                         .setType(m.getType());
+                super.setGlutenfree(m.isGlutenfree());
+                super.setVegan(m.isVegan());
+                super.setVegetarian(m.isVegetarian());
+                super.setSpicy(m.isSpicy());
                 this.distance = distance;
             }
 
@@ -346,8 +350,11 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
             final Menu menu = menus.get(position);
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
-            holder.menu_price.setText(menu.getPrice()+"€");
-            holder.menu_price.setText(menu.getPrice()+"€");
+            holder.menu_price.setText(String.format("%.2f", menu.getPrice())+"€");
+            if(!menu.isSpicy()) holder.spicy_icon.setVisibility(View.INVISIBLE);
+            if(!menu.isVegan()) holder.vegan_icon.setVisibility(View.INVISIBLE);
+            if(!menu.isVegetarian()) holder.vegetarian_icon.setVisibility(View.INVISIBLE);
+            if(!menu.isGlutenfree()) holder.glutenfree_icon.setVisibility(View.INVISIBLE);
             File img = new File(menu.getImageLocalPath());
             try {
                 holder.menu_image.setImageBitmap(new Picture(Uri.fromFile(img),context.getContentResolver(),300,300).getBitmap());

@@ -182,6 +182,11 @@ public class Menu_view_edit extends NavigationDrawer {
         protected ImageButton edit;
         protected CardView card;
         protected ImageView menu_image;
+        protected ImageView spicy_icon;
+        protected ImageView glutenfree_icon;
+        protected ImageView vegetarian_icon;
+        protected ImageView vegan_icon;
+
 
         public MenuEditViewHolder(View itemView) {
             super(itemView);
@@ -191,6 +196,10 @@ public class Menu_view_edit extends NavigationDrawer {
             this.edit=(ImageButton) itemView.findViewById(R.id.menu_edit);
             this.card= (CardView) itemView.findViewById(R.id.menu_card);
             this.menu_image=(ImageView)itemView.findViewById(R.id.menu_image);
+            this.glutenfree_icon=(ImageView)itemView.findViewById(R.id.menu_icon2);
+            this.vegetarian_icon=(ImageView)itemView.findViewById(R.id.menu_icon3);
+            this.vegan_icon=(ImageView)itemView.findViewById(R.id.menu_icon4);
+            this.spicy_icon=(ImageView)itemView.findViewById(R.id.menu_icon1);
         }
     }
 
@@ -225,7 +234,11 @@ public class Menu_view_edit extends NavigationDrawer {
             holder.card.setOnClickListener(new CardListener(menu.getRid(),menu.getMid()));
             holder.menu_desctiprion.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
-            holder.menu_price.setText(menu.getPrice()+"€");
+            holder.menu_price.setText(String.format("%.2f", menu.getPrice())+"€");
+            if(!menu.isSpicy()) holder.spicy_icon.setVisibility(View.INVISIBLE);
+            if(!menu.isVegan()) holder.vegan_icon.setVisibility(View.INVISIBLE);
+            if(!menu.isVegetarian()) holder.vegetarian_icon.setVisibility(View.INVISIBLE);
+            if(!menu.isGlutenfree()) holder.glutenfree_icon.setVisibility(View.INVISIBLE);
             holder.edit.setOnClickListener(new onEditclick(menu));
             try {
 
@@ -332,6 +345,10 @@ public class MenuList implements ChildEventListener{
         menu.setServiceFee((Boolean) dataSnapshot.child("serviceFee").getValue());
         menu.setType(Integer.parseInt(dataSnapshot.child("type").getValue().toString()));
         menu.setImageLocal((String) dataSnapshot.child("imageLocalPath").getValue());
+        menu.setSpicy((Boolean) dataSnapshot.child("spicy").getValue());
+        menu.setVegetarian((Boolean) dataSnapshot.child("vegetarian").getValue());
+        menu.setVegan((Boolean) dataSnapshot.child("vegan").getValue());
+        menu.setGlutenfree((Boolean) dataSnapshot.child("glutenfree").getValue());
         menus.add(menu);
 
                 adp.notifyDataSetChanged();
