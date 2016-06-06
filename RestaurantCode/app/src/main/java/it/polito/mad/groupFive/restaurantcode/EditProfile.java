@@ -32,6 +32,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -96,7 +99,7 @@ public class EditProfile extends NavigationDrawer{
 
         uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
         db = FirebaseDatabase.getInstance();
-        myRef = db.getReference();
+        myRef = db.getReference("User");
 
         sp = getSharedPreferences(getString(R.string.user_pref),MODE_PRIVATE);
         user =new User(uid);
@@ -142,10 +145,10 @@ public class EditProfile extends NavigationDrawer{
                         Firebase ref = new Firebase("https://luminous-heat-4574.firebaseio.com/");
                         if(isImageSet) {
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            img.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            img.compress(Bitmap.CompressFormat.JPEG, 20, baos);
                             FirebaseUser firebaseUser = auth.getCurrentUser();
                             user.setUid(firebaseUser.getUid());
-                            myRef.push().setValue(user);
+                            //myRef.push().setValue(user);
                             byte[] data = baos.toByteArray();
 
                             FirebaseStorage storage=FirebaseStorage.getInstance();
@@ -164,6 +167,10 @@ public class EditProfile extends NavigationDrawer{
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                    if(!changemail){
+                                        Intent profile = new Intent(getBaseContext(), Profile.class);
+                                        startActivity(profile);
+                                    }
 
                                 }
                             });
@@ -175,10 +182,41 @@ public class EditProfile extends NavigationDrawer{
                                 public void onSuccess() {
                                     // email changed
                                     Log.v("Change mail correct", "Mail changed");
-                                    user.setEmail(txtmailnew.getText().toString());
-                                    SharedPreferences.Editor editor = sp.edit();
-                                    editor.putString("email", txtmailnew.getText().toString());
-                                    editor.commit();
+                                    myRef.orderByChild("uid").equalTo(uid).addChildEventListener(new ChildEventListener() {
+                                        @Override
+                                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                            user=dataSnapshot.getValue(User.class);
+                                            user.setEmail(txtmailnew.getText().toString());
+                                            SharedPreferences.Editor editor = sp.edit();
+                                            editor.putString("email", txtmailnew.getText().toString());
+                                            editor.commit();
+                                            myRef.child(dataSnapshot.getKey()).setValue(user);
+                                            Intent profile = new Intent(getBaseContext(), Profile.class);
+                                            startActivity(profile);
+                                        }
+
+                                        @Override
+                                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                                        }
+
+                                        @Override
+                                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                        }
+
+                                        @Override
+                                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
 
                                 }
 
@@ -188,8 +226,7 @@ public class EditProfile extends NavigationDrawer{
                                 }
                             });
                         }
-                        Intent profile = new Intent(getBaseContext(), Profile.class);
-                        startActivity(profile);
+
 
                     }
                     else {
