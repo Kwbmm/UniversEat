@@ -141,7 +141,7 @@ public class CreateRestaurant
             InputStream is = getContentResolver().openInputStream(Uri.parse(this.restaurant.getImageLocalPath()));
             Bitmap image= BitmapFactory.decodeStream(is);
             ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
-            image.compress(Bitmap.CompressFormat.JPEG,20,outputStream);
+            image.compress(Bitmap.CompressFormat.PNG,20,outputStream);
             ByteArrayInputStream inputStream=new ByteArrayInputStream(outputStream.toByteArray());
             this.storageRoot.putStream(inputStream).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override

@@ -244,7 +244,7 @@ public class Create_simple_menu2 extends Fragment {
                                     InputStream is = getActivity().getContentResolver().openInputStream(Uri.parse((menu.getImageLocalPath())));
                                     Bitmap image=BitmapFactory.decodeStream(is);
                                     ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
-                                    image.compress(Bitmap.CompressFormat.JPEG,20,outputStream);
+                                    image.compress(Bitmap.CompressFormat.PNG,20,outputStream);
                                     ByteArrayInputStream inputStream=new ByteArrayInputStream(outputStream.toByteArray());
                                     storageRoot.putStream(inputStream).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                         @Override
