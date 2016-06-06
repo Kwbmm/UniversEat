@@ -77,7 +77,6 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         }
         this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
         this.rv = (RecyclerView) findViewById(R.id.home_recyclerViewHome);
-
         /**
          * These lines of code are for setting up the searchViewMenu and let it know about the activity
          * used to performed searches (SearchMenuResults.java).
@@ -198,7 +197,7 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
                         .show();
         }
     }
-
+    
     @Override
     protected void onStart() {
         this.gac.connect();
@@ -380,24 +379,4 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         public SortedList<DistanceMenu> getMenus(){ return this.menus; }
     }
 
-    public class onCardClick implements View.OnClickListener{
-        private int position;
-        private String rid;
-        private String mid;
-
-        public onCardClick(int position, String rid, String mid){
-            this.position=position;
-            this.rid=rid;
-            this.mid=mid;
-        }
-
-        @Override
-        public void onClick(View v) {
-            Intent restinfo=new Intent(getBaseContext(),User_info_view.class);
-            Log.v("rid",rid+"");
-            restinfo.putExtra("rid",this.rid);
-            restinfo.putExtra("mid",this.mid);
-            startActivity(restinfo);
-        }
-    }
 }
