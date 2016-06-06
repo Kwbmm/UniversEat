@@ -5,19 +5,19 @@
     <string name="close">Chiuso</string>
     <string name="user_pref">RestaurantCode.Userdata</string>
     <string-array name="drawer_option_login">
-        <item>Cerca Menu</item>
+        <item>Home</item>
         <item>Cerca Ristoranti</item>
         <item>Login</item>
         <item>Registrati</item>
     </string-array>
     <string-array name="drawer_option_logged_user">
-        <item>Cerca Menu</item>
+        <item>Home</item>
         <item>Cerca Ristoranti</item>
         <item>Profilo</item>
         <item>Logout</item>
     </string-array>
     <string-array name="drawer_option_logged_manager">
-        <item>Cerca Menu</item>
+        <item>Home</item>
         <item>Cerca Ristoranti</item>
         <item>Profilo</item>
         <item>Ordini</item>
@@ -241,7 +241,7 @@
     <string name="fragment_delete_dish_complete">Completa</string>
 
     <!-- fragment_login_view.xml-->
-    <string name="fragment_login_view_Username">Email</string>
+    <string name="fragment_login_view_Email">Indirizzo Email</string>
     <string name="fragment_login_view_Password">Password</string>
     <string name="fragment_login_view_Login">Login</string>
     <string name="fragment_login_view_Register">Registrati</string>
@@ -372,4 +372,8 @@
     <string name="actionBar_createMenu">Crea Menu</string>
     <string name="actionBar_createRestaurant">Crea Ristorante</string>
     <string name="actionBar_signUp">Crea un Account</string>
+    <string name="action_reply">Rispondi</string>
+    <string name="action_share">Condividi</string>
+    <string name="toast_getMenusUnexpectedError">Sembra che dovrai morire di fame… Non sono riuscito a trovare alcun menu… </string>
+    <string name="review_based_on">Basato su %d recensioni</string>
 </resources>

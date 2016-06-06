@@ -5,13 +5,13 @@
     <string name="featureUnavail">This feature is still under development…</string>
     <string name="user_pref">RestaurantCode.Userdata</string>
     <string-array name="drawer_option_login">
-        <item>Search Menus</item>
+        <item>Home</item>
         <item>Search Restaurants</item>
         <item>Login</item>
         <item>Register</item>
     </string-array>
     <string-array name="drawer_option_logged_manager">
-        <item>Search Menus</item>
+        <item>Home</item>
         <item>Search Restaurants</item>
         <item>Profile</item>
         <item>Orders</item>
@@ -19,7 +19,7 @@
         <item>Logout</item>
     </string-array>
     <string-array name="drawer_option_logged_user">
-        <item>Search Menus</item>
+        <item>Home</item>
         <item>Search Restaurants</item>
         <item>Profile</item>
         <item>Logout</item>
@@ -369,6 +369,7 @@
 
     <!--Restaurant_info_user-->
     <string name="closed">Closed</string>
+    <string name="review_based_on">Based on %d reviews</string>
 
     <string name="title_review">Write few words</string>
     <string name="rating_service">Service</string>
@@ -411,9 +412,6 @@
         <item>Dessert</item>
         <item>Side Dish</item>
     </array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="_new_order_notification_title_template">" New order": %1$s</string>
 
