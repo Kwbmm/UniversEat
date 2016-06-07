@@ -147,6 +147,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         holder.restaurant_address.setText(restaurant.getAddress());
         holder.restaurant_name.setText(restaurant.getName());
         holder.restaurant_rating.setRating(restaurant.getRating());
+        holder.distance.setText(String.valueOf((restaurants.get(position).getDistance()/1000))+" km");
+
         File img = new File(restaurant.getImageLocalPath());
         try {
             holder.restaurant_image.setImageBitmap(new Picture(Uri.fromFile(img),context.getContentResolver(),300,300).getBitmap());

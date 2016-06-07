@@ -15,6 +15,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder{
     public RatingBar restaurant_rating;
     public ImageView restaurant_image;
     public CardView card;
+    public TextView distance;
 
     public RestaurantViewHolder(View itemView) {
         super(itemView);
@@ -23,5 +24,6 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder{
         this.restaurant_rating = (RatingBar) itemView.findViewById(R.id.restaurant_rating);
         this.restaurant_image = (ImageView) itemView.findViewById(R.id.restaurant_image);
         this.card= (CardView) itemView.findViewById(R.id.restaurant_card);
+        this.distance=(TextView) itemView.findViewById(R.id.restaurant_distance);
     }
 }
