@@ -48,7 +48,7 @@ public class GetMenusListener implements ValueEventListener {
                         .setVegan((boolean)ds.child("vegan").getValue());
                 int type = ((Long) ds.child("type").getValue()).intValue();
                 m.setType(type);
-                float price = ((Long)ds.child("price").getValue()).floatValue();
+                float price = Float.parseFloat(ds.child("price").getValue().toString());
                 m.setPrice(price);
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 StorageReference storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");

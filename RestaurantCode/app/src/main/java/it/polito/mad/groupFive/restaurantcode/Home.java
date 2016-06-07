@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -48,7 +49,10 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
     private static final int LOCATION_REQUEST_CODE = 1;
     private static final long LOCATION_UPDATE_TIME_MS = 3000;
     private static final long LOCATION_UPDATE_FASTEST_TIME_MS = 5000;
+
     private static boolean isDBPersistanceEnabled = false;
+    public static boolean isQueryPerformed = false;
+
     private RecyclerView rv;
     private ProgressBar pb;
     private FirebaseDatabase db;
@@ -64,7 +68,6 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         super.onCreate(savedInstanceState);
         mlay = (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_home, mlay);
-
         this.gac = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -77,6 +80,7 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         }
         this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
         this.rv = (RecyclerView) findViewById(R.id.home_recyclerViewHome);
+
         /**
          * These lines of code are for setting up the searchViewMenu and let it know about the activity
          * used to performed searches (SearchMenuResults.java).
@@ -101,8 +105,8 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         }
         else{
             Log.i(METHOD_NAME,"Location permissions granted");
+            getLastKnownLocation();
             getAccurateLocation();
-            //getLastKnownLocation();
         }
     }
 
@@ -127,10 +131,19 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         //Get the current location
         if(this.rv != null){
             MenuAdapter ma = new MenuAdapter(this.rv,this.pb,this);
-            this.rv.setAdapter(ma);
-            LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-            llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-            this.rv.setLayoutManager(llmVertical);
+            if(this.rv.getAdapter() == null){
+                Log.i(METHOD_NAME,"Setting adapter");
+                this.rv.setAdapter(ma);
+            }
+            else{
+                Log.i(METHOD_NAME,"Swapping adapter");
+                this.rv.swapAdapter(ma,false);
+            }
+            if(this.rv.getLayoutManager() == null){
+                LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+                llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+                this.rv.setLayoutManager(llmVertical);
+            }
             //Create a location request object first
             LocationRequest locationReq = new LocationRequest();
             locationReq.setInterval(LOCATION_UPDATE_TIME_MS);
@@ -139,48 +152,39 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
             LocationServices.FusedLocationApi.requestLocationUpdates(this.gac,locationReq,new LocationListenerForMenus(this.gac,ma,this));
         }
     }
-    
+
     private void getLastKnownLocation() {
         final String METHOD_NAME = this.getClass().getName() + " - getLastKnownLocation";
         this.lastKnown = LocationServices.FusedLocationApi.getLastLocation(this.gac);
         if(this.lastKnown != null){
             getMenus(0);
         }
-        else{
-            Log.d(METHOD_NAME,"last known location is null");
-            getMenus(-1);
-        }
     }
 
     private void getMenus(int locationResult) {
         final String METHOD_NAME = this.getClass().getName() + " - getMenus";
         final int LOCATION_LAST_KNOWN = 0;
-        final int LOCATION_UNKNOWN_OR_NOT_GRANTED = -1;
+        final int LOCATION_UNKNOWN = -1;
         MenuAdapter ma;
         switch (locationResult){
-            case LOCATION_UNKNOWN_OR_NOT_GRANTED: { //Fetch data from most recent to least recent, regardless of the location
+            case LOCATION_UNKNOWN: { //Fetch data from most recent to least recent, regardless of the location
                 Log.w(METHOD_NAME,"Location is unknown, I'm fetching according to most recent data first.");
-                this.dbRoot = this.db.getReference("menu");
                 if(rv != null){
-                    ma = new MenuAdapter(this.rv,this.pb,this);
-                    rv.setAdapter(ma);
-                    LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-                    llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-                    rv.setLayoutManager(llmVertical);
+                    this.dbRoot = this.db.getReference("menu");
+                    this.configureRecyclerView();
                     Query menuQuery = this.dbRoot.limitToLast(30); //Get the newest 10 menus
+                    ma = (MenuAdapter) this.rv.getAdapter();
                     menuQuery.addListenerForSingleValueEvent(new GetMenusListener(ma,this));
                 }
                 break;
             }
             case LOCATION_LAST_KNOWN:{ //Fetch data from most recent to least recent, but put nearest menus first.
-                Log.d(METHOD_NAME,"Location last known");
-                this.dbRoot = this.db.getReference("restaurant");
-                if (rv != null) {
-                    ma = new MenuAdapter(this.rv, this.pb,this);
-                    rv.setAdapter(ma);
-                    LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-                    llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-                    rv.setLayoutManager(llmVertical);
+                Log.i(METHOD_NAME,"Location last known");
+                if (this.rv != null && !Home.isQueryPerformed) {
+                    this.dbRoot = this.db.getReference("restaurant");
+                    this.configureRecyclerView();
+                    ma = (MenuAdapter) this.rv.getAdapter();
+                    Log.i(METHOD_NAME,"Preparing query for fetching data..");
                     Query menuQuery = this.dbRoot.limitToLast(10); //Get the newest 10 restaurants
                     menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromRestaurantListener(ma,this.lastKnown,this));
                 }
@@ -197,17 +201,29 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
                         .show();
         }
     }
-    
+
+    private void configureRecyclerView(){
+        if(this.rv.getAdapter() == null){
+            MenuAdapter ma = new MenuAdapter(this.rv, this.pb,this);
+            rv.setAdapter(ma);
+        }
+        if(this.rv.getLayoutManager() == null){
+            LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+            llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+            this.rv.setLayoutManager(llmVertical);
+        }
+    }
+
     @Override
     protected void onStart() {
-        this.gac.connect();
         super.onStart();
+        this.gac.connect();
     }
 
     @Override
     protected void onStop() {
-        this.gac.disconnect();
         super.onStop();
+        this.gac.disconnect();
     }
 
     @Override
@@ -226,157 +242,157 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         Log.e("onConFail","GAPI con failed\n"+connectionResult.getErrorMessage());
     }
 
-    public static class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
-        private class DistanceMenu extends Menu{
+public static class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
+    private class DistanceMenu extends Menu{
 
-            private float distance;
-            public DistanceMenu(Menu m,float distance) throws MenuException {
-                super(m.getRid(), m.getMid());
-                super
-                        .setBeverage(m.isBeverage())
-                        .setDescription(m.getDescription())
-                        .setImageLocal(m.getImageLocalPath())
-                        .setName(m.getName())
-                        .setServiceFee(m.isServiceFee())
-                        .setPrice(m.getPrice())
-                        .setType(m.getType());
-                super.setGlutenfree(m.isGlutenfree());
-                super.setVegan(m.isVegan());
-                super.setVegetarian(m.isVegetarian());
-                super.setSpicy(m.isSpicy());
-                this.distance = distance;
-            }
-
-            public float getDistance(){ return this.distance; }
+        private float distance;
+        public DistanceMenu(Menu m,float distance) throws MenuException {
+            super(m.getRid(), m.getMid());
+            super
+                    .setBeverage(m.isBeverage())
+                    .setDescription(m.getDescription())
+                    .setImageLocal(m.getImageLocalPath())
+                    .setName(m.getName())
+                    .setServiceFee(m.isServiceFee())
+                    .setPrice(m.getPrice())
+                    .setType(m.getType());
+            super.setGlutenfree(m.isGlutenfree());
+            super.setVegan(m.isVegan());
+            super.setVegetarian(m.isVegetarian());
+            super.setSpicy(m.isSpicy());
+            this.distance = distance;
         }
 
-        private SortedList<DistanceMenu> menus;
-        private RecyclerView rv;
-        private ProgressBar pb;
-        private Context context;
-
-        private MenuAdapter(RecyclerView rv,ProgressBar pb,Context context){
-            this.rv = rv;
-            this.pb = pb;
-            this.context = context;
-            this.menus = new SortedList<DistanceMenu>(DistanceMenu.class,
-                    new SortedList.Callback<DistanceMenu>() {
-                        @Override
-                        public int compare(DistanceMenu o1, DistanceMenu o2) {
-                            if(o1.getDistance() == Float.MIN_VALUE || o2.getDistance() == Float.MIN_VALUE){
-                                //If the distance is not set, we order by insertion time in the db.
-                                return o2.getMid().compareTo(o1.getMid());
-                            }
-                            return (o2.getDistance() - o1.getDistance() >= 0) ? -1 : 1;
-                        }
-
-                        @Override
-                        public void onInserted(int position, int count) {
-                            notifyItemRangeInserted(position,count);
-                        }
-
-                        @Override
-                        public void onRemoved(int position, int count) {
-                            notifyItemRangeRemoved(position,count);
-                        }
-
-                        @Override
-                        public void onMoved(int fromPosition, int toPosition) {
-                            notifyItemMoved(fromPosition,toPosition);
-                        }
-
-                        @Override
-                        public void onChanged(int position, int count) {
-                            notifyItemRangeChanged(position,count);
-                        }
-
-                        @Override
-                        public boolean areContentsTheSame(DistanceMenu oldItem, DistanceMenu newItem) {
-                            return oldItem.getMid().equals(newItem.getMid());
-                        }
-
-                        @Override
-                        public boolean areItemsTheSame(DistanceMenu item1, DistanceMenu item2) {
-                            return item1.getMid().equals(item2.getMid());
-                        }
-                    });
-        }
-
-        /**
-         * Add a new child to the adapter. Elements are added according to their weights: elements
-         * with lower weight are displayed before those with higher weight.
-         *
-         * @param m Object to insert
-         * @param distance Distance of the object with respect to your location
-         */
-        public void addChildWithDistance(Menu m,float distance){
-            final String METHOD_NAME = this.getClass().getName()+" - addChildWithDistance";
-            try {
-                DistanceMenu wm = new DistanceMenu(m,distance);
-                this.menus.add(wm);
-                if(rv.getVisibility() == View.GONE){
-                    pb.setVisibility(View.GONE);
-                    rv.setVisibility(View.VISIBLE);
-                }
-            } catch (MenuException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-            }
-        }
-
-        public void addChildNoDistance(Menu m){
-            final String METHOD_NAME = this.getClass().getName()+" - addChildWithDistance";
-            try {
-                DistanceMenu wm = new DistanceMenu(m,Float.MIN_VALUE);
-                this.menus.add(wm);
-                if(rv.getVisibility() == View.GONE){
-                    pb.setVisibility(View.GONE);
-                    rv.setVisibility(View.VISIBLE);
-                }
-            } catch (MenuException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-            }
-        }
-
-        @Override
-        public MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View menu_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_view,null);
-            return new MenuViewHolder(menu_view);
-        }
-
-        @Override
-        public void onBindViewHolder(final MenuViewHolder holder, int position) {
-            final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
-            final Menu menu = menus.get(position);
-            holder.menu_description.setText(menu.getDescription());
-            holder.menu_name.setText(menu.getName());
-            holder.menu_price.setText(String.format("%.2f", menu.getPrice())+"€");
-            if(!menu.isSpicy()) holder.spicy_icon.setVisibility(View.INVISIBLE);
-            if(!menu.isVegan()) holder.vegan_icon.setVisibility(View.INVISIBLE);
-            if(!menu.isVegetarian()) holder.vegetarian_icon.setVisibility(View.INVISIBLE);
-            if(!menu.isGlutenfree()) holder.glutenfree_icon.setVisibility(View.INVISIBLE);
-            File img = new File(menu.getImageLocalPath());
-            try {
-                holder.menu_image.setImageBitmap(new Picture(Uri.fromFile(img),context.getContentResolver(),300,300).getBitmap());
-            } catch (IOException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-            }
-            holder.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent menu_view =new Intent(context,User_info_view.class);
-                    menu_view.putExtra("mid",menu.getMid());
-                    menu_view.putExtra("rid",menu.getRid());
-                    context.startActivity(menu_view);
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return this.menus.size();
-        }
-
-        public SortedList<DistanceMenu> getMenus(){ return this.menus; }
+        public float getDistance(){ return this.distance; }
     }
+
+    private SortedList<DistanceMenu> menus;
+    private RecyclerView rv;
+    private ProgressBar pb;
+    private Context context;
+
+    private MenuAdapter(RecyclerView rv,ProgressBar pb,Context context){
+        this.rv = rv;
+        this.pb = pb;
+        this.context = context;
+        this.menus = new SortedList<DistanceMenu>(DistanceMenu.class,
+                new SortedList.Callback<DistanceMenu>() {
+                    @Override
+                    public int compare(DistanceMenu o1, DistanceMenu o2) {
+                        if(o1.getDistance() == Float.MIN_VALUE || o2.getDistance() == Float.MIN_VALUE){
+                            //If the distance is not set, we order by insertion time in the db.
+                            return o2.getMid().compareTo(o1.getMid());
+                        }
+                        return (o2.getDistance() - o1.getDistance() >= 0) ? -1 : 1;
+                    }
+
+                    @Override
+                    public void onInserted(int position, int count) {
+                        notifyItemRangeInserted(position,count);
+                    }
+
+                    @Override
+                    public void onRemoved(int position, int count) {
+                        notifyItemRangeRemoved(position,count);
+                    }
+
+                    @Override
+                    public void onMoved(int fromPosition, int toPosition) {
+                        notifyItemMoved(fromPosition,toPosition);
+                    }
+
+                    @Override
+                    public void onChanged(int position, int count) {
+                        notifyItemRangeChanged(position,count);
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(DistanceMenu oldItem, DistanceMenu newItem) {
+                        return oldItem.getMid().equals(newItem.getMid());
+                    }
+
+                    @Override
+                    public boolean areItemsTheSame(DistanceMenu item1, DistanceMenu item2) {
+                        return item1.getMid().equals(item2.getMid());
+                    }
+                });
+    }
+
+    /**
+     * Add a new child to the adapter. Elements are added according to their weights: elements
+     * with lower weight are displayed before those with higher weight.
+     *
+     * @param m Object to insert
+     * @param distance Distance of the object with respect to your location
+     */
+    public void addChildWithDistance(Menu m,float distance){
+        final String METHOD_NAME = this.getClass().getName()+" - addChildWithDistance";
+        try {
+            DistanceMenu wm = new DistanceMenu(m,distance);
+            this.menus.add(wm);
+            if(rv.getVisibility() == View.GONE){
+                pb.setVisibility(View.GONE);
+                rv.setVisibility(View.VISIBLE);
+            }
+        } catch (MenuException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        }
+    }
+
+    public void addChildNoDistance(Menu m){
+        final String METHOD_NAME = this.getClass().getName()+" - addChildWithDistance";
+        try {
+            DistanceMenu wm = new DistanceMenu(m,Float.MIN_VALUE);
+            this.menus.add(wm);
+            if(rv.getVisibility() == View.GONE){
+                pb.setVisibility(View.GONE);
+                rv.setVisibility(View.VISIBLE);
+            }
+        } catch (MenuException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        }
+    }
+
+    @Override
+    public MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View menu_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_view,null);
+        return new MenuViewHolder(menu_view);
+    }
+
+    @Override
+    public void onBindViewHolder(final MenuViewHolder holder, int position) {
+        final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
+        final Menu menu = menus.get(position);
+        holder.menu_description.setText(menu.getDescription());
+        holder.menu_name.setText(menu.getName());
+        holder.menu_price.setText(String.format("%.2f", menu.getPrice())+"€");
+        if(!menu.isSpicy()) holder.spicy_icon.setVisibility(View.INVISIBLE);
+        if(!menu.isVegan()) holder.vegan_icon.setVisibility(View.INVISIBLE);
+        if(!menu.isVegetarian()) holder.vegetarian_icon.setVisibility(View.INVISIBLE);
+        if(!menu.isGlutenfree()) holder.glutenfree_icon.setVisibility(View.INVISIBLE);
+        File img = new File(menu.getImageLocalPath());
+        try {
+            holder.menu_image.setImageBitmap(new Picture(Uri.fromFile(img),context.getContentResolver(),300,300).getBitmap());
+        } catch (IOException e) {
+            Log.e(METHOD_NAME,e.getMessage());
+        }
+        holder.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent menu_view =new Intent(context,User_info_view.class);
+                menu_view.putExtra("mid",menu.getMid());
+                menu_view.putExtra("rid",menu.getRid());
+                context.startActivity(menu_view);
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return this.menus.size();
+    }
+
+    public SortedList<DistanceMenu> getMenus(){ return this.menus; }
+}
 
 }

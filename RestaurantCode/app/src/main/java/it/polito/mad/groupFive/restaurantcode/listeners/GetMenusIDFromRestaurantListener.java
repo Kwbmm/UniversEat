@@ -105,6 +105,7 @@ class GetMenuFromRestaurantListener implements ValueEventListener{
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         m.setImageLocal(filePath.getAbsolutePath());
                         ma.addChildWithDistance(m,distance);
+                        Home.isQueryPerformed = true;
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
