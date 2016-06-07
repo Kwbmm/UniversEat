@@ -50,6 +50,9 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
     private static final int LOCATION_REQUEST_CODE = 1;
     private static final long LOCATION_UPDATE_TIME_MS = 3000;
     private static final long LOCATION_UPDATE_FASTEST_TIME_MS = 5000;
+
+    public static boolean isQueryPerformed=false;
+
     private RecyclerView rv;
     private ProgressBar pb;
     private FirebaseDatabase db;
@@ -87,22 +90,6 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
                 Log.e("onError",status.getStatusMessage());
             }
         });
-
-        /**
-         * These lines of code are for setting up the searchViewMenu and let it know about the activity
-         * used to performed searches (SearchRestaurantResults.java).
-         * More info:
-         *  http://developer.android.com/guide/topics/search/search-dialog.html#UsingSearchWidget
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView searchViewRestaurant = (SearchView) findViewById(R.id.search_viewRestaurant);
-        if (searchViewRestaurant != null) {
-            searchViewRestaurant.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-            searchViewRestaurant.setIconifiedByDefault(false);
-            searchViewRestaurant.setQuery("Current Location",false);
-//            SearchRecentSuggestions srs = new SearchRecentSuggestions(this,RestaurantSearchSuggestionProvider.AUTHORITY,RestaurantSearchSuggestionProvider.MODE);
-//            srs.saveRecentQuery("Current Location",null);
-        }*/
     }
 
     private void checkLocationPermissions(){
@@ -115,8 +102,8 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
         }
         else{
             Log.i(METHOD_NAME,"Location permissions granted");
+            getLastKnownLocation();
             getAccurateLocation();
-            //getLastKnownLocation();
         }
     }
 
@@ -135,6 +122,14 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
         }
     }
 
+    private void getLastKnownLocation() {
+        final String METHOD_NAME = this.getClass().getName() + " - getLastKnownLocation";
+        this.lastKnown = LocationServices.FusedLocationApi.getLastLocation(this.gac);
+        if(this.lastKnown != null){
+            getRestaurants(0);
+        }
+    }
+
     private void getAccurateLocation() {
         final String METHOD_NAME = this.getClass().getName() + " - getLocation";
 
@@ -142,10 +137,19 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
         //Get the current location
         if(this.rv != null){
             RestaurantAdapter ra = new RestaurantAdapter(this.rv,this.pb,this);
-            this.rv.setAdapter(ra);
-            LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-            llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-            this.rv.setLayoutManager(llmVertical);
+            if(this.rv.getAdapter() == null){
+                Log.i(METHOD_NAME,"Setting adapter");
+                this.rv.setAdapter(ra);
+            }
+            else{
+                Log.i(METHOD_NAME,"Swapping adapter");
+                this.rv.swapAdapter(ra,false);
+            }
+            if(this.rv.getLayoutManager() == null){
+                LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+                llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+                this.rv.setLayoutManager(llmVertical);
+            }
             //Create a location request object first
             LocationRequest locationReq = new LocationRequest();
             locationReq.setInterval(LOCATION_UPDATE_TIME_MS);
@@ -158,18 +162,15 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
     private void getRestaurants(int locationResult){
         final String METHOD_NAME = this.getClass().getName() + " - getMenus";
         final int LOCATION_LAST_KNOWN = 0;
-        final int LOCATION_UNKNOWN_OR_NOT_GRANTED = -1;
+        final int LOCATION_UNKNOWN = -1;
         RestaurantAdapter ra;
         switch (locationResult){
-            case LOCATION_UNKNOWN_OR_NOT_GRANTED: { //Fetch data from most recent to least recent, regardless of the location
+            case LOCATION_UNKNOWN: { //Fetch data from most recent to least recent, regardless of the location
                 Log.w(METHOD_NAME,"Location is unknown, I'm fetching according to most recent data first.");
                 this.dbRoot = this.db.getReference("restaurant");
                 if(rv != null){
-                    ra = new RestaurantAdapter(this.rv,this.pb,this);
-                    rv.setAdapter(ra);
-                    LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-                    llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-                    rv.setLayoutManager(llmVertical);
+                    configureRecyclerView();
+                    ra = (RestaurantAdapter) this.rv.getAdapter();
                     Query restaurantQuery = this.dbRoot.limitToFirst(30); //Get the first 30 restaurants
                     restaurantQuery.addListenerForSingleValueEvent(new GetRestaurantListener(ra,this));
                 }
@@ -177,13 +178,10 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
             }
             case LOCATION_LAST_KNOWN:{ //Fetch data from most recent to least recent, but put nearest restaurants first.
                 this.dbRoot = this.db.getReference("restaurant");
-                if (rv != null) {
-                    ra = new RestaurantAdapter(this.rv, this.pb,this);
-                    rv.setAdapter(ra);
-                    LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-                    llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-                    rv.setLayoutManager(llmVertical);
-                    Query restaurantQuery = this.dbRoot.limitToFirst(30); //Get the first 10 restaurants
+                if (rv != null && !SearchRestaurants.isQueryPerformed) {
+                    configureRecyclerView();
+                    ra = (RestaurantAdapter) this.rv.getAdapter();
+                    Query restaurantQuery = this.dbRoot.limitToFirst(30); //Get the first 30 restaurants
                     restaurantQuery.addListenerForSingleValueEvent(new GetRestaurantListener(ra,this.lastKnown,this));
                 }
                 break;
@@ -197,6 +195,18 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
                                 getResources().getString(R.string.toast_getMenusUnexpectedError),
                                 Toast.LENGTH_LONG)
                         .show();
+        }
+    }
+
+    private void configureRecyclerView(){
+        if(this.rv.getAdapter() == null){
+            RestaurantAdapter ma = new RestaurantAdapter(this.rv, this.pb,this);
+            rv.setAdapter(ma);
+        }
+        if(this.rv.getLayoutManager() == null){
+            LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+            llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+            this.rv.setLayoutManager(llmVertical);
         }
     }
 

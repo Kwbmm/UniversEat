@@ -16,7 +16,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 
-import it.polito.mad.groupFive.restaurantcode.SearchMenuResults;
+import it.polito.mad.groupFive.restaurantcode.Home.SearchMenuResults;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 

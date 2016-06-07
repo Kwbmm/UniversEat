@@ -14,15 +14,15 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 
-import it.polito.mad.groupFive.restaurantcode.Home;
+import it.polito.mad.groupFive.restaurantcode.Home.MenuAdapter;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 
 public class GetMenusListener implements ValueEventListener {
-    private Home.MenuAdapter ma;
+    private MenuAdapter ma;
     private Context context;
 
-    public GetMenusListener(Home.MenuAdapter ma,Context context) {
+    public GetMenusListener(MenuAdapter ma,Context context) {
         this.ma = ma;
         this.context = context;
     }

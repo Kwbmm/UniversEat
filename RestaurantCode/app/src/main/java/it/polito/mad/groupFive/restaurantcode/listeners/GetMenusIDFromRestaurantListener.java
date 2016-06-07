@@ -20,17 +20,17 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 
-import it.polito.mad.groupFive.restaurantcode.Home;
+import it.polito.mad.groupFive.restaurantcode.Home.MenuAdapter;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
 
 public class GetMenusIDFromRestaurantListener implements ValueEventListener {
 
-    private Home.MenuAdapter ma;
+    private MenuAdapter ma;
     private Location location;
     private Context context;
 
-    public GetMenusIDFromRestaurantListener(Home.MenuAdapter ma, Location location, Context context){
+    public GetMenusIDFromRestaurantListener(MenuAdapter ma, Location location, Context context){
         this.ma = ma;
         this.location = location;
         this.context = context;
@@ -63,11 +63,11 @@ public class GetMenusIDFromRestaurantListener implements ValueEventListener {
 
 class GetMenuFromRestaurantListener implements ValueEventListener{
 
-    private Home.MenuAdapter ma;
+    private MenuAdapter ma;
     private float distance;
     private Context context;
 
-    GetMenuFromRestaurantListener(Home.MenuAdapter ma, float distance,Context context){
+    GetMenuFromRestaurantListener(MenuAdapter ma, float distance,Context context){
         this.ma = ma;
         this.distance = distance;
         this.context = context;
@@ -105,7 +105,6 @@ class GetMenuFromRestaurantListener implements ValueEventListener{
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         m.setImageLocal(filePath.getAbsolutePath());
                         ma.addChildWithDistance(m,distance);
-                        Home.isQueryPerformed = true;
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

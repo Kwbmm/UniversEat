@@ -79,6 +79,7 @@ public class GetRestaurantListener implements ValueEventListener {
                             here.setLatitude(r.getXCoord());
                             here.setLongitude(r.getYCoord());
                             float distance = lastKnow.distanceTo(here);
+                            SearchRestaurants.isQueryPerformed = true;
                             ra.addChildWithDistance(r,distance);
                         }
                     }

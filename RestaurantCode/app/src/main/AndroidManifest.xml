@@ -29,12 +29,12 @@
             android:value="AIzaSyDQhAjHBN1S0mnw5LYvJJR0-vFwJ1pdG7g" />
 
         <activity
-            android:name=".Home"
+            android:name=".Home.Home"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".SearchMenuResults" />
+                android:value=".Home.SearchMenuResults" />
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,7 +43,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SearchMenuResults"
+            android:name=".Home.SearchMenuResults"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
