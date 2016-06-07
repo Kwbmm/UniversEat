@@ -354,7 +354,7 @@
     <string name="toastRestaurantLoadDataFail">Non siamo riusciti a scaricare i dati dalla rete :(</string>
     <string name="SearchResult_filterCancelButtonText">Annulla</string>
     <string name="SearchResult_filterConfirmButtonText">Filtra</string>
-    <string name="button_btnSearchRestaurant">Cerca Ristorante</string>
+    <string name="searchRestaurants_btnSearchText">Cerca Ristoranti</string>
     <string name="search_helloRestaurant">Dove ti trovi?</string>
 
     <string name="password6">La password deve essere di almeno 6 caratteri</string>

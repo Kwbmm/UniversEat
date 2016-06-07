@@ -50,10 +50,7 @@ public class SearchMenuResults extends NavigationDrawer {
     private ArrayList<Restaurant> restaurants;
     private String[] query;
     private RecyclerView rv;
-    private ProgressBar pb;
     private int lastSortMethod;
-    private boolean isRestaurant;
-    private FirebaseDatabase db;
     private DatabaseReference dbRoot;
     private StorageReference storageRoot;
     private Context context;
@@ -63,75 +60,25 @@ public class SearchMenuResults extends NavigationDrawer {
         super.onCreate(savedInstanceState);
         final String METHOD_NAME = this.getClass().getName()+" - onCreate";
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-        mlay.inflate(this, R.layout.activity_search_result, mlay);
+        mlay.inflate(this, R.layout.activity_search_menu_results, mlay);
         // Get the intent, verify the action and get the query
         this.context=this;
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             this.query = intent.getStringExtra(SearchManager.QUERY).trim().toLowerCase().split(" ");
-            this.db = FirebaseDatabase.getInstance();
-//            this.db.setPersistenceEnabled(true);
             //Either show the menus or the restaurants, based on the value of isRestaurant
-            if(this.isRestaurant){
-                this.dbRoot = this.db.getReference("restaurant");
-                this.restaurants = new ArrayList<>();
-                showRestaurants();
-            }
-            else{
-                this.dbRoot = this.db.getReference("course");
-                showMenus();
-            }
+            showMenus();
         }
-    }
-
-    private void showRestaurants(){
-        final String METHOD_NAME = this.getClass().getName()+" - showRestaurants";
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        this.dbRoot = db.getReference().child("restaurant");
-        Query restaurantQuery = this.dbRoot.orderByChild("tickets");
-        restaurantQuery.addChildEventListener(
-                new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Log.d(METHOD_NAME,"DS count: "+dataSnapshot.getChildrenCount());
-                        for (DataSnapshot ds : dataSnapshot.getChildren()){
-                            Log.d(METHOD_NAME,"Key: "+ds.getKey()+" Value: "+ds.getValue());
-                        }
-                        if(restaurants.size() == 0)
-                            Toast.makeText(getApplicationContext(),
-                                    getString(R.string.SearchResult_toastNoRestaurants),
-                                    Toast.LENGTH_LONG)
-                                    .show();
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
     }
 
     private void showMenus(){
         final String METHOD_NAME = this.getClass().getName()+" - showMenus";
-        this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingSearchViewData);
+        ProgressBar pb = (ProgressBar) findViewById(R.id.progressBar_loadingSearchViewData);
         this.rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
         if (rv != null){
-            MenuAdapter ma = MenuAdapter.getInstanceSortedByWeight(this.rv,this.pb,context);
+            FirebaseDatabase db = FirebaseDatabase.getInstance();
+            this.dbRoot = db.getReference("course");
+            MenuAdapter ma = MenuAdapter.getInstanceSortedByWeight(this.rv, pb,context);
             rv.setAdapter(ma);
             LinearLayoutManager llmVertical = new LinearLayoutManager(this);
             llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
@@ -145,177 +92,98 @@ public class SearchMenuResults extends NavigationDrawer {
     @Override
     public boolean onCreateOptionsMenu(final android.view.Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_search_data, menu);
-        if(isRestaurant){ //Setup the buttons of the toolbar for the restaurant
-            final MenuItem filterRestaurantButton = menu.findItem(R.id.filterRestaurant);
-            final MenuItem sortRestaurantButton = menu.findItem(R.id.sortRestaurant);
+        //Setup the buttons of the toolbar for the menu
+        final MenuItem filterMenuButton = menu.findItem(R.id.filterMenu);
+        final MenuItem sortMenuButton = menu.findItem(R.id.sortMenu);
+        //Setup sortMenuButton
+        sortMenuButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
+                String[] items = getResources().getStringArray(R.array.sortCurtainMenuItems);
+                AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchMenuResults.this);
+                sortCurtain.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case 0:
+                                if(menus == null){
+                                    menus = ((MenuAdapter)rv.getAdapter()).getMenus();
+                                }
+                                MenuAdapter maByNameAsc = MenuAdapter.getInstanceSortedByName(true,menus,rv,context);
+                                rv.swapAdapter(maByNameAsc,false);
+                                lastSortMethod = 0;
+                                break;
+                            case 1:
+                                if(menus == null){
+                                    menus = ((MenuAdapter)rv.getAdapter()).getMenus();
+                                }
+                                MenuAdapter maByNameDesc = MenuAdapter.getInstanceSortedByName(false,menus,rv,context);
+                                rv.swapAdapter(maByNameDesc,false);
+                                lastSortMethod = 1;
+                                break;
+                            case 2:
+                                if(menus == null){
+                                    menus = ((MenuAdapter)rv.getAdapter()).getMenus();
+                                }
+                                MenuAdapter maByPriceAsc = MenuAdapter.getInstanceSortedByPrice(true,menus,rv,context);
+                                rv.swapAdapter(maByPriceAsc,false);
+                                lastSortMethod = 2;
+                                break;
+                            case 3:
+                                if(menus == null){
+                                    menus = ((MenuAdapter)rv.getAdapter()).getMenus();
+                                }
+                                MenuAdapter maByPriceDesc = MenuAdapter.getInstanceSortedByPrice(false,menus,rv,context);
+                                rv.swapAdapter(maByPriceDesc,false);
+                                lastSortMethod = 3;
+                                break;
+                        }
+                    }
+                }).show();
+                return true;
+            }
+        }).setVisible(true);
 
-            sortRestaurantButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
-                    String[] items = getResources().getStringArray(R.array.sortCurtainRestaurantItems);
-                    AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchMenuResults.this);
-                    sortCurtain.setItems(items, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which){
-                                case 0:
-                                    ((RestaurantAdapter)rv.getAdapter()).sortByName(true);
-                                    break;
-                                case 1:
-                                    ((RestaurantAdapter)rv.getAdapter()).sortByName(false);
-                                    break;
-                                case 2:
-                                    ((RestaurantAdapter)rv.getAdapter()).sortByRating(true);
-                                    break;
-                                case 3:
-                                    ((RestaurantAdapter)rv.getAdapter()).sortByRating(false);
-                                    break;
-                                case 4:
-                                    //TODO Uncomment when GMaps API are implemented
-                                    //((RestaurantAdapter)rv.getAdapter()).sortByNearest();
-                                    Toast.makeText(getApplicationContext(),
-                                            getString(R.string.featureUnavail),
-                                            Toast.LENGTH_LONG)
-                                            .show();
-                                    break;
+        filterMenuButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
+                String[] items = getResources().getStringArray(R.array.filterCurtainMenuItems);
+                final boolean[] selectedItems = new boolean[items.length];
+                AlertDialog.Builder filterCurtain = new AlertDialog.Builder(SearchMenuResults.this);
+                filterCurtain
+                        .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                selectedItems[which] = isChecked;
                             }
-                        }
-                    }).show();
-                    return true;
-                }
-            }).setVisible(true);
-            filterRestaurantButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
-                    String[] items = getResources().getStringArray(R.array.filterCurtainRestaurantItems);
-                    AlertDialog.Builder filterCurtain = new AlertDialog.Builder(SearchMenuResults.this);
-                    filterCurtain.setItems(items, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which){
-                                case 0:
-                                    ((RestaurantAdapter)rv.getAdapter()).filterByTicket(true);
-                                    break;
-                                case 1:
-                                    ((RestaurantAdapter)rv.getAdapter()).filterByTicket(false);
-                                    break;
-                                case 2:
-                                    ((RestaurantAdapter)rv.getAdapter()).filterByBeverage(true);
-                                    break;
-                                case 3:
-                                    ((RestaurantAdapter)rv.getAdapter()).filterByBeverage(false);
-                                    break;
-                                case 4:
-                                    ((RestaurantAdapter)rv.getAdapter()).filterByServiceFee(true);
-                                    break;
-                                case 5:
-                                    ((RestaurantAdapter)rv.getAdapter()).filterByServiceFee(false);
-                                    break;
-                                case 6:
-                                    ((RestaurantAdapter)rv.getAdapter()).filterByOpenNow();
-                                    break;
+                        })
+                        .setPositiveButton(getResources().getString(R.string.SearchResult_filterConfirmButtonText), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(menus == null){ //Save the original set
+                                    menus = ((MenuAdapter)rv.getAdapter()).getMenus();
+                                }
+                                MenuAdapter ma = MenuAdapter.getInstanceFromLastSortMethod(lastSortMethod,menus,rv,context);
+                                for (int i = 0; i < selectedItems.length; i++) {
+                                    if(selectedItems[i]){
+                                        ma.filter(i);
+                                    }
+                                }
+                                rv.swapAdapter(ma,false);
                             }
-                        }
-                    }).show();
-                    return true;
-                }
-            }).setVisible(true);
-        }
-        else{ //Setup the buttons of the toolbar for the menu
-            final MenuItem filterMenuButton = menu.findItem(R.id.filterMenu);
-            final MenuItem sortMenuButton = menu.findItem(R.id.sortMenu);
-            //Setup sortMenuButton
-            sortMenuButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
-                    String[] items = getResources().getStringArray(R.array.sortCurtainMenuItems);
-                    AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchMenuResults.this);
-                    sortCurtain.setItems(items, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which){
-                                case 0:
-                                    if(menus == null){
-                                        menus = ((MenuAdapter)rv.getAdapter()).getMenus();
-                                    }
-                                    MenuAdapter maByNameAsc = MenuAdapter.getInstanceSortedByName(true,menus,rv,context);
-                                    rv.swapAdapter(maByNameAsc,false);
-                                    lastSortMethod = 0;
-                                    break;
-                                case 1:
-                                    if(menus == null){
-                                        menus = ((MenuAdapter)rv.getAdapter()).getMenus();
-                                    }
-                                    MenuAdapter maByNameDesc = MenuAdapter.getInstanceSortedByName(false,menus,rv,context);
-                                    rv.swapAdapter(maByNameDesc,false);
-                                    lastSortMethod = 1;
-                                    break;
-                                case 2:
-                                    if(menus == null){
-                                        menus = ((MenuAdapter)rv.getAdapter()).getMenus();
-                                    }
-                                    MenuAdapter maByPriceAsc = MenuAdapter.getInstanceSortedByPrice(true,menus,rv,context);
-                                    rv.swapAdapter(maByPriceAsc,false);
-                                    lastSortMethod = 2;
-                                    break;
-                                case 3:
-                                    if(menus == null){
-                                        menus = ((MenuAdapter)rv.getAdapter()).getMenus();
-                                    }
-                                    MenuAdapter maByPriceDesc = MenuAdapter.getInstanceSortedByPrice(false,menus,rv,context);
-                                    rv.swapAdapter(maByPriceDesc,false);
-                                    lastSortMethod = 3;
-                                    break;
+                        })
+                        .setNegativeButton(getResources().getString(R.string.SearchResult_filterCancelButtonText), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Arrays.fill(selectedItems,false);
                             }
-                        }
-                    }).show();
-                    return true;
-                }
-            }).setVisible(true);
-
-            filterMenuButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
-                    String[] items = getResources().getStringArray(R.array.filterCurtainMenuItems);
-                    final boolean[] selectedItems = new boolean[items.length];
-                    AlertDialog.Builder filterCurtain = new AlertDialog.Builder(SearchMenuResults.this);
-                    filterCurtain
-                            .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                    selectedItems[which] = isChecked;
-                                }
-                            })
-                            .setPositiveButton(getResources().getString(R.string.SearchResult_filterConfirmButtonText), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if(menus == null){ //Save the original set
-                                        menus = ((MenuAdapter)rv.getAdapter()).getMenus();
-                                    }
-                                    MenuAdapter ma = MenuAdapter.getInstanceFromLastSortMethod(lastSortMethod,menus,rv,context);
-                                    for (int i = 0; i < selectedItems.length; i++) {
-                                        if(selectedItems[i]){
-                                            ma.filter(i);
-                                        }
-                                    }
-                                    rv.swapAdapter(ma,false);
-                                }
-                            })
-                            .setNegativeButton(getResources().getString(R.string.SearchResult_filterCancelButtonText), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Arrays.fill(selectedItems,false);
-                                }
-                            })
-                            .show();
-                    return true;
-                }
-            }).setVisible(true);
-        }
+                        })
+                        .show();
+                return true;
+            }
+        }).setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -989,27 +857,6 @@ public class SearchMenuResults extends NavigationDrawer {
         }
 
         public SortedList<WeightedMenu> getMenus(){ return this.menus; }
-    }
-
-    public class onCardClick implements View.OnClickListener{
-        private int position;
-        private int rid;
-        private int mid;
-
-        public onCardClick(int position,int rid,int mid){
-            this.position=position;
-            this.rid=rid;
-            this.mid=mid;
-        }
-
-        @Override
-        public void onClick(View v) {
-            Intent restinfo=new Intent(getBaseContext(),User_info_view.class);
-            Log.v("rid",rid+"");
-            restinfo.putExtra("rid",this.rid);
-            restinfo.putExtra("mid",this.mid);
-            startActivity(restinfo);
-        }
     }
 
 }

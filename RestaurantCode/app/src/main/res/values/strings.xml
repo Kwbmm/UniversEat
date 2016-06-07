@@ -40,9 +40,12 @@
     <string name="home_imageButtonOpt_contentDesc">This button can change the search type.</string>
     <string name="checkbox_searchByRestaurant">Search by Restaurant</string>
     <string name="checkbox_searchByDish">Search by Dish</string>
-    <string name="button_btnSearchRestaurant">Search Restaurant</string>
     <string name="toast_getMenusUnexpectedError">It seems like you\'re going to starve… I wasn\'t able to fetch any menu…</string>
     <!-- END activity_home.xml -->
+
+    <!-- activity_search_restaurants.xml -->
+    <string name="searchRestaurants_btnSearchText">Search Restaurants</string>
+    <!-- END activity_search_restaurants.xml-->
 
     <!-- fragment_creatlog_1.xml -->
     <string name="frg_creatLog1_textViewImageText">Profile Image</string>

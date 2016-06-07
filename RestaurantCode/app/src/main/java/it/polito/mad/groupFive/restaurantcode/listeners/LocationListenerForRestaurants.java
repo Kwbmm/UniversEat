@@ -5,6 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.util.Log;
+import android.widget.Button;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.*;
@@ -18,20 +19,33 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import it.polito.mad.groupFive.restaurantcode.SearchRestaurants.SearchRestaurants;
+import it.polito.mad.groupFive.restaurantcode.R;
+import it.polito.mad.groupFive.restaurantcode.SearchRestaurants.RestaurantAdapter;
 
 public class LocationListenerForRestaurants implements LocationListener {
 
     private GoogleApiClient gac;
-    private SearchRestaurants.RestaurantAdapter ra;
+    private RestaurantAdapter ra;
     private Context context;
     private SupportPlaceAutocompleteFragment paf;
+    private Button searchBtn;
+    private double[] latitude,longitude;
 
-    public LocationListenerForRestaurants(GoogleApiClient gac, SearchRestaurants.RestaurantAdapter ra, Context context, SupportPlaceAutocompleteFragment paf) {
+    public LocationListenerForRestaurants(
+            GoogleApiClient gac,
+            RestaurantAdapter ra,
+            Context context,
+            SupportPlaceAutocompleteFragment paf,
+            Button searchBtn,
+            double[] latitude,
+            double[] longitude) {
         this.gac = gac;
         this.ra = ra;
         this.context = context;
         this.paf = paf;
+        this.searchBtn = searchBtn;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     @Override
@@ -44,6 +58,10 @@ public class LocationListenerForRestaurants implements LocationListener {
             Address a = addressList.get(0);
             String address = String.format("%s, %s, %s",a.getAddressLine(0), a.getLocality(), a.getCountryName());
             this.paf.setText(address);
+            this.latitude[0] = a.getLatitude();
+            this.longitude[0] = a.getLongitude();
+            this.searchBtn.setTextColor(context.getResources().getColor(R.color.btnTextEnabled));
+            this.searchBtn.setEnabled(true);
         } catch (IOException e) {
             Log.e(METHOD_NAME,e.getMessage());
         }

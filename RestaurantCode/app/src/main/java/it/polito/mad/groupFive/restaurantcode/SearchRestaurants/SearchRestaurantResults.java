@@ -1,20 +1,21 @@
 package it.polito.mad.groupFive.restaurantcode.SearchRestaurants;
 
-import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
 import android.support.v7.widget.RecyclerView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.storage.StorageReference;
 
 import it.polito.mad.groupFive.restaurantcode.NavigationDrawer;
 import it.polito.mad.groupFive.restaurantcode.R;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import it.polito.mad.groupFive.restaurantcode.listeners.GetRestaurantListener;
 
 public class SearchRestaurantResults extends NavigationDrawer {
 
@@ -26,19 +27,31 @@ public class SearchRestaurantResults extends NavigationDrawer {
     private DatabaseReference dbRoot;
     private StorageReference storageRoot;
     private Context context;
+    private double inputLatitude, inputLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final String METHOD_NAME = this.getClass().getName()+" - onCreate";
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-        mlay.inflate(this, R.layout.activity_search_result, mlay);
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())){
-            SearchRecentSuggestions srs = new SearchRecentSuggestions(this,RestaurantSearchSuggestionProvider.AUTHORITY,RestaurantSearchSuggestionProvider.MODE);
-            this.query = intent.getStringExtra(SearchManager.QUERY).trim().toLowerCase();
-            if(!this.query.equals("current location"))
-                srs.saveRecentQuery(this.query,null);
-        }
+        mlay.inflate(this, R.layout.activity_search_restaurant_results, mlay);
+        Bundle b = getIntent().getExtras();
+        this.inputLatitude = b.getDouble("lat");
+        this.inputLongitude = b.getDouble("lon");
+        this.rv = (RecyclerView)findViewById(R.id.recyclerView_DataView);
+        this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingSearchViewData);
+        if(this.rv != null)
+            this.showRestaurant();
+    }
+
+    private void showRestaurant() {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference dbRoot = db.getReference("restaurant");
+        Location here = new Location("dummy provider");
+        here.setLatitude(this.inputLatitude);
+        here.setLongitude(this.inputLongitude);
+        RestaurantAdapter ra = new RestaurantAdapter(this.rv,this.pb,this);
+        Query restaurantQuery = dbRoot.orderByChild("rating").limitToFirst(30); //TODO Check if normal ordering is asc or desc
+        restaurantQuery.addListenerForSingleValueEvent(new GetRestaurantListener(ra,here,this));
     }
 }

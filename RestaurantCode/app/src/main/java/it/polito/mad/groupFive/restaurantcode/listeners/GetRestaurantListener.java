@@ -16,21 +16,21 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.util.Map;
 
-import it.polito.mad.groupFive.restaurantcode.SearchRestaurants.SearchRestaurants;
+import it.polito.mad.groupFive.restaurantcode.SearchRestaurants.RestaurantAdapter;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 public class GetRestaurantListener implements ValueEventListener {
 
-    private SearchRestaurants.RestaurantAdapter ra;
+    private RestaurantAdapter ra;
     private Context context;
     private Location lastKnow;
 
-    public GetRestaurantListener(SearchRestaurants.RestaurantAdapter ra, Context context) {
+    public GetRestaurantListener(RestaurantAdapter ra, Context context) {
         this(ra,null,context);
     }
 
-    public GetRestaurantListener(SearchRestaurants.RestaurantAdapter ra, Location lastKnown, Context context) {
+    public GetRestaurantListener(RestaurantAdapter ra, Location lastKnown, Context context) {
         this.ra = ra;
         this.lastKnow = lastKnown;
         this.context = context;
@@ -55,7 +55,9 @@ public class GetRestaurantListener implements ValueEventListener {
                         .setWebsite((String)ds.child("website").getValue())
                         .setZip((String)ds.child("zip").getValue());
                 float rating = Float.parseFloat(ds.child("rating").getValue().toString());
+                r.setRating(rating);
                 float ratingNum = Float.parseFloat(ds.child("ratingNumber").getValue().toString());
+                r.setRatingNumber(ratingNum);
                 Map<String,Boolean> tickets = (Map<String,Boolean>) ds.child("tickets").getValue();
                 r.setTickets(tickets);
                 Map<String,Map<String,String>> timetableLunch = (Map<String,Map<String,String>>) ds.child("timetableLunch").getValue();
@@ -79,7 +81,6 @@ public class GetRestaurantListener implements ValueEventListener {
                             here.setLatitude(r.getXCoord());
                             here.setLongitude(r.getYCoord());
                             float distance = lastKnow.distanceTo(here);
-                            SearchRestaurants.isQueryPerformed = true;
                             ra.addChildWithDistance(r,distance);
                         }
                     }
