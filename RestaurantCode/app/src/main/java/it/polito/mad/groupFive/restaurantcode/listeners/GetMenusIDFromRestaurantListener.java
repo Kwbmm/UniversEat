@@ -41,8 +41,8 @@ public class GetMenusIDFromRestaurantListener implements ValueEventListener {
         final String METHOD_NAME = this.getClass().getName()+" - onDCh";
         for(DataSnapshot ds : dataSnapshot.getChildren()) {
             String rid = (String) ds.child("rid").getValue();
-            float x = ((Double)ds.child("xcoord").getValue()).floatValue();
-            float y = ((Double)ds.child("xcoord").getValue()).floatValue();
+            double x = ((Double)ds.child("xcoord").getValue());
+            double y = ((Double)ds.child("xcoord").getValue());
             Location here = new Location("dummy location");
             here.setLatitude(x);
             here.setLongitude(y);

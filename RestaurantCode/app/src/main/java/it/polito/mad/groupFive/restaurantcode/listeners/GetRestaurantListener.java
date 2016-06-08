@@ -53,7 +53,9 @@ public class GetRestaurantListener implements ValueEventListener {
                         .setState((String)ds.child("state").getValue())
                         .setTelephone((String)ds.child("telephone").getValue())
                         .setWebsite((String)ds.child("website").getValue())
-                        .setZip((String)ds.child("zip").getValue());
+                        .setZip((String)ds.child("zip").getValue())
+                        .setXCoord((Double)ds.child("xcoord").getValue())
+                        .setYCoord((Double)ds.child("ycoord").getValue());
                 float rating = Float.parseFloat(ds.child("rating").getValue().toString());
                 r.setRating(rating);
                 float ratingNum = Float.parseFloat(ds.child("ratingNumber").getValue().toString());
@@ -93,6 +95,8 @@ public class GetRestaurantListener implements ValueEventListener {
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
+        final String METHOD_NAME = this.getClass().getName() + " - onCanc";
+        Log.e(METHOD_NAME,databaseError.getMessage());
 
     }
 }
