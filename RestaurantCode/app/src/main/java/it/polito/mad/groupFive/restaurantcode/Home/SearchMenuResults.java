@@ -85,8 +85,8 @@ public class SearchMenuResults extends NavigationDrawer {
     public boolean onCreateOptionsMenu(final android.view.Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_search_data, menu);
         //Setup the buttons of the toolbar for the menu
-        final MenuItem filterMenuButton = menu.findItem(R.id.filterButton);
-        filterMenuButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        final MenuItem filterButton = menu.findItem(R.id.filterButton);
+        filterButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
@@ -136,7 +136,7 @@ public class SearchMenuResults extends NavigationDrawer {
                         .show();
                 return true;
             }
-        }).setVisible(true);
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
