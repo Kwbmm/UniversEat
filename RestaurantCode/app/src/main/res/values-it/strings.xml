@@ -376,4 +376,23 @@
     <string name="action_share">Condividi</string>
     <string name="toast_getMenusUnexpectedError">Sembra che dovrai morire di fame… Non sono riuscito a trovare alcun menu… </string>
     <string name="review_based_on">Basato su %d recensioni</string>
+    <string-array name="filterCurtainMenuItems">
+        <item>Bevanda inclusa</item>
+        <item>Senza coperto</item>
+        <item>Vegano</item>
+        <item>Vegetariano</item>
+        <item>Prezzo da 1 a 10</item>
+        <item>Prezzo da 11 a 25</item>
+        <item>Prezzo oltre 25</item>
+    </string-array>
+
+    <string-array name="filterCurtainRestaurantItems">
+        <item>Ticket</item>
+        <item>Bevanda inclusa</item>
+        <item>Senza coperto</item>
+        <item>Vegano</item>
+        <item>Vegetariano</item>
+        <item>Valutazione da 3 a 5</item>
+        <item>Aperto adesso</item>
+    </string-array>
 </resources>
