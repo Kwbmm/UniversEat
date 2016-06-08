@@ -14,6 +14,16 @@
         android:layout_margin="5dp"
         android:id="@+id/restaurant_view_layout">
 
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@mipmap/ic_launcher"
+            android:id="@+id/restaurant_image"
+            android:layout_alignParentBottom="true" />
+
+
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -22,74 +32,44 @@
             android:id="@+id/restaurant_edit"
             />
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_below="@id/restaurant_name"
-            android:src="@mipmap/ic_launcher"
-            android:id="@+id/restaurant_image"/>
-
-        <TextView
-            android:id="@+id/restaurant_name"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/frg_create_restaurant_1_textView_RestaurantName"
-            android:textSize="25dp"
-            android:layout_toLeftOf="@id/restaurant_edit"
-            android:layout_toRightOf="@id/restaurant_image"
-            android:textStyle="bold" />
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/restaurant_image"
+            android:layout_toEndOf="@+id/restaurant_image"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical">
 
+            <TextView
+                android:id="@+id/restaurant_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/frg_create_restaurant_1_textView_RestaurantName"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="20dp" />
 
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/restaurant_rating"
+                style="@style/Base.Widget.AppCompat.RatingBar.Indicator"
+                android:layout_below="@id/restaurant_name"
+                android:numStars="5"
+                android:stepSize="0.5"
+                android:rating="3.5" />
 
-        <RatingBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/restaurant_rating"
-            android:layout_toRightOf="@id/restaurant_image"
-            style="@style/Base.Widget.AppCompat.RatingBar.Indicator"
-            android:layout_below="@id/restaurant_name"
-            android:numStars="5"
-            android:stepSize="0.5"
-            android:rating="3.5" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/restaurant_address"
-            android:layout_below="@id/restaurant_rating"
-            android:textSize="18dp"
-            android:layout_toRightOf="@id/restaurant_image"
-            android:text="@string/frg_create_restaurant_2_textView_Address"/>
-        <ImageView
-            android:id="@+id/restaurant_icon1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/restaurant_icon1"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/restaurant_icon2"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/restaurant_icon2"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/restaurant_icon3"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/restaurant_icon3"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/restaurant_icon4"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/restaurant_address"
+                android:layout_below="@id/restaurant_rating"
+                android:textSize="18dp"
+                android:text="@string/frg_create_restaurant_2_textView_Address"/>
 
+        </RelativeLayout>
 
 
     </RelativeLayout>

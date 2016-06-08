@@ -108,6 +108,10 @@ public class Menu_details_view extends NavigationDrawer {
                 c.setMid(dataSnapshot.child("mid").getValue().toString());
                 c.setCid(dataSnapshot.child("cid").getValue().toString());
                 c.setName(dataSnapshot.child("name").getValue().toString());
+                c.setGlutenFree((boolean)dataSnapshot.child("glutenFree").getValue());
+                c.setSpicy((boolean)dataSnapshot.child("spicy").getValue());
+                c.setVegan((boolean)dataSnapshot.child("vegan").getValue());
+                c.setVegetarian((boolean)dataSnapshot.child("vegetarian").getValue());
                 courses.add(c);
                 courseAdapter.notifyDataSetChanged();
 

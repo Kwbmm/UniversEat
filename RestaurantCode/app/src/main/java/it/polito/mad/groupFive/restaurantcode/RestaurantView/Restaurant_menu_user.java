@@ -275,7 +275,7 @@ public class Restaurant_menu_user extends Fragment {
         public void onBindViewHolder(MenuViewHolder holder, int position) {
             Menu menu =menus.get(position);
             if(menu.getMid().toString().equals(mid)){
-                holder.card.setCardBackgroundColor(Color.YELLOW);
+                holder.card.setCardBackgroundColor(getResources().getColor(R.color.colorAccent));
             }
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());

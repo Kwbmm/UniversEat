@@ -57,6 +57,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(R.string.actionBar_restaurantSearch);
         mlay = (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_search_restaurants, mlay);
 

@@ -59,6 +59,7 @@ public class CreateRestaurant_3 extends Fragment {
     private View parentView=null;
     private Restaurant restaurant = null;
     private String[] weekDays = new String[7];
+    private String[] weekDaysENG = new String[7];
     private ArrayMap<String,Integer> weekdayToRL_IDs=null;
 
     public CreateRestaurant_3() {
@@ -105,23 +106,17 @@ public class CreateRestaurant_3 extends Fragment {
         this.rid = getR.getRest().getRid();
         this.uid = getR.getRest().getUid();
         this.restaurant=getR.getRest();
-        weekDays[0] = getResources().getString(R.string.monday);
-        weekDays[1] = getResources().getString(R.string.tuesday);
-        weekDays[2] = getResources().getString(R.string.wednesday);
-        weekDays[3] = getResources().getString(R.string.thursday);
-        weekDays[4] = getResources().getString(R.string.friday);
-        weekDays[5] = getResources().getString(R.string.saturday);
-        weekDays[6] = getResources().getString(R.string.sunday);
+        weekDays=getResources().getStringArray(R.array.week);
+        weekDaysENG=getResources().getStringArray(R.array.weekENG);
         this.weekdayToRL_IDs = new ArrayMap<>();
 
         LinearLayout ll = (LinearLayout) this.parentView.findViewById(R.id.FL_timetableLunch);
         int count=0;
-        for(String weekday : this.weekDays){
+        for(String weekday : this.weekDaysENG){
             LayoutInflater li = LayoutInflater.from(this.parentView.getContext());
             final View timetableItem = li.inflate(R.layout.timetable_item,null);
             CheckBox cb=(CheckBox)timetableItem.findViewById(R.id.checkBox);
-            cb.setText(weekday);
-
+            cb.setText(weekDays[count]);
             cb.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("SetTextI18n")
                 @Override
@@ -213,14 +208,14 @@ public class CreateRestaurant_3 extends Fragment {
             });
             if (getR.editmode()){
                 if(!restaurant.getTimetableLunch().isEmpty()){
-                    if (restaurant.getTimetableLunch().containsKey(weekDays[count])){
+                    if (restaurant.getTimetableLunch().containsKey(weekDaysENG[count])){
                         cb.setChecked(true);
                         timetableItem.findViewById(R.id.from).setVisibility(View.VISIBLE);
                         timetableItem.findViewById(R.id.textClockFrom).setVisibility(View.VISIBLE);
                         timetableItem.findViewById(R.id.to).setVisibility(View.VISIBLE);
                         timetableItem.findViewById(R.id.textClockTo).setVisibility(View.VISIBLE);
-                        btnFrom.setText(restaurant.getTimetableLunch().get(weekDays[count]).get("start"));
-                        btnTo.setText(restaurant.getTimetableLunch().get(weekDays[count]).get("end"));
+                        btnFrom.setText(restaurant.getTimetableLunch().get(weekDaysENG[count]).get("start"));
+                        btnTo.setText(restaurant.getTimetableLunch().get(weekDaysENG[count]).get("end"));
                     }
                 }
                 count++;
@@ -255,7 +250,7 @@ public class CreateRestaurant_3 extends Fragment {
 
         try {
             this.restaurant = new Restaurant(this.uid,this.rid);
-            for (String weekDay : this.weekDays) {
+            for (String weekDay : this.weekDaysENG) {
                 CheckBox cb = (CheckBox) this.parentView.findViewById(this.weekdayToRL_IDs.get(weekDay)).findViewById(R.id.checkBox);
                 if (cb.isChecked()) {
                     Button bFrom = (Button) this.parentView.findViewById(this.weekdayToRL_IDs.get(weekDay)).findViewById(R.id.textClockFrom);

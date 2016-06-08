@@ -13,7 +13,8 @@
         android:layout_height="140dp"
         android:background="#ffffff"
         android:layout_margin="5dp"
-        android:id="@+id/menu_view_layout">
+        android:id="@+id/menu_view_layout"
+        android:paddingLeft="5dp">
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -38,7 +39,6 @@
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
             android:src="@drawable/ic_hot_black"
             android:tint="#a60101" />
         <ImageView
@@ -75,7 +75,6 @@
             android:layout_toRightOf="@+id/menu_image"
             android:layout_toEndOf="@+id/menu_image"
             android:layout_above="@+id/menu_icon3"
-            android:gravity="center_vertical"
             android:layout_marginLeft="10dp">
 
             <TextView
