@@ -85,7 +85,6 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
         this.paf.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                btnSearch.setTextColor(getResources().getColor(R.color.btnTextEnabled));
                 btnSearch.setEnabled(true);
                 latitude[0] = place.getLatLng().latitude;
                 longitude[0] = place.getLatLng().longitude;

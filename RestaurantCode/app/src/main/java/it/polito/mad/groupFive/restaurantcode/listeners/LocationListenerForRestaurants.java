@@ -60,7 +60,6 @@ public class LocationListenerForRestaurants implements LocationListener {
             this.paf.setText(address);
             this.latitude[0] = a.getLatitude();
             this.longitude[0] = a.getLongitude();
-            this.searchBtn.setTextColor(context.getResources().getColor(R.color.btnTextEnabled));
             this.searchBtn.setEnabled(true);
         } catch (IOException e) {
             Log.e(METHOD_NAME,e.getMessage());

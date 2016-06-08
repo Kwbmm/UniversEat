@@ -3,6 +3,4 @@
     <color name="colorPrimary">#d92528</color>
     <color name="colorPrimaryDark">#be090f</color>
     <color name="colorAccent">#ffd740</color>
-    <color name="btnTextDisabled">#737373</color>
-    <color name="btnTextEnabled">#000000</color>
 </resources>
