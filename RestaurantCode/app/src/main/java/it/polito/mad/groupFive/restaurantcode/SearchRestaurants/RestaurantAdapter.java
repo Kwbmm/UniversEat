@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
@@ -143,11 +144,20 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     @Override
     public void onBindViewHolder(final RestaurantViewHolder holder, int position) {
         final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
-        final Restaurant restaurant = restaurants.get(position);
+        final DistanceRestaurant restaurant = restaurants.get(position);
         holder.restaurant_address.setText(restaurant.getAddress());
         holder.restaurant_name.setText(restaurant.getName());
         holder.restaurant_rating.setRating(restaurant.getRating());
-        holder.distance.setText(String.valueOf((restaurants.get(position).getDistance()/1000))+" km");
+        float distance = restaurant.getDistance();
+        if(distance < 1){ //Less than 1 meter
+            holder.distance.setText("< 1m");
+        }
+        else if(distance >= 1 && distance < 1000){// Between 1 and 1000 meters
+            holder.distance.setText(String.valueOf((int)distance)+" m");
+        }
+        else{
+            holder.distance.setText(String.valueOf((int)(restaurant.getDistance()/1000))+" km");
+        }
 
         File img = new File(restaurant.getImageLocalPath());
         try {
