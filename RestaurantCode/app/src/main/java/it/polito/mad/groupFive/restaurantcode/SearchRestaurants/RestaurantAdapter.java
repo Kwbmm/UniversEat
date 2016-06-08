@@ -1,6 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode.SearchRestaurants;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import it.polito.mad.groupFive.restaurantcode.R;
+import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -248,17 +250,14 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         } catch (IOException e) {
             Log.e(METHOD_NAME,e.getMessage());
         }
-            /*
-            holder.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent menu_view =new Intent(context,User_info_view.class);
-                    menu_view.putExtra("mid",resta.getRid());
-                    menu_view.putExtra("rid",menu.getRid());
-                    context.startActivity(menu_view);
-                }
-            });
-            */
+        holder.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent restaurant_view =new Intent(context,User_info_view.class);
+                restaurant_view.putExtra("rid",restaurant.getRid());
+                context.startActivity(restaurant_view);
+            }
+        });
     }
 
     @Override

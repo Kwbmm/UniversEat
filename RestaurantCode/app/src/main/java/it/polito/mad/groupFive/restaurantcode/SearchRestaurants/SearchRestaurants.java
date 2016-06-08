@@ -228,4 +228,4 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.e("onConFail","GAPI con failed\n"+connectionResult.getErrorMessage());
     }
-    }
+}

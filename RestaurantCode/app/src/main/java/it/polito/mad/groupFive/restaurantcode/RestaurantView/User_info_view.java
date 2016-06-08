@@ -124,7 +124,7 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
 
 
-                    if(mid.equals("-1")){
+                    if(mid == null){
                         rest_i.setColorFilter(Color.parseColor("#ffffff"));
                         rest_r.setColorFilter(Color.parseColor("#000000"));
                         rest_m.setColorFilter(Color.parseColor("#000000"));
