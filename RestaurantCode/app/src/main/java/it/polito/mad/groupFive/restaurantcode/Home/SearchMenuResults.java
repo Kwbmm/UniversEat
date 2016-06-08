@@ -17,11 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -46,13 +42,11 @@ import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
 import it.polito.mad.groupFive.restaurantcode.listeners.GetMenusIDFromCourseListener;
 
 public class SearchMenuResults extends NavigationDrawer {
-    private SortedList<MenuAdapter.WeightedMenu> menus;
-    private ArrayList<Restaurant> restaurants;
+    private ArrayList<MenuAdapter.WeightedMenu> menus;
     private String[] query;
     private RecyclerView rv;
-    private int lastSortMethod;
+    private ProgressBar pb;
     private DatabaseReference dbRoot;
-    private StorageReference storageRoot;
     private Context context;
 
     @Override
@@ -61,31 +55,29 @@ public class SearchMenuResults extends NavigationDrawer {
         final String METHOD_NAME = this.getClass().getName()+" - onCreate";
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_search_menu_results, mlay);
-        // Get the intent, verify the action and get the query
+
         this.context=this;
+        this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingSearchViewData);
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             this.query = intent.getStringExtra(SearchManager.QUERY).trim().toLowerCase().split(" ");
-            //Either show the menus or the restaurants, based on the value of isRestaurant
             showMenus();
         }
     }
 
     private void showMenus(){
         final String METHOD_NAME = this.getClass().getName()+" - showMenus";
-        ProgressBar pb = (ProgressBar) findViewById(R.id.progressBar_loadingSearchViewData);
         this.rv = (RecyclerView) findViewById(R.id.recyclerView_DataView);
         if (rv != null){
             FirebaseDatabase db = FirebaseDatabase.getInstance();
             this.dbRoot = db.getReference("course");
-            MenuAdapter ma = MenuAdapter.getInstanceSortedByWeight(this.rv, pb,context);
+            MenuAdapter ma = new MenuAdapter(this.rv, this.pb,context);
             rv.setAdapter(ma);
             LinearLayoutManager llmVertical = new LinearLayoutManager(this);
             llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
             rv.setLayoutManager(llmVertical);
             Query menuQuery = this.dbRoot.orderByChild(this.query[0]).equalTo(true);
             menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromCourseListener(ma, this.query,getApplicationContext()));
-            lastSortMethod = 4;
         }
     }
 
@@ -93,58 +85,7 @@ public class SearchMenuResults extends NavigationDrawer {
     public boolean onCreateOptionsMenu(final android.view.Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_search_data, menu);
         //Setup the buttons of the toolbar for the menu
-        final MenuItem filterMenuButton = menu.findItem(R.id.filterMenu);
-        final MenuItem sortMenuButton = menu.findItem(R.id.sortMenu);
-        //Setup sortMenuButton
-        sortMenuButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
-                String[] items = getResources().getStringArray(R.array.sortCurtainMenuItems);
-                AlertDialog.Builder sortCurtain = new AlertDialog.Builder(SearchMenuResults.this);
-                sortCurtain.setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case 0:
-                                if(menus == null){
-                                    menus = ((MenuAdapter)rv.getAdapter()).getMenus();
-                                }
-                                MenuAdapter maByNameAsc = MenuAdapter.getInstanceSortedByName(true,menus,rv,context);
-                                rv.swapAdapter(maByNameAsc,false);
-                                lastSortMethod = 0;
-                                break;
-                            case 1:
-                                if(menus == null){
-                                    menus = ((MenuAdapter)rv.getAdapter()).getMenus();
-                                }
-                                MenuAdapter maByNameDesc = MenuAdapter.getInstanceSortedByName(false,menus,rv,context);
-                                rv.swapAdapter(maByNameDesc,false);
-                                lastSortMethod = 1;
-                                break;
-                            case 2:
-                                if(menus == null){
-                                    menus = ((MenuAdapter)rv.getAdapter()).getMenus();
-                                }
-                                MenuAdapter maByPriceAsc = MenuAdapter.getInstanceSortedByPrice(true,menus,rv,context);
-                                rv.swapAdapter(maByPriceAsc,false);
-                                lastSortMethod = 2;
-                                break;
-                            case 3:
-                                if(menus == null){
-                                    menus = ((MenuAdapter)rv.getAdapter()).getMenus();
-                                }
-                                MenuAdapter maByPriceDesc = MenuAdapter.getInstanceSortedByPrice(false,menus,rv,context);
-                                rv.swapAdapter(maByPriceDesc,false);
-                                lastSortMethod = 3;
-                                break;
-                        }
-                    }
-                }).show();
-                return true;
-            }
-        }).setVisible(true);
-
+        final MenuItem filterMenuButton = menu.findItem(R.id.filterButton);
         filterMenuButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -162,16 +103,28 @@ public class SearchMenuResults extends NavigationDrawer {
                         .setPositiveButton(getResources().getString(R.string.SearchResult_filterConfirmButtonText), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                boolean isFiltered = false;
                                 if(menus == null){ //Save the original set
-                                    menus = ((MenuAdapter)rv.getAdapter()).getMenus();
+                                    menus = new ArrayList<>();
+                                    for (int i = 0; i < ((MenuAdapter)rv.getAdapter()).getMenus().size(); i++) {
+                                        menus.add(((MenuAdapter)rv.getAdapter()).getMenus().get(i));
+                                    }
                                 }
-                                MenuAdapter ma = MenuAdapter.getInstanceFromLastSortMethod(lastSortMethod,menus,rv,context);
+                                MenuAdapter ma = new MenuAdapter(rv,pb,context);
+                                for (int i = 0; i < menus.size(); i++) {
+                                    MenuAdapter.WeightedMenu wm = menus.get(i);
+                                    ma.addChild(wm,wm.getWeight());
+                                }
                                 for (int i = 0; i < selectedItems.length; i++) {
                                     if(selectedItems[i]){
                                         ma.filter(i);
+                                        isFiltered = true;
                                     }
                                 }
-                                rv.swapAdapter(ma,false);
+                                if(isFiltered){
+                                    ma.updateEntries();
+                                }
+                                rv.setAdapter(ma);
                             }
                         })
                         .setNegativeButton(getResources().getString(R.string.SearchResult_filterCancelButtonText), new DialogInterface.OnClickListener() {
@@ -185,6 +138,243 @@ public class SearchMenuResults extends NavigationDrawer {
             }
         }).setVisible(true);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public static class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
+        private class WeightedMenu extends Menu{
+
+            private int weight;
+            private boolean toKeep;
+            public WeightedMenu(Menu m,int weight) throws MenuException {
+                super(m.getRid(), m.getMid());
+                super.setBeverage(m.isBeverage())
+                        .setDescription(m.getDescription())
+                        .setName(m.getName())
+                        .setPrice(m.getPrice())
+                        .setImageLocal(m.getImageLocalPath())
+                        .setServiceFee(m.isServiceFee())
+                        .setSpicy(m.isSpicy())
+                        .setGlutenfree(m.isGlutenfree())
+                        .setVegan(m.isVegan())
+                        .setVegetarian(m.isVegetarian())
+                        .setType(m.getType());
+                this.weight = weight;
+                this.toKeep = false;
+            }
+
+            public int getWeight(){ return this.weight; }
+        }
+
+        private SortedList<WeightedMenu> menus;
+        private RecyclerView rv;
+        private ProgressBar pb;
+        private Context context;
+
+        public MenuAdapter(RecyclerView rv,ProgressBar pb,Context context){
+            this.rv = rv;
+            this.pb = pb;
+            this.context=context;
+            this.menus = new SortedList<WeightedMenu>(WeightedMenu.class,
+                    new SortedList.Callback<WeightedMenu>() {
+                        @Override
+                        public int compare(WeightedMenu o1, WeightedMenu o2) {
+                            return o1.getWeight() <= o2.getWeight() ? -1 : 1;
+                        }
+
+                        @Override
+                        public void onInserted(int position, int count) {
+                            notifyItemRangeInserted(position,count);
+                        }
+
+                        @Override
+                        public void onRemoved(int position, int count) {
+                            notifyItemRangeRemoved(position,count);
+                        }
+
+                        @Override
+                        public void onMoved(int fromPosition, int toPosition) {
+                            notifyItemMoved(fromPosition,toPosition);
+                        }
+
+                        @Override
+                        public void onChanged(int position, int count) {
+                            notifyItemRangeChanged(position,count);
+                        }
+
+                        @Override
+                        public boolean areContentsTheSame(WeightedMenu oldItem, WeightedMenu newItem) {
+                            return oldItem.getMid().equals(newItem.getMid());
+                        }
+
+                        @Override
+                        public boolean areItemsTheSame(WeightedMenu item1, WeightedMenu item2) {
+                            return item1.getMid().equals(item2.getMid());
+                        }
+                    });
+        }
+
+        /**
+         * Add a new child to the adapter. Elements are added according to their weights: elements
+         * with lower weight are displayed before those with higher weight.
+         *
+         * @param m Object to insert
+         * @param weight Weight of the object
+         */
+        public void addChild(Menu m,int weight){
+            final String METHOD_NAME = this.getClass().getName()+" - filterByTicket";
+            try {
+                WeightedMenu wm = new WeightedMenu(m,weight);
+                this.menus.add(wm);
+                if(rv.getVisibility() == View.GONE){
+                    pb.setVisibility(View.GONE);
+                    rv.setVisibility(View.VISIBLE);
+                }
+            } catch (MenuException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+            }
+        }
+
+        public void filter(int choice){
+            switch (choice){
+                case 0: //By beverage
+                    this.filterByBeverage();
+                    break;
+                case 1: //By service fee
+                    this.filterByServiceFee();
+                    break;
+                case 2: //Vegan
+                    this.filterByVegan();
+                    break;
+                case 3: //Vegetarian
+                    this.filterByVegetarian();
+                    break;
+                case 4: //Price 1 - 10
+                    this.filterByPrice1_10();
+                    break;
+                case 5: //Price 11 - 25
+                    this.filterByPrice11_25();
+                    break;
+                case 6: //Price > 25
+                    this.filterByPrice25();
+                    break;
+            }
+        }
+
+        private void filterByBeverage(){
+            for (int i = 0; i < this.menus.size(); i++) {
+                WeightedMenu wm = this.menus.get(i);
+                if(wm.isBeverage())
+                    wm.toKeep = true;
+            }
+        }
+
+        private void filterByServiceFee() {
+            for (int i = 0; i < this.menus.size(); i++) {
+                WeightedMenu wm = this.menus.get(i);
+                if(!wm.isServiceFee())
+                    wm.toKeep = true;
+            }
+        }
+
+
+        private void filterByVegan() {
+            for (int i = 0; i < this.menus.size(); i++) {
+                WeightedMenu wm = this.menus.get(i);
+                if(wm.isVegan())
+                    wm.toKeep = true;
+            }
+        }
+
+        private void filterByVegetarian() {
+            for (int i = 0; i < this.menus.size(); i++) {
+                WeightedMenu wm = this.menus.get(i);
+                if(wm.isVegetarian())
+                    wm.toKeep = true;
+            }
+        }
+
+        private void filterByPrice1_10() {
+            for (int i = 0; i < this.menus.size(); i++) {
+                WeightedMenu wm = this.menus.get(i);
+                if(wm.getPrice() < 11)
+                    wm.toKeep = true;
+            }
+        }
+
+        private void filterByPrice11_25() {
+            for (int i = 0; i < this.menus.size(); i++) {
+                WeightedMenu wm = this.menus.get(i);
+                if (wm.getPrice() >= 11 && wm.getPrice() < 26)
+                    wm.toKeep = true;
+            }
+        }
+
+        private void filterByPrice25() {
+            for (int i = 0; i < this.menus.size(); i++) {
+                WeightedMenu wm = this.menus.get(i);
+                if (wm.getPrice() >= 26)
+                    wm.toKeep = true;
+            }
+        }
+
+        /**
+         * Remove the items marked as such.
+         */
+        public void updateEntries(){
+            this.menus.beginBatchedUpdates();
+            for (int i = 0; i < this.menus.size(); i++) {
+                WeightedMenu wm = this.menus.get(i);
+                if(!wm.toKeep){
+                    this.menus.removeItemAt(i);
+                    i--;
+                }
+                else{
+                    wm.toKeep = false;
+                }
+            }
+            this.menus.endBatchedUpdates();
+        }
+
+        @Override
+        public MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View menu_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_view,null);
+            return new MenuViewHolder(menu_view);
+        }
+
+        @Override
+        public void onBindViewHolder(final MenuViewHolder holder, int position) {
+            final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
+            final Menu menu = menus.get(position);
+            holder.menu_description.setText(menu.getDescription());
+            holder.menu_name.setText(menu.getName());
+            holder.menu_price.setText(menu.getPrice()+"€");
+            if(!menu.isSpicy()) holder.spicy_icon.setVisibility(View.GONE);
+            if(!menu.isVegan()) holder.vegan_icon.setVisibility(View.GONE);
+            if(!menu.isVegetarian()) holder.vegetarian_icon.setVisibility(View.GONE);
+            if(!menu.isGlutenfree()) holder.glutenfree_icon.setVisibility(View.GONE);
+            File img = new File(menu.getImageLocalPath());
+            try {
+                holder.menu_image.setImageBitmap(new Picture(Uri.fromFile(img),context.getContentResolver(),300,300).getBitmap());
+            } catch (IOException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+            }
+            holder.card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent menu_view =new Intent(context,User_info_view.class);
+                    menu_view.putExtra("mid",menu.getMid());
+                    menu_view.putExtra("rid",menu.getRid());
+                    context.startActivity(menu_view);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return this.menus.size();
+        }
+
+        public SortedList<WeightedMenu> getMenus(){ return this.menus; }
     }
 
     public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder>{
@@ -392,471 +582,6 @@ public class SearchMenuResults extends NavigationDrawer {
             return this.restaurants.size();
         }
 
-    }
-
-    public static class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
-        private class WeightedMenu extends Menu{
-
-            private int weight;
-            public WeightedMenu(Menu m,int weight) throws MenuException {
-                super(m.getRid(), m.getMid());
-                super.setBeverage(m.isBeverage())
-                        .setDescription(m.getDescription())
-                        .setName(m.getName())
-                        .setPrice(m.getPrice())
-                        .setImageLocal(m.getImageLocalPath())
-                        .setServiceFee(m.isServiceFee())
-                        .setType(m.getType());
-                this.weight = weight;
-            }
-
-            public int getWeight(){ return this.weight; }
-        }
-
-        private SortedList<WeightedMenu> menus;
-        private RecyclerView rv;
-        private ProgressBar pb;
-        private Context context;
-
-        public static MenuAdapter getInstanceSortedByWeight(RecyclerView rv,ProgressBar pb,Context context){
-            return new MenuAdapter(0,false,null,rv,pb,context);
-        }
-
-        public static MenuAdapter getInstanceSortedByWeight(SortedList<WeightedMenu> menus,RecyclerView rv,Context context){
-            return new MenuAdapter(4,false,menus,rv,null,context);
-        }
-
-        public static MenuAdapter getInstanceSortedByName(boolean asc,SortedList<WeightedMenu> menus,RecyclerView rv,Context context){
-            return new MenuAdapter(1,asc,menus,rv,null,context);
-        }
-
-        public static MenuAdapter getInstanceSortedByPrice(boolean asc,SortedList<WeightedMenu> menus,RecyclerView rv,Context context){
-            return new MenuAdapter(2,asc,menus,rv,null,context);
-        }
-
-        public static MenuAdapter getInstanceSortedByType(SortedList<WeightedMenu> menus, RecyclerView rv,Context context){
-            return new MenuAdapter(3,false,menus,rv,null,context);
-        }
-
-        private MenuAdapter(int sortType, boolean asc, SortedList<WeightedMenu> menus,RecyclerView rv,ProgressBar pb,Context context){
-            this.rv = rv;
-            this.pb = pb;
-            this.context=context;
-            switch (sortType){
-                case 0:{//Sort by weight
-                    this.menus = new SortedList<WeightedMenu>(WeightedMenu.class,
-                            new SortedList.Callback<WeightedMenu>() {
-                                @Override
-                                public int compare(WeightedMenu o1, WeightedMenu o2) {
-                                    return o1.getWeight() <= o2.getWeight() ? -1 : 1;
-                                }
-
-                                @Override
-                                public void onInserted(int position, int count) {
-                                    notifyItemRangeInserted(position,count);
-                                }
-
-                                @Override
-                                public void onRemoved(int position, int count) {
-                                    notifyItemRangeRemoved(position,count);
-                                }
-
-                                @Override
-                                public void onMoved(int fromPosition, int toPosition) {
-                                    notifyItemMoved(fromPosition,toPosition);
-                                }
-
-                                @Override
-                                public void onChanged(int position, int count) {
-                                    notifyItemRangeChanged(position,count);
-                                }
-
-                                @Override
-                                public boolean areContentsTheSame(WeightedMenu oldItem, WeightedMenu newItem) {
-                                    return oldItem.getMid().equals(newItem.getMid());
-                                }
-
-                                @Override
-                                public boolean areItemsTheSame(WeightedMenu item1, WeightedMenu item2) {
-                                    return item1.getMid().equals(item2.getMid());
-                                }
-                            });
-                    break;
-                }
-                case 1:{ //Sort by name
-                    if(asc){
-                        this.menus = new SortedList<WeightedMenu>(WeightedMenu.class,
-                                new SortedList.Callback<WeightedMenu>() {
-                                    @Override
-                                    public int compare(WeightedMenu o1, WeightedMenu o2) {
-                                        return o1.getName().compareToIgnoreCase(o2.getName());
-                                    }
-
-                                    @Override
-                                    public void onInserted(int position, int count) {
-                                        notifyItemRangeInserted(position,count);
-                                    }
-
-                                    @Override
-                                    public void onRemoved(int position, int count) {
-                                        notifyItemRangeRemoved(position,count);
-                                    }
-
-                                    @Override
-                                    public void onMoved(int fromPosition, int toPosition) {
-                                        notifyItemMoved(fromPosition,toPosition);
-                                    }
-
-                                    @Override
-                                    public void onChanged(int position, int count) {
-                                        notifyItemRangeChanged(position,count);
-                                    }
-
-                                    @Override
-                                    public boolean areContentsTheSame(WeightedMenu oldItem, WeightedMenu newItem) {
-                                        return oldItem.getMid().equals(newItem.getMid());
-                                    }
-
-                                    @Override
-                                    public boolean areItemsTheSame(WeightedMenu item1, WeightedMenu item2) {
-                                        return item1.getMid().equals(item2.getMid());
-                                    }
-                                });
-                    }
-                    else{
-                        this.menus = new SortedList<WeightedMenu>(WeightedMenu.class,
-                                new SortedList.Callback<WeightedMenu>() {
-                                    @Override
-                                    public int compare(WeightedMenu o1, WeightedMenu o2) {
-                                        return o2.getName().compareToIgnoreCase(o1.getName());
-                                    }
-
-                                    @Override
-                                    public void onInserted(int position, int count) {
-                                        notifyItemRangeInserted(position,count);
-                                    }
-
-                                    @Override
-                                    public void onRemoved(int position, int count) {
-                                        notifyItemRangeRemoved(position,count);
-                                    }
-
-                                    @Override
-                                    public void onMoved(int fromPosition, int toPosition) {
-                                        notifyItemMoved(fromPosition,toPosition);
-                                    }
-
-                                    @Override
-                                    public void onChanged(int position, int count) {
-                                        notifyItemRangeChanged(position,count);
-                                    }
-
-                                    @Override
-                                    public boolean areContentsTheSame(WeightedMenu oldItem, WeightedMenu newItem) {
-                                        return oldItem.getMid().equals(newItem.getMid());
-                                    }
-
-                                    @Override
-                                    public boolean areItemsTheSame(WeightedMenu item1, WeightedMenu item2) {
-                                        return item1.getMid().equals(item2.getMid());
-                                    }
-                                });
-                    }
-                    this.menus.beginBatchedUpdates();
-                    for (int i = 0; i < menus.size(); i++) {
-                        this.menus.add(menus.get(i));
-                    }
-                    this.menus.endBatchedUpdates();
-                    break;
-                }
-                case 2:{ //Sort by price
-                    if(asc){
-                        this.menus = new SortedList<WeightedMenu>(WeightedMenu.class,
-                                new SortedList.Callback<WeightedMenu>() {
-                                    @Override
-                                    public int compare(WeightedMenu o1, WeightedMenu o2) {
-                                        return o2.getPrice() - o1.getPrice() >= 0 ? -1 : 1;
-                                    }
-
-                                    @Override
-                                    public void onInserted(int position, int count) {
-                                        notifyItemRangeInserted(position,count);
-                                    }
-
-                                    @Override
-                                    public void onRemoved(int position, int count) {
-                                        notifyItemRangeRemoved(position,count);
-                                    }
-
-                                    @Override
-                                    public void onMoved(int fromPosition, int toPosition) {
-                                        notifyItemMoved(fromPosition,toPosition);
-                                    }
-
-                                    @Override
-                                    public void onChanged(int position, int count) {
-                                        notifyItemRangeChanged(position,count);
-                                    }
-
-                                    @Override
-                                    public boolean areContentsTheSame(WeightedMenu oldItem, WeightedMenu newItem) {
-                                        return oldItem.getMid().equals(newItem.getMid());
-                                    }
-
-                                    @Override
-                                    public boolean areItemsTheSame(WeightedMenu item1, WeightedMenu item2) {
-                                        return item1.getMid().equals(item2.getMid());
-                                    }
-                                });
-                    }
-                    else{
-                        this.menus = new SortedList<WeightedMenu>(WeightedMenu.class,
-                                new SortedList.Callback<WeightedMenu>() {
-                                    @Override
-                                    public int compare(WeightedMenu o1, WeightedMenu o2) {
-                                        return o2.getPrice() - o1.getPrice() >= 0 ? 1 : -1;
-                                    }
-
-                                    @Override
-                                    public void onInserted(int position, int count) {
-                                        notifyItemRangeInserted(position,count);
-                                    }
-
-                                    @Override
-                                    public void onRemoved(int position, int count) {
-                                        notifyItemRangeRemoved(position,count);
-                                    }
-
-                                    @Override
-                                    public void onMoved(int fromPosition, int toPosition) {
-                                        notifyItemMoved(fromPosition,toPosition);
-                                    }
-
-                                    @Override
-                                    public void onChanged(int position, int count) {
-                                        notifyItemRangeChanged(position,count);
-                                    }
-
-                                    @Override
-                                    public boolean areContentsTheSame(WeightedMenu oldItem, WeightedMenu newItem) {
-                                        return oldItem.getMid().equals(newItem.getMid());
-                                    }
-
-                                    @Override
-                                    public boolean areItemsTheSame(WeightedMenu item1, WeightedMenu item2) {
-                                        return item1.getMid().equals(item2.getMid());
-                                    }
-                                });
-                    }
-                    this.menus.beginBatchedUpdates();
-                    for (int i = 0; i < menus.size(); i++) {
-                        this.menus.add(menus.get(i));
-                    }
-                    this.menus.endBatchedUpdates();
-                    break;
-                }
-                case 3:{ //Sort by type
-                    this.menus = new SortedList<WeightedMenu>(WeightedMenu.class,
-                            new SortedList.Callback<WeightedMenu>() {
-                                @Override
-                                public int compare(WeightedMenu o1, WeightedMenu o2) {
-                                    return o2.getType() - o1.getType();
-                                }
-
-                                @Override
-                                public void onInserted(int position, int count) {
-                                    notifyItemRangeInserted(position,count);
-                                }
-
-                                @Override
-                                public void onRemoved(int position, int count) {
-                                    notifyItemRangeRemoved(position,count);
-                                }
-
-                                @Override
-                                public void onMoved(int fromPosition, int toPosition) {
-                                    notifyItemMoved(fromPosition,toPosition);
-                                }
-
-                                @Override
-                                public void onChanged(int position, int count) {
-                                    notifyItemRangeChanged(position,count);
-                                }
-
-                                @Override
-                                public boolean areContentsTheSame(WeightedMenu oldItem, WeightedMenu newItem) {
-                                    return oldItem.getMid().equals(newItem.getMid());
-                                }
-
-                                @Override
-                                public boolean areItemsTheSame(WeightedMenu item1, WeightedMenu item2) {
-                                    return item1.getMid().equals(item2.getMid());
-                                }
-                            });
-                    this.menus.beginBatchedUpdates();
-                    for (int i = 0; i < menus.size(); i++) {
-                        this.menus.add(menus.get(i));
-                    }
-                    this.menus.endBatchedUpdates();
-                    break;
-                }
-                case 4:{ //Sort by weight again
-                    this.menus = new SortedList<WeightedMenu>(WeightedMenu.class,
-                            new SortedList.Callback<WeightedMenu>() {
-                                @Override
-                                public int compare(WeightedMenu o1, WeightedMenu o2) {
-                                    return o1.getWeight() <= o2.getWeight() ? -1 : 1;
-                                }
-
-                                @Override
-                                public void onInserted(int position, int count) {
-                                    notifyItemRangeInserted(position,count);
-                                }
-
-                                @Override
-                                public void onRemoved(int position, int count) {
-                                    notifyItemRangeRemoved(position,count);
-                                }
-
-                                @Override
-                                public void onMoved(int fromPosition, int toPosition) {
-                                    notifyItemMoved(fromPosition,toPosition);
-                                }
-
-                                @Override
-                                public void onChanged(int position, int count) {
-                                    notifyItemRangeChanged(position,count);
-                                }
-
-                                @Override
-                                public boolean areContentsTheSame(WeightedMenu oldItem, WeightedMenu newItem) {
-                                    return oldItem.getMid().equals(newItem.getMid());
-                                }
-
-                                @Override
-                                public boolean areItemsTheSame(WeightedMenu item1, WeightedMenu item2) {
-                                    return item1.getMid().equals(item2.getMid());
-                                }
-                            });
-                    this.menus.beginBatchedUpdates();
-                    for (int i = 0; i < menus.size(); i++) {
-                        this.menus.add(menus.get(i));
-                    }
-                    this.menus.endBatchedUpdates();
-                    break;
-                }
-            }
-        }
-
-        /**
-         * Add a new child to the adapter. Elements are added according to their weights: elements
-         * with lower weight are displayed before those with higher weight.
-         *
-         * @param m Object to insert
-         * @param weight Weight of the object
-         */
-        public void addChild(Menu m,int weight){
-            final String METHOD_NAME = this.getClass().getName()+" - filterByTicket";
-            try {
-                WeightedMenu wm = new WeightedMenu(m,weight);
-                this.menus.add(wm);
-                if(rv.getVisibility() == View.GONE){
-                    pb.setVisibility(View.GONE);
-                    rv.setVisibility(View.VISIBLE);
-                }
-            } catch (MenuException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-            }
-        }
-
-        //Filtering methods
-        public static MenuAdapter getInstanceFromLastSortMethod(int lastSort,SortedList<WeightedMenu> menus, RecyclerView rv,Context context){
-            switch (lastSort){
-                case 0:
-                    return MenuAdapter.getInstanceSortedByName(true,menus,rv,context);
-                case 1:
-                    return MenuAdapter.getInstanceSortedByName(false,menus,rv,context);
-                case 2:
-                    return MenuAdapter.getInstanceSortedByPrice(true,menus,rv,context);
-                case 3:
-                    return MenuAdapter.getInstanceSortedByPrice(false,menus,rv,context);
-                case 4:
-                    return MenuAdapter.getInstanceSortedByWeight(menus,rv,context);
-            }
-            return null;
-        }
-
-        public void filter(int choice){
-            switch (choice){
-                case 0: //By beverage
-                    this.filterByBeverage();
-                    break;
-                case 1: //By ticket
-                    this.filterByServiceFee();
-                    break;
-            }
-        }
-
-        private void filterByBeverage(){
-            this.menus.beginBatchedUpdates();
-            for (int i = 0; i < this.menus.size(); i++) {
-                WeightedMenu wm = this.menus.get(i);
-                if(!wm.isBeverage())
-                    this.menus.removeItemAt(i);
-            }
-            this.menus.endBatchedUpdates();
-        }
-
-        private void filterByServiceFee() {
-            this.menus.beginBatchedUpdates();
-            for (int i = 0; i < this.menus.size(); i++) {
-                WeightedMenu wm = this.menus.get(i);
-                if(wm.isServiceFee())
-                    this.menus.remove(wm);
-            }
-            this.menus.endBatchedUpdates();
-        }
-
-        @Override
-        public MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View menu_view= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_view,null);
-            return new MenuViewHolder(menu_view);
-        }
-
-        @Override
-        public void onBindViewHolder(final MenuViewHolder holder, int position) {
-            final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
-            final Menu menu = menus.get(position);
-            holder.menu_description.setText(menu.getDescription());
-            holder.menu_name.setText(menu.getName());
-            holder.menu_price.setText(menu.getPrice()+"€");
-            if(!menu.isSpicy()) holder.spicy_icon.setVisibility(View.INVISIBLE);
-            if(!menu.isVegan()) holder.vegan_icon.setVisibility(View.INVISIBLE);
-            if(!menu.isVegetarian()) holder.vegetarian_icon.setVisibility(View.INVISIBLE);
-            if(!menu.isGlutenfree()) holder.glutenfree_icon.setVisibility(View.INVISIBLE);
-            File img = new File(menu.getImageLocalPath());
-            try {
-                holder.menu_image.setImageBitmap(new Picture(Uri.fromFile(img),context.getContentResolver(),300,300).getBitmap());
-            } catch (IOException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-            }
-            holder.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent menu_view =new Intent(context,User_info_view.class);
-                    menu_view.putExtra("mid",menu.getMid());
-                    menu_view.putExtra("rid",menu.getRid());
-                    context.startActivity(menu_view);
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return this.menus.size();
-        }
-
-        public SortedList<WeightedMenu> getMenus(){ return this.menus; }
     }
 
 }
