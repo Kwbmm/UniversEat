@@ -337,10 +337,10 @@ public class Restaurant {
         try {
             switch (dow){
                 case 1:{ //Sunday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(6).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(6).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(6).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(6).get("end"));
+                    Date startLunch = sdf.parse(this.timetableLunch.get("Sun").get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get("Sun").get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get("Sun").get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get("Sun").get("end"));
                     if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
                         return true;
                     if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
@@ -348,10 +348,10 @@ public class Restaurant {
                     return false;
                 }
                 case 2:{ //Monday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(0).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(0).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(0).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(0).get("end"));
+                    Date startLunch = sdf.parse(this.timetableLunch.get("Mon").get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get("Mon").get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get("Mon").get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get("Mon").get("end"));
                     if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
                         return true;
                     if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
@@ -359,10 +359,10 @@ public class Restaurant {
                     return false;
                 }
                 case 3:{ //Tuesday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(1).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(1).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(1).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(1).get("end"));
+                    Date startLunch = sdf.parse(this.timetableLunch.get("Tue").get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get("Tue").get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get("Tue").get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get("Tue").get("end"));
                     if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
                         return true;
                     if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
@@ -370,10 +370,10 @@ public class Restaurant {
                     return false;
                 }
                 case 4:{ //Wednesday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(2).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(2).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(2).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(2).get("end"));
+                    Date startLunch = sdf.parse(this.timetableLunch.get("Wed").get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get("Wed").get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get("Wed").get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get("Wed").get("end"));
                     if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
                         return true;
                     if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
@@ -381,10 +381,10 @@ public class Restaurant {
                     return false;
                 }
                 case 5:{ //Thursday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(3).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(3).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(3).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(3).get("end"));
+                    Date startLunch = sdf.parse(this.timetableLunch.get("Thu").get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get("Thu").get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get("Thu").get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get("Thu").get("end"));
                     if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
                         return true;
                     if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
@@ -392,10 +392,10 @@ public class Restaurant {
                     return false;
                 }
                 case 6:{ //Friday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(4).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(4).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(4).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(4).get("end"));
+                    Date startLunch = sdf.parse(this.timetableLunch.get("Fri").get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get("Fri").get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get("Fri").get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get("Fri").get("end"));
                     if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
                         return true;
                     if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
@@ -403,10 +403,10 @@ public class Restaurant {
                     return false;
                 }
                 case 7:{ //Saturday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(5).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(5).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(5).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(5).get("end"));
+                    Date startLunch = sdf.parse(this.timetableLunch.get("Sat").get("start"));
+                    Date endLunch = sdf.parse(this.timetableLunch.get("Sat").get("end"));
+                    Date startDinner = sdf.parse(this.timetableDinner.get("Sat").get("start"));
+                    Date endDinner = sdf.parse(this.timetableDinner.get("Sat").get("end"));
                     if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
                         return true;
                     if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
