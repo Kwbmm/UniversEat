@@ -105,13 +105,13 @@ public class CreateRestaurant_3 extends Fragment {
         this.rid = getR.getRest().getRid();
         this.uid = getR.getRest().getUid();
         this.restaurant=getR.getRest();
-        weekDays[0] = "Mond";
-        weekDays[1] = "Tue";
-        weekDays[2] = "Wed";
-        weekDays[3] = "Thu";
-        weekDays[4] = "Fri";
-        weekDays[5] = "Sat";
-        weekDays[6] = "Sun";
+        weekDays[0] = getResources().getString(R.string.monday);
+        weekDays[1] = getResources().getString(R.string.tuesday);
+        weekDays[2] = getResources().getString(R.string.wednesday);
+        weekDays[3] = getResources().getString(R.string.thursday);
+        weekDays[4] = getResources().getString(R.string.friday);
+        weekDays[5] = getResources().getString(R.string.saturday);
+        weekDays[6] = getResources().getString(R.string.sunday);
         this.weekdayToRL_IDs = new ArrayMap<>();
 
         LinearLayout ll = (LinearLayout) this.parentView.findViewById(R.id.FL_timetableLunch);
