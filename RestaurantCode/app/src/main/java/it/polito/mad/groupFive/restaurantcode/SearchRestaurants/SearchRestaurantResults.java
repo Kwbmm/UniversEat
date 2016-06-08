@@ -3,7 +3,9 @@ package it.polito.mad.groupFive.restaurantcode.SearchRestaurants;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
@@ -51,7 +53,11 @@ public class SearchRestaurantResults extends NavigationDrawer {
         here.setLatitude(this.inputLatitude);
         here.setLongitude(this.inputLongitude);
         RestaurantAdapter ra = new RestaurantAdapter(this.rv,this.pb,this);
-        Query restaurantQuery = dbRoot.orderByChild("rating").limitToFirst(30); //TODO Check if normal ordering is asc or desc
+        this.rv.setAdapter(ra);
+        LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+        llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+        this.rv.setLayoutManager(llmVertical);
+        Query restaurantQuery = dbRoot.orderByChild("rating").limitToLast(30); //Pick the 30 best restaurants
         restaurantQuery.addListenerForSingleValueEvent(new GetRestaurantListener(ra,here,this));
     }
 }
