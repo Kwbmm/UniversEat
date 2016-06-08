@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <!-- Menu Icons -->
+    <!-- Filter Icon-->
     <item
         android:id="@+id/filterButton"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:title="@string/filterTitle"
         android:icon="@drawable/ic_filter"
-        android:visible="false"
+        android:visible="true"
         />
 </menu>

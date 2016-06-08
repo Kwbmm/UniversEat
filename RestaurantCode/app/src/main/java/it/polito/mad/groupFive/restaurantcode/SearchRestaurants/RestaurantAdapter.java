@@ -21,9 +21,11 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
 import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder>{
-    private class DistanceRestaurant extends Restaurant {
+
+    public class DistanceRestaurant extends Restaurant {
 
         private float distance;
+        private boolean toKeep;
         public DistanceRestaurant(Restaurant r, float distance) throws RestaurantException {
             super(r.getUid(),r.getRid());
             super
@@ -43,6 +45,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                     .setTimetableLunch(r.getTimetableLunch())
                     .setTickets(r.getTickets());
             this.distance = distance;
+            this.toKeep = false;
         }
 
         public float getDistance(){ return this.distance; }
@@ -133,6 +136,86 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         } catch (RestaurantException e) {
             Log.e(METHOD_NAME,e.getMessage());
         }
+    }
+
+    public void filter(int choice){
+        switch (choice){
+            case 0: //By ticket
+                this.filterByTicket();
+                break;
+            case 1: //By beverage
+                this.filterByBeverage();
+                break;
+            case 2: //By Service fee
+                this.filterByServiceFee();
+                break;
+            case 3: //Vegan
+                this.filterByVegan();
+            case 4: //Vegetarian
+                this.filterByVegetarian();
+                break;
+            case 5: //By High rating (3-5)
+                this.filterByHighRating();
+                break;
+            case 6: //Open now
+                this.filterByOpenNow();
+                break;
+        }
+    }
+
+    private void filterByTicket() {
+
+    }
+
+    private void filterByBeverage() {
+
+    }
+
+    private void filterByServiceFee() {
+
+    }
+
+    private void filterByVegan() {
+
+    }
+
+    private void filterByVegetarian() {
+
+    }
+
+    private void filterByHighRating() {
+        for (int i = 0; i < this.restaurants.size(); i++) {
+            DistanceRestaurant dr = this.restaurants.get(i);
+            if(dr.getRating() >= 3){
+                dr.toKeep = true;
+            }
+        }
+    }
+
+    private void filterByOpenNow() {
+        for (int i = 0; i < this.restaurants.size(); i++) {
+            DistanceRestaurant dr = this.restaurants.get(i);
+            if(dr.isOpen())
+                dr.toKeep = true;
+        }
+    }
+
+    /**
+     * Remove the items marked as such.
+     */
+    public void updateEntries(){
+        this.restaurants.beginBatchedUpdates();
+        for (int i = 0; i < this.restaurants.size(); i++) {
+            DistanceRestaurant dr = this.restaurants.get(i);
+            if(!dr.toKeep){
+                this.restaurants.removeItemAt(i);
+                i--;
+            }
+            else{
+                dr.toKeep = false;
+            }
+        }
+        this.restaurants.endBatchedUpdates();
     }
 
     @Override
