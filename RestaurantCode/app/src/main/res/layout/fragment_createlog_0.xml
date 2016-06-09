@@ -38,14 +38,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/Button_Next_login"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:text="@string/next"
-            android:layout_marginBottom="@dimen/btn_marginBottom"
-            android:layout_marginRight="@dimen/btn_marginRight"
-            android:layout_marginEnd="@dimen/btn_marginRight"
-            />
+            android:layout_below="@+id/checkBox_login"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <ImageView
             android:layout_width="150dp"
