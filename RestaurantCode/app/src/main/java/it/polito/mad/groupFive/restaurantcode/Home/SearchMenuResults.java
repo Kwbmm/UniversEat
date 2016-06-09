@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
@@ -350,10 +351,10 @@ public class SearchMenuResults extends NavigationDrawer {
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(menu.getPrice()+"€");
-            if(!menu.isSpicy()) holder.spicy_icon.setVisibility(View.GONE);
-            if(!menu.isVegan()) holder.vegan_icon.setVisibility(View.GONE);
-            if(!menu.isVegetarian()) holder.vegetarian_icon.setVisibility(View.GONE);
-            if(!menu.isGlutenfree()) holder.glutenfree_icon.setVisibility(View.GONE);
+            if(!menu.isSpicy()) holder.spicy_icon.setColorFilter(Color.GRAY);
+            if(!menu.isVegan()) holder.vegan_icon.setColorFilter(Color.GRAY);
+            if(!menu.isVegetarian()) holder.vegetarian_icon.setColorFilter(Color.GRAY);
+            if(!menu.isGlutenfree()) holder.glutenfree_icon.setColorFilter(Color.GRAY);
             File img = new File(menu.getImageLocalPath());
             try {
                 holder.menu_image.setImageBitmap(new Picture(Uri.fromFile(img),context.getContentResolver(),300,300).getBitmap());
