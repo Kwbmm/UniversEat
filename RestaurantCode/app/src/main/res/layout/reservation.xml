@@ -3,19 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
     card_view:cardElevation="@dimen/cardview_default_elevation"
     card_view:cardCornerRadius="@dimen/cardview_default_radius"
     card_view:cardUseCompatPadding="true">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="190dp"
-        android:background="#ffffff"
-        android:paddingLeft="10dp"
-        android:paddingTop="5dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="5dp">
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
+        android:padding="5dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,8 +20,12 @@
             android:text="@string/reservation_textViewUsername"
             android:id="@+id/order_username"
             android:textStyle="bold"
-            android:layout_alignParentTop="true"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:layout_below="@+id/date"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/imageView"
+            android:layout_toStartOf="@+id/imageView" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -34,7 +35,11 @@
             android:id="@+id/order_meal"
             android:layout_below="@+id/order_username"
             android:textStyle="bold"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -43,18 +48,18 @@
             android:text="OID"
             android:id="@+id/order_OID"
             android:layout_gravity="right|bottom"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="false"
             android:textStyle="italic"
-            android:textSize="13dp" />
+            android:textSize="13dp"
+            android:layout_below="@+id/order_userID" />
 
         <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:id="@+id/imageView"
             android:src="@drawable/ic_delete_black_24px"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            android:background="#ffffff" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -62,10 +67,10 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="30"
             android:id="@+id/minutes"
-            android:textSize="48dp"
-            android:layout_below="@+id/date"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:textSize="20dp"
+            android:layout_above="@+id/order_username"
+            android:layout_toRightOf="@+id/hour_separator"
+            android:layout_toEndOf="@+id/hour_separator" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -73,9 +78,9 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text=":"
             android:id="@+id/hour_separator"
-            android:textSize="48dp"
-            android:layout_below="@+id/date"
-            android:layout_toLeftOf="@+id/minutes" />
+            android:textSize="20dp"
+            android:layout_toRightOf="@+id/hour"
+            android:layout_toEndOf="@+id/hour" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -83,9 +88,11 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="14"
             android:id="@+id/hour"
-            android:textSize="48dp"
-            android:layout_below="@+id/date"
-            android:layout_toLeftOf="@+id/hour_separator" />
+            android:textSize="20dp"
+            android:layout_alignTop="@+id/date"
+            android:layout_toRightOf="@+id/date"
+            android:layout_toEndOf="@+id/date"
+            android:layout_marginLeft="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -95,17 +102,17 @@
             android:id="@+id/date"
             android:gravity="center_horizontal"
             android:textSize="20dp"
-            android:layout_below="@id/order_meal"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/order_userID"
-            android:layout_above="@+id/order_OID"
             android:textSize="10dp"
-            android:text="123123" />
+            android:text="123123"
+            android:layout_below="@+id/order_notes" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -116,9 +123,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textSize="17dp"
-            android:layout_toLeftOf="@+id/hour"
-            android:layout_toStartOf="@+id/hour"
-            android:layout_above="@+id/order_userID" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
 
 
