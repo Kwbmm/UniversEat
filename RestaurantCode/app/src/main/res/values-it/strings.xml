@@ -411,4 +411,8 @@
         <item>Aperto adesso</item>
     </string-array>
 
+    <string name="emailaddressold">Inserisci la vecchia mail</string>
+    <string name="emailaddressnew">Inserisci la nuova mail</string>
+    <string name="passwordwrong">La password non è corretta</string>
+    <string name="mailwrong">La vecchia mail non è corretta</string>
 </resources>

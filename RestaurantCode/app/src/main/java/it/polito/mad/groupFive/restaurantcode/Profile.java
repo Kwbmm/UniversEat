@@ -18,7 +18,6 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -68,6 +67,7 @@ public class Profile extends NavigationDrawer {
     TextView email;
     ImageView image;
     ProfileAdapter profileAdapter;
+    ImageButton edit;
     List<Restaurant> re;
 
     @Override
@@ -108,6 +108,7 @@ public class Profile extends NavigationDrawer {
        username = (TextView) findViewById(R.id.user_username);
         email = (TextView) findViewById(R.id.user_email);
          image= (ImageView) findViewById(R.id.user_image);
+        edit= (ImageButton) findViewById(R.id.editprofile);
 
     }
     public class ProfileAdapter extends BaseAdapter {
@@ -133,6 +134,7 @@ public class Profile extends NavigationDrawer {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(getBaseContext()).inflate(R.layout.restaurant_view, null);
+
             final Restaurant rest = re.get(position);
 
             TextView name= (TextView)convertView.findViewById(R.id.restaurant_name);
@@ -194,7 +196,6 @@ public class Profile extends NavigationDrawer {
                             mlay.removeAllViews();
                             mlay.inflate(getBaseContext(), R.layout.profile, mlay);
                             showProfile();
-
                                 name.setText(user.getName()+" "+user.getSurname());
                                 username.setText(user.getUserName());
                                 email.setText(user.getEmail());
@@ -259,6 +260,15 @@ public class Profile extends NavigationDrawer {
 
                                 }
                             });
+                            edit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Log.v("Click","Prova click edit owner");
+                                    Intent edit = new Intent(getBaseContext(), EditProfile.class);
+                                    startActivity(edit);
+
+                                }
+                            });
 
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -299,6 +309,15 @@ public class Profile extends NavigationDrawer {
                             email.setText(user.getEmail());
                             image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
                             ProfileAdapter profileAdapter = new ProfileAdapter(getBaseContext());
+                            edit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Log.v("Click","Prova click edit no owner");
+                                    Intent edit1 = new Intent(getBaseContext(), EditProfile.class);
+                                    startActivity(edit1);
+
+                                }
+                            });
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -312,6 +331,7 @@ public class Profile extends NavigationDrawer {
                 }
 
             }
+
         }
 
         @Override
