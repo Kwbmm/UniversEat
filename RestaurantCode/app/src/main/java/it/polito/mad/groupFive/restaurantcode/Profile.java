@@ -75,6 +75,7 @@ public class Profile extends NavigationDrawer {
     ListView lv;
     ProfileAdapter profileAdapter;
     List<Restaurant> re;
+    ImageButton edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -115,6 +116,7 @@ public class Profile extends NavigationDrawer {
         email = (TextView) findViewById(R.id.user_email);
         image= (ImageView) findViewById(R.id.user_image);
         lv=(ListView) findViewById(R.id.recycler_favourite);
+        edit= (ImageButton) findViewById(R.id.editprofile);
 
     }
     public class ProfileAdapter extends BaseAdapter {
@@ -210,6 +212,16 @@ public class Profile extends NavigationDrawer {
                         username.setText(user.getUserName());
                         email.setText(user.getEmail());
                         image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                        edit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.v("Click","Prova click edit owner");
+                                Intent edit = new Intent(getBaseContext(), EditProfile.class);
+                                startActivity(edit);
+
+                            }
+                        });
+
 
                         profileAdapter= new ProfileAdapter(getBaseContext());
                         lv.setAdapter(profileAdapter);
