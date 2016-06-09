@@ -5,8 +5,8 @@
     android:background="#6e6d6d"
     >
     <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/progressBar_size"
+        android:layout_height="@dimen/progressBar_size"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         />

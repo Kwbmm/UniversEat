@@ -3,14 +3,15 @@ package it.polito.mad.groupFive.restaurantcode;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import it.polito.mad.groupFive.restaurantcode.Home.Home;
@@ -27,6 +28,8 @@ public class SplashScreen extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startup);
+        ProgressBar progressBar =(ProgressBar)findViewById(R.id.progressBar);
+        progressBar.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
         findViewById(R.id.splash_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

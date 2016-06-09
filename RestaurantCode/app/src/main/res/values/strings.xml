@@ -463,4 +463,5 @@
     <string name="actionBar_createMenu">Create Menu</string>
     <string name="actionBar_createRestaurant">Create Restaurant</string>
     <string name="actionBar_signUp">Sign Up</string>
+    <string name="universeat">UniversEat</string>
 </resources>
