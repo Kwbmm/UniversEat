@@ -64,6 +64,8 @@ public class RestaurantManagement extends NavigationDrawer {
     private Restaurant restaurant;
     private DatabaseReference dbRoot;
     private StorageReference storageRoot;
+    private GetRestaurantDataListener grdl;
+
     private String uid,rid;
     private FrameLayout mlay;
 
@@ -75,13 +77,12 @@ public class RestaurantManagement extends NavigationDrawer {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),RestaurantManagement.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
+        sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),RestaurantManagement.MODE_PRIVATE);
         getSupportActionBar().setTitle(R.string.actionBar_restaurantManagement);
         mlay= (FrameLayout) findViewById(R.id.frame);
         v=mlay.inflate(getBaseContext(), R.layout.restaurant_view_edit, mlay);
         load= LayoutInflater.from(this).inflate(R.layout.loading_bar,null);
-
 
         FirebaseDatabase db=FirebaseDatabase.getInstance();
         DatabaseReference myref=db.getReference("restaurant");
@@ -117,17 +118,17 @@ public class RestaurantManagement extends NavigationDrawer {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-               // mlay.removeView(load);
+
             }
         });
-
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(visible==false){
+        Log.d("actvity","Req: "+requestCode+" res"+resultCode);
+        if(!visible){
             showRestaurant();
         }
         if (requestCode==3){
@@ -153,7 +154,7 @@ public class RestaurantManagement extends NavigationDrawer {
             LinearLayout rview= (LinearLayout) findViewById(R.id.fl_redit);
             v=rview.inflate(this,R.layout.resturant_view_edit_fragment,rview);
             ImageButton modify = (ImageButton) findViewById(R.id.restaurant_edit);
-            modify.setOnClickListener(new onEditclick(1));
+            modify.setOnClickListener(new onEditClick(1));
             visible=true;
             RelativeLayout rl = (RelativeLayout) findViewById(R.id.restaurant_view_layout);
             if (rl != null) {
@@ -191,72 +192,8 @@ public class RestaurantManagement extends NavigationDrawer {
         this.dbRoot = db.getReference().child("restaurant").child(rid);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         this.storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
-        this.dbRoot.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mlay.removeView(load);
-                try {
-                    restaurant = new Restaurant(
-                            (String)dataSnapshot.child("uid").getValue(),
-                            (String)dataSnapshot.child("rid").getValue()
-                    );
-                } catch (RestaurantException e) {
-                    Log.e(METHOD_NAME,e.getMessage());
-                }
-                restaurant
-                        .setName((String)dataSnapshot.child("name").getValue())
-                        .setDescription((String)dataSnapshot.child("description").getValue())
-                        .setAddress((String)dataSnapshot.child("address").getValue())
-                        .setState((String)dataSnapshot.child("state").getValue())
-                        .setCity((String)dataSnapshot.child("city").getValue())
-                        .setWebsite((String)dataSnapshot.child("website").getValue())
-                        .setTelephone((String)dataSnapshot.child("telephone").getValue())
-                        .setZip((String)dataSnapshot.child("zip").getValue())
-                        .setImageLocalPath((String)dataSnapshot.child("imageLocalPath").getValue());
-                float rating = Float.parseFloat(dataSnapshot.child("rating").getValue().toString());
-                restaurant.setRating(rating);
-                double xcoord = Double.parseDouble(dataSnapshot.child("xcoord").getValue().toString());
-                restaurant.setXCoord(xcoord);
-                double ycoord = Double.parseDouble(dataSnapshot.child("ycoord").getValue().toString());
-                restaurant.setYCoord(ycoord);
-                restaurant.setRatingNumber(Float.parseFloat(dataSnapshot.child("ratingNumber").getValue().toString()));
-
-
-                TextView rname= (TextView)findViewById(R.id.restaurant_name);
-                TextView raddress= (TextView)findViewById(R.id.restaurant_address);
-                RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
-                ImageView rmimw = (ImageView) findViewById(R.id.restaurant_image);
-                if (rname != null) {
-                    rname.setText(restaurant.getName());
-                }
-                if (raddress != null) {
-                    raddress.setText(restaurant.getCity());
-                }
-                if (rbar != null) {
-                    rbar.setRating(restaurant.getRating());
-                }
-                if (rmimw != null ){
-                    //Try to load the image from internal storage
-                    try {
-                        Bitmap b = new Picture(Uri.parse(restaurant.getImageLocalPath()),getContentResolver()).getBitmap();
-                        rmimw.setImageBitmap(b);
-                    } catch (Exception e) { //Load from storage failed, try load from network
-                        Log.w(METHOD_NAME+" - onDataChange",e.getMessage());
-                        try {
-                            getFromNetwork(storageRoot,restaurant.getRid(),rmimw);
-                        } catch (FileNotFoundException e1) {
-                            Log.e(METHOD_NAME,e1.getMessage());
-                        }
-                    }
-                }
-                Log.i(METHOD_NAME+" - onDataChange","Restaurant data loaded");
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(METHOD_NAME+" - onCancelled",databaseError.getMessage());
-            }
-        });
+        this.grdl = new GetRestaurantDataListener();
+        this.dbRoot.addListenerForSingleValueEvent(this.grdl);
         return true;
     }
 
@@ -289,17 +226,11 @@ public class RestaurantManagement extends NavigationDrawer {
         rname.setText(restaurant.getName());
         raddress.setText(restaurant.getCity());
         rbar.setRating(restaurant.getRating());
-/*        try {
-            rmimw.setImageBitmap(restaurant.getImageBitmap());
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-        }
-*/
     }
 
-    public class onEditclick implements View.OnClickListener{
+    public class onEditClick implements View.OnClickListener{
         private int position;
-        public onEditclick(int position){
+        public onEditClick(int position){
             this.position=position;
         }
 
@@ -314,7 +245,82 @@ public class RestaurantManagement extends NavigationDrawer {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(this.grdl != null)
+            this.dbRoot.removeEventListener(this.grdl);
+    }
+
+    private class GetRestaurantDataListener implements ValueEventListener{
+
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            mlay.removeView(load);
+            try {
+                restaurant = new Restaurant(
+                        (String)dataSnapshot.child("uid").getValue(),
+                        (String)dataSnapshot.child("rid").getValue()
+                );
+            } catch (RestaurantException e) {
+                Log.e("onDataChange",e.getMessage());
+            }
+            restaurant
+                    .setName((String)dataSnapshot.child("name").getValue())
+                    .setDescription((String)dataSnapshot.child("description").getValue())
+                    .setAddress((String)dataSnapshot.child("address").getValue())
+                    .setState((String)dataSnapshot.child("state").getValue())
+                    .setCity((String)dataSnapshot.child("city").getValue())
+                    .setWebsite((String)dataSnapshot.child("website").getValue())
+                    .setTelephone((String)dataSnapshot.child("telephone").getValue())
+                    .setZip((String)dataSnapshot.child("zip").getValue())
+                    .setImageLocalPath((String)dataSnapshot.child("imageLocalPath").getValue());
+            float rating = Float.parseFloat(dataSnapshot.child("rating").getValue().toString());
+            restaurant.setRating(rating);
+            double xcoord = Double.parseDouble(dataSnapshot.child("xcoord").getValue().toString());
+            restaurant.setXCoord(xcoord);
+            double ycoord = Double.parseDouble(dataSnapshot.child("ycoord").getValue().toString());
+            restaurant.setYCoord(ycoord);
+            restaurant.setRatingNumber(Float.parseFloat(dataSnapshot.child("ratingNumber").getValue().toString()));
+
+            TextView rname= (TextView)findViewById(R.id.restaurant_name);
+            TextView raddress= (TextView)findViewById(R.id.restaurant_address);
+            RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
+            ImageView rmimw = (ImageView) findViewById(R.id.restaurant_image);
+            if (rname != null) {
+                rname.setText(restaurant.getName());
+            }
+            if (raddress != null) {
+                raddress.setText(restaurant.getCity());
+            }
+            if (rbar != null) {
+                rbar.setRating(restaurant.getRating());
+            }
+            if (rmimw != null ){
+                try {
+                    getFromNetwork(storageRoot,restaurant.getRid(),rmimw);
+                } catch (FileNotFoundException e) {
+                    Log.e("onDataChange",e.getMessage());
+                }
+            }
+            Log.i("onDataChange","Restaurant data loaded");
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Log.w("onCancelled",databaseError.getMessage());
+        }
+    }
+
     public class onPositionClickDialog implements DialogInterface.OnClickListener{
+        private class SuccessDeleteImageListener implements OnSuccessListener<Void>{
+
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.i("onSuccess","Image was deleted successfully!");
+            }
+        }
+
         private int position;
 
         public onPositionClickDialog(int position){
@@ -332,19 +338,24 @@ public class RestaurantManagement extends NavigationDrawer {
                 }
                 case 1:{
                     SharedPreferences.Editor editor=sharedPreferences.edit();
-                    //TOdo delete from server
                     editor.remove("rid");
-                    editor.commit();
+                    editor.apply();
                     final FirebaseDatabase db=FirebaseDatabase.getInstance();
                     DatabaseReference ref=db.getReference("restaurant");
                     ref.child(rid).removeValue();
+
+                    //Delete image
+                    SuccessDeleteImageListener sdil = new SuccessDeleteImageListener();
+                    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                    StorageReference storageReference = firebaseStorage.getReference("restaurant");
+                    storageReference.child(rid).delete().addOnSuccessListener(sdil);
 
                     ref=db.getReference("menu");
                     ref.orderByChild("rid").equalTo(rid).addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                             String mid=dataSnapshot.child("mid").getValue().toString();
-                           DatabaseReference ref=db.getReference("menu");
+                            DatabaseReference ref=db.getReference("menu");
                             ref.child(mid).removeValue();
                             ref=db.getReference("course");
                             ref.orderByChild("mid").equalTo(mid).addChildEventListener(new ChildEventListener() {
@@ -398,7 +409,6 @@ public class RestaurantManagement extends NavigationDrawer {
 
                         }
                     });
-
                     v.setVisibility(View.INVISIBLE);
                     plus.setVisible(true);
                     break;
@@ -406,5 +416,7 @@ public class RestaurantManagement extends NavigationDrawer {
                 default:{
                     dialog.cancel();
                 }
-            }}
-    }}
+            }
+        }
+    }
+}
