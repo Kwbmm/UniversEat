@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
@@ -229,10 +230,10 @@ public class Menu_view_edit extends NavigationDrawer {
             holder.menu_desctiprion.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(String.format("%.2f", menu.getPrice())+"€");
-            if(!menu.isSpicy()) holder.spicy_icon.setVisibility(View.INVISIBLE);
-            if(!menu.isVegan()) holder.vegan_icon.setVisibility(View.INVISIBLE);
-            if(!menu.isVegetarian()) holder.vegetarian_icon.setVisibility(View.INVISIBLE);
-            if(!menu.isGlutenfree()) holder.glutenfree_icon.setVisibility(View.INVISIBLE);
+            if(!menu.isSpicy()) holder.spicy_icon.setColorFilter(Color.GRAY);
+            if(!menu.isVegan()) holder.vegan_icon.setColorFilter(Color.GRAY);
+            if(!menu.isVegetarian()) holder.vegetarian_icon.setColorFilter(Color.GRAY);
+            if(!menu.isGlutenfree()) holder.glutenfree_icon.setColorFilter(Color.GRAY);
             holder.edit.setOnClickListener(new onEditclick(menu));
             try {
 

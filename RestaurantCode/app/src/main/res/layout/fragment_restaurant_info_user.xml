@@ -97,20 +97,19 @@
                 android:layout_marginRight="20dp" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/restaurant_tel"
                 android:text="@string/frg_create_restaurant_1_textView_Telephone"
                 android:textSize="20dp"
-                android:layout_toRightOf="@+id/imageView3"
-                android:layout_toEndOf="@+id/imageView3"
                 android:gravity="center_vertical"
-                android:layout_marginLeft="5dp"
                 android:layout_alignTop="@+id/imageView3"
                 android:minHeight="50dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:layout_marginRight="20dp" />
+                android:layout_toLeftOf="@+id/imageView7"
+                android:layout_alignLeft="@+id/restaurant_address"
+                android:layout_alignStart="@+id/restaurant_address" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -141,20 +140,20 @@
                 android:layout_marginLeft="20dp" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Website"
                 android:id="@+id/restaurant_web"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/imageView4"
                 android:gravity="center_vertical"
                 android:textSize="20dp"
                 android:layout_alignTop="@+id/imageView4"
                 android:minHeight="50dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:layout_marginRight="20dp" />
+                android:layout_toLeftOf="@+id/imageView8"
+                android:layout_toRightOf="@+id/button_time_img1"
+                android:layout_toEndOf="@+id/button_time_img1" />
 
             <ImageView
                 android:layout_width="wrap_content"

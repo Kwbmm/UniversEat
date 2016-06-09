@@ -54,9 +54,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:paddingLeft="10dp"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:gravity="bottom" />
+                android:textSize="20sp"
+                android:gravity="bottom"
+                android:textColor="#000000" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -96,7 +96,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/menu_details_Menu_description"
                 android:id="@+id/menu_description"
                 android:paddingLeft="10dp"
@@ -105,7 +104,8 @@
                 android:layout_toRightOf="@+id/menu_image"
                 android:layout_alignRight="@+id/courseList"
                 android:layout_alignEnd="@+id/courseList"
-                android:gravity="top" />
+                android:gravity="top"
+                android:textSize="15sp" />
 
         </RelativeLayout>
 
