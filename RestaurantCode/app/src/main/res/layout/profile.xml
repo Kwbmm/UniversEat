@@ -10,26 +10,28 @@
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:id="@+id/profile_card"
-        card_view:cardElevation="5dp"
-        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="@dimen/cardview_default_elevation"
+        card_view:cardCornerRadius="@dimen/cardview_default_radius"
         card_view:cardUseCompatPadding="true"
-        android:background="#ffffff"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp">
+        card_view:cardPreventCornerOverlap="false"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:minHeight="160dp">
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
                 android:id="@+id/user_image"
                 android:src="@mipmap/ic_launcher"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
-                android:layout_margin="5dp"/>
+                android:layout_marginRight="10dp"
+                android:scaleType="centerCrop" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -37,13 +39,13 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/profile_Name"
                 android:id="@+id/user_name"
-                android:layout_alignParentTop="true"
+                android:layout_alignParentTop="false"
                 android:layout_toRightOf="@+id/user_image"
                 android:textSize="20dp"
-                android:layout_marginTop="30dp"
                 android:textStyle="bold"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:layout_above="@+id/user_username" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -52,10 +54,10 @@
                 android:text="@string/profile_username"
                 android:id="@+id/user_username"
                 android:textSize="20dp"
-                android:layout_below="@+id/user_name"
                 android:layout_toRightOf="@+id/user_image"
                 android:layout_alignRight="@+id/user_name"
-                android:layout_alignEnd="@+id/user_name" />
+                android:layout_alignEnd="@+id/user_name"
+                android:layout_centerVertical="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -69,8 +71,8 @@
                 android:layout_alignParentEnd="true" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:id="@+id/editprofile"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
@@ -93,7 +95,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/favourite_text"
-        android:id="@+id/recycler_favourite">
+        android:id="@+id/recycler_favourite"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:footerDividersEnabled="false"
+        android:visibility="visible">
 
     </ListView>
 

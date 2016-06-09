@@ -280,10 +280,10 @@ public class Restaurant_menu_user extends Fragment {
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(String.format("%.2f", menu.getPrice())+"€");
-            if(!menu.isSpicy()) holder.spicy_icon.setVisibility(View.INVISIBLE);
-            if(!menu.isVegan()) holder.vegan_icon.setVisibility(View.INVISIBLE);
-            if(!menu.isVegetarian()) holder.vegetarian_icon.setVisibility(View.INVISIBLE);
-            if(!menu.isGlutenfree()) holder.glutenfree_icon.setVisibility(View.INVISIBLE);
+            if(!menu.isSpicy()) holder.spicy_icon.setColorFilter(Color.GRAY);
+            if(!menu.isVegan()) holder.vegan_icon.setColorFilter(Color.GRAY);
+            if(!menu.isVegetarian()) holder.vegetarian_icon.setColorFilter(Color.GRAY);
+            if(!menu.isGlutenfree()) holder.glutenfree_icon.setColorFilter(Color.GRAY);
             try {
                 FirebaseStorage storage=FirebaseStorage.getInstance();
                 StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -18,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -91,6 +93,8 @@ public class RestaurantManagement extends NavigationDrawer {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 mlay.addView(load);
+                ProgressBar pb=(ProgressBar)findViewById(R.id.progressBar_loading);
+                pb.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
                 if(plus!=null){
                     plus.setVisible(false);}
                 SharedPreferences.Editor editor=sharedPreferences.edit();

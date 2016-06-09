@@ -21,10 +21,10 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="240dp"
             android:id="@+id/iw"
             android:background="#ffffff"
-            />
+            android:scaleType="centerCrop" />
 
         <ListView android:id="@+id/left_drawer"
             android:layout_width="match_parent"

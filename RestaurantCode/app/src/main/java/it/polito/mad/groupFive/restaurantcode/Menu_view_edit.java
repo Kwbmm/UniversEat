@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,20 +39,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-
 import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Create_simple_menu;
-import it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu.Simple_menu_add_tags;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.User;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 
 /**
@@ -333,6 +327,8 @@ public class MenuList implements ChildEventListener{
 
         load= LayoutInflater.from(getBaseContext()).inflate(R.layout.loading_bar,null);
         mlay.addView(load);
+        ProgressBar pb=(ProgressBar)findViewById(R.id.progressBar_loading);
+        pb.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
                 Menu  menu = new Menu();
         Log.v("rid",(String)dataSnapshot.child("name").getValue());
                 menu.setRid((String)dataSnapshot.child("rid").getValue());

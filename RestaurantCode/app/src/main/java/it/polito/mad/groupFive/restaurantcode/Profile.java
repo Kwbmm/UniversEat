@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -100,6 +101,8 @@ public class Profile extends NavigationDrawer {
 
         View load= LayoutInflater.from(this).inflate(R.layout.loading_bar,null);
         mlay.addView(load);
+        ProgressBar pb=(ProgressBar)findViewById(R.id.progressBar_loading);
+        pb.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
 
 
@@ -152,7 +155,8 @@ public class Profile extends NavigationDrawer {
             ImageButton fav_b=(ImageButton) convertView.findViewById(R.id.restaurant_favourite);
             TextView distance=(TextView) convertView.findViewById(R.id.restaurant_distance);
             distance.setText("");
-            fav_b.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black_24dp));
+            fav_b.setImageDrawable(getResources().getDrawable(R.drawable.ic_heart_filled_black));
+            fav_b.setColorFilter(getResources().getColor(R.color.colorPrimary));
             fav_b.setOnClickListener(new OnFavourite(fav_b,rest));
             name.setText(rest.getName());
             address.setText(rest.getAddress());
@@ -381,7 +385,8 @@ public class Profile extends NavigationDrawer {
             if (favourite.contains(restaurant.getRid())){
                 //is favourite
                 favourite.remove(restaurant.getRid());
-                imageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_border_black_24dp));
+                imageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_heart_border_black));
+                imageButton.setColorFilter(Color.GRAY);
                 FirebaseDatabase db=FirebaseDatabase.getInstance();
                 DatabaseReference ref=db.getReference("favourite");
                 ref.child(uid).child(restaurant.getRid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -395,7 +400,8 @@ public class Profile extends NavigationDrawer {
             else{
                 favourite.add(restaurant.getRid());
                 //add on server
-                imageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black_24dp));
+                imageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_heart_filled_black));
+                imageButton.setColorFilter(getResources().getColor(R.color.colorPrimary));
                 FirebaseDatabase db=FirebaseDatabase.getInstance();
                 final DatabaseReference menus=db.getReference("menu");
                 menus.orderByChild("rid").equalTo(restaurant.getRid()).addListenerForSingleValueEvent(new ValueEventListener() {

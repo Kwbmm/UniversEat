@@ -2,6 +2,7 @@ package it.polito.mad.groupFive.restaurantcode.SearchRestaurants;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
@@ -258,7 +259,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         final DistanceRestaurant restaurant = restaurants.get(position);
         if(auth==true) {
             if (favourites.contains(restaurant.getRid())) {
-                holder.favourite.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_star_black_24dp));
+                holder.favourite.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_heart_filled_black));
+                holder.favourite.setColorFilter(Color.rgb(217,37,40));
             }
             holder.favourite.setOnClickListener(new OnFavourite(holder, restaurant));
         }
@@ -316,7 +318,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             if (favourites.contains(restaurant.getRid())){
                 //is favourite
                 favourites.remove(restaurant.getRid());
-                holder.favourite.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_star_border_black_24dp));
+                holder.favourite.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_heart_border_black));
+                holder.favourite.setColorFilter(Color.GRAY);
                 FirebaseDatabase db=FirebaseDatabase.getInstance();
                 DatabaseReference ref=db.getReference("favourite");
                 ref.child(uid).child(restaurant.getRid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -330,7 +333,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             else{
                 favourites.add(restaurant.getRid());
                 //add on server
-                holder.favourite.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_star_black_24dp));
+                holder.favourite.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_heart_filled_black));
+                holder.favourite.setColorFilter(Color.rgb(217,37,40));
                 FirebaseDatabase db=FirebaseDatabase.getInstance();
                 final DatabaseReference menus=db.getReference("menu");
                 menus.orderByChild("rid").equalTo(restaurant.getRid()).addListenerForSingleValueEvent(new ValueEventListener() {
