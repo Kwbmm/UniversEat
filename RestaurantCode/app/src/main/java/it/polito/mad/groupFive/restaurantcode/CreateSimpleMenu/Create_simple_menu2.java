@@ -39,12 +39,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -240,9 +242,7 @@ public class Create_simple_menu2 extends Fragment {
                                 FirebaseStorage storage = FirebaseStorage.getInstance();
                                 StorageReference storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/"+menu.getMid());
                                 try {
-
-                                    InputStream is = getActivity().getContentResolver().openInputStream(Uri.parse((menu.getImageLocalPath())));
-                                    Bitmap image=BitmapFactory.decodeStream(is);
+                                    Bitmap image= new Picture(Uri.parse(menu.getImageLocalPath()),getActivity().getContentResolver(),300,300).getBitmap();
                                     ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
                                     image.compress(Bitmap.CompressFormat.PNG,20,outputStream);
                                     ByteArrayInputStream inputStream=new ByteArrayInputStream(outputStream.toByteArray());
@@ -252,7 +252,7 @@ public class Create_simple_menu2 extends Fragment {
                                             getActivity().finish();
                                         }
                                     });
-                                } catch (FileNotFoundException e) {
+                                } catch (IOException e) {
                                     e.printStackTrace();
                                 }
 
