@@ -34,7 +34,7 @@ import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder>{
     private ArrayList<String> favourites;
-    private class DistanceRestaurant extends Restaurant {
+    public class DistanceRestaurant extends Restaurant {
 
         private float distance;
         private boolean toKeep;
@@ -261,7 +261,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     @Override
     public void onBindViewHolder(final RestaurantViewHolder holder, int position) {
         final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
-        final Restaurant restaurant = restaurants.get(position);
+        final DistanceRestaurant restaurant = restaurants.get(position);
         if(auth==true) {
             if (favourites.contains(restaurant.getRid())) {
                 holder.favourite.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_star_black_24dp));

@@ -20,6 +20,7 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +59,7 @@ import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
  * Created by Cristiano on 05/05/2016.
  */
 public class Profile extends NavigationDrawer {
-    
+
     String uid;
     User user;
     FirebaseDatabase db;
@@ -73,7 +74,6 @@ public class Profile extends NavigationDrawer {
     ImageView image;
     ListView lv;
     ProfileAdapter profileAdapter;
-    ImageButton edit;
     List<Restaurant> re;
 
     @Override
@@ -87,11 +87,11 @@ public class Profile extends NavigationDrawer {
         favourite=new ArrayList<>();
         if(uid==null) finish();
         restOwner=sharedPreferences.getBoolean("owner",Boolean.FALSE);
-            db = FirebaseDatabase.getInstance();
-            DatabaseReference Myref = db.getReference("User");
+        db = FirebaseDatabase.getInstance();
+        DatabaseReference Myref = db.getReference("User");
 
-            user =new User(uid);
-            Myref.orderByChild("uid").equalTo(uid).addChildEventListener(new DataList(user));
+        user =new User(uid);
+        Myref.orderByChild("uid").equalTo(uid).addChildEventListener(new DataList(user));
 
 
 
@@ -110,12 +110,11 @@ public class Profile extends NavigationDrawer {
 
 
     private void showProfile() {
-         name = (TextView) findViewById(R.id.user_name);
-       username = (TextView) findViewById(R.id.user_username);
+        name = (TextView) findViewById(R.id.user_name);
+        username = (TextView) findViewById(R.id.user_username);
         email = (TextView) findViewById(R.id.user_email);
-         image= (ImageView) findViewById(R.id.user_image);
+        image= (ImageView) findViewById(R.id.user_image);
         lv=(ListView) findViewById(R.id.recycler_favourite);
-        edit= (ImageButton) findViewById(R.id.editprofile);
 
     }
     public class ProfileAdapter extends BaseAdapter {
@@ -161,7 +160,7 @@ public class Profile extends NavigationDrawer {
                 FirebaseStorage storage=FirebaseStorage.getInstance();
                 StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
                 getFromNetwork(imageref,rest.getRid(),img);
-              //  img.setImageBitmap(restaurant.getImageBitmap());
+                //  img.setImageBitmap(restaurant.getImageBitmap());
             } catch (NullPointerException e){
                 Log.e("immagine non caricata"," ");
             } catch (FileNotFoundException e) {
@@ -191,177 +190,128 @@ public class Profile extends NavigationDrawer {
 
             this.user=dataSnapshot.getValue(user.getClass());
 
-            if(restOwner) {
 
             Log.v("name",user.getName());
 
-                try {
-                    FirebaseStorage storage=FirebaseStorage.getInstance();
-                    StorageReference user_img=storage.getReference("Users");
-                    StorageReference img = user_img.child(user.getUid()+".jpg");
+            try {
+                FirebaseStorage storage=FirebaseStorage.getInstance();
+                StorageReference user_img=storage.getReference("Users");
+                StorageReference img = user_img.child(user.getUid()+".jpg");
 
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    img.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            mlay.removeAllViews();
-                            mlay.inflate(getBaseContext(), R.layout.profile, mlay);
-                            showProfile();
-                                name.setText(user.getName()+" "+user.getSurname());
-                                username.setText(user.getUserName());
-                                email.setText(user.getEmail());
-                            image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-                            DatabaseReference rf= db.getReference("restaurant");
-                            profileAdapter= new ProfileAdapter(getBaseContext());
-                            lv.setAdapter(profileAdapter);
-                            DatabaseReference fav=db.getReference("favourite");
-                            fav.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Iterable<DataSnapshot> rfav=dataSnapshot.getChildren();
-                                    for(DataSnapshot d:rfav) {
-                                        favourite.add(d.getKey());
+                final long ONE_MEGABYTE = 1024 * 1024;
+                img.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        mlay.removeAllViews();
+                        mlay.inflate(getBaseContext(), R.layout.profile, mlay);
+                        showProfile();
 
-                                        DatabaseReference rf = db.getReference("restaurant");
-                                        rf.orderByChild("rid").equalTo(d.getKey()).addChildEventListener(new ChildEventListener() {
-                                            @Override
-                                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        name.setText(user.getName()+" "+user.getSurname());
+                        username.setText(user.getUserName());
+                        email.setText(user.getEmail());
+                        image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 
-                                                try {
-                                                    Restaurant r = new Restaurant(
-                                                            (String) dataSnapshot.child("uid").getValue(),
-                                                            (String) dataSnapshot.child("rid").getValue()
-                                                    );
+                        profileAdapter= new ProfileAdapter(getBaseContext());
+                        lv.setAdapter(profileAdapter);
+                        DatabaseReference fav=db.getReference("favourite");
+                        fav.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Iterable<DataSnapshot> rfav=dataSnapshot.getChildren();
+                                for(DataSnapshot d:rfav) {
+                                    favourite.add(d.getKey());
 
-                                                    r
-                                                            .setName((String) dataSnapshot.child("name").getValue())
-                                                            .setDescription((String) dataSnapshot.child("description").getValue())
-                                                            .setAddress((String) dataSnapshot.child("address").getValue())
-                                                            .setState((String) dataSnapshot.child("state").getValue())
-                                                            .setCity((String) dataSnapshot.child("city").getValue())
-                                                            .setWebsite((String) dataSnapshot.child("website").getValue())
-                                                            .setTelephone((String) dataSnapshot.child("telephone").getValue())
-                                                            .setZip((String) dataSnapshot.child("zip").getValue())
-                                                            .setImageLocalPath((String) dataSnapshot.child("imageLocalPath").getValue());
-                                                    float rating = Float.parseFloat(dataSnapshot.child("rating").getValue().toString());
-                                                    r.setRating(rating);
-                                                    double xcoord = Double.parseDouble(dataSnapshot.child("xcoord").getValue().toString());
-                                                    r.setXCoord(xcoord);
-                                                    double ycoord = Double.parseDouble(dataSnapshot.child("ycoord").getValue().toString());
-                                                    r.setYCoord(ycoord);
-                                                    r.setRatingNumber(Float.parseFloat(dataSnapshot.child("ratingNumber").getValue().toString()));
+                                    DatabaseReference rf = db.getReference("restaurant");
+                                    rf.orderByChild("rid").equalTo(d.getKey()).addChildEventListener(new ChildEventListener() {
+                                        @Override
+                                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                                            try {
+                                                Restaurant r = new Restaurant(
+                                                        (String) dataSnapshot.child("uid").getValue(),
+                                                        (String) dataSnapshot.child("rid").getValue()
+                                                );
+
+                                                r
+                                                        .setName((String) dataSnapshot.child("name").getValue())
+                                                        .setDescription((String) dataSnapshot.child("description").getValue())
+                                                        .setAddress((String) dataSnapshot.child("address").getValue())
+                                                        .setState((String) dataSnapshot.child("state").getValue())
+                                                        .setCity((String) dataSnapshot.child("city").getValue())
+                                                        .setWebsite((String) dataSnapshot.child("website").getValue())
+                                                        .setTelephone((String) dataSnapshot.child("telephone").getValue())
+                                                        .setZip((String) dataSnapshot.child("zip").getValue())
+                                                        .setImageLocalPath((String) dataSnapshot.child("imageLocalPath").getValue());
+                                                float rating = Float.parseFloat(dataSnapshot.child("rating").getValue().toString());
+                                                r.setRating(rating);
+                                                double xcoord = Double.parseDouble(dataSnapshot.child("xcoord").getValue().toString());
+                                                r.setXCoord(xcoord);
+                                                double ycoord = Double.parseDouble(dataSnapshot.child("ycoord").getValue().toString());
+                                                r.setYCoord(ycoord);
+                                                r.setRatingNumber(Float.parseFloat(dataSnapshot.child("ratingNumber").getValue().toString()));
 
 
-                                                    re.add(r);
-                                                    profileAdapter.notifyDataSetChanged();
-                                                } catch (RestaurantException e) {
-                                                    e.printStackTrace();
-                                                }
-
+                                                re.add(r);
+                                                profileAdapter.notifyDataSetChanged();
+                                            } catch (RestaurantException e) {
+                                                e.printStackTrace();
                                             }
 
-                                            @Override
-                                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                        }
 
-                                            }
+                                        @Override
+                                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                                            @Override
-                                            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                                        }
 
-                                            }
+                                        @Override
+                                        public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                                            @Override
-                                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                                        }
 
-                                            }
+                                        @Override
+                                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
+                                        }
 
-                                            }
-                                        });
-                                    }
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
                                 }
+                            }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                }
-                            });
-                            edit.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Log.v("Click","Prova click edit owner");
-                                    Intent edit = new Intent(getBaseContext(), EditProfile.class);
-                                    startActivity(edit);
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                                }
-                            });
+                            }
+                        });
 
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
 
-                                }
-                            });
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
 
 
 
 
-                    //image.setImageBitmap(user.getImageBitmap());
+                //image.setImageBitmap(user.getImageBitmap());
 
 
 
-                } catch (NullPointerException e){
-                    Log.e("immagine non caricata"," ");
-                }
-
+            } catch (NullPointerException e){
+                Log.e("immagine non caricata"," ");
             }
-            else {
-
-                try {
-                    FirebaseStorage storage=FirebaseStorage.getInstance();
-                    StorageReference user_img=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com");
-                    StorageReference img = user_img.child("Users").child(user.getUid()+".jpg");
-
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    img.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            mlay.removeAllViews();
-                            mlay.inflate(getBaseContext(), R.layout.profile, mlay);
-                            showProfile();
-                            name.setText(user.getName()+" "+user.getSurname());
-                            username.setText(user.getUserName());
-                            email.setText(user.getEmail());
-                            image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-                            ProfileAdapter profileAdapter = new ProfileAdapter(getBaseContext());
-                            edit.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Log.v("Click","Prova click edit no owner");
-                                    Intent edit1 = new Intent(getBaseContext(), EditProfile.class);
-                                    startActivity(edit1);
-
-                                }
-                            });
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                        }
-                    });
-                    // image.setImageBitmap(user.getImageBitmap());
-                } catch (NullPointerException e){
-                    Log.e("immagine non caricata"," ");
-                }
-
-            }
-
-
 
         }
+
+
 
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
