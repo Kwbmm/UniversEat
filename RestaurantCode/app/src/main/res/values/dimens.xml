@@ -27,6 +27,6 @@
     <!-- END timetable_restaurant_item.xmlnt_item.xml -->
 
     <!-- SearchMenuResults.java -->
-    <dimen name="progressBar_size">100dp</dimen>
+    <dimen name="progressBar_size">40dp</dimen>
     <!-- END SearchMenuResults.java -->
 </resources>

@@ -143,7 +143,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         this.imageView = (ImageView) findViewById(R.id.iw);
-        this.imageView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
+        this.imageView.setImageDrawable(getResources().getDrawable(R.drawable.new_icon_inverted));
         dList = (ListView) findViewById(R.id.left_drawer);
         dList.setAdapter(adapter);
         dList.setOnItemClickListener(new DrawerListener());

@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
-    tools:context=".SearchRestaurants.SearchRestaurantResults">
+    tools:context=".SearchRestaurants.SearchRestaurantResults"
+    android:background="@color/material_grey_100">
 
     <!-- Loading bar -->
     <ProgressBar

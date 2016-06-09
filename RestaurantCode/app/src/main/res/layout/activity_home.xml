@@ -23,7 +23,6 @@
     <ProgressBar
         android:layout_width="@dimen/progressBar_size"
         android:layout_height="@dimen/progressBar_size"
-        android:layout_below="@id/search_viewMenu"
         android:id="@+id/progressBar_loadingDataHome"
         android:indeterminate="true"
         android:layout_centerHorizontal="true"
@@ -32,12 +31,12 @@
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/home_recyclerViewHome"
         android:layout_below="@id/search_viewMenu"
         android:focusable="false"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:visibility="gone"
-        />
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp" />
 </RelativeLayout>

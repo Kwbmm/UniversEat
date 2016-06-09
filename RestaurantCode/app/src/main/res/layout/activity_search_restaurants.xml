@@ -30,7 +30,6 @@
     <ProgressBar
         android:layout_width="@dimen/progressBar_size"
         android:layout_height="@dimen/progressBar_size"
-        android:layout_below="@id/button_SearchRestaurants"
         android:id="@+id/progressBar_loadingDataRestaurant"
         android:indeterminate="true"
         android:layout_centerInParent="true"

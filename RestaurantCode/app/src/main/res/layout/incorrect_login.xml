@@ -7,7 +7,7 @@
         android:layout_height="wrap_content"
         android:text="@string/incorrect_login"
         android:textAlignment="center"
-        android:textColor="@android:color/holo_blue_dark"
+        android:textColor="@color/colorPrimary"
         android:id="@+id/incorrect_text"/>
 
 </LinearLayout>

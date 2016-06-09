@@ -9,39 +9,41 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_weight="1"
-      app:cardElevation="3dp"
+      app:cardElevation="@dimen/cardview_default_elevation"
+      app:cardCornerRadius="@dimen/cardview_default_radius"
       app:cardUseCompatPadding="true"
       >
       <RelativeLayout
           android:layout_width="match_parent"
-          android:layout_height="match_parent">
+          android:layout_height="match_parent"
+          android:gravity="center_vertical">
           <ImageView
-              android:layout_width="20dp"
-              android:layout_height="20dp"
+              android:layout_width="wrap_content"
+              android:layout_height="25dp"
               android:id="@+id/vegan"
               android:layout_gravity="right"
               android:src="@drawable/ic_vegan_black"
               android:tint="#007f24"
               android:layout_alignParentRight="true"/>
           <ImageView
-              android:layout_width="20dp"
-              android:layout_height="20dp"
+              android:layout_width="wrap_content"
+              android:layout_height="25dp"
               android:id="@+id/vegetarian"
               android:src="@drawable/ic_vegetarian_black"
               android:tint="#951f9b"
               android:layout_toLeftOf="@id/vegan"
               />
           <ImageView
-              android:layout_width="20dp"
-              android:layout_height="20dp"
+              android:layout_width="wrap_content"
+              android:layout_height="25dp"
               android:id="@+id/gluten_free"
               android:layout_toLeftOf="@id/vegetarian"
               android:src="@drawable/ic_nogluten_black"
               android:tint="#c8a004"
               />
           <ImageView
-              android:layout_width="20dp"
-              android:layout_height="20dp"
+              android:layout_width="wrap_content"
+              android:layout_height="25dp"
               android:id="@+id/hot"
               android:layout_toLeftOf="@id/gluten_free"
               android:src="@drawable/ic_hot_black"
@@ -49,7 +51,7 @@
               />
       <TextView
           android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
+          android:layout_height="25dp"
           android:text="@string/menu_dish_frag_DishName"
           android:textSize="20dp"
           android:layout_alignParentLeft="true"
@@ -71,5 +73,5 @@
     android:layout_marginRight="3dp"
     android:layout_marginLeft="3dp"
     android:id="@+id/delete_dish"
-    />
+    android:backgroundTint="#ffffff" />
 </LinearLayout>
