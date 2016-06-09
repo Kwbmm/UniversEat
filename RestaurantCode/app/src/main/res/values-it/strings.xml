@@ -405,8 +405,8 @@
     <string-array name="filterCurtainRestaurantItems">
         <item>Ticket</item>
         <item>Valutazione da 3 a 5</item>
-        <item>Open now</item>
-        <item>Near here (3 Km)</item>
+        <item>Aperto adesso</item>
+        <item>Qui vicino (3 Km)</item>
     </string-array>
 
     <string name="emailaddressold">Inserisci la vecchia mail</string>
