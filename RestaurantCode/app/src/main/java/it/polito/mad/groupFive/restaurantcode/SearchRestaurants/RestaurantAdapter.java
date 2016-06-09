@@ -25,6 +25,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
@@ -34,6 +36,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
 import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder>{
+    private static final float DISTANCE_NEAR = 3000; //Maximum distance to consider the restaurant near
     private ArrayList<String> favourites;
     public class DistanceRestaurant extends Restaurant {
 
@@ -180,44 +183,26 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             case 0: //By ticket
                 this.filterByTicket();
                 break;
-            case 1: //By beverage
-                this.filterByBeverage();
-                break;
-            case 2: //By Service fee
-                this.filterByServiceFee();
-                break;
-            case 3: //Vegan
-                this.filterByVegan();
-            case 4: //Vegetarian
-                this.filterByVegetarian();
-                break;
-            case 5: //By High rating (3-5)
+            case 1: //By High rating (3-5)
                 this.filterByHighRating();
                 break;
-            case 6: //Open now
+            case 2: //Open now
                 this.filterByOpenNow();
+                break;
+            case 3: //Less than 3 km
+                this.filterByNear();
                 break;
         }
     }
 
     private void filterByTicket() {
-
-    }
-
-    private void filterByBeverage() {
-
-    }
-
-    private void filterByServiceFee() {
-
-    }
-
-    private void filterByVegan() {
-
-    }
-
-    private void filterByVegetarian() {
-
+        for (int i = 0; i < this.restaurants.size(); i++) {
+            DistanceRestaurant dr = this.restaurants.get(i);
+            HashMap<String,Boolean> tickets = (HashMap<String,Boolean>)dr.getTickets();
+            if(tickets != null && tickets.size() > 0){
+                dr.toKeep = true;
+            }
+        }
     }
 
     private void filterByHighRating() {
@@ -233,6 +218,14 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         for (int i = 0; i < this.restaurants.size(); i++) {
             DistanceRestaurant dr = this.restaurants.get(i);
             if(dr.isOpen())
+                dr.toKeep = true;
+        }
+    }
+
+    private void filterByNear() {
+        for (int i = 0; i < this.restaurants.size(); i++) {
+            DistanceRestaurant dr = this.restaurants.get(i);
+            if(dr.getDistance() <= DISTANCE_NEAR)
                 dr.toKeep = true;
         }
     }
