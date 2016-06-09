@@ -227,6 +227,11 @@ public class RestaurantManagement extends NavigationDrawer {
         TextView raddress= (TextView)findViewById(R.id.restaurant_address);
         RatingBar rbar=(RatingBar)findViewById(R.id.restaurant_rating);
         ImageView rmimw = (ImageView) findViewById(R.id.restaurant_image);
+        try {
+            getFromNetwork(storageRoot,restaurant.getRid(),rmimw);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         rname.setText(restaurant.getName());
         raddress.setText(restaurant.getCity());
         rbar.setRating(restaurant.getRating());
