@@ -105,28 +105,36 @@
     <string name="SearchResult_filterConfirmButtonText">Filter</string>
     <string name="SearchResult_filterCancelButtonText">Cancel</string>
 
+    <string-array name="sortCurtainMenuItems">
+        <item>A-Z</item>
+        <item>Z-A</item>
+        <item>Price lower first</item>
+        <item>Price higher first</item>
+    </string-array>
+
+    <string-array name="sortCurtainRestaurantItems">
+        <item>A-Z</item>
+        <item>Z-A</item>
+        <item>Price lower first</item>
+        <item>Price higher first</item>
+        <item>Nearest first</item>
+    </string-array>
+
     <string-array name="filterCurtainMenuItems">
         <item>Beverage included</item>
         <item>No Service Fee</item>
-        <item>Vegan</item>
-        <item>Vegetarian</item>
-        <item>Price from 1 to 10</item>
-        <item>Price from 11 to 25</item>
-        <item>Price greater than 25</item>
     </string-array>
-    <!-- END SearchMenuResults.java -->
 
-    <!-- SearchRestaurantResults.java -->
     <string-array name="filterCurtainRestaurantItems">
-        <item>Ticket</item>
+        <item>Ticket only</item>
+        <item>No ticket</item>
         <item>Beverage included</item>
-        <item>No service fee</item>
-        <item>Vegan</item>
-        <item>Vegetarian</item>
-        <item>Rating from 3 to 5</item>
+        <item>Beverage not included</item>
+        <item>Service Fee: yes</item>
+        <item>Service Fee: no</item>
         <item>Open now</item>
     </string-array>
-    <!-- END SearchRestaurantResults.java -->
+    <!-- END SearchMenuResults.java -->
 
     <!-- toolbar_search_data.xml -->
     <string name="sortTitle">Sort by</string>
@@ -385,12 +393,6 @@
     <string name="password6">Password must be at least 6 char</string>
     <string name="email">The mail address is not correct</string>
 
-    <string name="emailaddressold">Insert old mail address</string>
-    <string name="emailaddressnew">Insert new mail address</string>
-
-    <string name="passwordwrong">The password is not correct</string>
-    <string name="mailwrong">The old mail address is not correct</string>
-
     <array name="tags">
         <item>Pizza</item>
         <item>Pasta</item>
@@ -450,10 +452,4 @@
     <string name="actionBar_createMenu">Create Menu</string>
     <string name="actionBar_createRestaurant">Create Restaurant</string>
     <string name="actionBar_signUp">Sign Up</string>
-    <string name="actionBar_restaurantSearch">Restaurant Search</string>
-
-    <string name="nowOpen">Now Open!</string>
-    <string name="nowClosed">Now Closed</string>
-    <string name="view_timetable">VIEW TIMETABLE</string>
-    <string name="hide_timetable">HIDE</string>
 </resources>

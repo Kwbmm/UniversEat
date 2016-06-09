@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -47,6 +51,7 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
 
 
 /**
@@ -58,7 +63,7 @@ public class Profile extends NavigationDrawer {
     User user;
     FirebaseDatabase db;
     DatabaseReference myRef;
-    
+    ArrayList<String> favourite;
     SharedPreferences sharedPreferences;
     boolean restOwner;
     FrameLayout mlay;
@@ -66,6 +71,7 @@ public class Profile extends NavigationDrawer {
     TextView username;
     TextView email;
     ImageView image;
+    ListView lv;
     ProfileAdapter profileAdapter;
     ImageButton edit;
     List<Restaurant> re;
@@ -78,12 +84,12 @@ public class Profile extends NavigationDrawer {
         sharedPreferences=this.getSharedPreferences("RestaurantCode.Userdata",this.MODE_PRIVATE);
         uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
         re=new ArrayList<Restaurant>();
+        favourite=new ArrayList<>();
         if(uid==null) finish();
         restOwner=sharedPreferences.getBoolean("owner",Boolean.FALSE);
             db = FirebaseDatabase.getInstance();
             DatabaseReference Myref = db.getReference("User");
 
-            //Myref.child("Owner").addValueEventListener(new UserDataListener(this));
             user =new User(uid);
             Myref.orderByChild("uid").equalTo(uid).addChildEventListener(new DataList(user));
 
@@ -108,6 +114,7 @@ public class Profile extends NavigationDrawer {
        username = (TextView) findViewById(R.id.user_username);
         email = (TextView) findViewById(R.id.user_email);
          image= (ImageView) findViewById(R.id.user_image);
+        lv=(ListView) findViewById(R.id.recycler_favourite);
         edit= (ImageButton) findViewById(R.id.editprofile);
 
     }
@@ -134,7 +141,6 @@ public class Profile extends NavigationDrawer {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(getBaseContext()).inflate(R.layout.restaurant_view, null);
-
             final Restaurant rest = re.get(position);
 
             TextView name= (TextView)convertView.findViewById(R.id.restaurant_name);
@@ -142,6 +148,11 @@ public class Profile extends NavigationDrawer {
             RatingBar rbar=(RatingBar)convertView.findViewById(R.id.restaurant_rating);
             ImageView img = (ImageView) convertView.findViewById(R.id.restaurant_image);
             CardView card = (CardView) convertView.findViewById(R.id.restaurant_card);
+            ImageButton fav_b=(ImageButton) convertView.findViewById(R.id.restaurant_favourite);
+            TextView distance=(TextView) convertView.findViewById(R.id.restaurant_distance);
+            distance.setText("");
+            fav_b.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black_24dp));
+            fav_b.setOnClickListener(new OnFavourite(fav_b,rest));
             name.setText(rest.getName());
             address.setText(rest.getAddress());
             rbar.setRating(rest.getRating());
@@ -202,62 +213,78 @@ public class Profile extends NavigationDrawer {
                             image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
                             DatabaseReference rf= db.getReference("restaurant");
                             profileAdapter= new ProfileAdapter(getBaseContext());
-                            rf.orderByChild("uid").equalTo(uid).addChildEventListener(new ChildEventListener() {
+                            lv.setAdapter(profileAdapter);
+                            DatabaseReference fav=db.getReference("favourite");
+                            fav.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
-                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Iterable<DataSnapshot> rfav=dataSnapshot.getChildren();
+                                    for(DataSnapshot d:rfav) {
+                                        favourite.add(d.getKey());
 
-                                    try {
-                                        Restaurant r = new Restaurant(
-                                                (String)dataSnapshot.child("uid").getValue(),
-                                                (String)dataSnapshot.child("rid").getValue()
-                                        );
+                                        DatabaseReference rf = db.getReference("restaurant");
+                                        rf.orderByChild("rid").equalTo(d.getKey()).addChildEventListener(new ChildEventListener() {
+                                            @Override
+                                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                                        r
-                                                .setName((String)dataSnapshot.child("name").getValue())
-                                                .setDescription((String)dataSnapshot.child("description").getValue())
-                                                .setAddress((String)dataSnapshot.child("address").getValue())
-                                                .setState((String)dataSnapshot.child("state").getValue())
-                                                .setCity((String)dataSnapshot.child("city").getValue())
-                                                .setWebsite((String)dataSnapshot.child("website").getValue())
-                                                .setTelephone((String)dataSnapshot.child("telephone").getValue())
-                                                .setZip((String)dataSnapshot.child("zip").getValue())
-                                                .setImageLocalPath((String)dataSnapshot.child("imageLocalPath").getValue());
-                                        float rating = Float.parseFloat(dataSnapshot.child("rating").getValue().toString());
-                                        r.setRating(rating);
-                                        double xcoord = Double.parseDouble(dataSnapshot.child("xcoord").getValue().toString());
-                                        r.setXCoord(xcoord);
-                                        double ycoord = Double.parseDouble(dataSnapshot.child("ycoord").getValue().toString());
-                                        r.setYCoord(ycoord);
-                                        r.setRatingNumber(Float.parseFloat(dataSnapshot.child("ratingNumber").getValue().toString()));
+                                                try {
+                                                    Restaurant r = new Restaurant(
+                                                            (String) dataSnapshot.child("uid").getValue(),
+                                                            (String) dataSnapshot.child("rid").getValue()
+                                                    );
+
+                                                    r
+                                                            .setName((String) dataSnapshot.child("name").getValue())
+                                                            .setDescription((String) dataSnapshot.child("description").getValue())
+                                                            .setAddress((String) dataSnapshot.child("address").getValue())
+                                                            .setState((String) dataSnapshot.child("state").getValue())
+                                                            .setCity((String) dataSnapshot.child("city").getValue())
+                                                            .setWebsite((String) dataSnapshot.child("website").getValue())
+                                                            .setTelephone((String) dataSnapshot.child("telephone").getValue())
+                                                            .setZip((String) dataSnapshot.child("zip").getValue())
+                                                            .setImageLocalPath((String) dataSnapshot.child("imageLocalPath").getValue());
+                                                    float rating = Float.parseFloat(dataSnapshot.child("rating").getValue().toString());
+                                                    r.setRating(rating);
+                                                    double xcoord = Double.parseDouble(dataSnapshot.child("xcoord").getValue().toString());
+                                                    r.setXCoord(xcoord);
+                                                    double ycoord = Double.parseDouble(dataSnapshot.child("ycoord").getValue().toString());
+                                                    r.setYCoord(ycoord);
+                                                    r.setRatingNumber(Float.parseFloat(dataSnapshot.child("ratingNumber").getValue().toString()));
 
 
+                                                    re.add(r);
+                                                    profileAdapter.notifyDataSetChanged();
+                                                } catch (RestaurantException e) {
+                                                    e.printStackTrace();
+                                                }
 
-                                        re.add(r);
-                                        profileAdapter.notifyDataSetChanged();
-                                    } catch (RestaurantException e) {
-                                        e.printStackTrace();
+                                            }
+
+                                            @Override
+                                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                                            }
+
+                                            @Override
+                                            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                            }
+
+                                            @Override
+                                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
                                     }
-
-                                }
-
-                                @Override
-                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                                }
-
-                                @Override
-                                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                                }
-
-                                @Override
-                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
                                 }
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-
                                 }
                             });
                             edit.setOnClickListener(new View.OnClickListener() {
@@ -275,8 +302,8 @@ public class Profile extends NavigationDrawer {
                         @Override
                         public void onFailure(@NonNull Exception e) {
 
-                        }
-                    });
+                                }
+                            });
 
 
 
@@ -332,6 +359,8 @@ public class Profile extends NavigationDrawer {
 
             }
 
+
+
         }
 
         @Override
@@ -372,5 +401,73 @@ public class Profile extends NavigationDrawer {
                 }
             }
         });
+    }
+    public class OnFavourite implements View.OnClickListener{
+        private ImageButton imageButton;
+        private Restaurant restaurant;
+        private ArrayList<String> menusList;
+
+
+        public OnFavourite(ImageButton imageButton, Restaurant restaurant) {
+            this.imageButton = imageButton;
+            this.restaurant = restaurant;
+            menusList=new ArrayList<>();
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (favourite.contains(restaurant.getRid())){
+                //is favourite
+                favourite.remove(restaurant.getRid());
+                imageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_border_black_24dp));
+                FirebaseDatabase db=FirebaseDatabase.getInstance();
+                DatabaseReference ref=db.getReference("favourite");
+                ref.child(uid).child(restaurant.getRid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                });
+                //remove on server
+            }
+            else{
+                favourite.add(restaurant.getRid());
+                //add on server
+                imageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black_24dp));
+                FirebaseDatabase db=FirebaseDatabase.getInstance();
+                final DatabaseReference menus=db.getReference("menu");
+                menus.orderByChild("rid").equalTo(restaurant.getRid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        FirebaseDatabase db=FirebaseDatabase.getInstance();
+                        DatabaseReference ref=db.getReference("favourite");
+                        Iterable<DataSnapshot> favs=dataSnapshot.getChildren();
+                        for(DataSnapshot d:favs){
+
+                            ref.child(uid).child(restaurant.getRid()).child(d.getKey()).setValue(true).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+
+
+                                }
+                            });
+
+
+
+
+                        }
+                        Toast.makeText(getBaseContext(),restaurant.getName()+" now is your favourite!",Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+        }
     }
 }

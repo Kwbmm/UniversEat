@@ -10,10 +10,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
@@ -23,8 +33,8 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
 import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder>{
-
-    public class DistanceRestaurant extends Restaurant {
+    private ArrayList<String> favourites;
+    private class DistanceRestaurant extends Restaurant {
 
         private float distance;
         private boolean toKeep;
@@ -57,11 +67,33 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     private RecyclerView rv;
     private ProgressBar pb;
     private Context context;
+    private Boolean auth=false;
+    private String uid;
 
     public RestaurantAdapter(RecyclerView rv,ProgressBar pb,Context context){
         this.rv = rv;
         this.pb = pb;
         this.context = context;
+        favourites=new ArrayList<>();
+        FirebaseDatabase db=FirebaseDatabase.getInstance();
+        DatabaseReference ref=db.getReference("favourite");
+        uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (uid!=null){
+            auth=true;
+        ref.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> favs=dataSnapshot.getChildren();
+                for(DataSnapshot d:favs){
+                    favourites.add(d.getKey().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });}
         this.restaurants = new SortedList<DistanceRestaurant>(DistanceRestaurant.class,
                 new SortedList.Callback<DistanceRestaurant>() {
                     @Override
@@ -229,7 +261,13 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     @Override
     public void onBindViewHolder(final RestaurantViewHolder holder, int position) {
         final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
-        final DistanceRestaurant restaurant = restaurants.get(position);
+        final Restaurant restaurant = restaurants.get(position);
+        if(auth==true) {
+            if (favourites.contains(restaurant.getRid())) {
+                holder.favourite.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_star_black_24dp));
+            }
+            holder.favourite.setOnClickListener(new OnFavourite(holder, restaurant));
+        }
         holder.restaurant_address.setText(restaurant.getAddress());
         holder.restaurant_name.setText(restaurant.getName());
         holder.restaurant_rating.setRating(restaurant.getRating());
@@ -266,4 +304,73 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     }
 
     public SortedList<DistanceRestaurant> getRestaurants(){ return this.restaurants; }
+
+    public class OnFavourite implements View.OnClickListener{
+        private RestaurantViewHolder holder;
+        private Restaurant restaurant;
+        private ArrayList<String> menusList;
+
+
+        public OnFavourite(RestaurantViewHolder holder, Restaurant restaurant) {
+            this.holder = holder;
+            this.restaurant = restaurant;
+            menusList=new ArrayList<>();
+        }
+
+        @Override
+        public void onClick(View v) {
+           if (favourites.contains(restaurant.getRid())){
+               //is favourite
+               favourites.remove(restaurant.getRid());
+               holder.favourite.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_star_border_black_24dp));
+               FirebaseDatabase db=FirebaseDatabase.getInstance();
+               DatabaseReference ref=db.getReference("favourite");
+               ref.child(uid).child(restaurant.getRid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                   @Override
+                   public void onSuccess(Void aVoid) {
+
+                   }
+               });
+               //remove on server
+           }
+            else{
+               favourites.add(restaurant.getRid());
+               //add on server
+               holder.favourite.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_star_black_24dp));
+               FirebaseDatabase db=FirebaseDatabase.getInstance();
+               final DatabaseReference menus=db.getReference("menu");
+               menus.orderByChild("rid").equalTo(restaurant.getRid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                   @Override
+                   public void onDataChange(DataSnapshot dataSnapshot) {
+                       FirebaseDatabase db=FirebaseDatabase.getInstance();
+                       DatabaseReference ref=db.getReference("favourite");
+                       Iterable<DataSnapshot> favs=dataSnapshot.getChildren();
+                       for(DataSnapshot d:favs){
+
+                       ref.child(uid).child(restaurant.getRid()).child(d.getKey()).setValue(true).addOnSuccessListener(new OnSuccessListener<Void>() {
+                           @Override
+                           public void onSuccess(Void aVoid) {
+
+
+
+                           }
+                       });
+
+
+
+
+                   }
+                       Toast.makeText(context,restaurant.getName()+" now is your favourite!",Toast.LENGTH_LONG).show();
+                   }
+
+                   @Override
+                   public void onCancelled(DatabaseError databaseError) {
+
+                   }
+               });
+
+           }
+
+        }
+    }
 }

@@ -3,6 +3,8 @@ package it.polito.mad.groupFive.restaurantcode.holders;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder{
     public ImageView restaurant_image;
     public CardView card;
     public TextView distance;
+    public ImageButton favourite;
 
     public RestaurantViewHolder(View itemView) {
         super(itemView);
@@ -25,5 +28,6 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder{
         this.restaurant_image = (ImageView) itemView.findViewById(R.id.restaurant_image);
         this.card= (CardView) itemView.findViewById(R.id.restaurant_card);
         this.distance=(TextView) itemView.findViewById(R.id.restaurant_distance);
+        this.favourite=(ImageButton) itemView.findViewById(R.id.restaurant_favourite);
     }
 }

@@ -27,20 +27,26 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDQhAjHBN1S0mnw5LYvJJR0-vFwJ1pdG7g" />
-
-        <activity
-            android:name=".Home.Home"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".Home.SearchMenuResults" />
-
+        <activity android:name=".SplashScreen"
+            android:noHistory="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".Home.Home"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".Home.SearchMenuResults" />
+
+
         </activity>
         <activity
             android:name=".Home.SearchMenuResults"
@@ -63,12 +69,12 @@
         </activity>
         <activity
             android:name=".SearchRestaurants.SearchRestaurantResults"
-            android:launchMode="singleTop">
-        </activity>
+            android:launchMode="singleTop" />
         <activity
             android:name=".NavigationDrawer"
             android:noHistory="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".RestaurantManagement"
             android:launchMode="singleTop"
@@ -117,7 +123,7 @@
 
         <service
             android:name=".Notification_Listener"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 
 </manifest>
