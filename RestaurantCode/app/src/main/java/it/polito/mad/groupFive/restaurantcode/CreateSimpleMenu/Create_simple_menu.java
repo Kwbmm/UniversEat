@@ -1,10 +1,12 @@
 package it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu;
 
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -123,6 +125,8 @@ public class Create_simple_menu extends NavigationDrawer implements Create_simpl
     @Override
     public void loading() {
         mlay.addView(getLayoutInflater().inflate(R.layout.loading_bar,null));
+        ProgressBar pb=(ProgressBar)findViewById(R.id.progressBar_loading);
+        pb.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
     }
 

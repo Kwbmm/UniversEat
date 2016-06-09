@@ -3,6 +3,7 @@ package it.polito.mad.groupFive.restaurantcode.SearchRestaurants;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -68,6 +69,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
                 .build();
         this.db = FirebaseDatabase.getInstance();
         this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataRestaurant);
+        pb.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         this.rv = (RecyclerView) findViewById(R.id.searchRestaurants_recyclerView);
         this.btnSearch = (Button) findViewById(R.id.button_SearchRestaurants);
         this.btnSearch.setOnClickListener(new View.OnClickListener() {

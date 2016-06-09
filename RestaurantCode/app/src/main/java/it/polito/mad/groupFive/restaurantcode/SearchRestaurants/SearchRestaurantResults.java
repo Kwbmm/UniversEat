@@ -2,6 +2,7 @@ package it.polito.mad.groupFive.restaurantcode.SearchRestaurants;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -47,6 +48,7 @@ public class SearchRestaurantResults extends NavigationDrawer {
         this.inputLongitude = b.getDouble("lon");
         this.rv = (RecyclerView)findViewById(R.id.recyclerView_DataView);
         this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingSearchViewData);
+        pb.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         this.context = this;
         if(this.rv != null)
             this.showRestaurant();
