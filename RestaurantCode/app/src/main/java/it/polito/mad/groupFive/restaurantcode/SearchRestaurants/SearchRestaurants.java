@@ -145,17 +145,21 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
         //Get the current location
         if(this.rv != null){
             RestaurantAdapter ra = new RestaurantAdapter(this.rv,this.pb,this);
-            Log.i(METHOD_NAME,"Setting adapter");
             this.rv.setAdapter(ra);
             LinearLayoutManager llmVertical = new LinearLayoutManager(this);
             llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
             this.rv.setLayoutManager(llmVertical);
-            //Create a location request object first
-            LocationRequest locationReq = new LocationRequest();
-            locationReq.setInterval(LOCATION_UPDATE_TIME_MS);
-            locationReq.setFastestInterval(LOCATION_UPDATE_FASTEST_TIME_MS);
-            locationReq.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            LocationServices.FusedLocationApi.requestLocationUpdates(this.gac,locationReq,new LocationListenerForRestaurants(this.gac,ra,this,this.paf,this.btnSearch,this.latitude,this.longitude));
+            if(lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                //Create a location request object first
+                LocationRequest locationReq = new LocationRequest();
+                locationReq.setInterval(LOCATION_UPDATE_TIME_MS);
+                locationReq.setFastestInterval(LOCATION_UPDATE_FASTEST_TIME_MS);
+                locationReq.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                LocationServices.FusedLocationApi.requestLocationUpdates(this.gac,locationReq,new LocationListenerForRestaurants(this.gac,ra,this,this.paf,this.btnSearch,this.latitude,this.longitude));
+            }
+            else{
+                getRestaurants(-1);
+            }
         }
     }
 

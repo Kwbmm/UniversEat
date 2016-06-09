@@ -121,25 +121,21 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         //Get the current location
         if(this.rv != null){
             MenuAdapter ma = new MenuAdapter(this.rv,this.pb,this);
-            if(this.rv.getAdapter() == null){
-                Log.i(METHOD_NAME,"Setting adapter");
-                this.rv.setAdapter(ma);
+            this.rv.setAdapter(ma);
+            LinearLayoutManager llmVertical = new LinearLayoutManager(this);
+            llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
+            this.rv.setLayoutManager(llmVertical);
+            if(lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                //Create a location request object first
+                LocationRequest locationReq = new LocationRequest();
+                locationReq.setInterval(LOCATION_UPDATE_TIME_MS);
+                locationReq.setFastestInterval(LOCATION_UPDATE_FASTEST_TIME_MS);
+                locationReq.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                LocationServices.FusedLocationApi.requestLocationUpdates(this.gac,locationReq,new LocationListenerForMenus(this.gac,ma,this));
             }
             else{
-                Log.i(METHOD_NAME,"Swapping adapter");
-                this.rv.swapAdapter(ma,false);
+                getMenus(-1);
             }
-            if(this.rv.getLayoutManager() == null){
-                LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-                llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-                this.rv.setLayoutManager(llmVertical);
-            }
-            //Create a location request object first
-            LocationRequest locationReq = new LocationRequest();
-            locationReq.setInterval(LOCATION_UPDATE_TIME_MS);
-            locationReq.setFastestInterval(LOCATION_UPDATE_FASTEST_TIME_MS);
-            locationReq.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            LocationServices.FusedLocationApi.requestLocationUpdates(this.gac,locationReq,new LocationListenerForMenus(this.gac,ma,this));
         }
     }
 
