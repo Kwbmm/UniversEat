@@ -33,6 +33,15 @@
         <item>Sat</item>
         <item>Sun</item>
     </string-array>
+    <string-array name="weekENG">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
 
     <!-- activity_home.xml -->
     <string name="search_helloMenu">What do you want to eat?</string>
@@ -435,4 +444,10 @@
     <string name="actionBar_createMenu">Create Menu</string>
     <string name="actionBar_createRestaurant">Create Restaurant</string>
     <string name="actionBar_signUp">Sign Up</string>
+    <string name="actionBar_restaurantSearch">Restaurant Search</string>
+
+    <string name="nowOpen">Now Open!</string>
+    <string name="nowClosed">Now Closed</string>
+    <string name="view_timetable">VIEW TIMETABLE</string>
+    <string name="hide_timetable">HIDE</string>
 </resources>

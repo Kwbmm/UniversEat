@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchRestaurants.SearchRestaurants">
+    tools:context=".SearchRestaurants.SearchRestaurants"
+    android:background="@color/material_grey_100">
 
     <fragment
         android:id="@+id/place_autocomplete_fragment"
@@ -43,6 +44,5 @@
         android:focusable="false"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 </RelativeLayout>

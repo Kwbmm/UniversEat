@@ -333,89 +333,176 @@ public class Restaurant {
         Calendar now = Calendar.getInstance();
         long nowMS = now.getTimeInMillis();
         int dow = now.get(Calendar.DAY_OF_WEEK);
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm",Locale.getDefault());
+        Calendar startLunch= Calendar.getInstance();
+        Calendar endLunch=Calendar.getInstance();
+        Calendar startDinner=Calendar.getInstance();
+        Calendar endDinner=Calendar.getInstance();
+        String time[];
         try {
             switch (dow){
                 case 1:{ //Sunday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(6).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(6).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(6).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(6).get("end"));
-                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                        return true;
-                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    if(this.timetableLunch.containsKey("Sun")) {
+                        time = this.timetableLunch.get("Sun").get("start").split(":");
+                        startLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        startLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        time = (this.timetableLunch.get("Sun").get("end").split(":"));
+                        endLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        endLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        if(nowMS >= startLunch.getTimeInMillis() && nowMS < endLunch.getTimeInMillis())
+                            return true;
+                    }
+                    time = this.timetableDinner.get("Sun").get("start").split(":");
+                    startDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    startDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    time = (this.timetableDinner.get("Sun").get("end").split(":"));
+                    endDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    endDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    if(endDinner.getTimeInMillis()<startDinner.getTimeInMillis())
+                        endDinner.set(Calendar.DAY_OF_MONTH,endDinner.get(Calendar.DAY_OF_MONTH)+1);
+                    if(nowMS >= startDinner.getTimeInMillis() && nowMS < endDinner.getTimeInMillis())
                         return true;
                     return false;
                 }
                 case 2:{ //Monday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(0).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(0).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(0).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(0).get("end"));
-                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                        return true;
-                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    if(this.timetableLunch.containsKey("Mon")) {
+                        time = this.timetableLunch.get("Mon").get("start").split(":");
+                        startLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        startLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        time = (this.timetableLunch.get("Mon").get("end").split(":"));
+                        endLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        endLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        if(nowMS >= startLunch.getTimeInMillis() && nowMS < endLunch.getTimeInMillis())
+                            return true;
+                    }
+                    time = this.timetableDinner.get("Mon").get("start").split(":");
+                    startDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    startDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    time = (this.timetableDinner.get("Mon").get("end").split(":"));
+                    endDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    endDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    if(endDinner.getTimeInMillis()<startDinner.getTimeInMillis())
+                        endDinner.set(Calendar.DAY_OF_MONTH,endDinner.get(Calendar.DAY_OF_MONTH)+1);
+                    if(nowMS >= startDinner.getTimeInMillis() && nowMS < endDinner.getTimeInMillis())
                         return true;
                     return false;
                 }
                 case 3:{ //Tuesday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(1).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(1).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(1).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(1).get("end"));
-                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                        return true;
-                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    if(this.timetableLunch.containsKey("Tue")) {
+                        time = this.timetableLunch.get("Tue").get("start").split(":");
+                        startLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        startLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        time = (this.timetableLunch.get("Tue").get("end").split(":"));
+                        endLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        endLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        if(nowMS >= startLunch.getTimeInMillis() && nowMS < endLunch.getTimeInMillis())
+                            return true;
+                    }
+                    time = this.timetableDinner.get("Tue").get("start").split(":");
+                    startDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    startDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    time = (this.timetableDinner.get("Tue").get("end").split(":"));
+                    endDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    endDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    if(endDinner.getTimeInMillis()<startDinner.getTimeInMillis())
+                        endDinner.set(Calendar.DAY_OF_MONTH,endDinner.get(Calendar.DAY_OF_MONTH)+1);
+                    if(nowMS >= startDinner.getTimeInMillis() && nowMS < endDinner.getTimeInMillis())
                         return true;
                     return false;
                 }
                 case 4:{ //Wednesday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(2).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(2).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(2).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(2).get("end"));
-                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                        return true;
-                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    if(this.timetableLunch.containsKey("Wed")) {
+                        time = this.timetableLunch.get("Wed").get("start").split(":");
+                        startLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        startLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        time = (this.timetableLunch.get("Wed").get("end").split(":"));
+                        endLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        endLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        if(nowMS >= startLunch.getTimeInMillis() && nowMS < endLunch.getTimeInMillis())
+                            return true;
+                    }
+                    time = this.timetableDinner.get("Wed").get("start").split(":");
+                    startDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    startDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    time = (this.timetableDinner.get("Wed").get("end").split(":"));
+                    endDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    endDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    if(endDinner.getTimeInMillis()<startDinner.getTimeInMillis())
+                        endDinner.set(Calendar.DAY_OF_MONTH,endDinner.get(Calendar.DAY_OF_MONTH)+1);
+                    if(nowMS >= startDinner.getTimeInMillis() && nowMS < endDinner.getTimeInMillis())
                         return true;
                     return false;
                 }
                 case 5:{ //Thursday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(3).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(3).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(3).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(3).get("end"));
-                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                        return true;
-                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    if(this.timetableLunch.containsKey("Thu")) {
+                        time = this.timetableLunch.get("Thu").get("start").split(":");
+                        startLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        startLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        time = (this.timetableLunch.get("Thu").get("end").split(":"));
+                        endLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        endLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        if(nowMS >= startLunch.getTimeInMillis() && nowMS < endLunch.getTimeInMillis())
+                            return true;
+                    }
+                    time = this.timetableDinner.get("Thu").get("start").split(":");
+                    startDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    startDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    time = (this.timetableDinner.get("Thu").get("end").split(":"));
+                    endDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    endDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    if(endDinner.getTimeInMillis()<startDinner.getTimeInMillis())
+                        endDinner.set(Calendar.DAY_OF_MONTH,endDinner.get(Calendar.DAY_OF_MONTH)+1);
+                    if(nowMS >= startDinner.getTimeInMillis() && nowMS < endDinner.getTimeInMillis())
                         return true;
                     return false;
                 }
                 case 6:{ //Friday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(4).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(4).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(4).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(4).get("end"));
-                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                        return true;
-                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    if(this.timetableLunch.containsKey("Fri")) {
+                        time = this.timetableLunch.get("Fri").get("start").split(":");
+                        startLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        startLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        time = (this.timetableLunch.get("Fri").get("end").split(":"));
+                        endLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        endLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        if(nowMS >= startLunch.getTimeInMillis() && nowMS < endLunch.getTimeInMillis())
+                            return true;
+                    }
+                    time = this.timetableDinner.get("Fri").get("start").split(":");
+                    startDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    startDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    time = (this.timetableDinner.get("Fri").get("end").split(":"));
+                    endDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    endDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    if(endDinner.getTimeInMillis()<startDinner.getTimeInMillis())
+                        endDinner.set(Calendar.DAY_OF_MONTH,endDinner.get(Calendar.DAY_OF_MONTH)+1);
+                    if(nowMS >= startDinner.getTimeInMillis() && nowMS < endDinner.getTimeInMillis())
                         return true;
                     return false;
                 }
                 case 7:{ //Saturday
-                    Date startLunch = sdf.parse(this.timetableLunch.get(5).get("start"));
-                    Date endLunch = sdf.parse(this.timetableLunch.get(5).get("end"));
-                    Date startDinner = sdf.parse(this.timetableDinner.get(5).get("start"));
-                    Date endDinner = sdf.parse(this.timetableDinner.get(5).get("end"));
-                    if(nowMS >= startLunch.getTime() && nowMS < endLunch.getTime())
-                        return true;
-                    if(nowMS >= startDinner.getTime() && nowMS < endDinner.getTime())
+                    if(this.timetableLunch.containsKey("Sat")) {
+                        time = this.timetableLunch.get("Sat").get("start").split(":");
+                        startLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        startLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        time = (this.timetableLunch.get("Sat").get("end").split(":"));
+                        endLunch.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                        endLunch.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                        if(nowMS >= startLunch.getTimeInMillis() && nowMS < endLunch.getTimeInMillis())
+                            return true;
+                    }
+                    time = this.timetableDinner.get("Sat").get("start").split(":");
+                    startDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    startDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    time = (this.timetableDinner.get("Sat").get("end").split(":"));
+                    endDinner.set(Calendar.HOUR_OF_DAY,Integer.parseInt(time[0]));
+                    endDinner.set(Calendar.MINUTE,Integer.parseInt(time[1]));
+                    if(endDinner.getTimeInMillis()<startDinner.getTimeInMillis())
+                        endDinner.set(Calendar.DAY_OF_MONTH,endDinner.get(Calendar.DAY_OF_MONTH)+1);
+                    if(nowMS >= startDinner.getTimeInMillis() && nowMS < endDinner.getTimeInMillis())
                         return true;
                     return false;
                 }
             }
-        } catch (ParseException e) {
-            Log.e(METHOD_NAME,e.getMessage());
+        } catch (NullPointerException e){
             return false;
         }
         Log.w(METHOD_NAME,"Switch not entered, returning wrong value");
@@ -611,5 +698,4 @@ public class Restaurant {
      * @param reviews An ArrayList of Review(s) to assign to this restaurant object.
      */
     public Restaurant setReviews(ArrayList<Review> reviews){ this.reviews = reviews; return this; }
-
 }

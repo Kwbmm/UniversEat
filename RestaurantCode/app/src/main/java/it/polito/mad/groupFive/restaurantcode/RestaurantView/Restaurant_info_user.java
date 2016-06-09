@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,12 +31,9 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
@@ -124,6 +122,18 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
         rest_rev_det.setText(String.format(getResources().getString(R.string.review_based_on),(int)restaurant.getRatingNumber()));
         TextView restname= (TextView) v.findViewById(R.id.restaurant_name);
         restname.setText(restaurant.getName());
+        TextView restopen= (TextView)v.findViewById(R.id.restaurant_open);
+        ImageView open=(ImageView)v.findViewById(R.id.imageView9);
+        if(restaurant.isOpen()){
+            restopen.setText(R.string.nowOpen);
+            restopen.setTextColor(Color.rgb(0,100,0));
+            open.setColorFilter(Color.rgb(0,100,0));
+        }
+        else {
+            restopen.setText(R.string.nowClosed);
+            restopen.setTextColor(Color.rgb(200,0,0));
+            open.setColorFilter(Color.rgb(200,0,0));
+        }
         TextView restdescr = (TextView)v.findViewById(R.id.restaurant_description);
         restdescr.setText(restaurant.getDescription());
         TextView restaddr=(TextView) v.findViewById(R.id.restaurant_address);
@@ -159,29 +169,48 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
         }
         //restImage.setImageBitmap(restaurant.getImageBitmap());
 
-        LinearLayout ll = (LinearLayout) v.findViewById(R.id.restaurant_time_t);
+        final LinearLayout ll = (LinearLayout) v.findViewById(R.id.restaurant_time_t);
         int count=0;
-        for(String weekday : getResources().getStringArray(R.array.week)){
+        for(String weekday : getResources().getStringArray(R.array.weekENG)){
             LayoutInflater li = LayoutInflater.from(v.getContext());
             View timetableItem = li.inflate(R.layout.timetable_view,null);
             TextView dow= (TextView) timetableItem.findViewById(R.id.dow);
-            dow.setText(weekday);
-            TextView dinner= (TextView) timetableItem.findViewById(R.id.time_dinner);
-            SimpleDateFormat sd=new SimpleDateFormat("HH:mm");
-            if (restaurant.getTimetableDinner()!=null&&restaurant.getTimetableDinner().containsKey(weekday)){
-            dinner.setText((restaurant.getTimetableDinner().get(weekday).get("start")+"-"+(restaurant.getTimetableDinner().get(weekday).get("end"))));}
-            else {
-                dinner.setText(getResources().getString(R.string.closed));
-            }
+            dow.setText(getResources().getStringArray(R.array.week)[count]);
+            String time="";
             TextView lunch=(TextView)timetableItem.findViewById(R.id.time_lunch);
-            if (restaurant.getTimetableLunch()!=null&&restaurant.getTimetableLunch().containsKey(weekday)){
-                lunch.setText(restaurant.getTimetableLunch().get(weekday).get("start")+"-"+restaurant.getTimetableLunch().get(weekday).get("end"));}
-            else {
-                lunch.setText(getResources().getString(R.string.closed));
+            if (restaurant.getTimetableLunch()!=null&&restaurant.getTimetableLunch().containsKey(weekday)) {
+                time=time.concat(restaurant.getTimetableLunch().get(weekday).get("start")+"-"+restaurant.getTimetableLunch().get(weekday).get("end"));
             }
+            if (restaurant.getTimetableDinner()!=null&&restaurant.getTimetableDinner().containsKey(weekday)) {
+                if(!time.equals("")) time=time.concat("\n");
+                time=time.concat((restaurant.getTimetableDinner().get(weekday).get("start") + "-" + (restaurant.getTimetableDinner().get(weekday).get("end"))));
+            }
+            if(time.equals("")) time=getString(R.string.closed);
+            lunch.setText(time);
             ll.addView(timetableItem);
             count++;
         }
+        final ImageView button_img1=(ImageView)v.findViewById(R.id.button_time_img1);
+        final ImageView button_img2=(ImageView)v.findViewById(R.id.button_time_img2);
+        final TextView button_time_t=(TextView)v.findViewById(R.id.button_time_t);
+        final ScrollView scrollView=(ScrollView)v.findViewById(R.id.scrollview);
+        button_time_t.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ll.getVisibility()==View.GONE){
+                    ll.setVisibility(View.VISIBLE);
+                    button_time_t.setText(R.string.hide_timetable);
+                    button_img1.setImageResource(R.drawable.ic_collapse_black);
+                    button_img2.setImageResource(R.drawable.ic_collapse_black);
+                }
+                else {
+                    ll.setVisibility(View.GONE);
+                    button_time_t.setText(R.string.view_timetable);
+                    button_img1.setImageResource(R.drawable.ic_expand_black);
+                    button_img2.setImageResource(R.drawable.ic_expand_black);
+                }
+            }
+        });
 
 
     }

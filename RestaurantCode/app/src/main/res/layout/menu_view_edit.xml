@@ -13,7 +13,8 @@
         android:layout_height="140dp"
         android:background="#ffffff"
         android:layout_margin="5dp"
-        android:id="@+id/menu_view_layout">
+        android:id="@+id/menu_view_layout"
+        android:paddingLeft="5dp">
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -80,10 +81,11 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_above="@+id/menu_icon3"
-            android:gravity="center_vertical"
             android:layout_toLeftOf="@+id/menu_edit"
             android:layout_toRightOf="@+id/menu_image"
-            android:layout_toEndOf="@+id/menu_image">
+            android:layout_toEndOf="@+id/menu_image"
+            android:gravity="top"
+            android:layout_marginLeft="5dp">
 
             <TextView
                 android:id="@+id/menu_name"

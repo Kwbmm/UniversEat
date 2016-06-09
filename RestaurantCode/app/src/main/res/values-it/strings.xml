@@ -25,13 +25,22 @@
         <item>Logout</item>
     </string-array>
     <string-array name="week">
-        <item>Lunedì</item>
-        <item>Martedì</item>
-        <item>Mercoledì</item>
-        <item>Giovedì</item>
-        <item>Venerdì</item>
-        <item>Sabato</item>
-        <item>Domenica</item>
+        <item>Lun</item>
+        <item>Mar</item>
+        <item>Mer</item>
+        <item>Gio</item>
+        <item>Ven</item>
+        <item>Sab</item>
+        <item>Dom</item>
+    </string-array>
+    <string-array name="weekENG">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
     </string-array>
 
     <string name="search_helloMenu">Che cosa vorresti mangiare?</string>
@@ -374,25 +383,12 @@
     <string name="actionBar_signUp">Crea un Account</string>
     <string name="action_reply">Rispondi</string>
     <string name="action_share">Condividi</string>
-    <string name="toast_getMenusUnexpectedError">Sembra che dovrai morire di fame… Non sono riuscito a trovare alcun menu… </string>
+    <string name="toast_getMenusUnexpectedError">Sembra che dovrai morire di fame… Non sono riuscito a trovare alcun menu :(</string>
     <string name="review_based_on">Basato su %d recensioni</string>
-    <string-array name="filterCurtainMenuItems">
-        <item>Bevanda inclusa</item>
-        <item>Senza coperto</item>
-        <item>Vegano</item>
-        <item>Vegetariano</item>
-        <item>Prezzo da 1 a 10</item>
-        <item>Prezzo da 11 a 25</item>
-        <item>Prezzo oltre 25</item>
-    </string-array>
+    <string name="actionBar_restaurantSearch">Cerca Ristoranti</string>
 
-    <string-array name="filterCurtainRestaurantItems">
-        <item>Ticket</item>
-        <item>Bevanda inclusa</item>
-        <item>Senza coperto</item>
-        <item>Vegano</item>
-        <item>Vegetariano</item>
-        <item>Valutazione da 3 a 5</item>
-        <item>Aperto adesso</item>
-    </string-array>
+    <string name="nowOpen">Aperto!</string>
+    <string name="nowClosed">Chiuso</string>
+    <string name="view_timetable">MOSTRA ORARIO</string>
+    <string name="hide_timetable">NASCONDI</string>
 </resources>

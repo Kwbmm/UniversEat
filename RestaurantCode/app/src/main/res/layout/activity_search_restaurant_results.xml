@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
-    tools:context=".SearchRestaurants.SearchRestaurantResults"
-    >
+    tools:context=".SearchRestaurants.SearchRestaurantResults">
 
     <!-- Loading bar -->
     <ProgressBar
@@ -26,7 +25,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
 </RelativeLayout>
