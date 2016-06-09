@@ -391,6 +391,7 @@
     <string name="nowClosed">Chiuso</string>
     <string name="view_timetable">MOSTRA ORARIO</string>
     <string name="hide_timetable">NASCONDI</string>
+
     <string-array name="filterCurtainMenuItems">
         <item>Bevanda inclusa</item>
         <item>Senza coperto</item>
@@ -403,12 +404,9 @@
 
     <string-array name="filterCurtainRestaurantItems">
         <item>Ticket</item>
-        <item>Bevanda inclusa</item>
-        <item>Senza coperto</item>
-        <item>Vegano</item>
-        <item>Vegetariano</item>
         <item>Valutazione da 3 a 5</item>
-        <item>Aperto adesso</item>
+        <item>Open now</item>
+        <item>Near here (3 Km)</item>
     </string-array>
 
     <string name="emailaddressold">Inserisci la vecchia mail</string>
