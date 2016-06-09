@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -57,6 +59,8 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
     Restaurant restaurant;
     GoogleMap myMap;
     MapView mapView;
+    FileDownloadTask imageDownloadTask;
+    ImageDownloadListener idl;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -167,7 +171,6 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        //restImage.setImageBitmap(restaurant.getImageBitmap());
 
         final LinearLayout ll = (LinearLayout) v.findViewById(R.id.restaurant_time_t);
         int count=0;
@@ -215,14 +218,6 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
 
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -259,24 +254,15 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
         ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
         final File dir = cw.getDir("images", Context.MODE_PRIVATE);
         File filePath = new File(dir,id);
-        storageRoot.child(id).getFile(filePath).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                File img = new File(dir, id);
-                Uri imgPath = Uri.fromFile(img);
-                try {
-                    Bitmap b = new Picture(imgPath,getActivity().getContentResolver()).getBitmap();
-                    imView.setImageBitmap(b);
-                } catch (IOException e) {
-                    Log.e("getFromNet",e.getMessage());
-                }
-            }
-        });
+        this.imageDownloadTask = storageRoot.child(id).getFile(filePath);
+        this.idl = new ImageDownloadListener(imView,dir,id);
+        this.imageDownloadTask.addOnSuccessListener(this.idl);
     }
 
     @Override
     public void onPause(){
         super.onPause();
+        this.imageDownloadTask.removeOnSuccessListener(this.idl);
         mapView.onPause();
     }
 
@@ -312,5 +298,27 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
                 .title(restaurant.getName()));
         map.moveCamera(CameraUpdateFactory.zoomTo(15));
         map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+    }
+
+    private class ImageDownloadListener implements OnSuccessListener<FileDownloadTask.TaskSnapshot>{
+        private ImageView imView;
+        private File directory;
+        private String id;
+        public ImageDownloadListener(ImageView imageView, File imageDirectory, String imageID){
+            this.imView = imageView;
+            this.directory = imageDirectory;
+            this.id = imageID;
+        }
+        @Override
+        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+            File img = new File(this.directory, this.id);
+            Uri imgPath = Uri.fromFile(img);
+            try {
+                Bitmap b = new Picture(imgPath,getActivity().getContentResolver()).getBitmap();
+                this.imView.setImageBitmap(b);
+            } catch (IOException e) {
+                Log.e("getFromNet",e.getMessage());
+            }
+        }
     }
 }
