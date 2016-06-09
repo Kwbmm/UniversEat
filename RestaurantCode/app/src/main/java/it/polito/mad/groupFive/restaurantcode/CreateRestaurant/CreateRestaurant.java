@@ -138,8 +138,7 @@ public class CreateRestaurant
         FirebaseStorage storage = FirebaseStorage.getInstance();
         this.storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/"+this.restaurant.getRid());
         try {
-            InputStream is = getContentResolver().openInputStream(Uri.parse(this.restaurant.getImageLocalPath()));
-            Bitmap image= BitmapFactory.decodeStream(is);
+            Bitmap image = new Picture(Uri.parse(this.restaurant.getImageLocalPath()),getContentResolver(),300,300).getBitmap();
             ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.PNG,20,outputStream);
             ByteArrayInputStream inputStream=new ByteArrayInputStream(outputStream.toByteArray());
@@ -154,7 +153,7 @@ public class CreateRestaurant
                     finish();
                 }
             });
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             Log.e(METHOD_NAME,e.getMessage());
         }
     }
