@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -94,6 +95,7 @@ public class Review_user_view extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
         inflater.inflate(R.menu.toolbar_add,menu);
         MenuItem item=menu.findItem(R.id.add_ab);
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -111,7 +113,7 @@ public class Review_user_view extends Fragment {
         });
         super.onCreateOptionsMenu(menu, inflater);
 
-    }
+    }}
 
     public void readdata(View v) {
 

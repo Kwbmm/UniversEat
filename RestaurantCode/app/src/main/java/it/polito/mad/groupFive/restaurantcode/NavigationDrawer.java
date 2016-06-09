@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -48,33 +49,30 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     private ImageView imageView;
     SharedPreferences sharedPreferences;
     private Notification_Listener notify;
+    private static boolean isDBPersistanceEnabled = false;
+
 
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView dList;
 
+    @Override
+    protected void onStart() {
+        //notify.setAlive(false);
+        super.onStart();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // not a real activity, it's used to extend toolbar and navigation drawer to all activity created
         super.onCreate(savedInstanceState);
-        FirebaseAuth auth=FirebaseAuth.getInstance();
-        sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
-        SharedPreferences.Editor editor= sharedPreferences.edit();
-        String ridc=sharedPreferences.getString("rid",null);
-        if(ridc!=null){
-            notify.startActionBaz(getBaseContext(),ridc,null);
-        }
+        //setup();
 
-        editor.apply();
-        String mail =sharedPreferences.getString("email",null);
-        String psw =sharedPreferences.getString("psw",null);
-        if (mail!=null&&psw!=null){
-            auth.signInWithEmailAndPassword(mail,psw);
-            editor.putString("uid",auth.getCurrentUser().getUid());}
+
         getUserinfo();
         checkUser();
         createDrawer();
         checkPic();
+
     }
 
     private void checkPic(){
@@ -356,4 +354,29 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void setup()  {
+        FirebaseDatabase db;
+        db = FirebaseDatabase.getInstance();
+        FirebaseAuth auth=FirebaseAuth.getInstance();
+        sharedPreferences = this.getSharedPreferences(getString(R.string.user_pref), this.MODE_PRIVATE);
+        SharedPreferences.Editor editor= sharedPreferences.edit();
+        String ridc=sharedPreferences.getString("rid",null);
+        editor.apply();
+        String mail =sharedPreferences.getString("email",null);
+        String psw =sharedPreferences.getString("psw",null);
+        if (mail!=null&&psw!=null){
+            auth.signInWithEmailAndPassword(mail,psw);
+            editor.putString("uid",auth.getCurrentUser().getUid());}
+        if(ridc!=null){
+            notify.startActionOrder(getBaseContext(),ridc);
+        }
+        if(auth.getCurrentUser().getUid()!=null){
+            notify.startActionFavourite(getBaseContext(),auth.getCurrentUser().getUid());
+        }}
 }
