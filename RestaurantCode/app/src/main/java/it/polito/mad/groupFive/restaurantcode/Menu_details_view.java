@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -172,7 +173,6 @@ public class Menu_details_view extends NavigationDrawer {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        Log.e("numero di courses",courses.size()+" ");
         courseAdapter = new CourseAdapter();
         listView.setAdapter(courseAdapter);
     }
@@ -206,10 +206,10 @@ public class Menu_details_view extends NavigationDrawer {
             ImageView img_vgt = (ImageView) convertView.findViewById(R.id.img_vgt);
             ImageView img_vgn = (ImageView) convertView.findViewById(R.id.img_vgn);
             course_name.setText(course.getName());
-            if(course.isSpicy()) img_hot.setVisibility(View.VISIBLE);
-            if(course.isGlutenFree()) img_nogluten.setVisibility(View.VISIBLE);
-            if(course.isVegetarian()) img_vgt.setVisibility(View.VISIBLE);
-            if(course.isVegan()) img_vgn.setVisibility(View.VISIBLE);
+            if(!course.isSpicy()) img_hot.setColorFilter(Color.GRAY);
+            if(!course.isGlutenFree()) img_nogluten.setColorFilter(Color.GRAY);
+            if(!course.isVegetarian()) img_vgt.setColorFilter(Color.GRAY);
+            if(!course.isVegan()) img_vgn.setColorFilter(Color.GRAY);
             return convertView;
         }
     }

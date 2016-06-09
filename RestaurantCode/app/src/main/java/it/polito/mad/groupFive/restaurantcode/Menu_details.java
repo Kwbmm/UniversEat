@@ -1,8 +1,12 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,13 +21,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.*;
@@ -177,11 +188,14 @@ public class Menu_details extends NavigationDrawer {
         else servicefee.setText(getString(R.string.Menu_details_service_fee_not));
         price.setText(String.format("%.2f", menu.getPrice())+"€");
         try {
-           // pic.setImageBitmap(menu.getImageBitmap());
+            FirebaseStorage storage=FirebaseStorage.getInstance();
+            StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");
+            getFromNetwork(imageref,menu.getMid(),pic);
         } catch (NullPointerException e){
             Log.e("immagine non caricata"," ");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        Log.e("numero di courses",courses.size()+" ");
         courseAdapter = new CourseAdapter();
         listView.setAdapter(courseAdapter);
     }
@@ -215,12 +229,31 @@ public class Menu_details extends NavigationDrawer {
             ImageView img_vgt = (ImageView) convertView.findViewById(R.id.img_vgt);
             ImageView img_vgn = (ImageView) convertView.findViewById(R.id.img_vgn);
             course_name.setText(course.getName());
-            if(course.isSpicy()) img_hot.setVisibility(View.VISIBLE);
-            if(course.isGlutenFree()) img_nogluten.setVisibility(View.VISIBLE);
-            if(course.isVegetarian()) img_vgt.setVisibility(View.VISIBLE);
-            if(course.isVegan()) img_vgn.setVisibility(View.VISIBLE);
+            if(!course.isSpicy()) img_hot.setColorFilter(Color.GRAY);
+            if(!course.isGlutenFree()) img_nogluten.setColorFilter(Color.GRAY);
+            if(!course.isVegetarian()) img_vgt.setColorFilter(Color.GRAY);
+            if(!course.isVegan()) img_vgn.setColorFilter(Color.GRAY);
             return convertView;
         }
+    }
+
+    private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        final File dir = cw.getDir("images",Context.MODE_PRIVATE);
+        File filePath = new File(dir,id);
+        storageRoot.child(id).getFile(filePath).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                File img = new File(dir, id);
+                Uri imgPath = Uri.fromFile(img);
+                try {
+                    Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
+                    imView.setImageBitmap(b);
+                } catch (IOException e) {
+                    Log.e("getFromNet",e.getMessage());
+                }
+            }
+        });
     }
 
 }
