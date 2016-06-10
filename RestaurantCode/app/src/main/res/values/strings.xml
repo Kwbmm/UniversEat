@@ -474,4 +474,7 @@
     <string name="write_your_review_here">Write your review here</string>
     <string name="old_email">Old Email</string>
     <string name="new_email">New Email</string>
+    <string name="info">INFO</string>
+    <string name="menu">MENU</string>
+    <string name="review">REVIEW</string>
 </resources>

@@ -149,7 +149,6 @@ public class Review_user_view extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.actionBar_restaurantReviews);
         reviews=new ArrayList<>();
         rest=restData.getRestaurant();
         View v =inflater.inflate(R.layout.fragment_review_user_view, container, false);

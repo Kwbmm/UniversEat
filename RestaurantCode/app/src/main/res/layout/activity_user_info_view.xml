@@ -9,55 +9,96 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:background="@color/colorPrimary"
-        android:layout_alignParentBottom="true"
+        android:elevation="8dp"
+        android:layout_alignParentBottom="false"
         android:minHeight="?attr/actionBarSize"
         android:id="@+id/bottom_bar"
-        />
+        android:layout_alignParentTop="true"
+        android:visibility="invisible" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true">
+        android:layout_gravity="center"
+        android:elevation="8dp"
+        android:background="@color/colorPrimary">
 
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_info_black_24px"
-            android:id="@+id/info_b"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="50dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:layout_centerVertical="true" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/info_b">
 
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_restaurant_menu_black_24px"
-            android:id="@+id/menu_b"
-            android:layout_centerInParent="true"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:id="@+id/info_b_line"
+                android:layout_alignParentBottom="true"
+                android:src="#ffffff"
+                android:visibility="invisible" />
 
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_star_rate_black_18px"
-            android:id="@+id/review_b"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="50dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:layout_centerVertical="true" />
-    </RelativeLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:text="@string/info"
+                android:id="@+id/info_b_text"
+                android:gravity="center_vertical|center_horizontal" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/menu_b">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:id="@+id/menu_b_line"
+                android:layout_alignParentBottom="true"
+                android:src="#ffffff"
+                android:visibility="invisible" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:text="@string/menu"
+                android:id="@+id/menu_b_text"
+                android:gravity="center_vertical|center_horizontal" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/review_b">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:id="@+id/review_b_line"
+                android:layout_alignParentBottom="true"
+                android:src="#ffffff"
+                android:visibility="invisible" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:text="@string/review"
+                android:id="@+id/review_b_text"
+                android:gravity="center_vertical|center_horizontal" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/uif_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_bar"
-        ></RelativeLayout>
+        android:layout_below="@+id/bottom_bar"></RelativeLayout>
 
 
 </RelativeLayout>

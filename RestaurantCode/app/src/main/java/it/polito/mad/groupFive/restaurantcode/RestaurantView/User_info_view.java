@@ -9,6 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,9 +33,15 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
 
 public class User_info_view extends NavigationDrawer implements Restaurant_info_user.OnFragmentInteractionListener, Restaurant_info_user.restaurantData, Restaurant_menu_user.OnFragmentInteractionListener, Restaurant_menu_user.restaurantData, Review_user_view.OnFragmentInteractionListener, Review_user_view.restaurantData {
     Restaurant restaurant;
-    ImageButton rest_i;
-    ImageButton rest_m;
-    ImageButton rest_r;
+    RelativeLayout rest_i;
+    RelativeLayout rest_m;
+    RelativeLayout rest_r;
+    ImageView line_i;
+    ImageView line_m;
+    ImageView line_r;
+    TextView text_i;
+    TextView text_m;
+    TextView text_r;
     String mid;
     String rid;
     FirebaseDatabase db;
@@ -44,6 +54,7 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
         try {
             super.onCreate(savedInstanceState);
+            getSupportActionBar().setElevation(0);
             FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
             mlay.inflate(this, R.layout.activity_user_info_view, mlay);
             rid = getIntent().getExtras().getString("rid");
@@ -75,16 +86,18 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                     restaurant.setTimetableLunch((HashMap) dataSnapshot.child("timetableLunch").getValue());
                     restaurant.setRatingNumber(Float.parseFloat(dataSnapshot.child("ratingNumber").getValue().toString()));
 
-                    rest_i = (ImageButton) findViewById(R.id.info_b);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        rest_i.getDrawable().setTint(Color.parseColor("#ffffff"));
-                    }
+                    rest_i = (RelativeLayout) findViewById(R.id.info_b);
+                    line_i= (ImageView) findViewById(R.id.info_b_line);
+                    text_i=(TextView)findViewById(R.id.info_b_text);
                     rest_i.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            rest_i.setColorFilter(Color.parseColor("#ffffff"));
-                            rest_r.setColorFilter(Color.parseColor("#000000"));
-                            rest_m.setColorFilter(Color.parseColor("#000000"));
+                            text_i.setTextColor(Color.parseColor("#ffffff"));
+                            text_r.setTextColor(Color.parseColor("#000000"));
+                            text_m.setTextColor(Color.parseColor("#000000"));
+                            line_i.setVisibility(View.VISIBLE);
+                            line_r.setVisibility(View.INVISIBLE);
+                            line_m.setVisibility(View.INVISIBLE);
                             Restaurant_info_user rest_view = new Restaurant_info_user();
                             getSupportFragmentManager()
                                     .beginTransaction().addToBackStack(null)
@@ -95,13 +108,18 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                         }
                     });
 
-                    rest_m = (ImageButton) findViewById(R.id.menu_b);
+                    rest_m = (RelativeLayout) findViewById(R.id.menu_b);
+                    line_m= (ImageView) findViewById(R.id.menu_b_line);
+                    text_m=(TextView)findViewById(R.id.menu_b_text);
                     rest_m.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            rest_m.setColorFilter(Color.parseColor("#ffffff"));
-                            rest_i.setColorFilter(Color.parseColor("#000000"));
-                            rest_r.setColorFilter(Color.parseColor("#000000"));
+                            text_m.setTextColor(Color.parseColor("#ffffff"));
+                            text_i.setTextColor(Color.parseColor("#000000"));
+                            text_r.setTextColor(Color.parseColor("#000000"));
+                            line_i.setVisibility(View.INVISIBLE);
+                            line_r.setVisibility(View.INVISIBLE);
+                            line_m.setVisibility(View.VISIBLE);
                             Restaurant_menu_user rest_view = new Restaurant_menu_user();
                             getSupportFragmentManager()
                                     .beginTransaction()
@@ -112,13 +130,18 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                         }
                     });
 
-                    rest_r = (ImageButton) findViewById(R.id.review_b);
+                    rest_r = (RelativeLayout) findViewById(R.id.review_b);
+                    line_r= (ImageView) findViewById(R.id.review_b_line);
+                    text_r=(TextView)findViewById(R.id.review_b_text);
                     rest_r.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            rest_m.setColorFilter(Color.parseColor("#000000"));
-                            rest_i.setColorFilter(Color.parseColor("#000000"));
-                            rest_r.setColorFilter(Color.parseColor("#ffffff"));
+                            text_m.setTextColor(Color.parseColor("#000000"));
+                            text_i.setTextColor(Color.parseColor("#000000"));
+                            text_r.setTextColor(Color.parseColor("#ffffff"));
+                            line_i.setVisibility(View.INVISIBLE);
+                            line_r.setVisibility(View.VISIBLE);
+                            line_m.setVisibility(View.INVISIBLE);
                             Review_user_view review_user_view = new Review_user_view();
                             getSupportFragmentManager()
                                     .beginTransaction()
@@ -130,9 +153,12 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
 
                     if (mid == null) {
-                        rest_i.setColorFilter(Color.parseColor("#ffffff"));
-                        rest_r.setColorFilter(Color.parseColor("#000000"));
-                        rest_m.setColorFilter(Color.parseColor("#000000"));
+                        text_i.setTextColor(Color.parseColor("#ffffff"));
+                        text_r.setTextColor(Color.parseColor("#000000"));
+                        text_m.setTextColor(Color.parseColor("#000000"));
+                        line_i.setVisibility(View.VISIBLE);
+                        line_r.setVisibility(View.INVISIBLE);
+                        line_m.setVisibility(View.INVISIBLE);
                         Restaurant_info_user rest_view = new Restaurant_info_user();
                         getSupportFragmentManager()
                                 .beginTransaction().addToBackStack(null)
@@ -140,9 +166,12 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                                 .commit();
 
                     } else {
-                        rest_m.setColorFilter(Color.parseColor("#ffffff"));
-                        rest_i.setColorFilter(Color.parseColor("#000000"));
-                        rest_r.setColorFilter(Color.parseColor("#000000"));
+                        text_m.setTextColor(Color.parseColor("#ffffff"));
+                        text_i.setTextColor(Color.parseColor("#000000"));
+                        text_r.setTextColor(Color.parseColor("#000000"));
+                        line_i.setVisibility(View.INVISIBLE);
+                        line_r.setVisibility(View.INVISIBLE);
+                        line_m.setVisibility(View.VISIBLE);
                         Restaurant_menu_user menu_view = new Restaurant_menu_user();
                         getSupportFragmentManager()
                                 .beginTransaction()
@@ -157,7 +186,8 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
                 }
             });
-
+            String title=restaurant.getName();
+            getSupportActionBar().setTitle(title);
         } catch (RestaurantException e) {
             e.printStackTrace();
         }

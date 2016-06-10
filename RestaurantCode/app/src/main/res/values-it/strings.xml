@@ -413,4 +413,7 @@
     <string name="write_your_review_here">Scrivi qui la tua recensione</string>
     <string name="old_email">Vecchia Email</string>
     <string name="new_email">Nuova Email</string>
+    <string name="info">INFO</string>
+    <string name="menu">MENU</string>
+    <string name="review">RECENSIONI</string>
 </resources>

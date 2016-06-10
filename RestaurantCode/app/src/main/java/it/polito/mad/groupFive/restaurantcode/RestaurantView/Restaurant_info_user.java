@@ -110,7 +110,6 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
         // Inflate the layout for this fragment
 
         View v=inflater.inflate(R.layout.fragment_restaurant_info_user, container, false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.actionBar_restaurantInfo);
         getRestaurantData(v);
         //init map
         MapsInitializer.initialize(this.getActivity());

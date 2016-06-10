@@ -123,7 +123,6 @@ public class Restaurant_menu_user extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.actionBar_restaurantMenus);
         View v=inflater.inflate(R.layout.fragment_restaurant_menu_user, container, false);
         mid=restData.getMid();
         menusshared=new ArrayList<>();
