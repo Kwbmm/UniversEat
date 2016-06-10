@@ -6,30 +6,30 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/edit_profil">
+        android:id="@+id/edit_profil"
+        android:padding="10dp">
 
         <!-- Profile Image -->
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:id="@+id/textView_imageText_e"
             android:text="@string/frg_creatLog1_textViewImageText"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            />
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/imageView_UserImage_e"
+            android:gravity="center_vertical" />
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/frg_imageView_containerHeight"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:maxWidth="@dimen/frg_imageView_maxWidth"
             android:maxHeight="@dimen/frg_imageView_maxHeight"
             android:id="@+id/imageView_UserImage_e"
-            android:layout_below="@id/textView_imageText_e"
-            android:src="@drawable/ic_add_a_photo_black_24dp"
+            android:src="@drawable/ic_picture_black"
             android:background="#fefeff"
-            android:layout_marginBottom="10dp"
             android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc"
-            />
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true" />
 
         <!-- User Nickname -->
 
@@ -38,56 +38,38 @@
         <!-- User Password repeat -->
 
         <!-- User mail -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/emailaddressold"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:id="@+id/textView_Mailaddress_old"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/imageView_UserImage_e" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_Mail_old"
-            android:layout_below="@id/textView_Mailaddress_old"
             android:inputType="textEmailAddress"
-            />
+            android:layout_below="@id/imageView_UserImage_e"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/imageView24"
+            android:hint="@string/old_email" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/emailaddressnew"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:id="@+id/textView_Mailaddress_new"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/editText_Mail_old" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_Mail_new"
-            android:layout_below="@id/textView_Mailaddress_new"
             android:inputType="textEmailAddress"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_Password_e"
-            android:layout_below="@id/editText_Mail_new"
-            android:text="@string/password"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            />
+            android:layout_below="@id/editText_Mail_old"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/imageView24"
+            android:hint="@string/new_email" />
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_Password_e"
-            android:layout_below="@id/textView_Password_e"
             android:inputType="textPassword"
-            />
+            android:layout_below="@id/editText_Mail_new"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/imageView25"
+            android:hint="@string/password" />
 
         <!-- Next button -->
         <Button
@@ -99,8 +81,25 @@
             android:layout_alignParentEnd="true"
             android:text="@string/finish"
             android:layout_marginTop="@dimen/btn_marginTop"
-            android:layout_marginRight="@dimen/btn_marginRight"
-            android:layout_marginEnd="@dimen/btn_marginRight"
-            />
+            android:background="@color/colorAccent" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView24"
+            android:layout_alignTop="@+id/editText_Mail_old"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/ic_email_black" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView25"
+            android:layout_alignTop="@+id/editText_Password_e"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/ic_password_black" />
+
     </RelativeLayout>
 </ScrollView>

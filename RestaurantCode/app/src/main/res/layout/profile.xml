@@ -100,7 +100,8 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:footerDividersEnabled="false"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:divider="@android:color/transparent">
 
     </ListView>
 

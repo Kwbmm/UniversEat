@@ -273,10 +273,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             holder.distance.setText("< 1m"+context.getResources().getString(R.string.from_here));
         }
         else if(distance >= 1 && distance < 1000){// Between 1 and 1000 meters
-            holder.distance.setText(context.getResources().getString(R.string.from_here2)+String.valueOf((int)distance)+"m"+context.getString(R.string.from_here));
+            holder.distance.setText(context.getResources().getString(R.string.from_here2)+" "+String.valueOf((int)distance)+"m "+context.getString(R.string.from_here));
         }
         else{
-            holder.distance.setText(context.getResources().getString(R.string.from_here2)+String.valueOf((int)(restaurant.getDistance()/1000))+"km"+context.getString(R.string.from_here));
+            holder.distance.setText(context.getResources().getString(R.string.from_here2)+" "+String.valueOf((int)(restaurant.getDistance()/1000))+"Km "+context.getString(R.string.from_here));
         }
 
         File img = new File(restaurant.getImageLocalPath());

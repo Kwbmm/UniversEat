@@ -458,4 +458,6 @@
     <string name="my_favourite_restaurants">My favourite restaurants</string>
     <string name="added_favourite">" has been added to your favourites"</string>
     <string name="write_your_review_here">Write your review here</string>
+    <string name="old_email">Old Email</string>
+    <string name="new_email">New Email</string>
 </resources>

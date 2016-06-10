@@ -415,8 +415,10 @@
     <string name="mailwrong">La vecchia mail non è corretta</string>
     <string name="universeat">UniversEat</string>
     <string name="from_here"> da qui</string>
-    <string name="from_here2">A </string>
+    <string name="from_here2">A</string>
     <string name="my_favourite_restaurants">I miei ristoranti preferiti</string>
     <string name="added_favourite">" è stato aggiunto ai tuoi preferiti"</string>
     <string name="write_your_review_here">Scrivi qui la tua recensione</string>
+    <string name="old_email">Vecchia Email</string>
+    <string name="new_email">Nuova Email</string>
 </resources>
