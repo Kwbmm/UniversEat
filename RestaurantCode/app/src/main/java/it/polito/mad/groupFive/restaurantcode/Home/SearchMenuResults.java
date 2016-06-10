@@ -579,7 +579,7 @@ public class SearchMenuResults extends NavigationDrawer {
             final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
             Restaurant restaurant = restaurants.get(position);
             holder.restaurant_name.setText(restaurant.getName());
-            holder.restaurant_address.setText(restaurant.getAddress()+", "+restaurant.getCity());
+            holder.restaurant_address.setText(restaurant.getCity());
             holder.restaurant_rating.setRating(restaurant.getRating());
             String s=restaurant.getDescription();
             if(s.length() >50)

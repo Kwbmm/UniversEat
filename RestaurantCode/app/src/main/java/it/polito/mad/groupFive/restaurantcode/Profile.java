@@ -164,7 +164,7 @@ public class Profile extends NavigationDrawer {
             if(s.length() >50)
                 s = s.substring(0,47) + "...";
             description.setText(s);
-            address.setText(rest.getAddress()+", "+rest.getCity());
+            address.setText(rest.getCity());
             rbar.setRating(rest.getRating());
             try {
 
@@ -182,7 +182,6 @@ public class Profile extends NavigationDrawer {
                 public void onClick(View v) {
                     Intent intent = new Intent(getBaseContext(), User_info_view.class);
                     intent.putExtra("rid",rest.getRid());
-                    intent.putExtra("mid","-1");
                     startActivity(intent);
                 }
             });

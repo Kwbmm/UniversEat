@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/beverage"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
+                android:layout_alignParentStart="false"
                 android:layout_below="@+id/menu_description"
                 android:drawSelectorOnTop="false"
                 android:headerDividersEnabled="false"
@@ -96,16 +96,15 @@
             <TextView
                 android:id="@+id/menu_description"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_alignEnd="@+id/courseList"
-                android:layout_alignRight="@+id/courseList"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/menu_name"
                 android:layout_toRightOf="@+id/menu_image"
                 android:gravity="top"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="@string/menu_details_Menu_description"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:minHeight="50dp" />
 
         </RelativeLayout>
 

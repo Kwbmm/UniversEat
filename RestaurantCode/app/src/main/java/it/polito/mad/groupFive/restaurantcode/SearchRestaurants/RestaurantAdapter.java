@@ -265,7 +265,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             }
             holder.favourite.setOnClickListener(new OnFavourite(holder, restaurant));
         }
-        holder.restaurant_address.setText(restaurant.getAddress()+", "+restaurant.getCity());
+        holder.restaurant_address.setText(restaurant.getCity());
         holder.restaurant_name.setText(restaurant.getName());
         holder.restaurant_rating.setRating(restaurant.getRating());
         String s=restaurant.getDescription();

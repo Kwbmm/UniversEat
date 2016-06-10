@@ -330,6 +330,11 @@
     <string name="menu_details_course">Course Name</string>
     <string name="menu_details_option">Option Name</string>
 
+    <string name="nowOpen">Now open</string>
+    <string name="nowClosed">Closed</string>
+    <string name="view_timetable">SHOW TIMETABLE</string>
+    <string name="hide_timetable">HIDE</string>
+
     <!-- menu_dish_frag.xml-->
     <string name="menu_dish_frag_DishName">DishName</string>
 

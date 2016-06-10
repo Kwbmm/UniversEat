@@ -87,10 +87,10 @@
         android:layout_height="wrap_content"
         android:text="@string/my_favourite_restaurants"
         android:layout_below="@id/profile_card"
-        android:textSize="22sp"
+        android:textSize="20sp"
 
         android:id="@+id/favourite_text"
-        android:layout_margin="15dp"/>
+        android:layout_margin="10dp"/>
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
