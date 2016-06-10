@@ -29,11 +29,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/restaurantView_textViewRestaurantName"
-            android:textSize="25dp"
+            android:textSize="20sp"
             android:layout_toRightOf="@id/restaurant_image"
-            android:textStyle="bold"
             android:layout_marginTop="27dp"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:textColor="#000000" />
 
 
 
@@ -53,11 +53,10 @@
             android:layout_height="wrap_content"
             android:id="@+id/restaurant_rev_details"
             android:layout_below="@id/restaurant_rating"
-            android:textSize="16dp"
+            android:textSize="15sp"
             android:layout_toRightOf="@id/restaurant_image"
             android:text="Based on N reviews"
-            android:layout_marginLeft="10dp"
-            android:textStyle="italic" />
+            android:layout_marginLeft="10dp" />
 
         <com.google.android.gms.maps.MapView
             android:layout_width="match_parent"

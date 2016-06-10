@@ -199,7 +199,7 @@
     <string name="restaurantowner">Proprietario di ristorante</string>
 
     <string name="login">Crea un nuovo account</string>
-    <string name="login1">Spunta qui se sei un Ristoratore:</string>
+    <string name="login1">Spunta qui se sei un Ristoratore</string>
     <string name="login_rest">RISTORATORE</string>
 
     <string name="SearchResult_toastNoMenus">Non ci sono menù da mostrare.</string>
@@ -337,7 +337,7 @@
         <item>Secondo</item>
     </array>
 
-    <string name="title_review">Scrivi poche parole</string>
+    <string name="title_review">Scrivi un titolo per la recensione</string>
     <string name="rating_service">Servizio</string>
     <string name="rating_place">Posto</string>
     <string name="rating_food">Cibo</string>
@@ -414,4 +414,9 @@
     <string name="passwordwrong">La password non è corretta</string>
     <string name="mailwrong">La vecchia mail non è corretta</string>
     <string name="universeat">UniversEat</string>
+    <string name="from_here"> da qui</string>
+    <string name="from_here2">A </string>
+    <string name="my_favourite_restaurants">I miei ristoranti preferiti</string>
+    <string name="added_favourite">" è stato aggiunto ai tuoi preferiti"</string>
+    <string name="write_your_review_here">Scrivi qui la tua recensione</string>
 </resources>

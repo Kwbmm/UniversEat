@@ -21,7 +21,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
+            android:padding="5dp">
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -64,13 +64,18 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/ll_incorrect"
 
-                />
+                android:background="@color/colorAccent"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp" />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/register"
                 android:text="@string/fragment_login_view_Register"
-                android:layout_below="@id/ll_incorrect"/>
+                android:layout_below="@id/ll_incorrect"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:background="@color/colorAccent" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </RelativeLayout>

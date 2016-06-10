@@ -46,10 +46,10 @@
             android:layout_height="wrap_content"
             android:id="@+id/Button_Finish"
             android:text="@string/finish"
-            android:layout_gravity="center"
             android:layout_marginTop="@dimen/btn_marginTop"
-            android:layout_marginRight="@dimen/btn_marginRight"
+            android:layout_marginRight="10dp"
             android:layout_marginEnd="@dimen/btn_marginRight"
-            />
+            android:layout_gravity="right"
+            android:background="@color/colorAccent" />
     </LinearLayout>
 </ScrollView>

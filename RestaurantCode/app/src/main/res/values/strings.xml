@@ -57,7 +57,7 @@
     <!-- END activity_search_restaurants.xml-->
 
     <!-- fragment_creatlog_1.xml -->
-    <string name="frg_creatLog1_textViewImageText">Profile Image</string>
+    <string name="frg_creatLog1_textViewImageText">Profile Picture</string>
     <!-- END fragment_creatlog_1.xml -->
 
     <!-- restaurant_view.xml -->
@@ -257,7 +257,7 @@
     <string name="restaurantowner">Restaurant owner</string>
 
     <string name="login">Create a new account</string>
-    <string name="login1">Check the box if you are a Restaurant Owner:</string>
+    <string name="login1">Check the box if you are a Restaurant Owner</string>
     <string name="login_rest">RESTAURANT OWNER</string>
 
     <string name="toastRegisterPasswordFail">Entered passwords do not match!</string>
@@ -372,7 +372,7 @@
     <string name="closed">Closed</string>
     <string name="review_based_on">Based on %d reviews</string>
 
-    <string name="title_review">Write few words</string>
+    <string name="title_review">Write a title for the review</string>
     <string name="rating_service">Service</string>
     <string name="rating_place">Place</string>
     <string name="rating_food">Food</string>
@@ -453,4 +453,9 @@
     <string name="actionBar_createRestaurant">Create Restaurant</string>
     <string name="actionBar_signUp">Sign Up</string>
     <string name="universeat">UniversEat</string>
+    <string name="from_here"> from here</string>
+    <string name="from_here2"></string>
+    <string name="my_favourite_restaurants">My favourite restaurants</string>
+    <string name="added_favourite">" has been added to your favourites"</string>
+    <string name="write_your_review_here">Write your review here</string>
 </resources>

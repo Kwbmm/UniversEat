@@ -1,107 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
-    card_view:cardElevation="@dimen/cardview_default_elevation"
-    card_view:cardCornerRadius="@dimen/cardview_default_radius"
-    card_view:cardPreventCornerOverlap="false"
-    card_view:cardUseCompatPadding="true"
-    android:id="@+id/menu_card">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp">
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/menu_card"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:minHeight="140dp"
-        android:layout_toEndOf="@+id/menu_image"
-        android:layout_above="@+id/menu_icon3">
+        android:layout_height="140dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        card_view:cardCornerRadius="@dimen/cardview_default_radius"
+        card_view:cardElevation="@dimen/cardview_default_elevation"
+        card_view:cardPreventCornerOverlap="false"
+        card_view:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/menu_icon3"
+            android:layout_toEndOf="@+id/menu_image"
+            android:minHeight="140dp">
 
             <TextView
                 android:id="@+id/menu_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/menu_details_Menu_Name"
-                android:textSize="20sp"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/menu_image"
-                android:layout_toEndOf="@+id/menu_image"
                 android:layout_marginRight="10dp"
-                android:textColor="#000000" />
+                android:layout_toEndOf="@+id/menu_image"
+                android:layout_toRightOf="@+id/menu_image"
+                android:text="@string/menu_details_Menu_Name"
+                android:textColor="#000000"
+                android:textSize="20sp" />
 
             <TextView
+                android:id="@+id/menu_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/menu_description"
-                android:textSize="15sp"
-                android:text="@string/menu_details_Menu_description"
-                android:maxLength="150"
                 android:layout_below="@+id/menu_name"
-                android:layout_toRightOf="@+id/menu_image"
+                android:layout_marginRight="10dp"
                 android:layout_toEndOf="@+id/menu_image"
-                android:layout_marginRight="10dp" />
+                android:layout_toRightOf="@+id/menu_image"
+                android:maxLength="150"
+                android:text="@string/menu_details_Menu_description"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/menu_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
                 android:text="7€"
-                android:textSize="20sp"
-                android:layout_marginRight="10dp" />
+                android:textSize="20sp" />
 
             <ImageView
                 android:id="@+id/menu_icon1"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="@drawable/ic_hot_black"
-                android:tint="#a60101"
                 android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@+id/menu_image"
                 android:layout_toRightOf="@+id/menu_image"
-                android:layout_toEndOf="@+id/menu_image" />
+                android:src="@drawable/ic_hot_black"
+                android:tint="#a60101" />
 
             <ImageView
+                android:id="@+id/menu_icon2"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@id/menu_icon1"
                 android:layout_marginLeft="5dp"
-                android:id="@+id/menu_icon2"
+                android:layout_toRightOf="@id/menu_icon1"
                 android:src="@drawable/ic_nogluten_black"
                 android:tint="#c8a004" />
 
             <ImageView
+                android:id="@+id/menu_icon3"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@id/menu_icon2"
                 android:layout_marginLeft="5dp"
-                android:id="@+id/menu_icon3"
+                android:layout_toRightOf="@id/menu_icon2"
                 android:src="@drawable/ic_vegetarian_black"
                 android:tint="#951f9b" />
 
             <ImageView
+                android:id="@+id/menu_icon4"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@id/menu_icon3"
                 android:layout_marginLeft="5dp"
-                android:id="@+id/menu_icon4"
+                android:layout_toRightOf="@id/menu_icon3"
                 android:src="@drawable/ic_vegan_black"
                 android:tint="#007f24" />
 
-        <ImageView
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:src="@mipmap/ic_launcher"
-            android:id="@+id/menu_image"
-            android:layout_marginRight="10dp"
-            android:scaleType="centerCrop" />
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/menu_image"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="10dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher" />
+        </RelativeLayout>
 
-</android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
+</FrameLayout>

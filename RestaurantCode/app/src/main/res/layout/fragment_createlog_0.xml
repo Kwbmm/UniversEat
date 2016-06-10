@@ -17,31 +17,34 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp" />
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/editText_login1"
             android:text="@string/login1"
-            android:layout_below="@+id/textView_login"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_marginTop="100dp"
-            android:gravity="center_horizontal" />
+            android:gravity="center_horizontal"
+            android:singleLine="true"
+            android:layout_below="@+id/textView_login"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="10dp" />
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login_rest"
             android:id="@+id/checkBox_login"
-            android:layout_below="@+id/editText_login1"
-            android:layout_centerHorizontal="true" />
+            android:layout_toLeftOf="@+id/editText_login1"
+            android:layout_alignTop="@+id/editText_login1" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/Button_Next_login"
             android:text="@string/next"
-            android:layout_below="@+id/checkBox_login"
+            android:background="@color/colorAccent"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp" />
 
         <ImageView
             android:layout_width="150dp"

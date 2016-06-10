@@ -7,29 +7,21 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/create_r_2">
+        android:id="@+id/create_r_2"
+        android:padding="10dp">
         <!-- Restaurant Address -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_Address"
-            android:text="@string/frg_create_restaurant_2_textView_Address"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_Address"
-            android:layout_below="@id/textView_Address"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
             android:inputType="text"
-            android:hint="@string/frg_create_restaurant_2_editView_AddressHint"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:hint="@string/frg_create_restaurant_2_textView_Address"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@+id/imageView_map"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/imageView20" />
 
         <!--
             For now we are just using a fixed image, as suggest by Prof. Malnati.
@@ -42,77 +34,49 @@
             android:src="@drawable/restaurant_map_view"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@id/editText_Address"
             android:scaleType="centerCrop" />
 
         <!-- Restaurant City -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_City"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:layout_below="@id/imageView_map"
-            android:text="@string/frg_create_restaurant_2_textView_City"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_City"
-            android:layout_below="@id/textView_City"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
             android:inputType="text"
-            android:hint="@string/frg_create_restaurant_2_editView_CityHint"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:hint="@string/frg_create_restaurant_2_textView_City"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@+id/editText_Address"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/imageView21" />
 
         <!-- Restaurant ZIP Code -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_ZIPCode"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:layout_below="@id/editText_City"
-            android:text="@string/frg_create_restaurant_2_textView_ZIPCode"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_ZIPCode"
-            android:layout_below="@id/textView_ZIPCode"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
             android:inputType="number"
-            android:hint="@string/frg_create_restaurant_2_editView_ZIPCodeHint"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:hint="@string/frg_create_restaurant_2_textView_ZIPCode"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@id/editText_City"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/imageView22" />
 
         <!-- Restaurant State -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_State"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:layout_below="@id/editText_ZIPCode"
-            android:text="@string/frg_create_restaurant_2_textView_State"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_State"
-            android:layout_below="@id/textView_State"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
             android:inputType="text"
-            android:hint="@string/frg_create_restaurant_2_editView_StateHint"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:hint="@string/frg_create_restaurant_2_textView_State"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@id/editText_ZIPCode"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/imageView23" />
 
         <Button
             android:layout_width="wrap_content"
@@ -122,10 +86,8 @@
             android:layout_alignParentEnd="true"
             android:text="@string/next"
             android:layout_below="@id/editText_State"
-            android:layout_marginTop="@dimen/btn_marginTop"
-            android:layout_marginRight="@dimen/btn_marginRight"
-            android:layout_marginEnd="@dimen/btn_marginRight"
-            />
+            android:background="@color/colorAccent"
+            android:layout_marginTop="@dimen/btn_marginTop" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -143,5 +105,45 @@
             android:textColor="#ffffff"
             android:textSize="20dp"
             android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView20"
+            android:layout_alignTop="@+id/editText_Address"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_marker_black"
+            android:layout_marginTop="5dp" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView21"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignTop="@+id/editText_City"
+            android:src="@drawable/ic_capitol_black"
+            android:layout_marginTop="5dp" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView22"
+            android:layout_alignTop="@+id/editText_ZIPCode"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_marker2_black"
+            android:layout_marginTop="5dp" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView23"
+            android:layout_alignTop="@+id/editText_State"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_flag_black"
+            android:layout_marginTop="5dp" />
     </RelativeLayout>
 </ScrollView>

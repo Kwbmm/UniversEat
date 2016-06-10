@@ -1,7 +1,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp">
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,7 +27,7 @@
                 android:id="@+id/rev_rest_name"
                 android:text="@string/restaurantView_textViewRestaurantName"
                 android:textAlignment="center"
-                android:textSize="25dp"/>
+                android:textSize="20sp"/>
             <RatingBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,23 +43,24 @@
             android:layout_height="wrap_content"
             android:id="@+id/ll_review2"
             android:layout_below="@id/ll_review1">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/Review_Title"
-                android:textSize="20dp"
-                android:textAlignment="center"
-                android:id="@+id/review_title_label"
-                />
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:layout_below="@id/review_title_label"
                 android:id="@+id/review_title"
                 android:layout_marginTop="5dp"
                 android:inputType="text"
                 android:hint="@string/title_review" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/review_text"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:hint="@string/write_your_review_here" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -140,35 +142,15 @@
                 android:layout_gravity="center_horizontal" />
 
 
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="@string/rating_comment"
-                android:layout_below="@id/rev_rate_pqr"
-                android:id="@+id/review_label"
-                android:textSize="20dp"
-                android:layout_marginTop="20dp"
-                />
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/review_text"
-                android:inputType="textMultiLine"
-                android:ems="10"
-                android:layout_gravity=""
-                />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Create"
-                android:layout_marginBottom="10dp"
                 android:layout_gravity="right"
                 android:id="@+id/rev_create"
                 android:layout_below="@id/review_text"
 
-                />
+                android:background="@color/colorAccent" />
 
         </LinearLayout>
 

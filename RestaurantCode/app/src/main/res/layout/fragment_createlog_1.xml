@@ -2,154 +2,106 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:padding="10dp">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/create_log_1">
         <!-- User name -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_UserName"
-            android:layout_alignParentTop="true"
-            android:text="@string/username"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_UserName"
-            android:layout_below="@id/textView_UserName"
             android:inputType="text"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:hint="@string/username"
+            android:layout_below="@+id/imageView_UserImage"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/imageView10"
+            android:layout_marginLeft="5dp" />
         <!-- User Surname -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_surname"
-            android:layout_below="@id/editText_UserName"
-            android:text="@string/surname"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_surname"
-            android:layout_below="@id/textView_surname"
             android:inputType="text"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:hint="@string/surname"
+            android:layout_below="@id/editText_UserName"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/imageView10" />
 
         <!-- Profile Image -->
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:id="@+id/textView_imageText"
-            android:layout_below="@id/editText_surname"
             android:text="@string/frg_creatLog1_textViewImageText"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp" />
+            android:textSize="20sp"
+            android:gravity="center_vertical"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/imageView_UserImage"
+            android:layout_toEndOf="@+id/imageView_UserImage"
+            android:layout_marginLeft="10dp" />
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/frg_imageView_containerHeight"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:maxWidth="@dimen/frg_imageView_maxWidth"
             android:maxHeight="@dimen/frg_imageView_maxHeight"
             android:id="@+id/imageView_UserImage"
-            android:layout_below="@id/textView_imageText"
             android:src="@drawable/ic_picture_black"
             android:background="#fefeff"
             android:layout_marginBottom="10dp"
             android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc" />
 
         <!-- User Nickname -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_Nickname"
-            android:text="@string/nickname"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:layout_below="@id/imageView_UserImage"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_Nickname"
-            android:layout_below="@id/textView_Nickname"
             android:inputType="text"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:hint="@string/nickname"
+            android:layout_below="@+id/editText_surname"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/imageView11"
+            android:layout_marginLeft="5dp" />
 
         <!-- User Password -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_Password"
-            android:layout_below="@id/editText_Nickname"
-            android:text="@string/password"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_Password"
-            android:layout_below="@id/textView_Password"
             android:inputType="textPassword"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:hint="@string/password"
+            android:layout_below="@id/editText_Nickname"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/imageView12"
+            android:layout_marginLeft="5dp" />
 
         <!-- User Password repeat -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_Password_repeat"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:layout_below="@id/editText_Password"
-            android:text="@string/password_repeat"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_Password_repeat"
-            android:layout_below="@id/textView_Password_repeat"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
             android:inputType="textPassword"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:hint="@string/password_repeat"
+            android:layout_below="@id/editText_Password"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/imageView12" />
 
         <!-- User mail -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/emailaddress"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:id="@+id/textView_Mailaddress"
-            android:layout_below="@id/editText_Password_repeat"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_Mail"
-            android:layout_below="@id/textView_Mailaddress"
             android:inputType="textEmailAddress"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:hint="@string/emailaddress"
+            android:layout_below="@id/editText_Password_repeat"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/imageView13"
+            android:layout_marginLeft="5dp" />
 
         <!-- Next button -->
         <Button
@@ -161,8 +113,48 @@
             android:layout_alignParentEnd="true"
             android:text="@string/finish"
             android:layout_marginTop="@dimen/btn_marginTop"
-            android:layout_marginRight="@dimen/btn_marginRight"
+            android:layout_marginRight="10dp"
             android:layout_marginEnd="@dimen/btn_marginRight"
-            />
+            android:background="@color/colorAccent" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView10"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignTop="@+id/editText_UserName"
+            android:src="@drawable/ic_name_black"
+            android:layout_marginTop="5dp" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView11"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignTop="@+id/editText_Nickname"
+            android:src="@drawable/ic_user_black"
+            android:layout_marginTop="5dp" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView12"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignTop="@+id/editText_Password"
+            android:src="@drawable/ic_password_black"
+            android:layout_marginTop="5dp" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView13"
+            android:layout_alignTop="@+id/editText_Mail"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:src="@drawable/ic_email_black"
+            android:layout_marginTop="5dp" />
     </RelativeLayout>
 </ScrollView>

@@ -269,13 +269,13 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         holder.restaurant_rating.setRating(restaurant.getRating());
         float distance = restaurant.getDistance();
         if(distance < 1){ //Less than 1 meter
-            holder.distance.setText("< 1m");
+            holder.distance.setText("< 1m"+context.getResources().getString(R.string.from_here));
         }
         else if(distance >= 1 && distance < 1000){// Between 1 and 1000 meters
-            holder.distance.setText(String.valueOf((int)distance)+" m");
+            holder.distance.setText(context.getResources().getString(R.string.from_here2)+String.valueOf((int)distance)+"m"+context.getString(R.string.from_here));
         }
         else{
-            holder.distance.setText(String.valueOf((int)(restaurant.getDistance()/1000))+" km");
+            holder.distance.setText(context.getResources().getString(R.string.from_here2)+String.valueOf((int)(restaurant.getDistance()/1000))+"km"+context.getString(R.string.from_here));
         }
 
         File img = new File(restaurant.getImageLocalPath());
@@ -358,7 +358,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
 
                         }
-                        Toast.makeText(context,restaurant.getName()+" now is your favourite!",Toast.LENGTH_LONG).show();
+                        Toast.makeText(context,restaurant.getName()+context.getResources().getString(R.string.added_favourite),Toast.LENGTH_LONG).show();
                     }
 
                     @Override

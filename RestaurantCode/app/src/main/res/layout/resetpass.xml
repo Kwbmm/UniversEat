@@ -7,6 +7,9 @@
         android:layout_height="wrap_content"
         android:text="Reset Password"
         android:layout_gravity="center_horizontal"
-        android:id="@+id/reset_button"/>
+        android:id="@+id/reset_button"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@color/colorAccent" />
 
 </LinearLayout>
