@@ -385,17 +385,26 @@
     <array name="tags">
         <item>Pizza</item>
         <item>Pasta</item>
-        <item>Meat</item>
-        <item>Fish</item>
-        <item>Cocktail</item>
-        <item>Cake</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
         <item>Carne</item>
         <item>Pesce</item>
+        <item>Verdura</item>
+        <item>Dolce</item>
+        <item>Sushi</item>
+        <item>Riso</item>
+        <item>Kebab</item>
+        <item>Pollo</item>
+        <item>Cinese</item>
+        <item>Patatine</item>
+        <item>Panino</item>
+        <item>Formaggio</item>
+        <item>Insalata</item>
+        <item>Birra</item>
+        <item>Gelato</item>
+        <item>Bibita</item>
         <item>Vino</item>
-        <item>Pomodoro</item>
-        <item>Basilico</item>
+        <item>Spumante</item>
+        <item>Etnico</item>
+        <item>Casereccio</item>
     </array>
 
     <array name="cuisine">

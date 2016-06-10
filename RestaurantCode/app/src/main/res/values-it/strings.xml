@@ -208,15 +208,7 @@
     <!--Restaurant_info_user-->
     <string name="closed">Chiuso</string>
 
-    <array name="tags">
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Carne</item>
-        <item>Pesce</item>
-        <item>Vino</item>
-        <item>Pomodoro</item>
-        <item>Basilico</item>
-    </array>
+
     <string name="restaurantView_textViewRestaurantAddress">Indirizzo</string>
     <string name="restaurantView_textViewRestaurantName">Nome del Ristorante</string>
     <string name="restaurantView_textViewRestaurantDescription">Descrizione</string>
