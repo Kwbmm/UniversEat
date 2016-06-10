@@ -16,12 +16,14 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder{
     public TextView restaurant_address;
     public RatingBar restaurant_rating;
     public ImageView restaurant_image;
+    public TextView restaurant_description;
     public CardView card;
     public TextView distance;
     public ImageButton favourite;
 
     public RestaurantViewHolder(View itemView) {
         super(itemView);
+        this.restaurant_description=(TextView) itemView.findViewById(R.id.restaurant_description);
         this.restaurant_name =(TextView)itemView.findViewById(R.id.restaurant_name);
         this.restaurant_address = (TextView) itemView.findViewById(R.id.restaurant_address);
         this.restaurant_rating = (RatingBar) itemView.findViewById(R.id.restaurant_rating);

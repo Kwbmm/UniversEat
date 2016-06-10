@@ -265,18 +265,22 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             }
             holder.favourite.setOnClickListener(new OnFavourite(holder, restaurant));
         }
-        holder.restaurant_address.setText(restaurant.getAddress());
+        holder.restaurant_address.setText(restaurant.getAddress()+", "+restaurant.getCity());
         holder.restaurant_name.setText(restaurant.getName());
         holder.restaurant_rating.setRating(restaurant.getRating());
+        String s=restaurant.getDescription();
+        if(s.length() >50)
+            s = s.substring(0,47) + "...";
+        holder.restaurant_description.setText(s);
         float distance = restaurant.getDistance();
         if(distance < 1){ //Less than 1 meter
             holder.distance.setText("< 1m"+context.getResources().getString(R.string.from_here));
         }
         else if(distance >= 1 && distance < 1000){// Between 1 and 1000 meters
-            holder.distance.setText(context.getResources().getString(R.string.from_here2)+" "+String.valueOf((int)distance)+"m "+context.getString(R.string.from_here));
+            holder.distance.setText(context.getResources().getString(R.string.from_here2)+" "+String.valueOf((int)distance)+" m "+context.getString(R.string.from_here));
         }
         else{
-            holder.distance.setText(context.getResources().getString(R.string.from_here2)+" "+String.valueOf((int)(restaurant.getDistance()/1000))+"Km "+context.getString(R.string.from_here));
+            holder.distance.setText(context.getResources().getString(R.string.from_here2)+" "+String.valueOf((int)(restaurant.getDistance()/1000))+" Km "+context.getString(R.string.from_here));
         }
 
         File img = new File(restaurant.getImageLocalPath());

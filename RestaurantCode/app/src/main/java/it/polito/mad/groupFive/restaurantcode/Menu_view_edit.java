@@ -227,7 +227,10 @@ public class Menu_view_edit extends NavigationDrawer {
         public void onBindViewHolder(MenuEditViewHolder holder,int position) {
             Menu menu =menus.get(position);
             holder.card.setOnClickListener(new CardListener(menu.getRid(),menu.getMid()));
-            holder.menu_desctiprion.setText(menu.getDescription());
+            String s=menu.getDescription();
+            if(s.length() >80)
+                s = s.substring(0,77) + "...";
+            holder.menu_desctiprion.setText(s);
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(String.format("%.2f", menu.getPrice())+"€");
             if(!menu.isSpicy()) holder.spicy_icon.setColorFilter(Color.GRAY);

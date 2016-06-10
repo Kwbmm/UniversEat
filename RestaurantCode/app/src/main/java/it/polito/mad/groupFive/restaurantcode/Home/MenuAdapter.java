@@ -144,7 +144,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
     public void onBindViewHolder(final MenuViewHolder holder, int position) {
         final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
         final DistanceMenu menu = menus.get(position);
-        holder.menu_description.setText(menu.getDescription());
+        String s=menu.getDescription();
+        if(s.length() >80)
+            s = s.substring(0,77) + "...";
+        holder.menu_description.setText(s);
         holder.menu_name.setText(menu.getName());
         holder.menu_price.setText(String.format(Locale.getDefault(),"%.2f", menu.getPrice())+"€");
         if(!menu.isSpicy()) holder.spicy_icon.setColorFilter(Color.GRAY);

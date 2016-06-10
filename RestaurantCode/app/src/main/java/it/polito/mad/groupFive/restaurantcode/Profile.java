@@ -149,6 +149,7 @@ public class Profile extends NavigationDrawer {
 
             TextView name= (TextView)convertView.findViewById(R.id.restaurant_name);
             TextView address= (TextView)convertView.findViewById(R.id.restaurant_address);
+            TextView description=(TextView)convertView.findViewById(R.id.restaurant_description);
             RatingBar rbar=(RatingBar)convertView.findViewById(R.id.restaurant_rating);
             ImageView img = (ImageView) convertView.findViewById(R.id.restaurant_image);
             CardView card = (CardView) convertView.findViewById(R.id.restaurant_card);
@@ -159,7 +160,11 @@ public class Profile extends NavigationDrawer {
             fav_b.setColorFilter(getResources().getColor(R.color.colorPrimary));
             fav_b.setOnClickListener(new OnFavourite(fav_b,rest));
             name.setText(rest.getName());
-            address.setText(rest.getAddress());
+            String s=rest.getDescription();
+            if(s.length() >50)
+                s = s.substring(0,47) + "...";
+            description.setText(s);
+            address.setText(rest.getAddress()+", "+rest.getCity());
             rbar.setRating(rest.getRating());
             try {
 
