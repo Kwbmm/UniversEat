@@ -274,7 +274,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         holder.restaurant_description.setText(s);
         float distance = restaurant.getDistance();
         if(distance < 1){ //Less than 1 meter
-            holder.distance.setText("< 1m"+context.getResources().getString(R.string.from_here));
+            holder.distance.setText("< 1 m "+context.getResources().getString(R.string.from_here));
         }
         else if(distance >= 1 && distance < 1000){// Between 1 and 1000 meters
             holder.distance.setText(context.getResources().getString(R.string.from_here2)+" "+String.valueOf((int)distance)+" m "+context.getString(R.string.from_here));

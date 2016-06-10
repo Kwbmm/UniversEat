@@ -353,7 +353,7 @@ public class SearchMenuResults extends NavigationDrawer {
                 s = s.substring(0,77) + "...";
             holder.menu_description.setText(s);
             holder.menu_name.setText(menu.getName());
-            holder.menu_price.setText(menu.getPrice()+"€");
+            holder.menu_price.setText(String.format("%.2f", menu.getPrice())+"€");
             if(!menu.isSpicy()) holder.spicy_icon.setColorFilter(Color.GRAY);
             if(!menu.isVegan()) holder.vegan_icon.setColorFilter(Color.GRAY);
             if(!menu.isVegetarian()) holder.vegetarian_icon.setColorFilter(Color.GRAY);

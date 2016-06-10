@@ -277,6 +277,9 @@ public class Restaurant_menu_user extends Fragment {
             if(menu.getMid().toString().equals(mid)){
                 holder.card.setCardBackgroundColor(getResources().getColor(R.color.colorAccent));
             }
+            String s=menu.getDescription();
+            if(s.length() >80)
+                s = s.substring(0,77) + "...";
             holder.menu_description.setText(menu.getDescription());
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(String.format("%.2f", menu.getPrice())+"€");
