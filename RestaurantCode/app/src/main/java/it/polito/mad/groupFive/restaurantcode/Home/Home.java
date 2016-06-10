@@ -64,10 +64,6 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
                 .addApi(LocationServices.API)
                 .build();
         this.db = FirebaseDatabase.getInstance();
-        /*if(!isDBPersistanceEnabled){
-            this.db.setPersistenceEnabled(true);
-            isDBPersistanceEnabled = true;
-        }*/
         this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
         this.rv = (RecyclerView) findViewById(R.id.home_recyclerViewHome);
 

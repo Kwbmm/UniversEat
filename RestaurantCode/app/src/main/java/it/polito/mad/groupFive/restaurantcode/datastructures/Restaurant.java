@@ -42,8 +42,9 @@ public class Restaurant {
     private Map<String, Map<String,String>> timetableDinner = new HashMap<>();
     private ArrayList<Review> reviews = new ArrayList<>();
 
-    public void setRatingNumber(float ratingNumber) {
+    public Restaurant setRatingNumber(float ratingNumber) {
         this.ratingNumber = ratingNumber;
+        return this;
     }
 
     public Restaurant(String uid, String rid) throws RestaurantException {

@@ -50,6 +50,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                     .setAddress(r.getAddress())
                     .setCity(r.getCity())
                     .setRating(r.getRating())
+                    .setRatingNumber(1)
                     .setState(r.getState())
                     .setXCoord(r.getXCoord())
                     .setYCoord(r.getYCoord())
