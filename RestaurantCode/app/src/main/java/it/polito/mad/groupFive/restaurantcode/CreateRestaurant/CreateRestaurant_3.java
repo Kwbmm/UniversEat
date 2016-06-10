@@ -218,12 +218,12 @@ public class CreateRestaurant_3 extends Fragment {
                         btnTo.setText(restaurant.getTimetableLunch().get(weekDaysENG[count]).get("end"));
                     }
                 }
-                count++;
+
             }
 
             timetableItem.findViewById(R.id.RL_timeTableItem).setId(weekdayToRL_IDs.get(weekday));
             ll.addView(timetableItem);
-
+            count++;
         }
         Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
