@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -95,25 +96,9 @@ public class Review_user_view extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
-        inflater.inflate(R.menu.toolbar_add,menu);
-        MenuItem item=menu.findItem(R.id.add_ab);
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent new_rew= new Intent(getContext(),Create_review.class);
-                new_rew.putExtra("rid",rest.getRid());
-                new_rew.putExtra("restName",rest.getName());
-                new_rew.putExtra("rat",rest.getRatingNumber());
-                new_rew.putExtra("ratingNumber",rest.getRatingNumber());
-                startActivityForResult(new_rew,1);
-
-                return true;
-            }
-        });
         super.onCreateOptionsMenu(menu, inflater);
 
-    }}
+    }
 
     public void readdata(View v) {
 
@@ -124,14 +109,29 @@ public class Review_user_view extends Fragment {
         LinearLayoutManager llm=new LinearLayoutManager(v.getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        TextView r_count= (TextView)v.findViewById(R.id.review_counter);
+        FloatingActionButton fab = (FloatingActionButton)v.findViewById(R.id.fab);
+        if(FirebaseAuth.getInstance().getCurrentUser()==null) {
+            fab.setVisibility(View.GONE);
+        }
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("rid",rest.getRid());
+                bundle.putFloat("ratingNumber",rest.getRatingNumber());
+                bundle.putFloat("ratingValue",rest.getRating());
+                New_Create_review create_review = new New_Create_review();
+                create_review.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.frame,create_review).commit();
+            }
+        });
+
+        /*TextView r_count= (TextView)v.findViewById(R.id.review_counter);
         r_count.setText(((int)rest.getRatingNumber())+" reviews");
         TextView r_name=(TextView)v.findViewById(R.id.restaurant_name);
         r_name.setText(rest.getName());
         RatingBar rate=(RatingBar)v.findViewById(R.id.rate);
-        rate.setRating(rest.getRating());
-
-
+        rate.setRating(rest.getRating());*/
 
     }
 
@@ -243,18 +243,8 @@ public class Review_user_view extends Fragment {
             Review rev=reviews.get(position);
             holder.rating.setRating(rev.getRating());
             holder.title.setText(rev.getTitle());
-            holder.review.setText(rev.getReviewText());
-            SimpleDateFormat dateFormat=new SimpleDateFormat("d M yy");
-            Calendar calendar = Calendar.getInstance();
-            try {
-                calendar.setTime(dateFormat.parse(rev.getDate()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            String date = String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.DAY_OF_MONTH))+"/"+
-                    String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MONTH))+"/"+
-                    String.format(Locale.getDefault(),"%04d",calendar.get(Calendar.YEAR));
-            holder.dat.setText(" "+date);
+            holder.review.setText("                         "+rev.getReviewText());
+            holder.dat.setText(rev.getDate());
 
         }
 

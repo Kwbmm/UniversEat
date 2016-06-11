@@ -23,14 +23,14 @@
               android:id="@+id/vegan"
               android:layout_gravity="right"
               android:src="@drawable/ic_vegan_black"
-              android:tint="#007f24"
+              android:tint="#388e3c"
               android:layout_alignParentRight="true"/>
           <ImageView
               android:layout_width="wrap_content"
               android:layout_height="25dp"
               android:id="@+id/vegetarian"
               android:src="@drawable/ic_vegetarian_black"
-              android:tint="#951f9b"
+              android:tint="#7b1fa2"
               android:layout_toLeftOf="@id/vegan"
               />
           <ImageView
@@ -39,7 +39,7 @@
               android:id="@+id/gluten_free"
               android:layout_toLeftOf="@id/vegetarian"
               android:src="@drawable/ic_nogluten_black"
-              android:tint="#c8a004"
+              android:tint="#FFFBC02D"
               />
           <ImageView
               android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
               android:id="@+id/hot"
               android:layout_toLeftOf="@id/gluten_free"
               android:src="@drawable/ic_hot_black"
-              android:tint="#a60101"
+              android:tint="#FFD32F2F"
               />
       <TextView
           android:layout_width="wrap_content"

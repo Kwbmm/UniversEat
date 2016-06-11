@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import it.polito.mad.groupFive.restaurantcode.Menu_details;
+import it.polito.mad.groupFive.restaurantcode.New_Menu_details;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
@@ -279,7 +280,7 @@ public class Restaurant_menu_user extends Fragment {
             String s=menu.getDescription();
             if(s.length() >80)
                 s = s.substring(0,77) + "...";
-            holder.menu_description.setText(menu.getDescription());
+            holder.menu_description.setText(s);
             holder.menu_name.setText(menu.getName());
             holder.menu_price.setText(String.format("%.2f", menu.getPrice())+"€");
             if(!menu.isSpicy()) holder.spicy_icon.setColorFilter(Color.GRAY);
@@ -367,10 +368,12 @@ public class Restaurant_menu_user extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Intent menu_info=new Intent(getContext(), Menu_details.class);
-                menu_info.putExtra("rid",menu.getRid());
-                menu_info.putExtra("mid",menu.getMid());
-                startActivity(menu_info);
+                Bundle bundle = new Bundle();
+                bundle.putString("rid",menu.getRid());
+                bundle.putString("mid",menu.getMid());
+                New_Menu_details menu_details = new New_Menu_details();
+                menu_details.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.frame,menu_details).commit();
             }
         }
     }

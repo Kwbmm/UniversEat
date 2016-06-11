@@ -87,13 +87,14 @@
             android:text="@string/next"
             android:layout_below="@id/editText_State"
             android:background="@color/colorAccent"
-            android:layout_marginTop="@dimen/btn_marginTop" />
+            android:layout_marginTop="@dimen/btn_marginTop"
+            android:elevation="0dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Pick a place on the map"
+            android:text="@string/pick_a_place_on_the_map"
             android:id="@+id/mapPickerText"
             android:layout_alignTop="@+id/imageView_map"
             android:layout_centerHorizontal="true"
@@ -114,7 +115,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:src="@drawable/ic_marker_black"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:tint="@color/colorPrimary" />
 
         <ImageView
             android:layout_width="40dp"
@@ -124,7 +126,8 @@
             android:layout_alignParentStart="false"
             android:layout_alignTop="@+id/editText_City"
             android:src="@drawable/ic_capitol_black"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:tint="@color/colorPrimary" />
 
         <ImageView
             android:layout_width="40dp"
@@ -134,7 +137,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:src="@drawable/ic_marker2_black"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:tint="@color/colorPrimary" />
 
         <ImageView
             android:layout_width="40dp"
@@ -144,6 +148,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:src="@drawable/ic_flag_black"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:tint="@color/colorPrimary" />
     </RelativeLayout>
 </ScrollView>

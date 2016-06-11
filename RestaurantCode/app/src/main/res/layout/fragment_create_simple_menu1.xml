@@ -50,7 +50,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:text="@string/fragment_create_simple_menu1_Send_notification"/>
+                android:text="@string/fragment_create_simple_menu1_Send_notification"
+                android:visibility="invisible" />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,7 +59,8 @@
                 android:id="@+id/next"
                 android:layout_marginTop="20dp"
                 android:layout_gravity="right"
-                android:background="@color/colorAccent" />
+                android:background="@color/colorAccent"
+                android:elevation="0dp" />
 
         </LinearLayout>
 
@@ -82,7 +84,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="false"
             android:src="@drawable/ic_menu_black"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:tint="@color/colorPrimary" />
 
         <ImageView
             android:layout_width="40dp"
@@ -91,8 +94,9 @@
             android:layout_alignTop="@+id/cmed_1_2"
             android:layout_alignStart="@+id/cmed_1_2"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_infosquared_black"
-            android:layout_marginTop="5dp" />
+            android:src="@drawable/ic_info_black"
+            android:layout_marginTop="5dp"
+            android:tint="@color/colorPrimary" />
 
     </RelativeLayout>
 

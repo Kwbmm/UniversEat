@@ -65,7 +65,7 @@
                 android:layout_toEndOf="@+id/menu_image"
                 android:layout_toRightOf="@+id/menu_image"
                 android:src="@drawable/ic_hot_black"
-                android:tint="#a60101" />
+                android:tint="#FFD32F2F" />
 
             <ImageView
                 android:id="@+id/menu_icon2"
@@ -75,7 +75,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/menu_icon1"
                 android:src="@drawable/ic_nogluten_black"
-                android:tint="#c8a004" />
+                android:tint="#FFFBC02D" />
 
             <ImageView
                 android:id="@+id/menu_icon3"
@@ -85,7 +85,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/menu_icon2"
                 android:src="@drawable/ic_vegetarian_black"
-                android:tint="#951f9b" />
+                android:tint="#7b1fa2" />
 
             <ImageView
                 android:id="@+id/menu_icon4"
@@ -95,7 +95,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/menu_icon3"
                 android:src="@drawable/ic_vegan_black"
-                android:tint="#007f24" />
+                android:tint="#388e3c" />
 
             <ImageView
                 android:id="@+id/menu_image"
@@ -105,7 +105,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="10dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@drawable/new_icon_inverted_white"
+                android:background="@color/colorPrimaryDark" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

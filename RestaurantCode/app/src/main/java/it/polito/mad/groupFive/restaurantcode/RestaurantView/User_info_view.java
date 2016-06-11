@@ -1,7 +1,11 @@
 package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,17 +14,28 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.firebase.client.Firebase;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,6 +43,7 @@ import it.polito.mad.groupFive.restaurantcode.NavigationDrawer;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
@@ -46,7 +62,8 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
     String rid;
     FirebaseDatabase db;
     ArrayList<Menu> menus;
-
+    FileDownloadTask imageDownloadTask;
+    ImageDownloadListener idl;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -55,6 +72,7 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
         try {
             super.onCreate(savedInstanceState);
             getSupportActionBar().setElevation(0);
+            getSupportActionBar().setTitle("");
             FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
             mlay.inflate(this, R.layout.activity_user_info_view, mlay);
             rid = getIntent().getExtras().getString("rid");
@@ -85,6 +103,23 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                     restaurant.setTimetableDinner((HashMap) dataSnapshot.child("timetableDinner").getValue());
                     restaurant.setTimetableLunch((HashMap) dataSnapshot.child("timetableLunch").getValue());
                     restaurant.setRatingNumber(Float.parseFloat(dataSnapshot.child("ratingNumber").getValue().toString()));
+                    TextView r_name =(TextView)findViewById(R.id.r_name);
+                    TextView r_rating=(TextView)findViewById(R.id.r_rating);
+                    RatingBar r_ratingBar=(RatingBar)findViewById(R.id.r_ratingBar);
+                    TextView r_reviews=(TextView)findViewById(R.id.r_reviews);
+                    r_name.setText(restaurant.getName());
+                    r_rating.setText(String.format("%.1f",restaurant.getRating()));
+                    r_ratingBar.setRating(restaurant.getRating());
+                    r_reviews.setText(String.format("%.0f",restaurant.getRatingNumber())+" "+getResources().getString(R.string.review_based_on));
+                    ImageView restImage=(ImageView)findViewById(R.id.restaurant_image);
+
+                    FirebaseStorage storage=FirebaseStorage.getInstance();
+                    StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
+                    try {
+                        getFromNetwork(imageref,restaurant.getRid(),restImage);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
 
                     rest_i = (RelativeLayout) findViewById(R.id.info_b);
                     line_i= (ImageView) findViewById(R.id.info_b_line);
@@ -100,8 +135,8 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                             line_m.setVisibility(View.INVISIBLE);
                             Restaurant_info_user rest_view = new Restaurant_info_user();
                             getSupportFragmentManager()
-                                    .beginTransaction().addToBackStack(null)
-                                    .add(R.id.uif_fragment, rest_view)
+                                    .beginTransaction()
+                                    .replace(R.id.uif_fragment, rest_view)
                                     .commit();
 
 
@@ -161,8 +196,8 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                         line_m.setVisibility(View.INVISIBLE);
                         Restaurant_info_user rest_view = new Restaurant_info_user();
                         getSupportFragmentManager()
-                                .beginTransaction().addToBackStack(null)
-                                .add(R.id.uif_fragment, rest_view)
+                                .beginTransaction()
+                                .replace(R.id.uif_fragment, rest_view)
                                 .commit();
 
                     } else {
@@ -175,7 +210,7 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                         Restaurant_menu_user menu_view = new Restaurant_menu_user();
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .add(R.id.uif_fragment, menu_view)
+                                .replace(R.id.uif_fragment, menu_view)
                                 .commit();
                     }
                 }
@@ -186,18 +221,49 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
                 }
             });
-            String title=restaurant.getName();
-            getSupportActionBar().setTitle(title);
         } catch (RestaurantException e) {
             e.printStackTrace();
         }
 
     }
 
+    private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        final File dir = cw.getDir("images", Context.MODE_PRIVATE);
+        File filePath = new File(dir,id);
+        this.imageDownloadTask = storageRoot.child(id).getFile(filePath);
+        this.idl = new ImageDownloadListener(imView,dir,id);
+        this.imageDownloadTask.addOnSuccessListener(this.idl);
+    }
+    private class ImageDownloadListener implements OnSuccessListener<FileDownloadTask.TaskSnapshot> {
+        private ImageView imView;
+        private File directory;
+        private String id;
+        public ImageDownloadListener(ImageView imageView, File imageDirectory, String imageID){
+            this.imView = imageView;
+            this.directory = imageDirectory;
+            this.id = imageID;
+        }
+        @Override
+        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+            File img = new File(this.directory, this.id);
+            Uri imgPath = Uri.fromFile(img);
+            try {
+                Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
+                this.imView.setImageBitmap(b);
+            } catch (IOException e) {
+                Log.e("getFromNet",e.getMessage());
+            }
+        }
+    }
+
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override

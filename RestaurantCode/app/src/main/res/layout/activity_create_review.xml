@@ -1,164 +1,154 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#c8ffffff"
     android:padding="10dp">
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/sv1"
-    >
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/sv1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        tools:context=".RestaurantView.Create_review1">
-        <LinearLayout
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/cardview_default_radius"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="10dp">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ll_review1"
-            android:orientation="vertical"
-            android:layout_alignParentTop="true">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/rev_rest_name"
-                android:text="@string/restaurantView_textViewRestaurantName"
-                android:textAlignment="center"
-                android:textSize="20sp"/>
-            <RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/rev_rate"
-                android:stepSize="0.5"
-                android:numStars="5"
-                android:layout_gravity="center_horizontal"
-                android:clickable="false" />
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ll_review2"
-            android:layout_below="@id/ll_review1">
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:padding="10dp"
+            tools:context=".RestaurantView.Create_review1">
 
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:id="@+id/review_title"
-                android:layout_marginTop="5dp"
-                android:inputType="text"
-                android:hint="@string/title_review" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/review_text"
-                android:inputType="textMultiLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/write_your_review_here" />
+                android:hint="@string/write_your_review_here"
+                android:inputType="textMultiLine"
+                android:minLines="3" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/review_title"
                 android:id="@+id/rating_service"
-                android:textSize="20dp"
-                android:textAlignment="center"
-                android:text="@string/rating_service"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/review_text"
                 android:layout_marginTop="20dp"
+                android:text="@string/rating_service"
+                android:textAlignment="center"
 
-                />
+                android:textColor="#000000"
+                android:textSize="15sp" />
 
             <RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/rev_rate_service"
+                style="@style/Base.Widget.AppCompat.RatingBar.Indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/rating_service"
-                android:stepSize="0.5"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:isIndicator="false"
                 android:numStars="5"
-                android:layout_gravity="center_horizontal" />
+                android:stepSize="0.5" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/rev_rate_service"
                 android:id="@+id/rating_place"
-                android:textSize="20dp"
-                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rev_rate_service"
+                android:layout_marginTop="10dp"
                 android:text="@string/rating_place"
+                android:textAlignment="center"
 
-                />
+                android:textColor="#000000"
+                android:textSize="15sp" />
 
             <RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/rev_rate_place"
+                style="@style/Base.Widget.AppCompat.RatingBar.Indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/rating_place"
-                android:stepSize="0.5"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:isIndicator="false"
                 android:numStars="5"
-                android:layout_gravity="center_horizontal" />
+                android:stepSize="0.5" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/rev_rate_place"
                 android:id="@+id/rating_food"
-                android:textSize="20dp"
-                android:textAlignment="center"
-                android:text="@string/rating_food"
-
-                />
-
-            <RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/rev_rate_food"
-                android:layout_below="@id/rating_food"
-                android:stepSize="0.5"
-                android:numStars="5"
-                android:layout_gravity="center_horizontal" />
-            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/rev_rate_food"
-                android:id="@+id/rating_pqr"
-                android:textSize="20dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rev_rate_place"
+                android:layout_marginTop="10dp"
+                android:text="@string/rating_food"
                 android:textAlignment="center"
-                android:text="@string/rating_pqr"
 
-                />
+                android:textColor="#000000"
+                android:textSize="15sp" />
 
             <RatingBar
+                android:id="@+id/rev_rate_food"
+                style="@style/Base.Widget.AppCompat.RatingBar.Indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/rev_rate_pqr"
-                android:layout_below="@id/rating_pqr"
-                android:stepSize="0.5"
+                android:layout_below="@id/rating_food"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:isIndicator="false"
                 android:numStars="5"
-                android:layout_gravity="center_horizontal" />
+                android:stepSize="0.5" />
 
+            <TextView
+                android:id="@+id/rating_pqr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rev_rate_food"
+                android:layout_marginTop="10dp"
+                android:text="@string/rating_pqr"
+                android:textAlignment="center"
+
+                android:textColor="#000000"
+                android:textSize="15sp" />
+
+            <RatingBar
+                android:id="@+id/rev_rate_pqr"
+                style="@style/Base.Widget.AppCompat.RatingBar.Indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rating_pqr"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:isIndicator="false"
+                android:numStars="5"
+                android:stepSize="0.5" />
 
             <Button
+                android:id="@+id/rev_create"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Create"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentEnd="true"
+
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/rev_rate_pqr"
                 android:layout_gravity="right"
-                android:id="@+id/rev_create"
-                android:layout_below="@id/review_text"
-
-                android:background="@color/colorAccent" />
-
-        </LinearLayout>
+                android:layout_marginTop="@dimen/btn_marginTop"
+                android:background="@color/colorAccent"
+                android:text="@string/create"
+                android:elevation="0dp" />
 
 
+        </RelativeLayout>
 
+    </android.support.v7.widget.CardView>
 
-
-    </RelativeLayout>
-
-</ScrollView>
 </RelativeLayout>

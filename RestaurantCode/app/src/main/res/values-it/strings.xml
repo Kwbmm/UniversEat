@@ -376,7 +376,7 @@
     <string name="action_reply">Rispondi</string>
     <string name="action_share">Condividi</string>
     <string name="toast_getMenusUnexpectedError">Sembra che dovrai morire di fame… Non sono riuscito a trovare alcun menu :(</string>
-    <string name="review_based_on">Basato su %d recensioni</string>
+    <string name="review_based_on">recensioni</string>
     <string name="actionBar_restaurantSearch">Cerca Ristoranti</string>
 
     <string name="nowOpen">Aperto!</string>
@@ -416,4 +416,9 @@
     <string name="info">INFO</string>
     <string name="menu">MENU</string>
     <string name="review">RECENSIONI</string>
+    <string name="call">CHIAMA</string>
+    <string name="website">SITO WEB</string>
+    <string name="fav">SALVA</string>
+    <string name="pick_a_place_on_the_map">Scegli un punto sulla mappa</string>
+    <string name="create">Crea</string>
 </resources>

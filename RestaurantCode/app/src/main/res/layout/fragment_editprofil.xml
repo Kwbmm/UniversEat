@@ -81,7 +81,8 @@
             android:layout_alignParentEnd="true"
             android:text="@string/finish"
             android:layout_marginTop="@dimen/btn_marginTop"
-            android:background="@color/colorAccent" />
+            android:background="@color/colorAccent"
+            android:elevation="0dp" />
 
         <ImageView
             android:layout_width="40dp"

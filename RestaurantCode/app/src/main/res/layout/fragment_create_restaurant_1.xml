@@ -87,7 +87,8 @@
                 android:layout_alignParentEnd="true"
                 android:text="@string/next"
                 android:layout_marginTop="@dimen/btn_marginTop"
-                android:background="@color/colorAccent" />
+                android:background="@color/colorAccent"
+                android:elevation="0dp" />
 
             <ImageView
                 android:layout_width="40dp"
@@ -98,7 +99,8 @@
                 android:layout_alignParentStart="false"
                 android:layout_alignTop="@+id/editText_RestaurantName"
                 android:src="@drawable/ic_restaurant_building_black"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:tint="@color/colorPrimary" />
 
             <ImageView
                 android:layout_width="40dp"
@@ -107,8 +109,9 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="false"
                 android:layout_alignTop="@+id/editText_Description"
-                android:src="@drawable/ic_infosquared_black"
-                android:layout_marginTop="5dp" />
+                android:src="@drawable/ic_info_black"
+                android:layout_marginTop="5dp"
+                android:tint="@color/colorPrimary" />
 
             <ImageView
                 android:layout_width="40dp"
@@ -118,7 +121,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="false"
                 android:src="@drawable/ic_phone_black"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:tint="@color/colorPrimary" />
 
             <ImageView
                 android:layout_width="40dp"
@@ -128,6 +132,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="false"
                 android:src="@drawable/ic_website_black"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:tint="@color/colorPrimary" />
     </RelativeLayout>
 </ScrollView>

@@ -264,6 +264,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                 holder.favourite.setColorFilter(Color.rgb(217,37,40));
             }
             holder.favourite.setOnClickListener(new OnFavourite(holder, restaurant));
+        } else {
+            holder.favourite.setVisibility(View.INVISIBLE);
         }
         holder.restaurant_address.setText(restaurant.getCity());
         holder.restaurant_name.setText(restaurant.getName());

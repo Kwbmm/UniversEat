@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +34,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import it.polito.mad.groupFive.restaurantcode.NavigationDrawer;
+import it.polito.mad.groupFive.restaurantcode.New_Menu_details;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
@@ -367,10 +369,12 @@ public class SearchMenuResults extends NavigationDrawer {
             holder.card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent menu_view =new Intent(context,User_info_view.class);
-                    menu_view.putExtra("mid",menu.getMid());
-                    menu_view.putExtra("rid",menu.getRid());
-                    context.startActivity(menu_view);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("rid",menu.getRid());
+                    bundle.putString("mid",menu.getMid());
+                    New_Menu_details menu_details = new New_Menu_details();
+                    menu_details.setArguments(bundle);
+                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.frame,menu_details).commit();
                 }
             });
         }

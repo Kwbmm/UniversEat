@@ -375,7 +375,7 @@
 
     <!--Restaurant_info_user-->
     <string name="closed">Closed</string>
-    <string name="review_based_on">Based on %d reviews</string>
+    <string name="review_based_on">reviews</string>
 
     <string name="title_review">Write a title for the review</string>
     <string name="rating_service">Service</string>
@@ -477,4 +477,9 @@
     <string name="info">INFO</string>
     <string name="menu">MENU</string>
     <string name="review">REVIEW</string>
+    <string name="call">CALL</string>
+    <string name="website">WEBSITE</string>
+    <string name="fav">FAV</string>
+    <string name="pick_a_place_on_the_map">Pick a place on the map</string>
+    <string name="create">Create</string>
 </resources>

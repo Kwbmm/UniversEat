@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -117,63 +118,34 @@ public class Menu_view_edit extends NavigationDrawer {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-
-
-    }
-
-
-    public void showMenu(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-
-        // This activity implements OnMenuItemClickListener
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.nfpm: {
-                        Intent intent = new Intent(getBaseContext(), Create_simple_menu.class);
-                        intent.putExtra("mid","-1");
-                        startActivityForResult(intent,1);
-                        break;
-                    }
-                    case R.id.ndm: {
-                        Intent intent = new Intent(getBaseContext(), Create_simple_menu.class);
-                        intent.putExtra("mid","-1");
-                        startActivityForResult(intent,2);
-
-                        break;
-
-                    }
-                }
-                return true;
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), Create_simple_menu.class);
+                intent.putExtra("mid","-1");
+                startActivityForResult(intent,1);
             }
         });
-        popup.inflate(R.menu.popup);
-        popup.show();
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.toolbar_add, menu);
-        MenuItem add=menu.findItem(R.id.add_ab);
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        if (item.getItemId() == R.id.add_ab) {
-            showMenu(findViewById(R.id.add_ab));
-        }
         return true;
     }
 
     public class MenuEditViewHolder extends RecyclerView.ViewHolder {
         protected TextView menu_name;
         protected TextView menu_desctiprion;
-        protected TextView menu_price;
         protected ImageButton edit;
         protected CardView card;
         protected ImageView menu_image;
@@ -187,7 +159,6 @@ public class Menu_view_edit extends NavigationDrawer {
             super(itemView);
             this.menu_name =(TextView)itemView.findViewById(R.id.menu_name);
             this.menu_desctiprion=(TextView)itemView.findViewById(R.id.menu_description);
-            this.menu_price=(TextView)itemView.findViewById(R.id.menu_price);
             this.edit=(ImageButton) itemView.findViewById(R.id.menu_edit);
             this.card= (CardView) itemView.findViewById(R.id.menu_card);
             this.menu_image=(ImageView)itemView.findViewById(R.id.menu_image);
@@ -232,7 +203,6 @@ public class Menu_view_edit extends NavigationDrawer {
                 s = s.substring(0,77) + "...";
             holder.menu_desctiprion.setText(s);
             holder.menu_name.setText(menu.getName());
-            holder.menu_price.setText(String.format("%.2f", menu.getPrice())+"€");
             if(!menu.isSpicy()) holder.spicy_icon.setColorFilter(Color.GRAY);
             if(!menu.isVegan()) holder.vegan_icon.setColorFilter(Color.GRAY);
             if(!menu.isVegetarian()) holder.vegetarian_icon.setColorFilter(Color.GRAY);
@@ -417,13 +387,16 @@ public class MenuList implements ChildEventListener{
 
         @Override
         public void onClick(View v) {
-            Intent menu_view=new Intent(getBaseContext(),Menu_details_view.class);
-            menu_view.putExtra("rid",rid);
-            menu_view.putExtra("mid",mid);
-            startActivity(menu_view);
+            Bundle bundle = new Bundle();
+            bundle.putString("rid",rid);
+            bundle.putString("mid",mid);
+            New_Menu_details menu_details = new New_Menu_details();
+            menu_details.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.frame,menu_details).commit();
 
         }
     }
+
 
     private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());

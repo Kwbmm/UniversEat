@@ -50,6 +50,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginEnd="@dimen/btn_marginRight"
             android:layout_gravity="right"
-            android:background="@color/colorAccent" />
+            android:background="@color/colorAccent"
+            android:elevation="0dp" />
     </LinearLayout>
 </ScrollView>

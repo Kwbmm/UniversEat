@@ -103,7 +103,6 @@
         <activity
             android:name=".Profile"
             android:launchMode="singleTop"
-            android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Order_management"

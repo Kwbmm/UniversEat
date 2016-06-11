@@ -2,7 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:elevation="0dp">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -125,7 +126,8 @@
             android:layout_alignParentStart="false"
             android:layout_alignTop="@+id/editText_UserName"
             android:src="@drawable/ic_name_black"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:tint="@color/colorPrimary" />
 
         <ImageView
             android:layout_width="40dp"
@@ -135,7 +137,8 @@
             android:layout_alignParentStart="false"
             android:layout_alignTop="@+id/editText_Nickname"
             android:src="@drawable/ic_user_black"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:tint="@color/colorPrimary" />
 
         <ImageView
             android:layout_width="40dp"
@@ -145,7 +148,8 @@
             android:layout_alignParentStart="false"
             android:layout_alignTop="@+id/editText_Password"
             android:src="@drawable/ic_password_black"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:tint="@color/colorPrimary" />
 
         <ImageView
             android:layout_width="40dp"
@@ -155,6 +159,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="false"
             android:src="@drawable/ic_email_black"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:tint="@color/colorPrimary" />
     </RelativeLayout>
 </ScrollView>

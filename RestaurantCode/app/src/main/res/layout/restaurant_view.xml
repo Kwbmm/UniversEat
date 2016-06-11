@@ -51,7 +51,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="10dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@drawable/new_icon_inverted_white"
+                android:background="@color/colorPrimaryDark" />
 
             <RatingBar
                 android:id="@+id/restaurant_rating"
