@@ -57,7 +57,7 @@
     <!-- END activity_search_restaurants.xml-->
 
     <!-- fragment_creatlog_1.xml -->
-    <string name="frg_creatLog1_textViewImageText">Profile Picture</string>
+    <string name="frg_creatLog1_textViewImageText">Add a picture</string>
     <!-- END fragment_creatlog_1.xml -->
 
     <!-- restaurant_view.xml -->
@@ -488,4 +488,6 @@
     <string name="reset_password">Reset Password</string>
     <string name="check_email">Check your email inbox</string>
     <string name="fill_all_fields">Fill all the fields</string>
+    <string name="pay_now">Pay now</string>
+    <string name="add_picture">Add a picture...</string>
 </resources>

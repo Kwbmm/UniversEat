@@ -122,7 +122,8 @@ public class Create_simple_menu1 extends Fragment {
         progressBar=(ProgressBar)v.findViewById(R.id.progressBar4);
         progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         restaurantImg = (ImageView) v.findViewById(R.id.cmiw_1_1);
-        restaurantImg.setOnClickListener(new View.OnClickListener() {
+        TextView setPic=(TextView)v.findViewById(R.id.image_label);
+        setPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isStoragePermissionGranted()){

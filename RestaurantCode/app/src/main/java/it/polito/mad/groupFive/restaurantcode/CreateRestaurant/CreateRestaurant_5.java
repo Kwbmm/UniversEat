@@ -3,6 +3,7 @@ package it.polito.mad.groupFive.restaurantcode.CreateRestaurant;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.ArrayMap;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +44,8 @@ public class CreateRestaurant_5 extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private TextView btnFinish;
+    private ProgressBar progressBar;
     private String rid,uid;
 
     private onFragInteractionListener mListener;
@@ -94,11 +97,14 @@ public class CreateRestaurant_5 extends Fragment {
         this.rid = getR.getRest().getRid();
         this.uid = getR.getRest().getUid();
         this.restaurant=getR.getRest();
-
-        TextView btnFinish = (TextView) this.parentView.findViewById(R.id.Button_Finish);
+        progressBar=(ProgressBar)parentView.findViewById(R.id.progressBar6);
+        progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        btnFinish = (TextView) this.parentView.findViewById(R.id.Button_Finish);
         btnFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnFinish.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 Activity a = getActivity();
                 if(a instanceof onFragInteractionListener) {
                     if(setRestaurantData()){
@@ -108,6 +114,8 @@ public class CreateRestaurant_5 extends Fragment {
                     else{
                         Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
                                 .show();
+                        progressBar.setVisibility(View.INVISIBLE);
+                        btnFinish.setVisibility(View.VISIBLE);
                     }
                 }
             }

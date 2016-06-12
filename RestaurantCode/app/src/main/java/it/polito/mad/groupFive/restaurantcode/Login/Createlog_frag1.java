@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,9 +20,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,8 @@ public class Createlog_frag1 extends Fragment{
     private EditText txtmail;
     private EditText txtpassword;
     private EditText txtrepeat;
+    private TextView btnNext;
+    private ProgressBar progressBar;
     private boolean owner;
     private boolean isImageSet=false;
     private boolean toast=false;
@@ -104,9 +107,11 @@ public class Createlog_frag1 extends Fragment{
         txtsurname = (EditText) v.findViewById(R.id.editText_surname);
         txtpassword = (EditText) v.findViewById(R.id.editText_Password);
         txtrepeat = (EditText) v.findViewById(R.id.editText_Password_repeat);
-
+        progressBar=(ProgressBar)v.findViewById(R.id.progressBar7);
+        progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         this.userPicView = (ImageView) v.findViewById(R.id.imageView_UserImage);
-        this.userPicView.setOnClickListener(new View.OnClickListener() {
+        TextView selectPic=(TextView)v.findViewById(R.id.textView_imageText);
+        selectPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isStoragePermissionGranted()){
@@ -123,10 +128,12 @@ public class Createlog_frag1 extends Fragment{
         });
 
 
-        TextView btnNext = (TextView) v.findViewById(R.id.Button_Next);
+        btnNext = (TextView) v.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnNext.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 Activity a = getActivity();
                 if(a instanceof OnFragmentInteractionListener) {
                     if(setUserData()){
@@ -137,6 +144,8 @@ public class Createlog_frag1 extends Fragment{
                         if(!toast)
                         Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
                                 .show();
+                        btnNext.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 }}});
 

@@ -104,13 +104,13 @@ public class EditProfile extends NavigationDrawer{
         txtmailnew = (EditText) findViewById(R.id.editText_Mail_new);
         this.userPicView = (ImageView) findViewById(R.id.imageView_UserImage_e);
         txtpassword = (EditText) findViewById(R.id.editText_Password_e);
+        TextView addPic=(TextView) findViewById(R.id.textView_imageText_e);
 
 
 
 
 
-
-        this.userPicView.setOnClickListener(new View.OnClickListener() {
+        addPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isStoragePermissionGranted()){

@@ -428,4 +428,6 @@
     <string name="reset_password">Reimposta la Password</string>
     <string name="check_email">Controlla la tua posta in arrivo</string>
     <string name="fill_all_fields">Riempi tutti i campi</string>
+    <string name="pay_now">Paga ora</string>
+    <string name="add_picture">Scegli una foto...</string>
 </resources>

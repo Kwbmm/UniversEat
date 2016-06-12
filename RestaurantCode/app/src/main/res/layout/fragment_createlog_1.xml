@@ -15,7 +15,6 @@
             android:id="@+id/editText_UserName"
             android:inputType="text"
             android:hint="@string/username"
-            android:layout_below="@+id/imageView_UserImage"
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/imageView10"
             android:layout_marginLeft="16dp"
@@ -37,26 +36,27 @@
 
         <!-- Profile Image -->
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/textView_imageText"
-            android:text="@string/frg_creatLog1_textViewImageText"
-            android:textSize="20sp"
+            android:text="@string/add_picture"
+            android:textSize="18sp"
             android:gravity="center_vertical"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentTop="false"
             android:layout_toRightOf="@+id/imageView_UserImage"
-            android:layout_toEndOf="@+id/imageView_UserImage"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="16dp"
+            android:minHeight="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/editText_Mail"
+            android:background="@drawable/ripple_effect" />
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:maxWidth="@dimen/frg_imageView_maxWidth"
-            android:maxHeight="@dimen/frg_imageView_maxHeight"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
             android:id="@+id/imageView_UserImage"
             android:src="@drawable/ic_picture_black"
-            android:background="#fefeff"
-            android:layout_marginBottom="10dp"
-            android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc" />
+            android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc"
+            android:layout_marginLeft="6dp"
+            android:layout_alignTop="@+id/textView_imageText" />
 
         <!-- User Nickname -->
         <EditText
@@ -169,7 +169,17 @@
             android:id="@+id/Button_Next"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_below="@+id/editText_Mail"
+            android:layout_below="@+id/textView_imageText"
             style="@style/Button" />
+
+        <ProgressBar
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/progressBar7"
+            android:visibility="invisible"
+            android:layout_alignTop="@+id/Button_Next"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp" />
     </RelativeLayout>
 </ScrollView>

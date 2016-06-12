@@ -15,7 +15,6 @@
                 android:id="@+id/editText_RestaurantName"
                 android:inputType="text"
                 android:hint="@string/frg_create_restaurant_1_textView_RestaurantName"
-                android:layout_below="@+id/imageView_RestaurantImage"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="16dp"
                 android:layout_toRightOf="@+id/imageView16"
@@ -24,25 +23,28 @@
 
             <!-- Restaurant Image -->
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/textView_image"
-                android:text="@string/frg_create_restaurant_1_imageView_ContentDesc"
-                android:textSize="20sp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="10dp"
+                android:text="@string/add_picture"
+                android:textSize="18sp"
+                android:layout_marginLeft="16dp"
                 android:layout_toRightOf="@+id/imageView_RestaurantImage"
-                android:gravity="center_vertical" />
+                android:gravity="center_vertical"
+                android:layout_below="@+id/editText_Website"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ripple_effect"
+                android:minHeight="50dp" />
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
                 android:maxWidth="@dimen/frg_imageView_maxWidth"
                 android:maxHeight="@dimen/frg_imageView_maxHeight"
                 android:id="@+id/imageView_RestaurantImage"
                 android:src="@drawable/ic_picture_black"
-                android:background="#fefeff"
                 android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc"
-                android:layout_marginBottom="10dp" />
+                android:layout_alignTop="@+id/textView_image"
+                android:layout_marginLeft="6dp" />
 
             <!-- Restaurant Description -->
             <EditText
@@ -139,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/next"
                 android:id="@+id/Button_Next"
-                android:layout_below="@+id/editText_Website"
+                android:layout_below="@+id/textView_image"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 style="@style/Button" />

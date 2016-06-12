@@ -141,10 +141,11 @@ public class CreateRestaurant_1 extends Fragment {
         progressBar=(ProgressBar)parentView.findViewById(R.id.progressBar2);
         progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         btnNext = (TextView) this.parentView.findViewById(R.id.Button_Next);
+        TextView addPic=(TextView) parentView.findViewById(R.id.textView_image);
         if(getR.editmode()){
            fetchData();
         }
-        restaurantImg.setOnClickListener(new View.OnClickListener() {
+        addPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isStoragePermissionGranted()){
