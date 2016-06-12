@@ -122,7 +122,7 @@ public class CreateRestaurant_2 extends Fragment {
         if(getR.editmode()){
             fetchData();
         }
-        Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
+        TextView btnNext = (TextView) this.parentView.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

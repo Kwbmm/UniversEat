@@ -25,18 +25,15 @@
             android:layout_below="@id/textView_TimetableDinner"
             android:layout_marginTop="10dp">
         </LinearLayout>
-        <Button
+
+        <TextView
+            style="@style/Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/Button_Next"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:text="@string/next"
-            android:layout_below="@id/FL_timetableDinner"
-            android:layout_marginTop="@dimen/btn_marginTop"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="@dimen/btn_marginRight"
-            android:background="@color/colorAccent"
-            android:elevation="0dp" />
+            android:id="@+id/Button_Next"
+            android:layout_below="@+id/FL_timetableDinner"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 </ScrollView>

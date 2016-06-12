@@ -252,7 +252,9 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     drawerLayout.closeDrawers();
                     Login_view lw=new Login_view();
                     // FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
-                    getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.frame,lw).commit();
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up,R.anim.slide_down)
+                            .addToBackStack(null).add(R.id.frame,lw).commit();
                     //Todo intent create profile
                 }
                 if (position==3){

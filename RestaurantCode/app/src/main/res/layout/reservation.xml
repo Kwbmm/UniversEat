@@ -58,11 +58,12 @@
 
             <ImageButton
                 android:id="@+id/imageView"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
-                android:background="#ffffff"
-                android:src="@drawable/ic_delete_black_24px" />
+                android:src="@drawable/ic_delete_black_24px"
+                android:backgroundTint="#ffffff"
+                android:layout_alignParentBottom="true" />
 
             <TextView
                 android:id="@+id/minutes"

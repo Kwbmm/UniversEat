@@ -8,11 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,11 +18,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,9 +38,6 @@ import java.util.Date;
 import it.polito.mad.groupFive.restaurantcode.CreateRestaurant.CreateRestaurant;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.libs.RealPathUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,6 +64,8 @@ public class Create_simple_menu1 extends Fragment {
     private boolean boolean_name=false;
     private boolean boolean_descr=false;
     private boolean isImageSet = false;
+    private TextView next;
+    private ProgressBar progressBar;
 
     private static final String IMAGE_TYPE = "image/*";
     private static final int CAPTURE_IMAGE = 1;
@@ -126,6 +118,7 @@ public class Create_simple_menu1 extends Fragment {
         data=sData.getdata();
         name=(EditText)v.findViewById(R.id.cmed_1_1);
         description=(EditText)v.findViewById(R.id.cmed_1_2);
+        progressBar=(ProgressBar)v.findViewById(R.id.progressBar4);
         restaurantImg = (ImageView) v.findViewById(R.id.cmiw_1_1);
         restaurantImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,7 +134,7 @@ public class Create_simple_menu1 extends Fragment {
                     pickImage();
                 }     }
         });
-                Button next= (Button) v.findViewById(R.id.next);
+                next= (TextView) v.findViewById(R.id.next);
                 next.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -161,7 +154,9 @@ public class Create_simple_menu1 extends Fragment {
                             }
 
                             Create_simple_menu2 csm2 = new Create_simple_menu2();
-                            getFragmentManager().beginTransaction().replace(R.id.fragment_holder, csm2).commit();
+                            getFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.slide_left_in,R.anim.slide_left_out,R.anim.slide_right_in,R.anim.slide_right_out)
+                                    .replace(R.id.fragment_holder, csm2).commit();
                         }
                         else
                         {
@@ -187,6 +182,8 @@ public class Create_simple_menu1 extends Fragment {
     public void fetchData(){
         if(sData.getdata().isEdit()){
             //restaurantImg.setImageBitmap(sData.getdata().getMenu().getImageBitmap());
+            next.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
             description.setText(sData.getdata().getMenu().getDescription());
             name.setText(sData.getdata().getMenu().getName());
             FirebaseStorage storage=FirebaseStorage.getInstance();
@@ -350,6 +347,8 @@ public class Create_simple_menu1 extends Fragment {
                 try {
                     Bitmap b = new Picture(imgPath,getActivity().getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    next.setVisibility(View.VISIBLE);
                 } catch (IOException e) {
                     Log.e("getFromNet",e.getMessage());
                 }

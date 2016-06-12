@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -233,6 +234,8 @@ public class RestaurantManagement extends NavigationDrawer {
             e.printStackTrace();
         }
         rname.setText(restaurant.getName());
+        if(restaurant.getName().length()>18)
+            rname.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
         raddress.setText(restaurant.getCity());
         rbar.setRating(restaurant.getRating());
     }
@@ -246,8 +249,7 @@ public class RestaurantManagement extends NavigationDrawer {
         @Override
         public void onClick(View v) {
             AlertDialog.Builder dialog=new AlertDialog.Builder(RestaurantManagement.this);
-            final CharSequence[] items = { "Edit", "Delete","Cancel" };
-            dialog.setTitle("Edit Options");
+            final CharSequence[] items = { getString(R.string.Menu_view_edit_Edit), getString(R.string.Menu_view_edit_Delete),getString(R.string.Menu_view_edit_Cancel) };
             dialog.setItems(items,new onPositionClickDialog(position));
             dialog.show();
 

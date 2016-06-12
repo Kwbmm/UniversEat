@@ -39,10 +39,9 @@ public class Create_simple_menu extends NavigationDrawer implements Create_simpl
         }else{
         getData();
         Create_simple_menu1 csm1=new Create_simple_menu1();
-        getSupportFragmentManager().
-                beginTransaction().
-                add(R.id.fragment_holder,csm1).
-                commit();}
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_holder,csm1)
+                .commit();}
 
 
     }

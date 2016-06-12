@@ -3,7 +3,6 @@ package it.polito.mad.groupFive.restaurantcode;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,15 +14,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -47,7 +43,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import it.polito.mad.groupFive.restaurantcode.Login.CreateLogin;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
@@ -91,8 +86,7 @@ public class EditProfile extends NavigationDrawer{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v("EditProfile","Start EditProfile");
-        getSupportActionBar().setTitle("Edit");
+        getSupportActionBar().setTitle(R.string.actionBar_editProfile);
 
         mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.fragment_editprofil, mlay);
@@ -133,7 +127,7 @@ public class EditProfile extends NavigationDrawer{
         });
 
 
-        Button btnNext = (Button) findViewById(R.id.Button_Next_e);
+        TextView btnNext = (TextView) findViewById(R.id.Button_Next_e);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -3,6 +3,7 @@ package it.polito.mad.groupFive.restaurantcode.SearchRestaurants;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
@@ -269,6 +270,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         }
         holder.restaurant_address.setText(restaurant.getCity());
         holder.restaurant_name.setText(restaurant.getName());
+        if(restaurant.getName().length()>18)
+            holder.restaurant_name.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
         holder.restaurant_rating.setRating(restaurant.getRating());
         String s=restaurant.getDescription();
         if(s.length() >50)
@@ -282,7 +285,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             holder.distance.setText(context.getResources().getString(R.string.from_here2)+" "+String.valueOf((int)distance)+" m "+context.getString(R.string.from_here));
         }
         else{
-            holder.distance.setText(context.getResources().getString(R.string.from_here2)+" "+String.valueOf((int)(restaurant.getDistance()/1000))+" Km "+context.getString(R.string.from_here));
+            holder.distance.setText(context.getResources().getString(R.string.from_here2)+" "+String.valueOf((int)(restaurant.getDistance()/1000))+" km "+context.getString(R.string.from_here));
         }
 
         File img = new File(restaurant.getImageLocalPath());

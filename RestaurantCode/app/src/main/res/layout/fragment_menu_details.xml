@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fl_redit"
+    android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#c8ffffff"
@@ -18,7 +18,8 @@
         card:cardPreventCornerOverlap="false"
         card:cardElevation="4dp"
         card:cardCornerRadius="4dp"
-        card:cardUseCompatPadding="true">
+        card:cardUseCompatPadding="true"
+        android:clickable="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -34,7 +35,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
+                android:layout_alignParentStart="true"
+                android:clickable="true"
+                android:background="@drawable/ripple_effect">
 
                 <ImageView
                     android:layout_width="50dp"
@@ -72,9 +75,8 @@
                 android:id="@+id/menu_image"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:src="@drawable/new_icon_inverted_white"
                 android:scaleType="centerCrop"
-                android:background="@color/colorPrimaryDark" />
+                android:background="@color/material_grey_300" />
 
             <TextView
                 android:id="@+id/menu_name"

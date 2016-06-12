@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -222,7 +223,7 @@ public class CreateRestaurant_4 extends Fragment {
             ll.addView(timetableItem);
             count++;
         }
-        Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
+        TextView btnNext = (TextView) this.parentView.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

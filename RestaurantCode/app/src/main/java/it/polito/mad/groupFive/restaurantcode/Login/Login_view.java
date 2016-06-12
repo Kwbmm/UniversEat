@@ -11,9 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -94,7 +99,7 @@ public class Login_view extends Fragment {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_login_view, container, false);
         sharedPreferences=getContext().getSharedPreferences(getString(R.string.user_pref),getContext().MODE_PRIVATE);
-        Button create_new= (Button) v.findViewById(R.id.register);
+        TextView create_new= (TextView) v.findViewById(R.id.register);
         create_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,9 +109,15 @@ public class Login_view extends Fragment {
         });
         username=(EditText)v.findViewById(R.id.emailAddress);
         password=(EditText)v.findViewById(R.id.password);
-
+        RelativeLayout background=(RelativeLayout)v.findViewById(R.id.background);
+        background.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
         incorrect_log= (LinearLayout) v.findViewById(R.id.ll_incorrect);
-        Button login=(Button)v.findViewById(R.id.login);
+        TextView login=(TextView) v.findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

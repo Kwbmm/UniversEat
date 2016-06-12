@@ -21,7 +21,9 @@
             android:id="@+id/restaurant_view_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:minHeight="140dp">
+            android:minHeight="140dp"
+            android:background="@drawable/ripple_effect"
+            android:clickable="false">
 
             <ImageButton
                 android:id="@+id/restaurant_favourite"
@@ -29,8 +31,8 @@
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:background="#FFFFFF"
-                android:src="@drawable/ic_heart_border_black" />
+                android:src="@drawable/ic_heart_border_black"
+                android:backgroundTint="#ffffff" />
 
             <TextView
                 android:id="@+id/restaurant_name"

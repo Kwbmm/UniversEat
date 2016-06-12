@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -160,6 +161,8 @@ public class Profile extends NavigationDrawer {
             fav_b.setColorFilter(getResources().getColor(R.color.colorPrimary));
             fav_b.setOnClickListener(new OnFavourite(fav_b,rest));
             name.setText(rest.getName());
+            if(rest.getName().length()>18)
+                name.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
             String s=rest.getDescription();
             if(s.length() >50)
                 s = s.substring(0,47) + "...";
@@ -429,7 +432,7 @@ public class Profile extends NavigationDrawer {
 
 
                         }
-                        Toast.makeText(getBaseContext(),restaurant.getName()+" now is your favourite!",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(),restaurant.getName()+getResources().getString(R.string.added_favourite),Toast.LENGTH_LONG).show();
                     }
 
                     @Override

@@ -482,4 +482,5 @@
     <string name="fav">FAV</string>
     <string name="pick_a_place_on_the_map">Pick a place on the map</string>
     <string name="create">Create</string>
+    <string name="actionBar_editProfile">Edit Profile</string>
 </resources>

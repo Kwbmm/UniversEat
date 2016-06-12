@@ -45,22 +45,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/scm_ll_button"
             android:layout_alignParentBottom="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:text="@string/fragment_create_simple_menu1_Send_notification"
                 android:visibility="invisible" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/next"
-                android:id="@+id/next"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="right"
-                android:background="@color/colorAccent"
-                android:elevation="0dp" />
 
         </LinearLayout>
 
@@ -97,6 +89,27 @@
             android:src="@drawable/ic_info_black"
             android:layout_marginTop="5dp"
             android:tint="@color/colorPrimary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next"
+            android:id="@+id/next"
+            android:layout_below="@+id/cmed_1_2"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            style="@style/Button" />
+
+        <ProgressBar
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/progressBar4"
+            android:visibility="invisible"
+            android:layout_alignTop="@+id/next"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="40dp" />
 
     </RelativeLayout>
 

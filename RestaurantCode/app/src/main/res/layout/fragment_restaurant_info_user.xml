@@ -34,7 +34,9 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="right"
                     android:layout_weight="1"
-                    android:id="@+id/layout_call">
+                    android:id="@+id/layout_call"
+                    android:clickable="true"
+                    android:background="@drawable/ripple_effect">
 
                     <ImageView
                         android:layout_width="35dp"
@@ -67,7 +69,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:id="@+id/layout_web">
+                    android:id="@+id/layout_web"
+                    android:background="@drawable/ripple_effect"
+                    android:clickable="true">
 
                     <ImageView
                         android:layout_width="35dp"
@@ -100,7 +104,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:id="@+id/layout_fav">
+                    android:id="@+id/layout_fav"
+                    android:clickable="true"
+                    android:background="@drawable/ripple_effect">
 
                     <ImageView
                         android:layout_width="35dp"

@@ -373,7 +373,9 @@ public class Restaurant_menu_user extends Fragment {
                 bundle.putString("mid",menu.getMid());
                 New_Menu_details menu_details = new New_Menu_details();
                 menu_details.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.frame,menu_details).commit();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up,R.anim.slide_down)
+                        .addToBackStack(null).add(R.id.frame,menu_details).commit();
             }
         }
     }

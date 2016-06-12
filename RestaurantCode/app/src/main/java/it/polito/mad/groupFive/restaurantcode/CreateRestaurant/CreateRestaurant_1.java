@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,6 +86,8 @@ public class CreateRestaurant_1 extends Fragment {
     private TextView name;
     private TextView telephone;
     private TextView website;
+    private ProgressBar progressBar;
+    private TextView btnNext;
 
     public CreateRestaurant_1() {
     }
@@ -134,6 +138,9 @@ public class CreateRestaurant_1 extends Fragment {
         restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
         telephone= (TextView) parentView.findViewById(R.id.editText_Telephone);
         website= (TextView) parentView.findViewById(R.id.editText_Website);
+        progressBar=(ProgressBar)parentView.findViewById(R.id.progressBar2);
+        progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        btnNext = (TextView) this.parentView.findViewById(R.id.Button_Next);
         if(getR.editmode()){
            fetchData();
         }
@@ -153,7 +160,6 @@ public class CreateRestaurant_1 extends Fragment {
             }
         });
 
-        Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,6 +183,8 @@ public class CreateRestaurant_1 extends Fragment {
         private void fetchData() {
             final String METHOD_NAME = this.getClass().getName() + " - fetchData";
             this.restaurant=getR.getRest();
+            btnNext.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
             name.setText(restaurant.getName());
             description.setText(restaurant.getDescription());
             telephone.setText(restaurant.getTelephone());
@@ -382,6 +390,8 @@ public class CreateRestaurant_1 extends Fragment {
                 try {
                     Bitmap b = new Picture(imgPath,getActivity().getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    btnNext.setVisibility(View.VISIBLE);
                 } catch (IOException e) {
                     Log.e("getFromNet",e.getMessage());
                 }

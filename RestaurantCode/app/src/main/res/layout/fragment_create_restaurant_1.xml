@@ -46,12 +46,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editText_Description"
-                android:inputType="text"
+                android:inputType="textMultiLine"
                 android:hint="@string/frg_create_restaurant_1_textView_Description"
                 android:layout_below="@+id/editText_RestaurantName"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/imageView17" />
+                android:layout_toRightOf="@+id/imageView17"
+                android:maxLines="3" />
 
             <!-- Restaurant Telephone -->
             <EditText
@@ -78,17 +79,6 @@
                 android:layout_toRightOf="@+id/imageView19" />
 
             <!-- Next button -->
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/Button_Next"
-                android:layout_below="@id/editText_Website"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:text="@string/next"
-                android:layout_marginTop="@dimen/btn_marginTop"
-                android:background="@color/colorAccent"
-                android:elevation="0dp" />
 
             <ImageView
                 android:layout_width="40dp"
@@ -134,5 +124,26 @@
                 android:src="@drawable/ic_website_black"
                 android:layout_marginTop="5dp"
                 android:tint="@color/colorPrimary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/next"
+                android:id="@+id/Button_Next"
+                android:layout_below="@+id/editText_Website"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                style="@style/Button" />
+
+            <ProgressBar
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/progressBar2"
+                android:layout_alignTop="@+id/Button_Next"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="40dp"
+                android:visibility="invisible"
+                android:layout_marginTop="5dp" />
     </RelativeLayout>
 </ScrollView>

@@ -2,7 +2,6 @@ package it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,11 +15,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,11 +34,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.R;
@@ -49,7 +42,6 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.holders.DishViewHolder;
 
 /**
@@ -214,7 +206,7 @@ public class Create_simple_menu2 extends Fragment {
         price= (EditText) v.findViewById(R.id.fcm2_price);
         drink= (CheckBox) v.findViewById(R.id.cbch_2_1);
         fee=(CheckBox)v.findViewById(R.id.cbch_2_2);
-        Button end =(Button)v.findViewById(R.id.fin);
+        TextView end =(TextView) v.findViewById(R.id.fin);
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

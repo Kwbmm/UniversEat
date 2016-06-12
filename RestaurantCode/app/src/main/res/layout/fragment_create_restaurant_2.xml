@@ -78,18 +78,6 @@
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/imageView23" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/Button_Next"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:text="@string/next"
-            android:layout_below="@id/editText_State"
-            android:background="@color/colorAccent"
-            android:layout_marginTop="@dimen/btn_marginTop"
-            android:elevation="0dp" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -150,5 +138,16 @@
             android:src="@drawable/ic_flag_black"
             android:layout_marginTop="5dp"
             android:tint="@color/colorPrimary" />
+
+        <TextView
+            style="@style/Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next"
+            android:id="@+id/Button_Next"
+            android:layout_below="@+id/editText_State"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
     </RelativeLayout>
 </ScrollView>

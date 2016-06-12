@@ -1,5 +1,6 @@
 package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -66,7 +69,14 @@ public class New_Create_review extends Fragment {
         rating_place = (RatingBar) v.findViewById(R.id.rev_rate_place);
         rating_pricequality = (RatingBar) v.findViewById(R.id.rev_rate_pqr);
         rating_service = (RatingBar) v.findViewById(R.id.rev_rate_service);
-        Button create = (Button) v.findViewById(R.id.rev_create);
+        RelativeLayout background=(RelativeLayout)v.findViewById(R.id.background);
+        background.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+        TextView create = (TextView) v.findViewById(R.id.rev_create);
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

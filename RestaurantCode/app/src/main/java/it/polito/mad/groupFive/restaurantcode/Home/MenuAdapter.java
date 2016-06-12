@@ -2,6 +2,7 @@ package it.polito.mad.groupFive.restaurantcode.Home;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -150,6 +151,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
             s = s.substring(0,77) + "...";
         holder.menu_description.setText(s);
         holder.menu_name.setText(menu.getName());
+        if(menu.getName().length()>18)
+            holder.menu_name.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
         holder.menu_price.setText(String.format(Locale.getDefault(),"%.2f", menu.getPrice())+"€");
         if(!menu.isSpicy()) holder.spicy_icon.setColorFilter(Color.GRAY);
         if(!menu.isVegan()) holder.vegan_icon.setColorFilter(Color.GRAY);
@@ -169,7 +172,9 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
                 bundle.putString("mid",menu.getMid());
                 New_Menu_details menu_details = new New_Menu_details();
                 menu_details.setArguments(bundle);
-                ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.frame,menu_details).commit();
+                ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up,R.anim.slide_down)
+                        .addToBackStack(null).add(R.id.frame,menu_details).commit();
             }
         });
     }

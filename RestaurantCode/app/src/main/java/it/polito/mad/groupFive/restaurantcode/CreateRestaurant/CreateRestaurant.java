@@ -77,6 +77,7 @@ public class CreateRestaurant
             cr2.setArguments(b);
             getSupportFragmentManager()
                     .beginTransaction()
+                    .setCustomAnimations(R.anim.slide_left_in,R.anim.slide_left_out,R.anim.slide_right_in,R.anim.slide_right_out)
                     .replace(R.id.fragment_CreateRestaurant,cr2)
                     .addToBackStack(null)
                     .commit();
@@ -96,6 +97,7 @@ public class CreateRestaurant
         cr3.setArguments(b);
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.slide_left_in,R.anim.slide_left_out,R.anim.slide_right_in,R.anim.slide_right_out)
                 .replace(R.id.fragment_CreateRestaurant,cr3)
                 .addToBackStack(null)
                 .commit();
@@ -111,6 +113,7 @@ public class CreateRestaurant
         //Pass to CreateRestaurant_4 fragment the id of the restaurant
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.slide_left_in,R.anim.slide_left_out,R.anim.slide_right_in,R.anim.slide_right_out)
                 .replace(R.id.fragment_CreateRestaurant,cr4)
                 .addToBackStack(null)
                 .commit();
@@ -125,6 +128,7 @@ public class CreateRestaurant
         //Pass to CreateRestaurant_5 fragment the id of the restaurant
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.slide_left_in,R.anim.slide_left_out,R.anim.slide_right_in,R.anim.slide_right_out)
                 .replace(R.id.fragment_CreateRestaurant,cr5)
                 .addToBackStack(null)
                 .commit();

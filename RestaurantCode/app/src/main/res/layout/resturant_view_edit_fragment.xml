@@ -14,13 +14,16 @@
         card_view:cardCornerRadius="@dimen/cardview_default_radius"
         card_view:cardElevation="@dimen/cardview_default_elevation"
         card_view:cardPreventCornerOverlap="false"
-        card_view:cardUseCompatPadding="true">
+        card_view:cardUseCompatPadding="true"
+        android:clickable="false">
 
         <RelativeLayout
             android:id="@+id/restaurant_view_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:minHeight="140dp">
+            android:minHeight="140dp"
+            android:clickable="false"
+            android:background="@drawable/ripple_effect">
 
             <ImageView
                 android:id="@+id/restaurant_image"
@@ -43,7 +46,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:background="#ffffff" />
+                android:backgroundTint="#ffffff" />
 
             <TextView
                 android:id="@+id/restaurant_name"

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -73,10 +74,10 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
             super.onCreate(savedInstanceState);
             getSupportActionBar().setElevation(0);
             getSupportActionBar().setTitle("");
-            FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
+            FrameLayout mlay = (FrameLayout) findViewById(R.id.frame);
             mlay.inflate(this, R.layout.activity_user_info_view, mlay);
             rid = getIntent().getExtras().getString("rid");
-            mid=getIntent().getExtras().getString("mid");
+            mid = getIntent().getExtras().getString("mid");
             restaurant = new Restaurant(rid);
             menus = new ArrayList<>();
             db = FirebaseDatabase.getInstance();
@@ -103,86 +104,108 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                     restaurant.setTimetableDinner((HashMap) dataSnapshot.child("timetableDinner").getValue());
                     restaurant.setTimetableLunch((HashMap) dataSnapshot.child("timetableLunch").getValue());
                     restaurant.setRatingNumber(Float.parseFloat(dataSnapshot.child("ratingNumber").getValue().toString()));
-                    TextView r_name =(TextView)findViewById(R.id.r_name);
-                    TextView r_rating=(TextView)findViewById(R.id.r_rating);
-                    RatingBar r_ratingBar=(RatingBar)findViewById(R.id.r_ratingBar);
-                    TextView r_reviews=(TextView)findViewById(R.id.r_reviews);
+                    TextView r_name = (TextView) findViewById(R.id.r_name);
+                    TextView r_rating = (TextView) findViewById(R.id.r_rating);
+                    RatingBar r_ratingBar = (RatingBar) findViewById(R.id.r_ratingBar);
+                    TextView r_reviews = (TextView) findViewById(R.id.r_reviews);
                     r_name.setText(restaurant.getName());
-                    r_rating.setText(String.format("%.1f",restaurant.getRating()));
+                    if(restaurant.getName().length()>18)
+                        r_name.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
+                    r_rating.setText(String.format("%.1f", restaurant.getRating()));
                     r_ratingBar.setRating(restaurant.getRating());
-                    r_reviews.setText(String.format("%.0f",restaurant.getRatingNumber())+" "+getResources().getString(R.string.review_based_on));
-                    ImageView restImage=(ImageView)findViewById(R.id.restaurant_image);
+                    r_reviews.setText(String.format("%.0f", restaurant.getRatingNumber()) + " " + getResources().getString(R.string.review_based_on));
+                    ImageView restImage = (ImageView) findViewById(R.id.restaurant_image);
 
-                    FirebaseStorage storage=FirebaseStorage.getInstance();
-                    StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference imageref = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
                     try {
-                        getFromNetwork(imageref,restaurant.getRid(),restImage);
+                        getFromNetwork(imageref, restaurant.getRid(), restImage);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
 
                     rest_i = (RelativeLayout) findViewById(R.id.info_b);
-                    line_i= (ImageView) findViewById(R.id.info_b_line);
-                    text_i=(TextView)findViewById(R.id.info_b_text);
+                    line_i = (ImageView) findViewById(R.id.info_b_line);
+                    text_i = (TextView) findViewById(R.id.info_b_text);
                     rest_i.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            text_i.setTextColor(Color.parseColor("#ffffff"));
-                            text_r.setTextColor(Color.parseColor("#000000"));
-                            text_m.setTextColor(Color.parseColor("#000000"));
-                            line_i.setVisibility(View.VISIBLE);
-                            line_r.setVisibility(View.INVISIBLE);
-                            line_m.setVisibility(View.INVISIBLE);
-                            Restaurant_info_user rest_view = new Restaurant_info_user();
-                            getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .replace(R.id.uif_fragment, rest_view)
-                                    .commit();
-
+                            if (line_i.getVisibility() != View.VISIBLE) {
+                                text_i.setTextColor(Color.parseColor("#ffffff"));
+                                text_r.setTextColor(Color.parseColor("#000000"));
+                                text_m.setTextColor(Color.parseColor("#000000"));
+                                line_i.setVisibility(View.VISIBLE);
+                                line_r.setVisibility(View.INVISIBLE);
+                                line_m.setVisibility(View.INVISIBLE);
+                                Restaurant_info_user rest_view = new Restaurant_info_user();
+                                getSupportFragmentManager()
+                                        .beginTransaction()
+                                        .setCustomAnimations(R.anim.slide_right_in, R.anim.slide_right_out)
+                                        .replace(R.id.uif_fragment, rest_view)
+                                        .commit();
+                            }
 
                         }
                     });
 
                     rest_m = (RelativeLayout) findViewById(R.id.menu_b);
-                    line_m= (ImageView) findViewById(R.id.menu_b_line);
-                    text_m=(TextView)findViewById(R.id.menu_b_text);
+                    line_m = (ImageView) findViewById(R.id.menu_b_line);
+                    text_m = (TextView) findViewById(R.id.menu_b_text);
                     rest_m.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            text_m.setTextColor(Color.parseColor("#ffffff"));
-                            text_i.setTextColor(Color.parseColor("#000000"));
-                            text_r.setTextColor(Color.parseColor("#000000"));
-                            line_i.setVisibility(View.INVISIBLE);
-                            line_r.setVisibility(View.INVISIBLE);
-                            line_m.setVisibility(View.VISIBLE);
-                            Restaurant_menu_user rest_view = new Restaurant_menu_user();
-                            getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .replace(R.id.uif_fragment, rest_view)
-                                    .commit();
-
-
+                            if (line_m.getVisibility() != View.VISIBLE) {
+                                Restaurant_menu_user rest_view = new Restaurant_menu_user();
+                                if (line_i.getVisibility() == View.VISIBLE) {
+                                    text_m.setTextColor(Color.parseColor("#ffffff"));
+                                    text_i.setTextColor(Color.parseColor("#000000"));
+                                    text_r.setTextColor(Color.parseColor("#000000"));
+                                    line_i.setVisibility(View.INVISIBLE);
+                                    line_r.setVisibility(View.INVISIBLE);
+                                    line_m.setVisibility(View.VISIBLE);
+                                    getSupportFragmentManager()
+                                            .beginTransaction()
+                                            .setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out)
+                                            .replace(R.id.uif_fragment, rest_view)
+                                            .commit();
+                                }
+                                if (line_r.getVisibility() == View.VISIBLE) {
+                                    text_m.setTextColor(Color.parseColor("#ffffff"));
+                                    text_i.setTextColor(Color.parseColor("#000000"));
+                                    text_r.setTextColor(Color.parseColor("#000000"));
+                                    line_i.setVisibility(View.INVISIBLE);
+                                    line_r.setVisibility(View.INVISIBLE);
+                                    line_m.setVisibility(View.VISIBLE);
+                                    getSupportFragmentManager()
+                                            .beginTransaction()
+                                            .setCustomAnimations(R.anim.slide_right_in, R.anim.slide_right_out)
+                                            .replace(R.id.uif_fragment, rest_view)
+                                            .commit();
+                                }
+                            }
                         }
                     });
 
                     rest_r = (RelativeLayout) findViewById(R.id.review_b);
-                    line_r= (ImageView) findViewById(R.id.review_b_line);
-                    text_r=(TextView)findViewById(R.id.review_b_text);
+                    line_r = (ImageView) findViewById(R.id.review_b_line);
+                    text_r = (TextView) findViewById(R.id.review_b_text);
                     rest_r.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            text_m.setTextColor(Color.parseColor("#000000"));
-                            text_i.setTextColor(Color.parseColor("#000000"));
-                            text_r.setTextColor(Color.parseColor("#ffffff"));
-                            line_i.setVisibility(View.INVISIBLE);
-                            line_r.setVisibility(View.VISIBLE);
-                            line_m.setVisibility(View.INVISIBLE);
-                            Review_user_view review_user_view = new Review_user_view();
-                            getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .replace(R.id.uif_fragment, review_user_view)
-                                    .commit();
-
+                            if (line_r.getVisibility() != View.VISIBLE) {
+                                text_m.setTextColor(Color.parseColor("#000000"));
+                                text_i.setTextColor(Color.parseColor("#000000"));
+                                text_r.setTextColor(Color.parseColor("#ffffff"));
+                                line_i.setVisibility(View.INVISIBLE);
+                                line_r.setVisibility(View.VISIBLE);
+                                line_m.setVisibility(View.INVISIBLE);
+                                Review_user_view review_user_view = new Review_user_view();
+                                getSupportFragmentManager()
+                                        .beginTransaction()
+                                        .setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out)
+                                        .replace(R.id.uif_fragment, review_user_view)
+                                        .commit();
+                            }
                         }
                     });
 
@@ -230,29 +253,32 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
     private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         final File dir = cw.getDir("images", Context.MODE_PRIVATE);
-        File filePath = new File(dir,id);
+        File filePath = new File(dir, id);
         this.imageDownloadTask = storageRoot.child(id).getFile(filePath);
-        this.idl = new ImageDownloadListener(imView,dir,id);
+        this.idl = new ImageDownloadListener(imView, dir, id);
         this.imageDownloadTask.addOnSuccessListener(this.idl);
     }
+
     private class ImageDownloadListener implements OnSuccessListener<FileDownloadTask.TaskSnapshot> {
         private ImageView imView;
         private File directory;
         private String id;
-        public ImageDownloadListener(ImageView imageView, File imageDirectory, String imageID){
+
+        public ImageDownloadListener(ImageView imageView, File imageDirectory, String imageID) {
             this.imView = imageView;
             this.directory = imageDirectory;
             this.id = imageID;
         }
+
         @Override
         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
             File img = new File(this.directory, this.id);
             Uri imgPath = Uri.fromFile(img);
             try {
-                Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
+                Bitmap b = new Picture(imgPath, getContentResolver()).getBitmap();
                 this.imView.setImageBitmap(b);
             } catch (IOException e) {
-                Log.e("getFromNet",e.getMessage());
+                Log.e("getFromNet", e.getMessage());
             }
         }
     }

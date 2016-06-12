@@ -14,6 +14,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -79,6 +83,13 @@ public class New_Menu_details extends Fragment {
             e.printStackTrace();
         }
         courses = new ArrayList<>();
+        RelativeLayout background=(RelativeLayout)v.findViewById(R.id.background);
+        background.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
         FirebaseDatabase db;
         db = FirebaseDatabase.getInstance();
         DatabaseReference ref = db.getReference("course");

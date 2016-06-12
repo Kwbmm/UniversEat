@@ -21,7 +21,9 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/menu_icon3"
             android:layout_toEndOf="@+id/menu_image"
-            android:minHeight="140dp">
+            android:minHeight="140dp"
+            android:background="@drawable/ripple_effect"
+            android:clickable="false">
 
             <TextView
                 android:id="@+id/menu_name"

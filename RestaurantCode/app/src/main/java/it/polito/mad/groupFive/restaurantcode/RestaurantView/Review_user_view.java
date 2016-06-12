@@ -122,7 +122,9 @@ public class Review_user_view extends Fragment {
                 bundle.putFloat("ratingValue",rest.getRating());
                 New_Create_review create_review = new New_Create_review();
                 create_review.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.frame,create_review).commit();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up,R.anim.slide_down)
+                        .addToBackStack(null).add(R.id.frame,create_review).commit();
             }
         });
 

@@ -76,7 +76,7 @@
 
     <string name="reviewlist_imageButtonImg">Immagine del ristorante</string>
     <string name="reviewlist_textViewName">Nome del ristorante</string>
-    <string name="finish">Fine</string>
+    <string name="finish">Salva</string>
 
 
     <!-- Create_menu_frag.java -->
@@ -100,7 +100,7 @@
     <string name="friday">Ven</string>
     <string name="saturday">Sab</string>
     <string name="sunday">Dom</string>
-    <string name="next">Prossimo</string>
+    <string name="next">Continua</string>
 
     <!-- END timetable_restaurant_item.xml-->
 
@@ -195,7 +195,7 @@
     <string name="nickname">Username</string>
     <string name="password">Password</string>
     <string name="password_repeat">Ripeti la password</string>
-    <string name="button_end">FINE</string>
+    <string name="button_end">Salva</string>
     <string name="restaurantowner">Proprietario di ristorante</string>
 
     <string name="login">Crea un nuovo account</string>
@@ -254,7 +254,7 @@
     <string name="fragment_simple_menu_add_tags_Add_new_tags">Aggiungi nuovi tag</string>
 
     <!-- incorrect_login.xml-->
-    <string name="incorrect_login">Username o password non corretta</string>
+    <string name="incorrect_login">Username o password non corretti</string>
 
     <!-- make_order.xml-->
     <string name="make_order_Reservation_Name">Nome prenotazione</string>
@@ -398,7 +398,7 @@
         <item>Ticket</item>
         <item>Valutazione da 3 a 5</item>
         <item>Aperto adesso</item>
-        <item>Qui vicino (3 Km)</item>
+        <item>Qui vicino (3 km)</item>
     </string-array>
 
     <string name="emailaddressold">Inserisci la vecchia mail</string>
@@ -421,4 +421,5 @@
     <string name="fav">SALVA</string>
     <string name="pick_a_place_on_the_map">Scegli un punto sulla mappa</string>
     <string name="create">Crea</string>
+    <string name="actionBar_editProfile">Modifica Profilo</string>
 </resources>

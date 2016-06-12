@@ -64,7 +64,9 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
         editor.apply();
         Createlog_frag1 frag1 = new Createlog_frag1();
         frag1.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.ac_login,frag1).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.slide_left_in,R.anim.slide_left_out,R.anim.slide_right_in,R.anim.slide_right_out)
+                .replace(R.id.ac_login,frag1).addToBackStack(null).commit();
     }
 
     public void onChangeFrag(User u, Bitmap image) {

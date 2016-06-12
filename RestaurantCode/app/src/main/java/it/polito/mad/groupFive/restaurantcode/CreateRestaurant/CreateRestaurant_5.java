@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -94,7 +95,7 @@ public class CreateRestaurant_5 extends Fragment {
         this.uid = getR.getRest().getUid();
         this.restaurant=getR.getRest();
 
-        Button btnFinish = (Button) this.parentView.findViewById(R.id.Button_Finish);
+        TextView btnFinish = (TextView) this.parentView.findViewById(R.id.Button_Finish);
         btnFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
