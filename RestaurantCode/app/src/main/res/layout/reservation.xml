@@ -66,39 +66,6 @@
                 android:layout_alignParentBottom="true" />
 
             <TextView
-                android:id="@+id/minutes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/order_username"
-                android:layout_toEndOf="@+id/hour_separator"
-                android:layout_toRightOf="@+id/hour_separator"
-                android:text="30"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/hour_separator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/hour"
-                android:layout_toRightOf="@+id/hour"
-                android:text=":"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/hour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/date"
-                android:layout_marginLeft="10dp"
-                android:layout_toEndOf="@+id/date"
-                android:layout_toRightOf="@+id/date"
-                android:text="14"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15sp" />
-
-            <TextView
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -2,6 +2,7 @@ package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,6 +44,8 @@ public class New_Create_review extends Fragment {
     RatingBar rating_place;
     RatingBar rating_food;
     RatingBar rating_service;
+    TextView create;
+    ProgressBar progressBar;
     String uid;
     String rid;
     Float ratingValue;
@@ -76,6 +80,8 @@ public class New_Create_review extends Fragment {
         rating_place = (RatingBar) v.findViewById(R.id.rev_rate_place);
         rating_pricequality = (RatingBar) v.findViewById(R.id.rev_rate_pqr);
         rating_service = (RatingBar) v.findViewById(R.id.rev_rate_service);
+        progressBar=(ProgressBar)v.findViewById(R.id.progressBar3);
+        progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         background=(RelativeLayout)v.findViewById(R.id.background);
         background.postDelayed(new Runnable() {
             @Override
@@ -89,10 +95,12 @@ public class New_Create_review extends Fragment {
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
-        TextView create = (TextView) v.findViewById(R.id.rev_create);
+        create = (TextView) v.findViewById(R.id.rev_create);
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                create.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 sum=rating_food.getRating()+rating_place.getRating()+rating_service.getRating()+rating_pricequality.getRating();
                 sum=sum/4;
                 Review rev = new Review(uid, rid);

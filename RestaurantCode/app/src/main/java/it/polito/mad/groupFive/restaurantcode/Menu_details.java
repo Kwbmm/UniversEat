@@ -166,7 +166,7 @@ public class Menu_details extends NavigationDrawer {
                 String uid = sharedPreferences.getString("uid", null);
 
                 Boolean logged = sharedPreferences.getBoolean("logged", false);
-                if (uid != null && logged == true) {
+                /*if (uid != null && logged == true) {
                     Intent ordernow = new Intent(getBaseContext(), MakeOrder.class);
                     ordernow.putExtra("rid", rid);
                     ordernow.putExtra("mid", mid);
@@ -175,7 +175,7 @@ public class Menu_details extends NavigationDrawer {
                     startActivity(ordernow);
                 } else {
                     Toast.makeText(getBaseContext(), "You need to login first!", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
         name.setText(menu.getName());

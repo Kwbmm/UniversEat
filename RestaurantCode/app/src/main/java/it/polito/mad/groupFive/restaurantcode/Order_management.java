@@ -162,8 +162,6 @@ public class Order_management extends NavigationDrawer {
             convertView= LayoutInflater.from(getBaseContext()).inflate(R.layout.reservation,null);
             TextView username= (TextView) convertView.findViewById(R.id.order_username);
             TextView userID= (TextView) convertView.findViewById(R.id.order_userID);
-            TextView hour=(TextView) convertView.findViewById(R.id.hour);
-            TextView minutes = (TextView) convertView.findViewById(R.id.minutes);
             TextView date=(TextView) convertView.findViewById(R.id.date);
             TextView oid = (TextView)convertView.findViewById(R.id.order_OID);
             TextView meal=(TextView) convertView.findViewById(R.id.order_meal);
@@ -201,22 +199,12 @@ public class Order_management extends NavigationDrawer {
             });
 
             Order order= orders.get(position);
-            SimpleDateFormat format=new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy");
-            Calendar calendar= Calendar.getInstance();
-            try {
-                Log.v("date",order.getDate());
-                calendar.setTime(format.parse(order.getDate()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
             username.setText(order.getName());
             userID.setText(" (User #"+String.valueOf(order.getUid())+")");
             notes.setText("\""+order.getNotes()+"\"");
             if(order.getNotes().length()==0)
                 notes.setVisibility(View.GONE);
-            hour.setText(String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.HOUR_OF_DAY)));
-            minutes.setText(String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MINUTE)));
-            date.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))+" "+months[calendar.get(Calendar.MONTH)]);
+            date.setText(order.getDate());
             oid.setText("Order ID: "+String.valueOf(order.getOid()));
             String mealID=String.valueOf(order.getMenuName());
 

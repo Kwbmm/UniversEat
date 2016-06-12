@@ -317,6 +317,7 @@
     <string name="make_order_date">Pick a date</string>
     <string name="make_order_time">Pick a time</string>
     <string name="make_order_notes">Any notes?</string>
+    <string name="select_date_time">Please select date and time!</string>
 
     <!-- menu_choice.xml-->
     <string name="menu_choice_Option">Option</string>
@@ -359,7 +360,7 @@
     <!-- MakeOrder.java-->
     <string name="MakeOrder_name">Please insert a name</string>
     <string name="MakeOrder_past">You can\'t order in the past!</string>
-    <string name="MakeOrder_successful">Order successful</string>
+    <string name="MakeOrder_successful">Order created as</string>
 
     <!-- Menu_details.java-->
     <string name="Menu_details_beverage_incl">Beverage included</string>
@@ -381,7 +382,7 @@
     <string name="rating_service">Service</string>
     <string name="rating_place">Place</string>
     <string name="rating_food">Food</string>
-    <string name="rating_pqr">Price/Quality</string>
+    <string name="rating_pqr">Price</string>
     <string name="rating_comment">Comments</string>
 
     <string name="password6">Password must be at least 6 char</string>
@@ -483,4 +484,8 @@
     <string name="pick_a_place_on_the_map">Pick a place on the map</string>
     <string name="create">Create</string>
     <string name="actionBar_editProfile">Edit Profile</string>
+    <string name="need_to_login">You need to login first!</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="check_email">Check your email inbox</string>
+    <string name="fill_all_fields">Fill all the fields</string>
 </resources>

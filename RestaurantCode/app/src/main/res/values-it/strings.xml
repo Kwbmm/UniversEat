@@ -298,7 +298,9 @@
     <!-- MakeOrder.java-->
     <string name="MakeOrder_name">Per favore inserire un nome</string>
     <string name="MakeOrder_past">Non puoi ordinare nel passato!</string>
-    <string name="MakeOrder_successful">Ordine completato con successo</string>
+    <string name="MakeOrder_successful">Ordine creato a nome</string>
+    <string name="select_date_time">Prima seleziona data e ora</string>
+
 
     <!-- Menu_details.java-->
     <string name="Menu_details_beverage_incl">Bevande incluse</string>
@@ -331,9 +333,9 @@
 
     <string name="title_review">Scrivi un titolo per la recensione</string>
     <string name="rating_service">Servizio</string>
-    <string name="rating_place">Posto</string>
+    <string name="rating_place">Locale</string>
     <string name="rating_food">Cibo</string>
-    <string name="rating_pqr">Qualità/Prezzo</string>
+    <string name="rating_pqr">Prezzo</string>
     <string name="rating_comment">Commenti</string>
 
     <string name="toastRegisterPasswordFail">Le password inserite non coincidono</string>
@@ -422,4 +424,8 @@
     <string name="pick_a_place_on_the_map">Scegli un punto sulla mappa</string>
     <string name="create">Crea</string>
     <string name="actionBar_editProfile">Modifica Profilo</string>
+    <string name="need_to_login">Effettua il login per ordinare!</string>
+    <string name="reset_password">Reimposta la Password</string>
+    <string name="check_email">Controlla la tua posta in arrivo</string>
+    <string name="fill_all_fields">Riempi tutti i campi</string>
 </resources>

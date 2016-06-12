@@ -67,6 +67,8 @@ public class New_Menu_details extends Fragment {
     private ValueAnimator valueAnimator1;
     private ValueAnimator valueAnimator2;
     private RelativeLayout background;
+    private Boolean fadeoutBackground;
+    private Boolean fadeinBackground;
 
     public New_Menu_details() {
         // Required empty public constructor
@@ -74,6 +76,7 @@ public class New_Menu_details extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        fadeinBackground=true;
         super.onCreate(savedInstanceState);
     }
 
@@ -83,6 +86,7 @@ public class New_Menu_details extends Fragment {
         // Inflate the layout for this fragment
         final View v = inflater.inflate(R.layout.fragment_menu_details, container, false);
         setAnimators();
+        fadeoutBackground=true;
         sharedPreferences = getContext().getSharedPreferences(getString(R.string.user_pref), getContext().MODE_PRIVATE);
         mid = getArguments().getString("mid");
         rid = getArguments().getString("rid");
@@ -93,12 +97,16 @@ public class New_Menu_details extends Fragment {
         }
         courses = new ArrayList<>();
         background = (RelativeLayout) v.findViewById(R.id.background);
-        background.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                valueAnimator1.start();
-            }
-        }, 300);
+        if(fadeinBackground){
+            background.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    valueAnimator1.start();
+                }
+            }, 300);
+            fadeinBackground=false;
+        }
+        else background.setBackgroundColor(getResources().getColor(R.color.fragmentWhite));
         background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,14 +151,18 @@ public class New_Menu_details extends Fragment {
                             String uid = sharedPreferences.getString("uid", null);
                             Boolean logged = sharedPreferences.getBoolean("logged", false);
                             if (uid != null && logged == true) {
-                                Intent ordernow = new Intent(getActivity().getBaseContext(), MakeOrder.class);
-                                ordernow.putExtra("rid", rid);
-                                ordernow.putExtra("mid", mid);
-                                ordernow.putExtra("uid", uid);
-                                ordernow.putExtra("name", menu.getName());
-                                startActivity(ordernow);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("rid",menu.getRid());
+                                bundle.putString("mid",menu.getMid());
+                                bundle.putString("menuName",menu.getName());
+                                New_MakeOrder makeOrder = new New_MakeOrder();
+                                makeOrder.setArguments(bundle);
+                                fadeoutBackground=false;
+                                getActivity().getSupportFragmentManager().beginTransaction()
+                                        .setCustomAnimations(R.anim.slide_down_fromup,R.anim.slide_down_nooffset,R.anim.slide_up,R.anim.slide_up_away)
+                                        .addToBackStack(null).replace(R.id.frame,makeOrder).commit();
                             } else {
-                                Toast.makeText(getActivity().getBaseContext(), "You need to login first!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity().getBaseContext(), R.string.need_to_login, Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -285,7 +297,7 @@ public class New_Menu_details extends Fragment {
     }
     @Override
     public void onDestroyView(){
-        valueAnimator2.start();
+        if(fadeoutBackground) valueAnimator2.start();
         super.onDestroyView();
     }
 

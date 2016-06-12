@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +64,9 @@ public class Login_view extends Fragment {
     private ValueAnimator valueAnimator1;
     private ValueAnimator valueAnimator2;
     private RelativeLayout background;
+    private TextView login;
+    private ProgressBar progressBar;
+    private TextView reset;
     private User user;
     private boolean own;
     private OnFragmentInteractionListener mListener;
@@ -115,6 +120,9 @@ public class Login_view extends Fragment {
         });
         username = (EditText) v.findViewById(R.id.emailAddress);
         password = (EditText) v.findViewById(R.id.password);
+        reset =(TextView)v.findViewById(R.id.reset_button);
+        progressBar=(ProgressBar)v.findViewById(R.id.progressBar5);
+        progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         background = (RelativeLayout) v.findViewById(R.id.background);
         background.postDelayed(new Runnable() {
             @Override
@@ -129,10 +137,13 @@ public class Login_view extends Fragment {
             }
         });
         incorrect_log = (LinearLayout) v.findViewById(R.id.ll_incorrect);
-        TextView login = (TextView) v.findViewById(R.id.login);
+        login = (TextView) v.findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                login.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                incorrect_log.removeAllViewsInLayout();
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 String psw, usr;
                 psw = username.getText().toString();
@@ -211,26 +222,27 @@ public class Login_view extends Fragment {
 
                             } else {
                                 counter++;
-                                incorrect_log.removeAllViewsInLayout();
+                                View view = inflater.inflate(R.layout.incorrect_login, null);
+                                incorrect_log.addView(view);
                                 if (counter < 2) {
-                                    View view = inflater.inflate(R.layout.incorrect_login, null);
-                                    incorrect_log.addView(view);
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    login.setVisibility(View.VISIBLE);
                                 } else {
-                                    View view = inflater.inflate(R.layout.resetpass, null);
-                                    Button reset = (Button) view.findViewById(R.id.reset_button);
+                                    reset.setVisibility(View.VISIBLE);
                                     reset.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             auth.sendPasswordResetEmail(username.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                    Toast toast = Toast.makeText(getContext(), "Check your email!!", Toast.LENGTH_LONG);
+                                                    Toast toast = Toast.makeText(getContext(), R.string.check_email, Toast.LENGTH_LONG);
                                                     toast.show();
                                                 }
                                             });
                                         }
                                     });
-                                    incorrect_log.addView(view);
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    login.setVisibility(View.VISIBLE);
                                 }
 
                             }
@@ -240,8 +252,9 @@ public class Login_view extends Fragment {
 
 
                 } else {
-                    username.setText("Fill email field");
-                    password.setText("Here");
+                    Toast.makeText(getActivity().getBaseContext(), R.string.fill_all_fields, Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                    login.setVisibility(View.VISIBLE);
                 }
             }
 
