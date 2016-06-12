@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
@@ -78,7 +79,7 @@ public class Createlog_frag extends Fragment{
         });
 
 
-        Button btnNext = (Button) v.findViewById(R.id.Button_Next_login);
+        TextView btnNext = (TextView) v.findViewById(R.id.Button_Next_login);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -18,10 +18,12 @@
             android:layout_alignParentStart="false"
             android:inputType="text"
             android:hint="@string/frg_create_restaurant_2_textView_Address"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="16dp"
             android:layout_below="@+id/imageView_map"
             android:layout_marginTop="10dp"
-            android:layout_toRightOf="@+id/imageView20" />
+            android:layout_toRightOf="@+id/imageView20"
+            android:background="@android:color/transparent"
+            android:minHeight="50dp" />
 
         <!--
             For now we are just using a fixed image, as suggest by Prof. Malnati.
@@ -34,7 +36,8 @@
             android:src="@drawable/restaurant_map_view"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="10dp" />
 
         <!-- Restaurant City -->
         <EditText
@@ -45,10 +48,12 @@
             android:layout_alignParentStart="false"
             android:inputType="text"
             android:hint="@string/frg_create_restaurant_2_textView_City"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="16dp"
             android:layout_below="@+id/editText_Address"
             android:layout_marginTop="10dp"
-            android:layout_toRightOf="@+id/imageView21" />
+            android:layout_toRightOf="@+id/imageView21"
+            android:background="@android:color/transparent"
+            android:minHeight="50dp" />
 
         <!-- Restaurant ZIP Code -->
         <EditText
@@ -59,10 +64,12 @@
             android:layout_alignParentStart="false"
             android:inputType="number"
             android:hint="@string/frg_create_restaurant_2_textView_ZIPCode"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="16dp"
             android:layout_below="@id/editText_City"
             android:layout_marginTop="10dp"
-            android:layout_toRightOf="@+id/imageView22" />
+            android:layout_toRightOf="@+id/imageView22"
+            android:background="@android:color/transparent"
+            android:minHeight="50dp" />
 
         <!-- Restaurant State -->
         <EditText
@@ -73,10 +80,12 @@
             android:layout_alignParentStart="false"
             android:inputType="text"
             android:hint="@string/frg_create_restaurant_2_textView_State"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="16dp"
             android:layout_below="@id/editText_ZIPCode"
             android:layout_marginTop="10dp"
-            android:layout_toRightOf="@+id/imageView23" />
+            android:layout_toRightOf="@+id/imageView23"
+            android:background="@android:color/transparent"
+            android:minHeight="50dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -97,47 +106,47 @@
 
         <ImageView
             android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:id="@+id/imageView20"
             android:layout_alignTop="@+id/editText_Address"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:src="@drawable/ic_marker_black"
-            android:layout_marginTop="5dp"
-            android:tint="@color/colorPrimary" />
+            android:tint="@color/material_grey_600"
+            android:layout_marginLeft="6dp" />
 
         <ImageView
             android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:id="@+id/imageView21"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="false"
             android:layout_alignTop="@+id/editText_City"
             android:src="@drawable/ic_capitol_black"
-            android:layout_marginTop="5dp"
-            android:tint="@color/colorPrimary" />
+            android:tint="@color/material_grey_600"
+            android:layout_marginLeft="6dp" />
 
         <ImageView
             android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:id="@+id/imageView22"
             android:layout_alignTop="@+id/editText_ZIPCode"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:src="@drawable/ic_marker2_black"
-            android:layout_marginTop="5dp"
-            android:tint="@color/colorPrimary" />
+            android:tint="@color/material_grey_600"
+            android:layout_marginLeft="6dp" />
 
         <ImageView
             android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:id="@+id/imageView23"
             android:layout_alignTop="@+id/editText_State"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:src="@drawable/ic_flag_black"
-            android:layout_marginTop="5dp"
-            android:tint="@color/colorPrimary" />
+            android:tint="@color/material_grey_600"
+            android:layout_marginLeft="6dp" />
 
         <TextView
             style="@style/Button"

@@ -1,5 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode.Login;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -57,10 +59,13 @@ public class Login_view extends Fragment {
     private SharedPreferences sharedPreferences;
     private EditText username;
     private EditText password;
+    private ValueAnimator valueAnimator1;
+    private ValueAnimator valueAnimator2;
+    private RelativeLayout background;
     private User user;
     private boolean own;
     private OnFragmentInteractionListener mListener;
-    private int counter=0;
+    private int counter = 0;
 
     public Login_view() {
         // Required empty public constructor
@@ -97,27 +102,34 @@ public class Login_view extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v=inflater.inflate(R.layout.fragment_login_view, container, false);
-        sharedPreferences=getContext().getSharedPreferences(getString(R.string.user_pref),getContext().MODE_PRIVATE);
-        TextView create_new= (TextView) v.findViewById(R.id.register);
+        View v = inflater.inflate(R.layout.fragment_login_view, container, false);
+        setAnimators();
+        sharedPreferences = getContext().getSharedPreferences(getString(R.string.user_pref), getContext().MODE_PRIVATE);
+        TextView create_new = (TextView) v.findViewById(R.id.register);
         create_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent register=new Intent(getContext(),CreateLogin.class);
-                startActivityForResult(register,5);
+                Intent register = new Intent(getContext(), CreateLogin.class);
+                startActivityForResult(register, 5);
             }
         });
-        username=(EditText)v.findViewById(R.id.emailAddress);
-        password=(EditText)v.findViewById(R.id.password);
-        RelativeLayout background=(RelativeLayout)v.findViewById(R.id.background);
+        username = (EditText) v.findViewById(R.id.emailAddress);
+        password = (EditText) v.findViewById(R.id.password);
+        background = (RelativeLayout) v.findViewById(R.id.background);
+        background.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                valueAnimator1.start();
+            }
+        }, 300);
         background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
-        incorrect_log= (LinearLayout) v.findViewById(R.id.ll_incorrect);
-        TextView login=(TextView) v.findViewById(R.id.login);
+        incorrect_log = (LinearLayout) v.findViewById(R.id.ll_incorrect);
+        TextView login = (TextView) v.findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,8 +166,8 @@ public class Login_view extends Fragment {
                                             editor.putBoolean("logged", true);
                                             editor.putBoolean("owner", false);
                                             editor.putString("uid", firebaseUser.getUid());
-                                            editor.putString("psw",password.getText().toString());
-                                            editor.putString("email",username.getText().toString());
+                                            editor.putString("psw", password.getText().toString());
+                                            editor.putString("email", username.getText().toString());
                                             editor.commit();
                                             mListener.onFragmentInteraction();
                                             getFragmentManager().popBackStack();
@@ -164,8 +176,8 @@ public class Login_view extends Fragment {
                                             editor.putBoolean("logged", true);
                                             editor.putBoolean("owner", true);
                                             editor.putString("uid", firebaseUser.getUid());
-                                            editor.putString("psw",password.getText().toString());
-                                            editor.putString("email",username.getText().toString());
+                                            editor.putString("psw", password.getText().toString());
+                                            editor.putString("email", username.getText().toString());
                                             editor.commit();
                                             Log.v("pws", password.getText().toString());
                                             mListener.onFragmentInteraction();
@@ -205,14 +217,14 @@ public class Login_view extends Fragment {
                                     incorrect_log.addView(view);
                                 } else {
                                     View view = inflater.inflate(R.layout.resetpass, null);
-                                    Button reset=(Button)view.findViewById(R.id.reset_button);
+                                    Button reset = (Button) view.findViewById(R.id.reset_button);
                                     reset.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             auth.sendPasswordResetEmail(username.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                    Toast toast=Toast.makeText(getContext(),"Check your email!!",Toast.LENGTH_LONG);
+                                                    Toast toast = Toast.makeText(getContext(), "Check your email!!", Toast.LENGTH_LONG);
                                                     toast.show();
                                                 }
                                             });
@@ -227,7 +239,7 @@ public class Login_view extends Fragment {
                     });
 
 
-                }else{
+                } else {
                     username.setText("Fill email field");
                     password.setText("Here");
                 }
@@ -244,20 +256,47 @@ public class Login_view extends Fragment {
         }
     }
 
+    private void setAnimators() {
+        valueAnimator1 = ValueAnimator.ofObject(new ArgbEvaluator(), getResources().getColor(R.color.fragmentTransparent), getResources().getColor(R.color.fragmentWhite));
+        valueAnimator1.setDuration(300);
+        valueAnimator1.setInterpolator(new DecelerateInterpolator(2));
+        valueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                background.setBackgroundColor((int) animation.getAnimatedValue());
+            }
+        });
+        valueAnimator2 = ValueAnimator.ofObject(new ArgbEvaluator(), getResources().getColor(R.color.fragmentWhite), getResources().getColor(R.color.fragmentTransparent));
+        valueAnimator2.setDuration(100);
+        //valueAnimator2.setInterpolator(new DecelerateInterpolator(2));
+        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                background.setBackgroundColor((int) animation.getAnimatedValue());
+            }
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        valueAnimator2.start();
+        super.onDestroyView();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         update();
     }
 
-    public void update(){
-        sharedPreferences=getContext().getSharedPreferences(getString(R.string.user_pref),getContext().MODE_PRIVATE);
-        if(sharedPreferences.getBoolean("owner",false)){
+    public void update() {
+        sharedPreferences = getContext().getSharedPreferences(getString(R.string.user_pref), getContext().MODE_PRIVATE);
+        if (sharedPreferences.getBoolean("owner", false)) {
 
 
-                Log.v("owner", "fl");
-                user=new User(sharedPreferences.getString("uid",null));
-                own=false;
+            Log.v("owner", "fl");
+            user = new User(sharedPreferences.getString("uid", null));
+            own = false;
 
         }
     }
@@ -284,7 +323,7 @@ public class Login_view extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

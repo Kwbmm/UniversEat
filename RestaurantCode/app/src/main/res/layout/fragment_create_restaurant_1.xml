@@ -17,8 +17,10 @@
                 android:hint="@string/frg_create_restaurant_1_textView_RestaurantName"
                 android:layout_below="@+id/imageView_RestaurantImage"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/imageView16" />
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@+id/imageView16"
+                android:background="@android:color/transparent"
+                android:minHeight="50dp" />
 
             <!-- Restaurant Image -->
             <TextView
@@ -39,7 +41,8 @@
                 android:id="@+id/imageView_RestaurantImage"
                 android:src="@drawable/ic_picture_black"
                 android:background="#fefeff"
-                android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc" />
+                android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc"
+                android:layout_marginBottom="10dp" />
 
             <!-- Restaurant Description -->
             <EditText
@@ -50,9 +53,11 @@
                 android:hint="@string/frg_create_restaurant_1_textView_Description"
                 android:layout_below="@+id/editText_RestaurantName"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="16dp"
                 android:layout_toRightOf="@+id/imageView17"
-                android:maxLines="3" />
+                android:maxLines="3"
+                android:background="@android:color/transparent"
+                android:minHeight="50dp" />
 
             <!-- Restaurant Telephone -->
             <EditText
@@ -63,8 +68,10 @@
                 android:hint="@string/frg_create_restaurant_1_textView_Telephone"
                 android:layout_below="@id/editText_Description"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/imageView18" />
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@+id/imageView18"
+                android:background="@android:color/transparent"
+                android:minHeight="50dp" />
 
             <!-- Restaurant Website -->
             <EditText
@@ -75,55 +82,57 @@
                 android:hint="@string/frg_create_restaurant_1_textView_Website"
                 android:layout_below="@id/editText_Telephone"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/imageView19" />
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@+id/imageView19"
+                android:background="@android:color/transparent"
+                android:minHeight="50dp" />
 
             <!-- Next button -->
 
             <ImageView
                 android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:id="@+id/imageView16"
                 android:layout_alignParentTop="false"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="false"
                 android:layout_alignTop="@+id/editText_RestaurantName"
                 android:src="@drawable/ic_restaurant_building_black"
-                android:layout_marginTop="5dp"
-                android:tint="@color/colorPrimary" />
+                android:tint="@color/material_grey_600"
+                android:layout_marginLeft="6dp" />
 
             <ImageView
                 android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:id="@+id/imageView17"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="false"
                 android:layout_alignTop="@+id/editText_Description"
                 android:src="@drawable/ic_info_black"
-                android:layout_marginTop="5dp"
-                android:tint="@color/colorPrimary" />
+                android:tint="@color/material_grey_600"
+                android:layout_marginLeft="6dp" />
 
             <ImageView
                 android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:id="@+id/imageView18"
                 android:layout_alignTop="@+id/editText_Telephone"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="false"
                 android:src="@drawable/ic_phone_black"
-                android:layout_marginTop="5dp"
-                android:tint="@color/colorPrimary" />
+                android:tint="@color/material_grey_600"
+                android:layout_marginLeft="6dp" />
 
             <ImageView
                 android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:id="@+id/imageView19"
                 android:layout_alignTop="@+id/editText_Website"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="false"
                 android:src="@drawable/ic_website_black"
-                android:layout_marginTop="5dp"
-                android:tint="@color/colorPrimary" />
+                android:tint="@color/material_grey_600"
+                android:layout_marginLeft="6dp" />
 
             <TextView
                 android:layout_width="wrap_content"

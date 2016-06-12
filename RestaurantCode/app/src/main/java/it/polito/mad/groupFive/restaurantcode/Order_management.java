@@ -212,6 +212,8 @@ public class Order_management extends NavigationDrawer {
             username.setText(order.getName());
             userID.setText(" (User #"+String.valueOf(order.getUid())+")");
             notes.setText("\""+order.getNotes()+"\"");
+            if(order.getNotes().length()==0)
+                notes.setVisibility(View.GONE);
             hour.setText(String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.HOUR_OF_DAY)));
             minutes.setText(String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MINUTE)));
             date.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))+" "+months[calendar.get(Calendar.MONTH)]);

@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="it.polito.mad.groupFive.restaurantcode.Login.Login_view"
-    android:background="#c8ffffff"
     android:clickable="true"
     android:id="@+id/background">
 

@@ -5,7 +5,6 @@
     android:padding="10dp"
     android:clickable="true"
     android:elevation="0dp"
-    android:background="#c8ffffff"
     android:stateListAnimator="@null"
     android:id="@+id/background">
 

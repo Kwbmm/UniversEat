@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -122,7 +123,7 @@ public class Createlog_frag1 extends Fragment{
         });
 
 
-        Button btnNext = (Button) v.findViewById(R.id.Button_Next);
+        TextView btnNext = (TextView) v.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

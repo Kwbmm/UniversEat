@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -119,6 +120,7 @@ public class Create_simple_menu1 extends Fragment {
         name=(EditText)v.findViewById(R.id.cmed_1_1);
         description=(EditText)v.findViewById(R.id.cmed_1_2);
         progressBar=(ProgressBar)v.findViewById(R.id.progressBar4);
+        progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         restaurantImg = (ImageView) v.findViewById(R.id.cmiw_1_1);
         restaurantImg.setOnClickListener(new View.OnClickListener() {
             @Override

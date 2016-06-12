@@ -1,5 +1,9 @@
 package it.polito.mad.groupFive.restaurantcode;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -60,6 +64,10 @@ public class New_Menu_details extends Fragment {
     SharedPreferences sharedPreferences;
     private ArrayList<Course> courses;
     private CourseAdapter courseAdapter;
+    private ValueAnimator valueAnimator1;
+    private ValueAnimator valueAnimator2;
+    private RelativeLayout background;
+
     public New_Menu_details() {
         // Required empty public constructor
     }
@@ -73,17 +81,24 @@ public class New_Menu_details extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View v=inflater.inflate(R.layout.fragment_menu_details, container, false);
-        sharedPreferences=getContext().getSharedPreferences(getString(R.string.user_pref),getContext().MODE_PRIVATE);
-        mid=getArguments().getString("mid");
-        rid=getArguments().getString("rid");
+        final View v = inflater.inflate(R.layout.fragment_menu_details, container, false);
+        setAnimators();
+        sharedPreferences = getContext().getSharedPreferences(getString(R.string.user_pref), getContext().MODE_PRIVATE);
+        mid = getArguments().getString("mid");
+        rid = getArguments().getString("rid");
         try {
-            restaurant=new Restaurant(rid);
+            restaurant = new Restaurant(rid);
         } catch (RestaurantException e) {
             e.printStackTrace();
         }
         courses = new ArrayList<>();
-        RelativeLayout background=(RelativeLayout)v.findViewById(R.id.background);
+        background = (RelativeLayout) v.findViewById(R.id.background);
+        background.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                valueAnimator1.start();
+            }
+        }, 300);
         background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,51 +129,52 @@ public class New_Menu_details extends Fragment {
                         menu.setServiceFee((Boolean) dataSnapshot.child("serviceFee").getValue());
                     } else menu.setServiceFee(false);
                     menu.setType(Integer.parseInt(dataSnapshot.child("type").getValue().toString()));
-                        TextView name = (TextView) v.findViewById(R.id.menu_name);
-                        TextView description = (TextView) v.findViewById(R.id.menu_description);
-                        TextView beverage = (TextView) v.findViewById(R.id.beverage);
-                        TextView servicefee = (TextView) v.findViewById(R.id.servicefee);
-                        TextView price = (TextView) v.findViewById(R.id.menu_price);
-                        ImageView pic = (ImageView) v.findViewById(R.id.menu_image);
-                        ListView listView = (ListView) v.findViewById(R.id.courseList);
-                    FloatingActionButton fab=(FloatingActionButton)v.findViewById(R.id.fab);
-                        fab.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String uid = sharedPreferences.getString("uid", null);
-                                Boolean logged = sharedPreferences.getBoolean("logged", false);
-                                if (uid != null && logged == true) {
-                                    Intent ordernow = new Intent(getActivity().getBaseContext(), MakeOrder.class);
-                                    ordernow.putExtra("rid", rid);
-                                    ordernow.putExtra("mid", mid);
-                                    ordernow.putExtra("uid", uid);
-                                    ordernow.putExtra("name", menu.getName());
-                                    startActivity(ordernow);
-                                } else {
-                                    Toast.makeText(getActivity().getBaseContext(), "You need to login first!", Toast.LENGTH_SHORT).show();
-                                }
+                    TextView name = (TextView) v.findViewById(R.id.menu_name);
+                    TextView description = (TextView) v.findViewById(R.id.menu_description);
+                    TextView beverage = (TextView) v.findViewById(R.id.beverage);
+                    TextView servicefee = (TextView) v.findViewById(R.id.servicefee);
+                    TextView price = (TextView) v.findViewById(R.id.menu_price);
+                    ImageView pic = (ImageView) v.findViewById(R.id.menu_image);
+                    ListView listView = (ListView) v.findViewById(R.id.courseList);
+                    FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String uid = sharedPreferences.getString("uid", null);
+                            Boolean logged = sharedPreferences.getBoolean("logged", false);
+                            if (uid != null && logged == true) {
+                                Intent ordernow = new Intent(getActivity().getBaseContext(), MakeOrder.class);
+                                ordernow.putExtra("rid", rid);
+                                ordernow.putExtra("mid", mid);
+                                ordernow.putExtra("uid", uid);
+                                ordernow.putExtra("name", menu.getName());
+                                startActivity(ordernow);
+                            } else {
+                                Toast.makeText(getActivity().getBaseContext(), "You need to login first!", Toast.LENGTH_SHORT).show();
                             }
-                        });
-                        name.setText(menu.getName());
-                        description.setText(menu.getDescription());
-                        if (menu.isBeverage()) beverage.setText(getString(R.string.Menu_details_beverage_incl));
-                        else beverage.setText(getString(R.string.Menu_details_beverage_not));
-                        if (menu.isServiceFee())
-                            servicefee.setText(getString(R.string.Menu_details_service_fee_incl));
-                        else servicefee.setText(getString(R.string.Menu_details_service_fee_not));
-                        price.setText(String.format("%.2f", menu.getPrice()) + "€");
-
-                            FirebaseStorage storage = FirebaseStorage.getInstance();
-                            StorageReference imageref = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");
-                        try {
-                            getFromNetwork(imageref, menu.getMid(), pic);
-                        } catch (NullPointerException e) {
-                            Log.e("immagine non caricata", " ");
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
                         }
-                        courseAdapter = new CourseAdapter();
-                        listView.setAdapter(courseAdapter);
+                    });
+                    name.setText(menu.getName());
+                    description.setText(menu.getDescription());
+                    if (menu.isBeverage())
+                        beverage.setText(getString(R.string.Menu_details_beverage_incl));
+                    else beverage.setText(getString(R.string.Menu_details_beverage_not));
+                    if (menu.isServiceFee())
+                        servicefee.setText(getString(R.string.Menu_details_service_fee_incl));
+                    else servicefee.setText(getString(R.string.Menu_details_service_fee_not));
+                    price.setText(String.format("%.2f", menu.getPrice()) + "€");
+
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference imageref = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");
+                    try {
+                        getFromNetwork(imageref, menu.getMid(), pic);
+                    } catch (NullPointerException e) {
+                        Log.e("immagine non caricata", " ");
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    courseAdapter = new CourseAdapter();
+                    listView.setAdapter(courseAdapter);
 
 
                 } catch (MenuException e) {
@@ -185,7 +201,7 @@ public class New_Menu_details extends Fragment {
                 courses.add(c);
                 try {
                     courseAdapter.notifyDataSetChanged();
-                } catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
 
@@ -217,23 +233,23 @@ public class New_Menu_details extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 restaurant.setName((String) dataSnapshot.child("name").getValue())
                         .setImageLocalPath((String) dataSnapshot.child("imageLocalPath").getValue());
-                TextView restname=(TextView)v.findViewById(R.id.restaurant_name);
+                TextView restname = (TextView) v.findViewById(R.id.restaurant_name);
                 restname.setText(restaurant.getName());
-                RelativeLayout restlayout=(RelativeLayout)v.findViewById(R.id.restaurantLayout);
+                RelativeLayout restlayout = (RelativeLayout) v.findViewById(R.id.restaurantLayout);
                 restlayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent restaurant_view =new Intent(getContext(),User_info_view.class);
-                        restaurant_view.putExtra("rid",restaurant.getRid());
+                        Intent restaurant_view = new Intent(getContext(), User_info_view.class);
+                        restaurant_view.putExtra("rid", restaurant.getRid());
                         startActivity(restaurant_view);
                     }
                 });
-                ImageView restImage=(ImageView)v.findViewById(R.id.restaurant_image);
+                ImageView restImage = (ImageView) v.findViewById(R.id.restaurant_image);
 
-                FirebaseStorage storage=FirebaseStorage.getInstance();
-                StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference imageref = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
                 try {
-                    getFromNetwork(imageref,restaurant.getRid(),restImage);
+                    getFromNetwork(imageref, restaurant.getRid(), restImage);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -246,6 +262,33 @@ public class New_Menu_details extends Fragment {
         });
         return v;
     }
+
+    private void setAnimators() {
+        valueAnimator1 = ValueAnimator.ofObject(new ArgbEvaluator(), getResources().getColor(R.color.fragmentTransparent), getResources().getColor(R.color.fragmentWhite));
+        valueAnimator1.setDuration(300);
+        valueAnimator1.setInterpolator(new DecelerateInterpolator(2));
+        valueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                background.setBackgroundColor((int) animation.getAnimatedValue());
+            }
+        });
+        valueAnimator2 = ValueAnimator.ofObject(new ArgbEvaluator(), getResources().getColor(R.color.fragmentWhite), getResources().getColor(R.color.fragmentTransparent));
+        valueAnimator2.setDuration(100);
+        //valueAnimator2.setInterpolator(new DecelerateInterpolator(2));
+        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                background.setBackgroundColor((int) animation.getAnimatedValue());
+            }
+        });
+    }
+    @Override
+    public void onDestroyView(){
+        valueAnimator2.start();
+        super.onDestroyView();
+    }
+
     public class CourseAdapter extends BaseAdapter {
 
         public CourseAdapter() {
@@ -299,12 +342,13 @@ public class New_Menu_details extends Fragment {
                     imView.setImageBitmap(b);
                 } catch (IOException e) {
                     Log.e("getFromNet", e.getMessage());
-                } catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
         });
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

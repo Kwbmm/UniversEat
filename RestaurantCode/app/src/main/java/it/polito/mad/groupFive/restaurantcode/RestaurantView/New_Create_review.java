@@ -1,5 +1,7 @@
 package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -44,6 +47,9 @@ public class New_Create_review extends Fragment {
     Float ratingValue;
     Float ratingNumber;
     float sum;
+    private ValueAnimator valueAnimator1;
+    private ValueAnimator valueAnimator2;
+    private RelativeLayout background;
     FirebaseDatabase db;
 
     @Override
@@ -56,6 +62,7 @@ public class New_Create_review extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View v = inflater.inflate(R.layout.activity_create_review, container, false);
+        setAnimators();
         rid=getArguments().getString("rid");
         ratingNumber=getArguments().getFloat("ratingNumber");
         ratingValue=getArguments().getFloat("ratingValue");
@@ -69,7 +76,13 @@ public class New_Create_review extends Fragment {
         rating_place = (RatingBar) v.findViewById(R.id.rev_rate_place);
         rating_pricequality = (RatingBar) v.findViewById(R.id.rev_rate_pqr);
         rating_service = (RatingBar) v.findViewById(R.id.rev_rate_service);
-        RelativeLayout background=(RelativeLayout)v.findViewById(R.id.background);
+        background=(RelativeLayout)v.findViewById(R.id.background);
+        background.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                valueAnimator1.start();
+            }
+        }, 300);
         background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +135,33 @@ public class New_Create_review extends Fragment {
         });
     return v;
     }
+
+    private void setAnimators() {
+        valueAnimator1 = ValueAnimator.ofObject(new ArgbEvaluator(), getResources().getColor(R.color.fragmentTransparent), getResources().getColor(R.color.fragmentWhite));
+        valueAnimator1.setDuration(300);
+        valueAnimator1.setInterpolator(new DecelerateInterpolator(2));
+        valueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                background.setBackgroundColor((int) animation.getAnimatedValue());
+            }
+        });
+        valueAnimator2 = ValueAnimator.ofObject(new ArgbEvaluator(), getResources().getColor(R.color.fragmentWhite), getResources().getColor(R.color.fragmentTransparent));
+        valueAnimator2.setDuration(100);
+        //valueAnimator2.setInterpolator(new DecelerateInterpolator(2));
+        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                background.setBackgroundColor((int) animation.getAnimatedValue());
+            }
+        });
+    }
+    @Override
+    public void onDestroyView(){
+        valueAnimator2.start();
+        super.onDestroyView();
+    }
+
 
     public class DataList implements ChildEventListener {
         public User user;
