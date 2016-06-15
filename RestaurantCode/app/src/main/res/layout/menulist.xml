@@ -18,7 +18,7 @@ android:layout_width="match_parent"
             android:paddingBottom="5dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:scrollbars="vertical" />
+            android:scrollbars="none" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
@@ -30,5 +30,6 @@ android:layout_width="match_parent"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
-        android:src="@drawable/ic_add_24dp" />
+        android:src="@drawable/ic_add_24dp"
+        android:tint="#ffffff" />
 </RelativeLayout>

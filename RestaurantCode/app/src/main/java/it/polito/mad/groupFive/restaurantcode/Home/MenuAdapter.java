@@ -147,8 +147,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
         final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
         final DistanceMenu menu = menus.get(position);
         String s=menu.getDescription();
-        if(s.length() >80)
-            s = s.substring(0,77) + "...";
         holder.menu_description.setText(s);
         holder.menu_name.setText(menu.getName());
         if(menu.getName().length()>18)

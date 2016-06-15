@@ -69,6 +69,9 @@ public class EditProfile extends NavigationDrawer{
     private User user=null;
     private Bitmap img;
     private ImageView userPicView = null;
+    private ImageView imageView24;
+    private ImageView imageView30;
+    private ImageView imageView25;
     private EditText txtmailnew;
     private EditText txtmailold;
     private EditText txtpassword;
@@ -99,11 +102,34 @@ public class EditProfile extends NavigationDrawer{
         user =new User(uid);
 
 
-
+        imageView24=(ImageView)findViewById(R.id.imageView24);
+        imageView30=(ImageView)findViewById(R.id.imageView30);
+        imageView25=(ImageView)findViewById(R.id.imageView25);
         txtmailold = (EditText) findViewById(R.id.editText_Mail_old);
+        txtmailold.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView24.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView24.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         txtmailnew = (EditText) findViewById(R.id.editText_Mail_new);
+        txtmailnew.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView30.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView30.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         this.userPicView = (ImageView) findViewById(R.id.imageView_UserImage_e);
         txtpassword = (EditText) findViewById(R.id.editText_Password_e);
+        txtpassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView25.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView25.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         TextView addPic=(TextView) findViewById(R.id.textView_imageText_e);
 
 

@@ -1,25 +1,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
     android:clickable="true"
     android:elevation="0dp"
-    android:stateListAnimator="@null"
-    android:id="@+id/background">
+    android:padding="10dp"
+    android:stateListAnimator="@null">
 
     <android.support.v7.widget.CardView
         android:id="@+id/sv1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:clickable="true"
         app:cardCornerRadius="@dimen/cardview_default_radius"
         app:cardElevation="4dp"
-        app:cardUseCompatPadding="true"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="10dp"
-        android:clickable="true">
+        app:cardUseCompatPadding="true">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -27,28 +27,38 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:padding="10dp"
+            android:padding="8dp"
             tools:context=".RestaurantView.Create_review1">
 
-            <EditText
-                android:id="@+id/review_text"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/write_your_review_here"
-                android:inputType="textMultiLine"
-                android:maxLines="3" />
+                android:id="@+id/reveiw"
+                android:layout_marginTop="8dp">
+
+                <EditText
+                    android:id="@+id/review_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/write_your_review_here"
+                    android:inputType="textMultiLine"
+                    android:maxLines="3"
+                    android:textColor="#DE000000"
+                    android:textColorHint="#8A000000"
+                    android:textSize="16sp" />
+            </android.support.design.widget.TextInputLayout>
 
             <TextView
                 android:id="@+id/rating_service"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/review_text"
-                android:layout_marginTop="20dp"
+                android:layout_below="@+id/reveiw"
+                android:layout_marginTop="16dp"
                 android:text="@string/rating_service"
                 android:textAlignment="center"
 
-                android:textColor="#000000"
-                android:textSize="15sp" />
+                android:textColor="#DE000000"
+                android:textSize="14sp" />
 
             <RatingBar
                 android:id="@+id/rev_rate_service"
@@ -67,12 +77,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rev_rate_service"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/rating_place"
                 android:textAlignment="center"
 
-                android:textColor="#000000"
-                android:textSize="15sp" />
+                android:textColor="#DE000000"
+                android:textSize="14sp" />
 
             <RatingBar
                 android:id="@+id/rev_rate_place"
@@ -91,12 +101,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rev_rate_place"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/rating_food"
                 android:textAlignment="center"
 
-                android:textColor="#000000"
-                android:textSize="15sp" />
+                android:textColor="#DE000000"
+                android:textSize="14sp" />
 
             <RatingBar
                 android:id="@+id/rev_rate_food"
@@ -115,12 +125,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rev_rate_food"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/rating_pqr"
                 android:textAlignment="center"
 
-                android:textColor="#000000"
-                android:textSize="15sp" />
+                android:textColor="#DE000000"
+                android:textSize="14sp" />
 
             <RatingBar
                 android:id="@+id/rev_rate_pqr"
@@ -135,26 +145,26 @@
                 android:stepSize="0.5" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/create"
                 android:id="@+id/rev_create"
                 style="@style/Button"
-                android:layout_below="@+id/rev_rate_pqr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_below="@+id/rev_rate_pqr"
+                android:text="@string/create"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <ProgressBar
+                android:id="@+id/progressBar3"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:id="@+id/progressBar3"
-                android:visibility="invisible"
-                android:layout_alignTop="@+id/rev_create"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/rev_create"
+                android:layout_marginRight="35dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="35dp" />
+                android:visibility="invisible" />
 
 
         </RelativeLayout>

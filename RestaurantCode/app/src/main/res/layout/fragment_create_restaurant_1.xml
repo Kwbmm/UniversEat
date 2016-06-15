@@ -1,160 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/create_r_1"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/create_r_1">
+    android:layout_height="wrap_content">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">
-            <!-- Restaurant Name -->
+        <!-- Restaurant Name -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            android:layout_toRightOf="@+id/imageView16"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp">
+
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/editText_RestaurantName"
-                android:inputType="text"
-                android:hint="@string/frg_create_restaurant_1_textView_RestaurantName"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="16dp"
-                android:layout_toRightOf="@+id/imageView16"
-                android:background="@android:color/transparent"
-                android:minHeight="50dp" />
-
-            <!-- Restaurant Image -->
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView_image"
-                android:text="@string/add_picture"
-                android:textSize="18sp"
-                android:layout_marginLeft="16dp"
-                android:layout_toRightOf="@+id/imageView_RestaurantImage"
-                android:gravity="center_vertical"
-                android:layout_below="@+id/editText_Website"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/ripple_effect"
-                android:minHeight="50dp" />
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="50dp"
-                android:maxWidth="@dimen/frg_imageView_maxWidth"
-                android:maxHeight="@dimen/frg_imageView_maxHeight"
-                android:id="@+id/imageView_RestaurantImage"
-                android:src="@drawable/ic_picture_black"
-                android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc"
-                android:layout_alignTop="@+id/textView_image"
-                android:layout_marginLeft="6dp" />
+                android:layout_toRightOf="@+id/imageView16"
+                android:hint="@string/frg_create_restaurant_1_textView_RestaurantName"
+                android:inputType="textCapWords"
+                android:textColor="#DE000000"
+                android:textColorHint="#8A000000"
+                android:textSize="16sp" />
+        </android.support.design.widget.TextInputLayout>
+        <!-- Restaurant Image -->
+        <TextView
+            android:id="@+id/textView_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/website"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="22dp"
+            android:layout_toRightOf="@+id/imageView_RestaurantImage"
+            android:background="@drawable/ripple_effect"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:text="@string/add_picture"
+            android:textColor="#DE000000"
+            android:textSize="16sp"
+            android:paddingLeft="4dp" />
 
+        <ImageView
+            android:id="@+id/imageView_RestaurantImage"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:layout_alignTop="@+id/textView_image"
+            android:layout_marginLeft="6dp"
+            android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc"
+            android:maxHeight="@dimen/frg_imageView_maxHeight"
+            android:maxWidth="@dimen/frg_imageView_maxWidth"
+            android:src="@drawable/ic_picture_black" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/description"
+            android:layout_below="@+id/name"
+            android:layout_toRightOf="@+id/imageView17"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp">
             <!-- Restaurant Description -->
             <EditText
+                android:id="@+id/editText_Description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText_Description"
-                android:inputType="textMultiLine"
-                android:hint="@string/frg_create_restaurant_1_textView_Description"
                 android:layout_below="@+id/editText_RestaurantName"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="16dp"
                 android:layout_toRightOf="@+id/imageView17"
+                android:hint="@string/frg_create_restaurant_1_textView_Description"
+                android:inputType="textMultiLine"
                 android:maxLines="3"
-                android:background="@android:color/transparent"
-                android:minHeight="50dp" />
+                android:textColor="#DE000000"
+                android:textColorHint="#8A000000"
+                android:textSize="16sp" />
+        </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/phone"
+            android:layout_below="@+id/description"
+            android:layout_toRightOf="@+id/imageView18"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp">
             <!-- Restaurant Telephone -->
             <EditText
+                android:id="@+id/editText_Telephone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText_Telephone"
-                android:inputType="phone"
-                android:hint="@string/frg_create_restaurant_1_textView_Telephone"
                 android:layout_below="@id/editText_Description"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="16dp"
                 android:layout_toRightOf="@+id/imageView18"
-                android:background="@android:color/transparent"
-                android:minHeight="50dp" />
+                android:hint="@string/frg_create_restaurant_1_textView_Telephone"
+                android:inputType="phone"
+                android:textColor="#DE000000"
+                android:textColorHint="#8A000000"
+                android:textSize="16sp" />
+        </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/website"
+            android:layout_below="@+id/phone"
+            android:layout_toRightOf="@+id/imageView19"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp">
             <!-- Restaurant Website -->
             <EditText
+                android:id="@+id/editText_Website"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText_Website"
-                android:inputType="textUri"
-                android:hint="@string/frg_create_restaurant_1_textView_Website"
                 android:layout_below="@id/editText_Telephone"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="16dp"
                 android:layout_toRightOf="@+id/imageView19"
-                android:background="@android:color/transparent"
-                android:minHeight="50dp" />
+                android:hint="@string/frg_create_restaurant_1_textView_Website"
+                android:inputType="textUri"
+                android:textColor="#DE000000"
+                android:textColorHint="#8A000000"
+                android:textSize="16sp" />
+        </android.support.design.widget.TextInputLayout>
+        <!-- Next button -->
 
-            <!-- Next button -->
+        <ImageView
+            android:id="@+id/imageView16"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentTop="false"
+            android:layout_alignTop="@+id/name"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/ic_restaurant_building_black"
+            android:tint="@color/material_grey_600"
+            android:layout_marginTop="5dp" />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="50dp"
-                android:id="@+id/imageView16"
-                android:layout_alignParentTop="false"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="false"
-                android:layout_alignTop="@+id/editText_RestaurantName"
-                android:src="@drawable/ic_restaurant_building_black"
-                android:tint="@color/material_grey_600"
-                android:layout_marginLeft="6dp" />
+        <ImageView
+            android:id="@+id/imageView17"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignTop="@+id/description"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/ic_info_black"
+            android:tint="@color/material_grey_600"
+            android:layout_marginTop="5dp" />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="50dp"
-                android:id="@+id/imageView17"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="false"
-                android:layout_alignTop="@+id/editText_Description"
-                android:src="@drawable/ic_info_black"
-                android:tint="@color/material_grey_600"
-                android:layout_marginLeft="6dp" />
+        <ImageView
+            android:id="@+id/imageView18"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignTop="@+id/phone"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/ic_phone_black"
+            android:tint="@color/material_grey_600"
+            android:layout_marginTop="5dp" />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="50dp"
-                android:id="@+id/imageView18"
-                android:layout_alignTop="@+id/editText_Telephone"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="false"
-                android:src="@drawable/ic_phone_black"
-                android:tint="@color/material_grey_600"
-                android:layout_marginLeft="6dp" />
+        <ImageView
+            android:id="@+id/imageView19"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignTop="@+id/website"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/ic_website_black"
+            android:tint="@color/material_grey_600"
+            android:layout_marginTop="5dp" />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="50dp"
-                android:id="@+id/imageView19"
-                android:layout_alignTop="@+id/editText_Website"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="false"
-                android:src="@drawable/ic_website_black"
-                android:tint="@color/material_grey_600"
-                android:layout_marginLeft="6dp" />
+        <TextView
+            android:id="@+id/Button_Next"
+            style="@style/Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView_image"
+            android:text="@string/next" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/next"
-                android:id="@+id/Button_Next"
-                android:layout_below="@+id/textView_image"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                style="@style/Button" />
-
-            <ProgressBar
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:id="@+id/progressBar2"
-                android:layout_alignTop="@+id/Button_Next"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="40dp"
-                android:visibility="invisible"
-                android:layout_marginTop="5dp" />
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/Button_Next"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="5dp"
+            android:visibility="invisible" />
     </RelativeLayout>
 </ScrollView>

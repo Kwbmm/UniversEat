@@ -59,6 +59,12 @@ public class Createlog_frag1 extends Fragment{
     private User user=null;
     private Bitmap img;
     private ImageView userPicView = null;
+    private ImageView imageView10;
+    private ImageView imageView11;
+    private ImageView imageView12;
+    private ImageView imageView13;
+    private ImageView imageView31;
+    private ImageView imageView32;
     private EditText txtname;
     private EditText txtsurname;
     private EditText nickname;
@@ -101,12 +107,60 @@ public class Createlog_frag1 extends Fragment{
         owner =this.getArguments().getBoolean("owner");
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_createlog_1, container, false);
+        imageView10=(ImageView)v.findViewById(R.id.imageView10);
+        imageView11=(ImageView)v.findViewById(R.id.imageView11);
+        imageView12=(ImageView)v.findViewById(R.id.imageView12);
+        imageView13=(ImageView)v.findViewById(R.id.imageView13);
+        imageView31=(ImageView)v.findViewById(R.id.imageView31);
+        imageView32=(ImageView)v.findViewById(R.id.imageView32);
         txtname = (EditText) v.findViewById(R.id.editText_UserName);
+        txtname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView10.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView10.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         txtmail = (EditText) v.findViewById(R.id.editText_Mail);
+        txtmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView13.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView13.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         nickname = (EditText) v.findViewById(R.id.editText_Nickname);
+        nickname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView11.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView11.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         txtsurname = (EditText) v.findViewById(R.id.editText_surname);
+        txtsurname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView31.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView31.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         txtpassword = (EditText) v.findViewById(R.id.editText_Password);
+        txtpassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView12.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView12.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         txtrepeat = (EditText) v.findViewById(R.id.editText_Password_repeat);
+        txtrepeat.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView32.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView32.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         progressBar=(ProgressBar)v.findViewById(R.id.progressBar7);
         progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         this.userPicView = (ImageView) v.findViewById(R.id.imageView_UserImage);

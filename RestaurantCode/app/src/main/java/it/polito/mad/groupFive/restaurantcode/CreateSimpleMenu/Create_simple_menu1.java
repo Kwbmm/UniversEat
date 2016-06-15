@@ -61,6 +61,8 @@ public class Create_simple_menu1 extends Fragment {
     private EditText description;
     private Uri menuPicUri = null;
     private ImageView menuPicView = null;
+    private ImageView imageView14;
+    private ImageView imageView15;
     private Bitmap imageBitmap;
     private boolean boolean_name=false;
     private boolean boolean_descr=false;
@@ -117,8 +119,24 @@ public class Create_simple_menu1 extends Fragment {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_create_simple_menu1, container, false);
         data=sData.getdata();
+        imageView14=(ImageView)v.findViewById(R.id.imageView14);
+        imageView15=(ImageView)v.findViewById(R.id.imageView15);
         name=(EditText)v.findViewById(R.id.cmed_1_1);
+        name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView14.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView14.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         description=(EditText)v.findViewById(R.id.cmed_1_2);
+        description.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView15.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView15.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         progressBar=(ProgressBar)v.findViewById(R.id.progressBar4);
         progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         restaurantImg = (ImageView) v.findViewById(R.id.cmiw_1_1);

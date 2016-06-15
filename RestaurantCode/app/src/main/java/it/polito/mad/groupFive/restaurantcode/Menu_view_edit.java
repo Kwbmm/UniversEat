@@ -202,8 +202,6 @@ public class Menu_view_edit extends NavigationDrawer {
             Menu menu = menus.get(position);
             holder.card.setOnClickListener(new CardListener(menu.getRid(), menu.getMid()));
             String s = menu.getDescription();
-            if (s.length() > 80)
-                s = s.substring(0, 77) + "...";
             holder.menu_desctiprion.setText(s);
             holder.menu_name.setText(menu.getName());
             if (menu.getName().length() > 18)

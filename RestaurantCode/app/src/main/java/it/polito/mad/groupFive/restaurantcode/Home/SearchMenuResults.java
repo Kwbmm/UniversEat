@@ -352,8 +352,6 @@ public class SearchMenuResults extends NavigationDrawer {
             final String METHOD_NAME = this.getClass().getName()+" - onBindViewHolder";
             final Menu menu = menus.get(position);
             String s=menu.getDescription();
-            if(s.length() >80)
-                s = s.substring(0,77) + "...";
             holder.menu_description.setText(s);
             holder.menu_name.setText(menu.getName());
             if(menu.getName().length()>18)
@@ -593,8 +591,6 @@ public class SearchMenuResults extends NavigationDrawer {
             holder.restaurant_address.setText(restaurant.getCity());
             holder.restaurant_rating.setRating(restaurant.getRating());
             String s=restaurant.getDescription();
-            if(s.length() >50)
-                s = s.substring(0,47) + "...";
             holder.restaurant_description.setText(s);
         }
 

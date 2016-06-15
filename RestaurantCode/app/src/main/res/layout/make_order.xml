@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/fragmentWhite"
     android:clickable="true">
 
@@ -10,108 +10,127 @@
         android:id="@+id/sv1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:clickable="true"
         app:cardCornerRadius="@dimen/cardview_default_radius"
         app:cardElevation="4dp"
-        app:cardUseCompatPadding="true"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="10dp"
-        android:clickable="true">
-        <RelativeLayout
-            android:layout_width="match_parent"
+        app:cardUseCompatPadding="true">
+
+        <ScrollView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:scrollbars="none">
 
-            <TextView
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/make_order_date"
-                android:id="@+id/date"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="10dp"
-                android:minHeight="50dp"
-                android:gravity="center_vertical"
-                android:layout_marginRight="16dp"
-                android:layout_toRightOf="@+id/imageView26"
-                android:background="@drawable/ripple_effect" />
+                android:padding="5dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/make_order_time"
-                android:id="@+id/time"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/date"
-                android:minHeight="50dp"
-                android:gravity="center_vertical"
-                android:layout_marginRight="16dp"
-                android:layout_toRightOf="@+id/imageView27"
-                android:background="@drawable/ripple_effect" />
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_toRightOf="@+id/imageView26"
+                    android:background="@drawable/ripple_effect"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:text="@string/make_order_date"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#DE000000"
+                    android:textSize="16sp" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:ems="10"
-                android:id="@+id/notes"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/time"
-                android:minHeight="50dp"
-                android:background="@android:color/transparent"
-                android:layout_marginRight="16dp"
-                android:gravity="center_vertical"
-                android:layout_toRightOf="@+id/imageView28"
-                android:hint="@string/make_order_notes"
-                android:maxLines="4" />
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/date"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_toRightOf="@+id/imageView27"
+                    android:background="@drawable/ripple_effect"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:text="@string/make_order_time"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#DE000000"
+                    android:textSize="16sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pay_now"
-                android:id="@+id/pay"
-                android:layout_below="@+id/notes"
-                android:layout_alignParentRight="true"
-                style="@style/Button" />
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/time"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_toRightOf="@+id/imageView28">
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="50dp"
-                android:id="@+id/imageView26"
-                android:layout_alignTop="@+id/date"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/ic_calendar_black"
-                android:tint="@color/material_grey_600" />
+                    <EditText
+                        android:id="@+id/notes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/time"
+                        android:layout_toRightOf="@+id/imageView28"
+                        android:gravity="center_vertical"
+                        android:hint="@string/make_order_notes"
+                        android:inputType="textMultiLine"
+                        android:maxLines="4"
+                        android:textColor="#DE000000"
+                        android:textColorHint="#8A000000"
+                        android:textSize="16sp" />
+                </android.support.design.widget.TextInputLayout>
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="50dp"
-                android:id="@+id/imageView27"
-                android:layout_alignTop="@+id/time"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/ic_clock_black"
-                android:tint="@color/material_grey_600" />
+                <TextView
+                    android:id="@+id/pay"
+                    style="@style/Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/note"
+                    android:text="@string/pay_now" />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="50dp"
-                android:id="@+id/imageView28"
-                android:layout_alignTop="@+id/notes"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/ic_pen_black"
-                android:tint="@color/material_grey_600" />
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/imageView26"
+                    android:layout_width="40dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignTop="@+id/date"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_calendar_black"
+                    android:tint="@color/material_grey_600" />
 
+                <ImageView
+                    android:id="@+id/imageView27"
+                    android:layout_width="40dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignTop="@+id/time"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_clock_black"
+                    android:tint="@color/material_grey_600" />
+
+                <ImageView
+                    android:id="@+id/imageView28"
+                    android:layout_width="40dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignTop="@+id/note"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/ic_pen_black"
+                    android:tint="@color/material_grey_600" />
+            </RelativeLayout>
+        </ScrollView>
     </android.support.v7.widget.CardView>
 
 </RelativeLayout>

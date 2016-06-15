@@ -65,6 +65,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     protected void onCreate(Bundle savedInstanceState) {
         // not a real activity, it's used to extend toolbar and navigation drawer to all activity created
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setElevation(4);
         //setup();
 
 

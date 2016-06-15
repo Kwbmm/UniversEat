@@ -15,17 +15,20 @@
             android:layout_height="wrap_content"
             android:id="@+id/textView_imageText_e"
             android:text="@string/add_picture"
-            android:textSize="18sp"
-            android:minHeight="50dp"
+            android:textSize="16sp"
+            android:minHeight="48dp"
             android:background="@drawable/ripple_effect"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="22dp"
             android:layout_toRightOf="@+id/imageView_UserImage_e"
             android:gravity="center_vertical"
-            android:layout_below="@+id/editText_Password_e" />
+            android:layout_below="@+id/password"
+            android:textColor="#DE000000"
+            android:layout_marginRight="8dp"
+            android:paddingLeft="4dp" />
         <ImageView
             android:layout_width="40dp"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:id="@+id/imageView_UserImage_e"
             android:src="@drawable/ic_picture_black"
             android:contentDescription="@string/frg_create_restaurant_1_imageView_ContentDesc"
@@ -41,65 +44,90 @@
         <!-- User Password repeat -->
 
         <!-- User mail -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/oldmail"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_toRightOf="@+id/imageView24">
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_Mail_old"
             android:inputType="textEmailAddress"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="16dp"
             android:layout_toRightOf="@+id/imageView24"
             android:hint="@string/old_email"
-            android:background="@android:color/transparent"
-            android:minHeight="50dp" />
-
+            android:textSize="16sp"
+            android:textColor="#DE000000"
+            android:textColorHint="#8A000000" />
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/newmail"
+            android:layout_below="@+id/oldmail"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_toRightOf="@+id/imageView30">
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_Mail_new"
             android:inputType="textEmailAddress"
             android:layout_below="@id/editText_Mail_old"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="16dp"
             android:layout_toRightOf="@+id/imageView24"
             android:hint="@string/new_email"
-            android:background="@android:color/transparent"
-            android:minHeight="50dp" />
-
+            android:textSize="16sp"
+            android:textColor="#DE000000"
+            android:textColorHint="#8A000000" />
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/password"
+            android:layout_below="@+id/newmail"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_toRightOf="@+id/imageView25">
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_Password_e"
             android:inputType="textPassword"
             android:layout_below="@id/editText_Mail_new"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="16dp"
             android:layout_toRightOf="@+id/imageView25"
             android:hint="@string/password"
-            android:background="@android:color/transparent"
-            android:minHeight="50dp" />
-
+            android:textSize="16sp"
+            android:textColor="#DE000000"
+            android:textColorHint="#8A000000" />
+</android.support.design.widget.TextInputLayout>
         <!-- Next button -->
 
         <ImageView
             android:layout_width="40dp"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:id="@+id/imageView24"
-            android:layout_alignTop="@+id/editText_Mail_old"
+            android:layout_alignTop="@+id/oldmail"
             android:src="@drawable/ic_email_black"
             android:layout_marginLeft="6dp"
-            android:tint="@color/material_grey_600" />
+            android:tint="@color/material_grey_600"
+            android:layout_marginTop="5dp" />
 
         <ImageView
             android:layout_width="40dp"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:id="@+id/imageView25"
-            android:layout_alignTop="@+id/editText_Password_e"
+            android:layout_alignTop="@+id/password"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:src="@drawable/ic_password_black"
             android:layout_marginLeft="6dp"
-            android:tint="@color/material_grey_600" />
+            android:tint="@color/material_grey_600"
+            android:layout_marginTop="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -109,6 +137,18 @@
             android:layout_below="@+id/textView_imageText_e"
             android:layout_alignParentRight="true"
             style="@style/Button" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:id="@+id/imageView30"
+            android:src="@drawable/ic_email_black"
+            android:tint="@color/material_grey_600"
+            android:layout_alignTop="@+id/newmail"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="5dp" />
 
     </RelativeLayout>
 </ScrollView>

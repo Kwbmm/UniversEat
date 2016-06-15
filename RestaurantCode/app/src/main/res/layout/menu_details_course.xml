@@ -58,6 +58,7 @@
         android:layout_toLeftOf="@+id/img_hot"
         android:layout_toStartOf="@+id/img_hot"
         android:layout_marginRight="5dp"
-        android:textSize="15sp" />
+        android:textSize="14sp"
+        android:textColor="#8A000000" />
 </RelativeLayout>
 

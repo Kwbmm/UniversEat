@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="100dp"
-            android:padding="5dp">
+            android:padding="8dp">
 
             <TextView
                 android:id="@+id/order_username"
@@ -29,7 +29,7 @@
                 android:layout_toLeftOf="@+id/imageView"
                 android:layout_toStartOf="@+id/imageView"
                 android:text="@string/reservation_textViewUsername"
-                android:textColor="#000000"
+                android:textColor="#DE000000"
                 android:textSize="20sp" />
 
             <TextView
@@ -42,7 +42,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/order_username"
                 android:text="@string/reservation_textViewOrder"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:textColor="#8A000000" />
 
             <TextView
                 android:id="@+id/order_OID"
@@ -53,8 +54,8 @@
                 android:layout_gravity="right|bottom"
                 android:text="OID"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="13sp"
-                android:textStyle="italic" />
+                android:textSize="12sp"
+                android:textColor="#8A000000" />
 
             <ImageButton
                 android:id="@+id/imageView"
@@ -75,7 +76,8 @@
                 android:gravity="center_horizontal"
                 android:text="@string/reservation_month"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15sp" />
+                android:textSize="14sp"
+                android:textColor="#8A000000" />
 
             <TextView
                 android:id="@+id/order_userID"
@@ -84,7 +86,8 @@
                 android:layout_below="@+id/order_notes"
                 android:text="123123"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="10sp" />
+                android:textSize="12sp"
+                android:textColor="#8A000000" />
 
             <TextView
                 android:id="@+id/order_notes"
@@ -95,7 +98,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/order_meal"
-                android:textSize="15sp" />
+                android:textSize="14sp"
+                android:textColor="#8A000000" />
 
 
         </RelativeLayout>

@@ -24,8 +24,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/review_title"
-                android:textColor="#000000"
-                android:textSize="15sp" />
+                android:textColor="#DE000000"
+                android:textSize="14sp" />
 
 
             <TextView
@@ -34,13 +34,14 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="5dp"
                 android:text="Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliq"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:layout_below="@+id/date"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="3dp"
                 android:gravity="top"
-                android:layout_marginRight="20dp" />
+                android:layout_marginRight="20dp"
+                android:textColor="#8A000000" />
 
             <TextView
                 android:id="@+id/date"
@@ -48,10 +49,11 @@
                 android:layout_height="wrap_content"
                 android:text="22/03/2016"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15dp"
+                android:textSize="14sp"
                 android:layout_below="@+id/review_title"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:textColor="#8A000000" />
 
     <ImageView
         android:layout_width="fill_parent"

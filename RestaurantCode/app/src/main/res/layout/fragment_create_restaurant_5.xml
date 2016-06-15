@@ -16,7 +16,7 @@
             android:textSize="20sp"
             android:gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:textColor="#000000"
+            android:textColor="#DE000000"
             android:id="@+id/acceptedTickets"
             android:layout_marginBottom="10dp" />
         <CheckBox
@@ -26,7 +26,9 @@
             android:id="@+id/ticket_1"
             android:layout_below="@+id/acceptedTickets"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:textColor="#DE000000"
+            android:textSize="14sp" />
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +36,9 @@
             android:id="@+id/ticket_2"
             android:layout_below="@+id/ticket_1"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:textColor="#DE000000"
+            android:textSize="14sp" />
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +46,9 @@
             android:id="@+id/ticket_3"
             android:layout_below="@+id/ticket_2"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:textColor="#DE000000"
+            android:textSize="14sp" />
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,7 +56,9 @@
             android:id="@+id/ticket_4"
             android:layout_below="@+id/ticket_3"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:textColor="#DE000000"
+            android:textSize="14sp" />
 
         <TextView
             style="@style/Button"

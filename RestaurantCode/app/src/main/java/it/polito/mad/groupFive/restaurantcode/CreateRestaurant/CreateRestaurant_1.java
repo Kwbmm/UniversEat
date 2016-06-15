@@ -82,6 +82,10 @@ public class CreateRestaurant_1 extends Fragment {
     private String uid,rid;
     /*view items*/
     private ImageView restaurantImg;
+    private ImageView imageView16;
+    private ImageView imageView17;
+    private ImageView imageView18;
+    private ImageView imageView19;
     private TextView description;
     private TextView name;
     private TextView telephone;
@@ -131,13 +135,44 @@ public class CreateRestaurant_1 extends Fragment {
         this.rid = getR.getRest().getRid();
         this.uid = getR.getRest().getUid();
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_1, container, false);
-
+        imageView16=(ImageView)parentView.findViewById(R.id.imageView16);
+        imageView17=(ImageView)parentView.findViewById(R.id.imageView17);
+        imageView18=(ImageView)parentView.findViewById(R.id.imageView18);
+        imageView19=(ImageView)parentView.findViewById(R.id.imageView19);
         restaurantImg = (ImageView) this.parentView.findViewById(R.id.imageView_RestaurantImage);
         name = (TextView) parentView.findViewById(R.id.editText_RestaurantName);
+        name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView16.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView16.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         description=(TextView) parentView.findViewById(R.id.editText_Description);
+        description.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView17.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView17.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
         telephone= (TextView) parentView.findViewById(R.id.editText_Telephone);
+        telephone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView18.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView18.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         website= (TextView) parentView.findViewById(R.id.editText_Website);
+        website.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView19.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView19.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         progressBar=(ProgressBar)parentView.findViewById(R.id.progressBar2);
         progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         btnNext = (TextView) this.parentView.findViewById(R.id.Button_Next);

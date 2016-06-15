@@ -132,8 +132,8 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                         public void onClick(View v) {
                             if (line_i.getVisibility() != View.VISIBLE) {
                                 text_i.setTextColor(Color.parseColor("#ffffff"));
-                                text_r.setTextColor(Color.parseColor("#000000"));
-                                text_m.setTextColor(Color.parseColor("#000000"));
+                                text_r.setTextColor(Color.parseColor("#8A000000"));
+                                text_m.setTextColor(Color.parseColor("#8A000000"));
                                 line_i.setVisibility(View.VISIBLE);
                                 line_r.setVisibility(View.INVISIBLE);
                                 line_m.setVisibility(View.INVISIBLE);
@@ -158,8 +158,8 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                                 Restaurant_menu_user rest_view = new Restaurant_menu_user();
                                 if (line_i.getVisibility() == View.VISIBLE) {
                                     text_m.setTextColor(Color.parseColor("#ffffff"));
-                                    text_i.setTextColor(Color.parseColor("#000000"));
-                                    text_r.setTextColor(Color.parseColor("#000000"));
+                                    text_i.setTextColor(Color.parseColor("#8A000000"));
+                                    text_r.setTextColor(Color.parseColor("#8A000000"));
                                     line_i.setVisibility(View.INVISIBLE);
                                     line_r.setVisibility(View.INVISIBLE);
                                     line_m.setVisibility(View.VISIBLE);
@@ -171,8 +171,8 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                                 }
                                 if (line_r.getVisibility() == View.VISIBLE) {
                                     text_m.setTextColor(Color.parseColor("#ffffff"));
-                                    text_i.setTextColor(Color.parseColor("#000000"));
-                                    text_r.setTextColor(Color.parseColor("#000000"));
+                                    text_i.setTextColor(Color.parseColor("#8A000000"));
+                                    text_r.setTextColor(Color.parseColor("#8A000000"));
                                     line_i.setVisibility(View.INVISIBLE);
                                     line_r.setVisibility(View.INVISIBLE);
                                     line_m.setVisibility(View.VISIBLE);
@@ -193,8 +193,8 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                         @Override
                         public void onClick(View v) {
                             if (line_r.getVisibility() != View.VISIBLE) {
-                                text_m.setTextColor(Color.parseColor("#000000"));
-                                text_i.setTextColor(Color.parseColor("#000000"));
+                                text_m.setTextColor(Color.parseColor("#8A000000"));
+                                text_i.setTextColor(Color.parseColor("#8A000000"));
                                 text_r.setTextColor(Color.parseColor("#ffffff"));
                                 line_i.setVisibility(View.INVISIBLE);
                                 line_r.setVisibility(View.VISIBLE);
@@ -212,8 +212,8 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
                     if (mid == null) {
                         text_i.setTextColor(Color.parseColor("#ffffff"));
-                        text_r.setTextColor(Color.parseColor("#000000"));
-                        text_m.setTextColor(Color.parseColor("#000000"));
+                        text_r.setTextColor(Color.parseColor("#8A000000"));
+                        text_m.setTextColor(Color.parseColor("#8A000000"));
                         line_i.setVisibility(View.VISIBLE);
                         line_r.setVisibility(View.INVISIBLE);
                         line_m.setVisibility(View.INVISIBLE);
@@ -225,8 +225,8 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
                     } else {
                         text_m.setTextColor(Color.parseColor("#ffffff"));
-                        text_i.setTextColor(Color.parseColor("#000000"));
-                        text_r.setTextColor(Color.parseColor("#000000"));
+                        text_i.setTextColor(Color.parseColor("#8A000000"));
+                        text_r.setTextColor(Color.parseColor("#8A000000"));
                         line_i.setVisibility(View.INVISIBLE);
                         line_r.setVisibility(View.INVISIBLE);
                         line_m.setVisibility(View.VISIBLE);

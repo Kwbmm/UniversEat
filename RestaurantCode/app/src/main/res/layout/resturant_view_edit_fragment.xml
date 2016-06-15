@@ -57,8 +57,10 @@
                 android:layout_toEndOf="@+id/restaurant_image"
                 android:layout_toRightOf="@+id/restaurant_image"
                 android:text="@string/frg_create_restaurant_1_textView_RestaurantName"
-                android:textColor="#000000"
-                android:textSize="20sp" />
+                android:textColor="#DE000000"
+                android:textSize="20sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <RatingBar
                 android:id="@+id/restaurant_rating"
@@ -81,7 +83,10 @@
                 android:layout_alignStart="@+id/restaurant_rating"
                 android:layout_below="@+id/restaurant_name"
                 android:text="@string/frg_create_restaurant_2_textView_Address"
-                android:textSize="15sp" />
+                android:textSize="14sp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="#8A000000" />
 
 
         </RelativeLayout>

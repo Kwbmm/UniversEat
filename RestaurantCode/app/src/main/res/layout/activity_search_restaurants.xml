@@ -15,17 +15,24 @@
         android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
         />
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
         android:id="@+id/button_SearchRestaurants"
         android:layout_below="@id/place_autocomplete_fragment"
         android:text="@string/searchRestaurants_btnSearchText"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:enabled="false"
-        android:background="@color/colorAccent" />
+        android:background="@color/colorAccent"
+        android:textColor="#ffffff"
+        android:layout_alignParentRight="true"
+        android:elevation="2dp"
+        android:minWidth="88dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:textSize="14dp" />
     <!-- Loading bar -->
     <ProgressBar
         android:layout_width="@dimen/progressBar_size"

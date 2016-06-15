@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ public class New_MakeOrder extends Fragment implements TimePickerFragment.Listen
     private TextView time;
     private EditText notes;
     private TextView button;
+    ImageView imageView;
     private Boolean dateSet;
     private Boolean timeSet;
     private Calendar chosenDate;
@@ -85,7 +87,15 @@ public class New_MakeOrder extends Fragment implements TimePickerFragment.Listen
                 datePickerFragment.show(getActivity().getFragmentManager(),"datePicker");
             }
         });
+        imageView=(ImageView)v.findViewById(R.id.imageView28);
         notes=(EditText)v.findViewById(R.id.notes);
+        notes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         RelativeLayout background=(RelativeLayout)v.findViewById(R.id.background);
         background.setOnClickListener(new View.OnClickListener() {
             @Override

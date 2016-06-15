@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,10 @@ public class CreateRestaurant_2 extends Fragment {
     private TextView ZIPCode;
     private TextView state;
     private TextView mapPickerText;
+    private ImageView imageView20;
+    private ImageView imageView21;
+    private ImageView imageView22;
+    private ImageView imageView23;
     private LatLng latLng;
     private int PLACE_PICKER_REQUEST = 1;
 
@@ -99,10 +104,42 @@ public class CreateRestaurant_2 extends Fragment {
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_2, container, false);
         this.rid = getR.getRest().getRid();
         this.uid = getR.getRest().getUid();
+        imageView20=(ImageView)parentView.findViewById(R.id.imageView20);
+        imageView21=(ImageView)parentView.findViewById(R.id.imageView21);
+        imageView22=(ImageView)parentView.findViewById(R.id.imageView22);
+        imageView23=(ImageView)parentView.findViewById(R.id.imageView23);
         address = (TextView) parentView.findViewById(R.id.editText_Address);
+        address.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView20.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView20.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         city = (TextView) parentView.findViewById(R.id.editText_City);
+        city.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView21.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView21.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         ZIPCode = (TextView) parentView.findViewById(R.id.editText_ZIPCode);
+        ZIPCode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView22.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView22.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         state = (TextView) parentView.findViewById(R.id.editText_State);
+        state.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView23.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView23.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         mapPickerText = (TextView) parentView.findViewById(R.id.mapPickerText);
         mapPickerText.setOnClickListener(new View.OnClickListener() {
             @Override

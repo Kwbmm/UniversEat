@@ -2,6 +2,7 @@ package it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -321,43 +322,22 @@ public class Create_simple_menu2 extends Fragment {
 
         @Override
         public void onBindViewHolder(DishViewHolder holder, int position) {
-            int visible;
             Course course= courses.get(position);
             holder.dish_name.setText(course.getName());
             Log.v("Course",course.getName());
             holder.delete.setOnClickListener(new onClickRemove(position,courses));
 
-            if(course.isGlutenFree()){
-                visible=View.VISIBLE;
-            }
-            else{
-                visible=View.INVISIBLE;
-            }
-            holder.glunten_free.setVisibility(visible);
+            if(!course.isGlutenFree())
+                holder.glunten_free.setColorFilter(Color.GRAY);
 
-            if(course.isSpicy()){
-                visible=View.VISIBLE;
-            }
-            else{
-                visible=View.INVISIBLE;
-            }
-            holder.hot.setVisibility(visible);
+            if(!course.isSpicy())
+                holder.hot.setColorFilter(Color.GRAY);
 
-            if(course.isVegan()){
-                visible=View.VISIBLE;
-            }
-            else{
-                visible=View.INVISIBLE;
-            }
-            holder.vegan.setVisibility(visible);
+            if(!course.isVegan())
+                holder.vegan.setColorFilter(Color.GRAY);
 
-            if(course.isVegetarian()){
-                visible=View.VISIBLE;
-            }
-            else{
-                visible=View.INVISIBLE;
-            }
-            holder.vegetarian.setVisibility(visible);
+            if(!course.isVegetarian())
+                holder.vegetarian.setColorFilter(Color.GRAY);
 
 
 

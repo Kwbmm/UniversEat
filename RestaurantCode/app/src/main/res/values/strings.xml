@@ -274,7 +274,7 @@
     <string name="add_dish_Vegan">Vegan</string>
     <string name="add_dish_Vegetarian">Vegetarian</string>
     <string name="add_dish_Hot">Hot</string>
-    <string name="add_dish_Add">Add</string>
+    <string name="add_dish_Add">Add Dish</string>
     <string name="add_dish_Gluten_free">Gluten free</string>
 
     <!-- fragment_create_menu.xml -->
@@ -490,4 +490,6 @@
     <string name="fill_all_fields">Fill all the fields</string>
     <string name="pay_now">Pay now</string>
     <string name="add_picture">Add a picture...</string>
+    <string name="actionBar_addDish">Add a Dish</string>
+    <string name="actionBar_addTags">Add Tags</string>
 </resources>

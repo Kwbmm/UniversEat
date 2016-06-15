@@ -35,8 +35,10 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignStart="@+id/menu_description"
                 android:text="@string/menu_details_Menu_Name"
-                android:textColor="#000000"
-                android:textSize="20sp" />
+                android:textColor="#DE000000"
+                android:textSize="20sp"
+                android:ellipsize="end"
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/menu_description"
@@ -46,9 +48,11 @@
                 android:layout_marginRight="10dp"
                 android:layout_toEndOf="@+id/menu_image"
                 android:layout_toRightOf="@+id/menu_image"
-                android:maxLength="150"
                 android:text="@string/menu_details_Menu_description"
-                android:textSize="15sp" />
+                android:textSize="14sp"
+                android:maxLines="4"
+                android:ellipsize="end"
+                android:textColor="#DE000000" />
 
             <ImageView
                 android:id="@+id/menu_icon1"

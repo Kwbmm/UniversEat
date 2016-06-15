@@ -12,7 +12,7 @@
     android:layout_height="wrap_content"
     android:text="Tag"
     android:textSize="20dp"
-    android:textColor="#000000"
+    android:textColor="#ffffff"
     android:background="@android:color/transparent"
     android:id="@+id/tag_name"
     android:paddingRight="4dp"

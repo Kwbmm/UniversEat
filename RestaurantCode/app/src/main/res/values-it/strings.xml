@@ -136,7 +136,7 @@
 
     <!-- activity_create_menu_frag2.xml -->
     <string name="checkBox_ServiceFee">Coperto</string>
-    <string name="checkBox_BeverageIncluded">Bevande incluse</string>
+    <string name="checkBox_BeverageIncluded">Bevanda inclusa</string>
     <string name="editText_Price">Prezzo</string>
     <!-- END activity_create_menu_frag2.xml -->
 
@@ -225,7 +225,7 @@
     <string name="add_dish_Vegan">Vegano</string>
     <string name="add_dish_Vegetarian">Vegetariano</string>
     <string name="add_dish_Hot">Piccante</string>
-    <string name="add_dish_Add">Aggiungi</string>
+    <string name="add_dish_Add">Aggiungi Piatto</string>
     <string name="add_dish_Gluten_free">Senza glutine</string>
 
     <!-- fragment_create_menu.xml -->
@@ -251,7 +251,7 @@
     <string name="fragment_restaurant_menu_user_Complete_Menu">Menù completo</string>
 
     <!-- fragment_simple_menu_add_tags.xml-->
-    <string name="fragment_simple_menu_add_tags_Add_new_tags">Aggiungi nuovi tag</string>
+    <string name="fragment_simple_menu_add_tags_Add_new_tags">Aggiungi</string>
 
     <!-- incorrect_login.xml-->
     <string name="incorrect_login">Username o password non corretti</string>
@@ -267,7 +267,7 @@
 
     <!-- menu_details.xml-->
     <string name="menu_details_Menu_Name">Nome del menu</string>
-    <string name="menu_details_beverage">Bevande non incluse</string>
+    <string name="menu_details_beverage">Bevanda non inclusa</string>
     <string name="menu_details_service">Coperto non incluso</string>
     <string name="menu_details_Menu_description">Descrizione del menu</string>
     <string name="menu_details_order">Ordina ora!</string>
@@ -303,8 +303,8 @@
 
 
     <!-- Menu_details.java-->
-    <string name="Menu_details_beverage_incl">Bevande incluse</string>
-    <string name="Menu_details_beverage_not">Bevande non incluse</string>
+    <string name="Menu_details_beverage_incl">Bevanda inclusa</string>
+    <string name="Menu_details_beverage_not">Bevanda non inclusa</string>
     <string name="Menu_details_service_fee_incl">Coperto incluso</string>
     <string name="Menu_details_service_fee_not">Coperto non incluso</string>
 
@@ -391,16 +391,16 @@
         <item>Senza coperto</item>
         <item>Vegano</item>
         <item>Vegetariano</item>
-        <item>Prezzo da 1 a 10</item>
-        <item>Prezzo da 11 a 25</item>
-        <item>Prezzo oltre 25</item>
+        <item>Prezzo inferiore a 10€</item>
+        <item>Prezzo da 11€ a 25€</item>
+        <item>Prezzo superiore a 25€</item>
     </string-array>
 
     <string-array name="filterCurtainRestaurantItems">
         <item>Ticket</item>
-        <item>Valutazione da 3 a 5</item>
+        <item>Almeno 3 stelle</item>
         <item>Aperto adesso</item>
-        <item>Qui vicino (3 km)</item>
+        <item>Nei dintorni (3 km)</item>
     </string-array>
 
     <string name="emailaddressold">Inserisci la vecchia mail</string>
@@ -430,4 +430,6 @@
     <string name="fill_all_fields">Riempi tutti i campi</string>
     <string name="pay_now">Paga ora</string>
     <string name="add_picture">Scegli una foto...</string>
+    <string name="actionBar_addDish">Aggiungi un Piatto</string>
+    <string name="actionBar_addTags">Aggiungi Tag</string>
 </resources>

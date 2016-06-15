@@ -155,8 +155,6 @@ public class Profile extends NavigationDrawer {
             ImageView img = (ImageView) convertView.findViewById(R.id.restaurant_image);
             CardView card = (CardView) convertView.findViewById(R.id.restaurant_card);
             ImageButton fav_b=(ImageButton) convertView.findViewById(R.id.restaurant_favourite);
-            TextView distance=(TextView) convertView.findViewById(R.id.restaurant_distance);
-            distance.setText("");
             fav_b.setImageDrawable(getResources().getDrawable(R.drawable.ic_heart_filled_black));
             fav_b.setColorFilter(getResources().getColor(R.color.colorPrimary));
             fav_b.setOnClickListener(new OnFavourite(fav_b,rest));
@@ -164,8 +162,6 @@ public class Profile extends NavigationDrawer {
             if(rest.getName().length()>18)
                 name.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
             String s=rest.getDescription();
-            if(s.length() >50)
-                s = s.substring(0,47) + "...";
             description.setText(s);
             address.setText(rest.getCity());
             rbar.setRating(rest.getRating());
