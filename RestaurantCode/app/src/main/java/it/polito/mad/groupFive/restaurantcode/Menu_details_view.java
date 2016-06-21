@@ -2,24 +2,20 @@ package it.polito.mad.groupFive.restaurantcode;
 
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -37,10 +33,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.*;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 
 public class Menu_details_view extends NavigationDrawer {
@@ -60,7 +56,7 @@ public class Menu_details_view extends NavigationDrawer {
         sharedPreferences=this.getSharedPreferences("RestaurantCode.Userdata",this.MODE_PRIVATE);
         mid=getIntent().getExtras().getString("mid");
         rid=getIntent().getExtras().getString("rid");
-        Log.e("RID E MID",""+rid+" "+mid);
+        //Log.e("RID E MID",""+rid+" "+mid);
         courses=new ArrayList<>();
         FirebaseDatabase db;
         db=FirebaseDatabase.getInstance();
@@ -169,7 +165,7 @@ public class Menu_details_view extends NavigationDrawer {
             StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");
             getFromNetwork(imageref,menu.getMid(),pic);
         } catch (NullPointerException e){
-            Log.e("immagine non caricata"," ");
+            //Log.e("immagine non caricata"," ");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -227,7 +223,7 @@ public class Menu_details_view extends NavigationDrawer {
                     Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
                 } catch (IOException e) {
-                    Log.e("getFromNet",e.getMessage());
+                    //Log.e("getFromNet",e.getMessage());
                 }
             }
         });

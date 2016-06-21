@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -201,7 +200,7 @@ public class EditProfile extends NavigationDrawer{
                                 @Override
                                 public void onSuccess() {
                                     // email changed
-                                    Log.v("Change mail correct", "Mail changed");
+                                    //Log.v("Change mail correct", "Mail changed");
                                     myRef.orderByChild("uid").equalTo(uid).addChildEventListener(new ChildEventListener() {
                                         @Override
                                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -287,7 +286,7 @@ public class EditProfile extends NavigationDrawer{
                         try {
                             photo = createImageFile();
                         } catch (IOException ioe) {
-                            Log.e(METHOD_NAME, ioe.getMessage());
+                            //Log.e(METHOD_NAME, ioe.getMessage());
                         }
                         if (photo != null) {
                             userPicUri = Uri.fromFile(photo);
@@ -301,7 +300,7 @@ public class EditProfile extends NavigationDrawer{
                     startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.intentChooser_select_image)), SELECT_PICTURE);
                 }
                 else{
-                    Log.d(METHOD_NAME,"here");
+                    //Log.d(METHOD_NAME,"here");
                 }
             }
         });
@@ -313,7 +312,7 @@ public class EditProfile extends NavigationDrawer{
         toast=false;
 
         if(txtpassword.getText().toString().trim().equals("") || txtpassword.getText() == null){
-            Log.w(METHOD_NAME, "TextView Password is either empty or null");
+            //Log.w(METHOD_NAME, "TextView Password is either empty or null");
             return false;
         }
 
@@ -339,7 +338,7 @@ public class EditProfile extends NavigationDrawer{
 
         if(txtmailnew.getText().toString().trim().equals("") || txtmailnew.getText() == null){
             if(changemail) {
-                Log.w(METHOD_NAME, "TextView Email is either empty or null");
+                //Log.w(METHOD_NAME, "TextView Email is either empty or null");
                 return false;
             }
         }
@@ -366,17 +365,17 @@ public class EditProfile extends NavigationDrawer{
         if (Build.VERSION.SDK_INT >= 23) {
             if (a.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.v(METHOD_NAME,"Permission granted");
+                //Log.v(METHOD_NAME,"Permission granted");
                 return true;
             } else {
 
-                Log.v(METHOD_NAME,"Permission revoked");
+                //Log.v(METHOD_NAME,"Permission revoked");
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         }
         else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(METHOD_NAME,"Permission granted");
+            //Log.v(METHOD_NAME,"Permission granted");
             return true;
         }
     }
@@ -407,27 +406,31 @@ public class EditProfile extends NavigationDrawer{
                 img=new Picture(this.userPicUri,a.getContentResolver(),imageWidth,imageHeight).getBitmap();
                 this.userPicView.setImageBitmap(img);
                 this.isImageSet = true;
-            } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
+            } catch(IOException ioe) {
+                //Log.e(METHOD_NAME,ioe.getMessage());
+            }
         }
         if(resultCode == a.RESULT_OK && requestCode == CAPTURE_IMAGE){
             try{
                 img=new Picture(this.userPicUri,a.getContentResolver(),imageWidth,imageHeight).getBitmap();
                 this.userPicView.setImageBitmap(img);
                 this.isImageSet = true;
-            } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
+            } catch(IOException ioe) {
+                //Log.e(METHOD_NAME,ioe.getMessage());
+            }
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        final String METHOD_NAME = this.getClass().getName()+" - onRequestPermissionResult";
+        final String METHOD_NAME = this.getClass().getName() + " - onRequestPermissionResult";
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-            Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            //Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
             pickImage();
+        } else {
+            //Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
         }
-        else
-            Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
     }
 
 

@@ -8,14 +8,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,10 +23,8 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
@@ -55,7 +51,6 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
     }
     restaurantData data;
     Restaurant restaurant;
-    GoogleMap myMap;
     MapView mapView;
     FileDownloadTask imageDownloadTask;
     ImageDownloadListener idl;
@@ -291,7 +286,7 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
                 Bitmap b = new Picture(imgPath,getActivity().getContentResolver()).getBitmap();
                 this.imView.setImageBitmap(b);
             } catch (IOException e) {
-                Log.e("getFromNet",e.getMessage());
+                //Log.e("getFromNet",e.getMessage());
             }
         }
     }

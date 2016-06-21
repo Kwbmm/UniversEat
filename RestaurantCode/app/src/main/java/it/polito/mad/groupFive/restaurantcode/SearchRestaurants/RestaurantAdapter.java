@@ -7,7 +7,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,7 +160,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                 rv.setVisibility(View.VISIBLE);
             }
         } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
+            //Log.e(METHOD_NAME,e.getMessage());
         }
     }
 
@@ -175,7 +174,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                 rv.setVisibility(View.VISIBLE);
             }
         } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
+            //Log.e(METHOD_NAME,e.getMessage());
         }
     }
 
@@ -290,7 +289,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         try {
             holder.restaurant_image.setImageBitmap(new Picture(Uri.fromFile(img),context.getContentResolver(),300,300).getBitmap());
         } catch (IOException e) {
-            Log.e(METHOD_NAME,e.getMessage());
+            //Log.e(METHOD_NAME,e.getMessage());
         }
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override

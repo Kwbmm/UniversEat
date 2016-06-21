@@ -2,7 +2,6 @@ package it.polito.mad.groupFive.restaurantcode.libs;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.util.Log;
 import android.widget.TimePicker;
 
 import java.lang.reflect.Field;
@@ -43,7 +42,7 @@ public class CustomTimePickerDialog extends TimePickerDialog {
             TimePicker mTimePicker = (TimePicker) mTimePickerField.get(this);
             mTimePicker.setOnTimeChangedListener(this);
         } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-            Log.e(METHOD_NAME,e.getMessage());
+            //Log.e(METHOD_NAME,e.getMessage());
         }
     }
 

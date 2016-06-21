@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +101,7 @@ public class Simple_menu_add_tags extends Fragment {
             public void onClick(View v) {
 
                 sData.getdata().getNewDish().setTags(c_tags);
-                Log.v("vect",c_tags.size()+"");
+                //Log.v("vect",c_tags.size()+"");
                 getFragmentManager().popBackStack();
             }
         });

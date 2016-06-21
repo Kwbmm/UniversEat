@@ -11,7 +11,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -132,7 +131,7 @@ public class RestaurantManagement extends NavigationDrawer {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("actvity","Req: "+requestCode+" res"+resultCode);
+        //Log.d("actvity","Req: "+requestCode+" res"+resultCode);
         if(!visible){
             showRestaurant();
         }
@@ -181,7 +180,7 @@ public class RestaurantManagement extends NavigationDrawer {
     public boolean onOptionsItemSelected(MenuItem item) {
         SharedPreferences.Editor editor= sharedPreferences.edit();
         if(item.getItemId()==R.id.add_ab){
-            Log.v("intent","newRest");
+            //Log.v("intent","newRest");
             Intent intent=new Intent(getApplicationContext(),CreateRestaurant.class);
             intent.putExtra("rid","-1");
             item.setVisible(false);
@@ -215,7 +214,7 @@ public class RestaurantManagement extends NavigationDrawer {
                     Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
                 } catch (IOException e) {
-                    Log.e("getFromNet",e.getMessage());
+                    //Log.e("getFromNet",e.getMessage());
                 }
             }
         });
@@ -274,7 +273,7 @@ public class RestaurantManagement extends NavigationDrawer {
                         (String)dataSnapshot.child("rid").getValue()
                 );
             } catch (RestaurantException e) {
-                Log.e("onDataChange",e.getMessage());
+                //Log.e("onDataChange",e.getMessage());
             }
             restaurant
                     .setName((String)dataSnapshot.child("name").getValue())
@@ -311,15 +310,15 @@ public class RestaurantManagement extends NavigationDrawer {
                 try {
                     getFromNetwork(storageRoot,restaurant.getRid(),rmimw);
                 } catch (FileNotFoundException e) {
-                    Log.e("onDataChange",e.getMessage());
+                    //Log.e("onDataChange",e.getMessage());
                 }
             }
-            Log.i("onDataChange","Restaurant data loaded");
+            //Log.i("onDataChange","Restaurant data loaded");
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            Log.w("onCancelled",databaseError.getMessage());
+            //Log.w("onCancelled",databaseError.getMessage());
         }
     }
 
@@ -328,7 +327,7 @@ public class RestaurantManagement extends NavigationDrawer {
 
             @Override
             public void onSuccess(Void aVoid) {
-                Log.i("onSuccess","Image was deleted successfully!");
+                //Log.i("onSuccess","Image was deleted successfully!");
             }
         }
 

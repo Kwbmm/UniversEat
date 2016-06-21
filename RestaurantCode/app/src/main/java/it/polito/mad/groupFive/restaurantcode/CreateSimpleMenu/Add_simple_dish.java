@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -30,8 +28,6 @@ import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -183,13 +179,13 @@ public class Add_simple_dish extends Fragment{
             ArrayList<String> res;
 
             res=sData.getdata().getNewDish().getTags();
-            Log.v("count",res.size()+"");
+            //Log.v("count",res.size()+"");
             int count=0,lng=0;
             for (String s:res){
                 View child=LayoutInflater.from(getContext()).inflate(R.layout.tag_card_frag,null);
                 TextView tag_name=(TextView)child.findViewById(R.id.tag_name);
                 //lng+=res[count].length();
-                Log.v("count",count+"");
+                //Log.v("count",count+"");
                 tag_name.setText(s);
                 if(lng+s.length()>20){
                     horlay=new LinearLayout(getContext());

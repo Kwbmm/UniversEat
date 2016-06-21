@@ -1,15 +1,11 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.DataManagerException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * @author Marco Ardizzone

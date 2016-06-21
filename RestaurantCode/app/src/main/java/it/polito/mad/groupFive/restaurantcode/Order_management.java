@@ -1,21 +1,17 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,17 +22,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
-
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 public class Order_management extends NavigationDrawer {
     private SharedPreferences sharedPreferences;
@@ -58,7 +46,7 @@ public class Order_management extends NavigationDrawer {
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
         uid=sharedPreferences.getString("uid",null);
         rid=sharedPreferences.getString("rid",null);
-        Log.e("RID E UID",""+rid+" "+uid);
+        //Log.e("RID E UID",""+rid+" "+uid);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.reservationlist, mlay);
 
@@ -116,7 +104,7 @@ public class Order_management extends NavigationDrawer {
     private boolean showOrders() {
         TextView noitems = (TextView)findViewById(R.id.noItemsTextView);
         ListView lview = (ListView) findViewById(R.id.listView);
-        Log.v("Order",String.valueOf(orders.size()));
+        //Log.v("Order",String.valueOf(orders.size()));
         if (orders.size()>0) {
             noitems.setVisibility(View.INVISIBLE);
             lview.setVisibility(View.VISIBLE);

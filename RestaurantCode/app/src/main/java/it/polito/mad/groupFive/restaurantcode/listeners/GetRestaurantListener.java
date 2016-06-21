@@ -3,7 +3,6 @@ package it.polito.mad.groupFive.restaurantcode.listeners;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.location.Location;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -88,7 +87,7 @@ public class GetRestaurantListener implements ValueEventListener {
                     }
                 });
             } catch (RestaurantException e) {
-                Log.e(METHOD_NAME,e.getMessage());
+                //Log.e(METHOD_NAME,e.getMessage());
             }
         }
     }
@@ -96,7 +95,7 @@ public class GetRestaurantListener implements ValueEventListener {
     @Override
     public void onCancelled(DatabaseError databaseError) {
         final String METHOD_NAME = this.getClass().getName() + " - onCanc";
-        Log.e(METHOD_NAME,databaseError.getMessage());
+        //Log.e(METHOD_NAME,databaseError.getMessage());
 
     }
 }

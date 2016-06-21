@@ -6,14 +6,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
@@ -26,17 +23,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Review;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 
 /**
@@ -156,7 +147,7 @@ public class Review_user_view extends Fragment {
         View v =inflater.inflate(R.layout.fragment_review_user_view, container, false);
         FirebaseDatabase db=FirebaseDatabase.getInstance();
         DatabaseReference reference=db.getReference("review");
-        Log.v("rev id ",rest.getRid());
+        //Log.v("rev id ",rest.getRid());
         reference.orderByChild("rid").equalTo(rest.getRid()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

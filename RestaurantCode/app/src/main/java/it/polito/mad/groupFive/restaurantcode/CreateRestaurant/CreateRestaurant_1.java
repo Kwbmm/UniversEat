@@ -3,7 +3,6 @@ package it.polito.mad.groupFive.restaurantcode.CreateRestaurant;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
@@ -18,11 +17,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -34,19 +31,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import it.polito.mad.groupFive.restaurantcode.R;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 
 
 /**
@@ -247,21 +239,21 @@ public class CreateRestaurant_1 extends Fragment {
 
             restaurant=getR.getRest();
             if(name.getText().toString().trim().equals("") || name.getText() == null){
-                Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
+                //Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
                 return false;
             }
             restaurant.setName(name.getText().toString());
 
 
             if(description.getText().toString().trim().equals("") || description.getText() == null){
-                Log.w(METHOD_NAME,"TextView Description is either empty or null");
+                //Log.w(METHOD_NAME,"TextView Description is either empty or null");
                 return false;
             }
             restaurant.setDescription(description.getText().toString());
 
 
             if(!isImageSet){
-                Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
+                //Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
                 return false;
             }
 
@@ -271,13 +263,13 @@ public class CreateRestaurant_1 extends Fragment {
             restaurant.setImageLocalPath(this.restaurantPicUri.toString());
 
             if(telephone.getText().toString().trim().equals("") || telephone.getText() == null){
-                Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
+                //Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
                 return false;
             }
             restaurant.setTelephone(telephone.getText().toString());
 
             if(website.getText().toString().trim().equals("") || website.getText() == null){
-                Log.w(METHOD_NAME,"TextView Website is either empty or null");
+                //Log.w(METHOD_NAME,"TextView Website is either empty or null");
                 return false;
             }
             restaurant.setWebsite(website.getText().toString());
@@ -289,7 +281,6 @@ public class CreateRestaurant_1 extends Fragment {
         final String METHOD_NAME = this.getClass().getName()+" - pickImage";
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getResources().getString(R.string.alertBox_photo_title));
         builder.setItems(choices, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -303,7 +294,7 @@ public class CreateRestaurant_1 extends Fragment {
                         try {
                             photo = createImageFile();
                         } catch (IOException ioe) {
-                            Log.e(METHOD_NAME, ioe.getMessage());
+                            //Log.e(METHOD_NAME, ioe.getMessage());
                         }
                         if (photo != null) {
                             restaurantPicAbsPath = photo.getAbsolutePath();
@@ -327,17 +318,17 @@ public class CreateRestaurant_1 extends Fragment {
         if (Build.VERSION.SDK_INT >= 23) {
             if (getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.v(METHOD_NAME,"Permission granted");
+                //Log.v(METHOD_NAME,"Permission granted");
                 return true;
             } else {
 
-                Log.v(METHOD_NAME,"Permission revoked");
+                //Log.v(METHOD_NAME,"Permission revoked");
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         }
         else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(METHOD_NAME,"Permission granted");
+            //Log.v(METHOD_NAME,"Permission granted");
             return true;
         }
     }
@@ -347,11 +338,12 @@ public class CreateRestaurant_1 extends Fragment {
         final String METHOD_NAME = this.getClass().getName()+" - onRequestPermissionResult";
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-            Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+            //Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
             pickImage();
         }
-        else
-            Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
+        else {
+            //Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
+        }
     }
 
     private File createImageFile() throws IOException {
@@ -380,14 +372,16 @@ public class CreateRestaurant_1 extends Fragment {
             try{
                 this.restaurantImg.setImageBitmap(new Picture(this.restaurantPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
                 this.isImageSet = true;
-            } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
+            } catch(IOException ioe) { //Log.e(METHOD_NAME,ioe.getMessage());}
         }
         if(resultCode == CreateRestaurant.RESULT_OK && requestCode == CAPTURE_IMAGE){
             this.restaurantPicView = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
             try{
                 this.restaurantImg.setImageBitmap(new Picture(this.restaurantPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
                 this.isImageSet = true;
-            } catch(IOException ioe){Log.e(METHOD_NAME,ioe.getMessage());}
+            } catch(IOException ioe){
+                //Log.e(METHOD_NAME,ioe.getMessage());
+            }}
         }
     }
 
@@ -429,7 +423,7 @@ public class CreateRestaurant_1 extends Fragment {
                     progressBar.setVisibility(View.INVISIBLE);
                     btnNext.setVisibility(View.VISIBLE);
                 } catch (IOException e) {
-                    Log.e("getFromNet",e.getMessage());
+                    //Log.e("getFromNet",e.getMessage());
                 }
             }
         });

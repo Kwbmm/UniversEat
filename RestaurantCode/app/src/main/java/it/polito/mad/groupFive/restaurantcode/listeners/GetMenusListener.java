@@ -2,7 +2,6 @@ package it.polito.mad.groupFive.restaurantcode.listeners;
 
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -63,7 +62,7 @@ public class GetMenusListener implements ValueEventListener {
                     }
                 });
             } catch (MenuException e) {
-                Log.e(METHOD_NAME,e.getMessage());
+                //Log.e(METHOD_NAME,e.getMessage());
             }
         }
     }

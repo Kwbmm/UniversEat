@@ -2,7 +2,6 @@ package it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 
 /**
  * Created by MacBookRetina on 30/04/16.

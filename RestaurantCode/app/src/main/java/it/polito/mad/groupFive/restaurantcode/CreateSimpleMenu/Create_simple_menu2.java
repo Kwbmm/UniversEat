@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -324,7 +323,7 @@ public class Create_simple_menu2 extends Fragment {
         public void onBindViewHolder(DishViewHolder holder, int position) {
             Course course= courses.get(position);
             holder.dish_name.setText(course.getName());
-            Log.v("Course",course.getName());
+            //Log.v("Course",course.getName());
             holder.delete.setOnClickListener(new onClickRemove(position,courses));
 
             if(!course.isGlutenFree())

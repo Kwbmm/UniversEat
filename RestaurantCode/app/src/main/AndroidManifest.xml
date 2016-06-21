@@ -27,9 +27,12 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDQhAjHBN1S0mnw5LYvJJR0-vFwJ1pdG7g" />
-        <activity android:name=".SplashScreen"
+
+        <activity
+            android:name=".SplashScreen"
+            android:launchMode="singleTop"
             android:noHistory="true"
-            android:launchMode="singleTop">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,7 +53,8 @@
         </activity>
         <activity
             android:name=".Home.SearchMenuResults"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -69,12 +73,12 @@
         </activity>
         <activity
             android:name=".SearchRestaurants.SearchRestaurantResults"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".NavigationDrawer"
             android:noHistory="true"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".RestaurantManagement"
             android:launchMode="singleTop"
@@ -117,8 +121,12 @@
             android:name=".Login.CreateLogin"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-        <activity android:name=".RestaurantView.Create_review" />
-        <activity android:name=".CreateSimpleMenu.Create_simple_menu" />
+        <activity
+            android:name=".RestaurantView.Create_review"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CreateSimpleMenu.Create_simple_menu"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".Notification_Listener"

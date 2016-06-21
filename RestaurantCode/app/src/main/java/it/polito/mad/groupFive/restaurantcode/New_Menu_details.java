@@ -1,7 +1,5 @@
 package it.polito.mad.groupFive.restaurantcode;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -14,13 +12,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -181,7 +175,7 @@ public class New_Menu_details extends Fragment {
                     try {
                         getFromNetwork(imageref, menu.getMid(), pic);
                     } catch (NullPointerException e) {
-                        Log.e("immagine non caricata", " ");
+                        //Log.e("immagine non caricata", " ");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -353,7 +347,7 @@ public class New_Menu_details extends Fragment {
                     Bitmap b = new Picture(imgPath, getActivity().getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
                 } catch (IOException e) {
-                    Log.e("getFromNet", e.getMessage());
+                    //Log.e("getFromNet", e.getMessage());
                 } catch (NullPointerException e) {
 
                 }

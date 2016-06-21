@@ -14,7 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +24,6 @@ import android.widget.ProgressBar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +35,6 @@ import java.util.Comparator;
 import it.polito.mad.groupFive.restaurantcode.NavigationDrawer;
 import it.polito.mad.groupFive.restaurantcode.New_Menu_details;
 import it.polito.mad.groupFive.restaurantcode.R;
-import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -236,7 +233,7 @@ public class SearchMenuResults extends NavigationDrawer {
                     rv.setVisibility(View.VISIBLE);
                 }
             } catch (MenuException e) {
-                Log.e(METHOD_NAME,e.getMessage());
+                //Log.e(METHOD_NAME,e.getMessage());
             }
         }
 
@@ -365,7 +362,7 @@ public class SearchMenuResults extends NavigationDrawer {
             try {
                 holder.menu_image.setImageBitmap(new Picture(Uri.fromFile(img),context.getContentResolver(),300,300).getBitmap());
             } catch (IOException e) {
-                Log.e(METHOD_NAME,e.getMessage());
+                //Log.e(METHOD_NAME,e.getMessage());
             }
             holder.card.setOnClickListener(new View.OnClickListener() {
                 @Override

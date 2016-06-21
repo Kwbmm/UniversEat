@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp">
+    android:layout_marginTop="5dp">
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -55,8 +55,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="10dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/new_icon_inverted_white"
-                android:background="@color/colorPrimaryDark" />
+                android:src="@color/material_grey_300" />
 
             <RatingBar
                 android:id="@+id/restaurant_rating"

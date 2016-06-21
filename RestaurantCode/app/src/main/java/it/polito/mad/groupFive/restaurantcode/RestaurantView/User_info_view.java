@@ -1,30 +1,20 @@
 package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
-import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,7 +32,6 @@ import java.util.HashMap;
 
 import it.polito.mad.groupFive.restaurantcode.NavigationDrawer;
 import it.polito.mad.groupFive.restaurantcode.R;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -250,6 +239,12 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
 
     }
 
+    @Override
+    protected void onPause(){
+        getSupportFragmentManager().popBackStack(null, android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        super.onPause();
+    }
+
     private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         final File dir = cw.getDir("images", Context.MODE_PRIVATE);
@@ -278,7 +273,7 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                 Bitmap b = new Picture(imgPath, getContentResolver()).getBitmap();
                 this.imView.setImageBitmap(b);
             } catch (IOException e) {
-                Log.e("getFromNet", e.getMessage());
+                //Log.e("getFromNet", e.getMessage());
             }
         }
     }

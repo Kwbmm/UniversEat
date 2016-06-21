@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -211,7 +210,6 @@ public class Createlog_frag1 extends Fragment{
         final String METHOD_NAME = this.getClass().getName()+" - pickImage";
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getResources().getString(R.string.alertBox_photo_title));
         builder.setItems(choices,new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -223,7 +221,7 @@ public class Createlog_frag1 extends Fragment{
                         try {
                             photo = createImageFile();
                         } catch (IOException ioe) {
-                            Log.e(METHOD_NAME, ioe.getMessage());
+                            //Log.e(METHOD_NAME, ioe.getMessage());
                         }
                         if (photo != null) {
                             userPicUri = Uri.fromFile(photo);
@@ -237,7 +235,7 @@ public class Createlog_frag1 extends Fragment{
                     startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.intentChooser_select_image)), SELECT_PICTURE);
                 }
                 else{
-                    Log.d(METHOD_NAME,"here");
+                    //Log.d(METHOD_NAME,"here");
                 }
             }
         });
@@ -252,19 +250,19 @@ public class Createlog_frag1 extends Fragment{
         toast=false;
 
         if(txtname.getText().toString().trim().equals("") || txtname.getText() == null){
-            Log.w(METHOD_NAME,"TextView Name is either empty or null");
+            //Log.w(METHOD_NAME,"TextView Name is either empty or null");
             return false;
         }
         user.setName(txtname.getText().toString());
 
         if(txtsurname.getText().toString().trim().equals("") || txtsurname.getText() == null){
-            Log.w(METHOD_NAME,"TextView Surname is either empty or null");
+            //Log.w(METHOD_NAME,"TextView Surname is either empty or null");
             return false;
         }
         user.setSurname(txtsurname.getText().toString());
 
         if(txtmail.getText().toString().trim().equals("") || txtmail.getText() == null){
-            Log.w(METHOD_NAME,"TextView Email is either empty or null");
+            //Log.w(METHOD_NAME,"TextView Email is either empty or null");
             return false;
         }
         if(!isValidEmailAddress(txtmail.getText().toString())){
@@ -276,20 +274,20 @@ public class Createlog_frag1 extends Fragment{
         user.setEmail(txtmail.getText().toString());
 
         if(nickname.getText().toString().trim().equals("") || nickname.getText() == null){
-            Log.w(METHOD_NAME, "TextView Username is either empty or null");
+            //Log.w(METHOD_NAME, "TextView Username is either empty or null");
             return false;
         }
         user.setUserName(nickname.getText().toString());
 
         if(!isImageSet){
-            Log.w(METHOD_NAME,"ImageView Profile Picture is not set");
+            //Log.w(METHOD_NAME,"ImageView Profile Picture is not set");
             return false;
         }
         //this.img=userPicView.getDrawingCache();
         // user.setImageFromDrawable(userPicView.getDrawable());
 
         if(txtpassword.getText().toString().trim().equals("") || txtpassword.getText() == null){
-            Log.w(METHOD_NAME, "TextView Password is either empty or null");
+            //Log.w(METHOD_NAME, "TextView Password is either empty or null");
             return false;
         }
         if (txtpassword.getText().length()<6){
@@ -313,17 +311,17 @@ public class Createlog_frag1 extends Fragment{
         if (Build.VERSION.SDK_INT >= 23) {
             if (getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.v(METHOD_NAME,"Permission granted");
+                //Log.v(METHOD_NAME,"Permission granted");
                 return true;
             } else {
 
-                Log.v(METHOD_NAME,"Permission revoked");
+                //Log.v(METHOD_NAME,"Permission revoked");
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         }
         else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(METHOD_NAME,"Permission granted");
+            //Log.v(METHOD_NAME,"Permission granted");
             return true;
         }
     }
@@ -353,27 +351,31 @@ public class Createlog_frag1 extends Fragment{
                 img=new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap();
                 this.userPicView.setImageBitmap(img);
                 this.isImageSet = true;
-            } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
+            } catch(IOException ioe) {
+                //Log.e(METHOD_NAME,ioe.getMessage());
+            }
         }
         if(resultCode == getActivity().RESULT_OK && requestCode == CAPTURE_IMAGE){
             try{
                 img=new Picture(this.userPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap();
                 this.userPicView.setImageBitmap(img);
                 this.isImageSet = true;
-            } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
+            } catch(IOException ioe) {
+                //Log.e(METHOD_NAME,ioe.getMessage());
+            }
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        final String METHOD_NAME = this.getClass().getName()+" - onRequestPermissionResult";
+        final String METHOD_NAME = this.getClass().getName() + " - onRequestPermissionResult";
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-            Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            //Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
             pickImage();
+        } else {
+            //Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
         }
-        else
-            Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
     }
 
     @Override

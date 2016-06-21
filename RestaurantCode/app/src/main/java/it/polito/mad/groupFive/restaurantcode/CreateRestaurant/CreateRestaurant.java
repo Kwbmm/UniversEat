@@ -1,40 +1,24 @@
 package it.polito.mad.groupFive.restaurantcode.CreateRestaurant;
 
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.util.Log;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -149,7 +133,7 @@ public class CreateRestaurant
             this.storageRoot.putStream(inputStream).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.i(METHOD_NAME,"Image upload successful");
+                    //Log.i(METHOD_NAME,"Image upload successful");
                     SharedPreferences sharedPreferences=getSharedPreferences(getString(R.string.user_pref),CreateRestaurant.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("rid",restaurant.getRid());
@@ -158,7 +142,7 @@ public class CreateRestaurant
                 }
             });
         } catch (IOException e) {
-            Log.e(METHOD_NAME,e.getMessage());
+            //Log.e(METHOD_NAME,e.getMessage());
         }
     }
 
@@ -194,7 +178,7 @@ public class CreateRestaurant
                                    (String)dataSnapshot.child("rid").getValue()
                            );
                        } catch (RestaurantException e) {
-                           Log.e(METHOD_NAME,e.getMessage());
+                           //Log.e(METHOD_NAME,e.getMessage());
                        }
                        restaurant
                                .setName((String)dataSnapshot.child("name").getValue())
@@ -241,7 +225,7 @@ public class CreateRestaurant
 
                    @Override
                    public void onCancelled(DatabaseError databaseError) {
-                       Log.w(METHOD_NAME+" - onCancelled",databaseError.getMessage());
+                       //Log.w(METHOD_NAME+" - onCancelled",databaseError.getMessage());
                    }
                });
 

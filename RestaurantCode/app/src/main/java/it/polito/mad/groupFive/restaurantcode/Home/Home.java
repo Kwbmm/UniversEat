@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -81,16 +82,22 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         }
     }
 
+    @Override
+    protected void onPause(){
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        super.onPause();
+    }
+
     private void checkLocationPermissions(){
         final String METHOD_NAME = this.getClass().getName() + " - checkLocationPermissions";
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            Log.i(METHOD_NAME,"Requesting location permissions");
+            //Log.i(METHOD_NAME,"Requesting location permissions");
             String[] permission = new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
             ActivityCompat.requestPermissions(this,permission,LOCATION_REQUEST_CODE);
         }
         else{
-            Log.i(METHOD_NAME,"Location permissions granted");
+            //Log.i(METHOD_NAME,"Location permissions granted");
             //getLastKnownLocation();
             getAccurateLocation();
         }
@@ -105,7 +112,7 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
                 checkLocationPermissions();
             }
             else{
-                Log.w(METHOD_NAME,"Permission was not granted");
+                //Log.w(METHOD_NAME,"Permission was not granted");
                 getMenus(-1);
             }
         }
@@ -150,7 +157,7 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         MenuAdapter ma;
         switch (locationResult){
             case LOCATION_UNKNOWN: { //Fetch data from most recent to least recent, regardless of the location
-                Log.w(METHOD_NAME,"Location is unknown, I'm fetching according to most recent data first.");
+                //Log.w(METHOD_NAME,"Location is unknown, I'm fetching according to most recent data first.");
                 if(rv != null){
                     this.dbRoot = this.db.getReference("menu");
                     ma = new MenuAdapter(this.rv, this.pb,this);
@@ -164,7 +171,7 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
                 break;
             }
             case LOCATION_LAST_KNOWN:{ //Fetch data from most recent to least recent, but put nearest menus first.
-                Log.i(METHOD_NAME,"Location last known");
+                //Log.i(METHOD_NAME,"Location last known");
                 if (this.rv != null) {
                     this.dbRoot = this.db.getReference("restaurant");
                     ma = new MenuAdapter(this.rv, this.pb,this);
@@ -172,14 +179,14 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
                     LinearLayoutManager llmVertical = new LinearLayoutManager(this);
                     llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
                     this.rv.setLayoutManager(llmVertical);
-                    Log.i(METHOD_NAME,"Preparing query for fetching data..");
+                    //Log.i(METHOD_NAME,"Preparing query for fetching data..");
                     Query menuQuery = this.dbRoot.limitToLast(10); //Get the newest 10 restaurants
                     menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromRestaurantListener(ma,this.lastKnown,this));
                 }
                 break;
             }
             default:
-                Log.w(METHOD_NAME,"Entering 'default' case, display error message. Location code was: "+locationResult);
+                //Log.w(METHOD_NAME,"Entering 'default' case, display error message. Location code was: "+locationResult);
                 this.pb.setVisibility(View.GONE);
                 Toast
                         .makeText(
@@ -204,7 +211,7 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.i("onConnected", "Successfully connected to google API");
+        //Log.i("onConnected", "Successfully connected to google API");
         checkLocationPermissions();
     }
 

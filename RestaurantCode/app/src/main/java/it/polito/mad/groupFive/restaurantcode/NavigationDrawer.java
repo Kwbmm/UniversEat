@@ -7,11 +7,11 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -253,6 +253,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     drawerLayout.closeDrawers();
                     Login_view lw=new Login_view();
                     // FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
+                    getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     getSupportFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up,R.anim.slide_down)
                             .addToBackStack(null).add(R.id.frame,lw).commit();
@@ -350,7 +351,7 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
                 } catch (IOException e) {
-                    Log.e("getFromNet",e.getMessage());
+                    //Log.e("getFromNet",e.getMessage());
                 }catch (NullPointerException e){
 
                 }

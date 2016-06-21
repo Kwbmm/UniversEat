@@ -3,17 +3,14 @@ package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,13 +34,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import it.polito.mad.groupFive.restaurantcode.Menu_details;
 import it.polito.mad.groupFive.restaurantcode.New_Menu_details;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
 
 
@@ -135,10 +130,10 @@ public class Restaurant_menu_user extends Fragment {
 
 
                 Menu  menu = new Menu();
-                Log.v("rid",(String)dataSnapshot.child("name").getValue());
+                //Log.v("rid",(String)dataSnapshot.child("name").getValue());
                 menu.setRid((String)dataSnapshot.child("rid").getValue());
                 menu.setName((String) dataSnapshot.child("name").getValue());
-                Log.v("name",menu.getName());
+                //Log.v("name",menu.getName());
                 menu.setMid(dataSnapshot.child("mid").getValue().toString());
                 menu.setBeverage((Boolean) dataSnapshot.child("beverage").getValue());
                 menu.setDescription((String) dataSnapshot.child("description").getValue());
@@ -295,7 +290,7 @@ public class Restaurant_menu_user extends Fragment {
                 }
                 //holder.menu_image.setImageBitmap(menu.getImageBitmap());
             } catch (NullPointerException e){
-                Log.e("immagine non caricata"," ");
+                //Log.e("immagine non caricata"," ");
             }
             holder.card.setOnClickListener(new OnCardClick(menu));
 
@@ -391,7 +386,7 @@ public class Restaurant_menu_user extends Fragment {
                     Bitmap b = new Picture(imgPath,getActivity().getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
                 } catch (IOException e) {
-                    Log.e("getFromNet",e.getMessage());
+                    //Log.e("getFromNet",e.getMessage());
                 }
                 catch (NullPointerException e){
 

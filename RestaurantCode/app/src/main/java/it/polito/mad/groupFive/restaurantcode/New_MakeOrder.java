@@ -21,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Calendar;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
 /**

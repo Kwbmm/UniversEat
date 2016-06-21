@@ -10,14 +10,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -36,7 +32,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import it.polito.mad.groupFive.restaurantcode.Notification_Listener;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
@@ -190,7 +185,7 @@ public class Login_view extends Fragment {
                                             editor.putString("psw", password.getText().toString());
                                             editor.putString("email", username.getText().toString());
                                             editor.commit();
-                                            Log.v("pws", password.getText().toString());
+                                            //Log.v("pws", password.getText().toString());
                                             mListener.onFragmentInteraction();
                                             getFragmentManager().popBackStack();
                                         }
@@ -307,7 +302,7 @@ public class Login_view extends Fragment {
         if (sharedPreferences.getBoolean("owner", false)) {
 
 
-            Log.v("owner", "fl");
+            //Log.v("owner", "fl");
             user = new User(sharedPreferences.getString("uid", null));
             own = false;
 

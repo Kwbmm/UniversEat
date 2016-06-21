@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,7 +117,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
                 rv.setVisibility(View.VISIBLE);
             }
         } catch (MenuException e) {
-            Log.e(METHOD_NAME,e.getMessage());
+            //Log.e(METHOD_NAME,e.getMessage());
         }
     }
 
@@ -132,7 +131,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
                 rv.setVisibility(View.VISIBLE);
             }
         } catch (MenuException e) {
-            Log.e(METHOD_NAME,e.getMessage());
+            //Log.e(METHOD_NAME,e.getMessage());
         }
     }
 
@@ -160,7 +159,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
         try {
             holder.menu_image.setImageBitmap(new Picture(Uri.fromFile(img),context.getContentResolver(),300,300).getBitmap());
         } catch (IOException e) {
-            Log.e(METHOD_NAME,e.getMessage());
+            //Log.e(METHOD_NAME,e.getMessage());
         }
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override

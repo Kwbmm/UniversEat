@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -89,10 +88,10 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
     public void onBackPressed(){
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-            Log.i("MainActivity", "popping backstack");
+            //Log.i("MainActivity", "popping backstack");
             fm.popBackStack();
         } else {
-            Log.i("MainActivity", "nothing on backstack, calling super");
+            //Log.i("MainActivity", "nothing on backstack, calling super");
             super.onBackPressed();
         }
     }
@@ -109,7 +108,7 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
         @Override
         public void onComplete(@NonNull Task task) {
             if (task.isSuccessful()) {
-                Log.v("login", "Success");
+                //Log.v("login", "Success");
                 String key;
                 db = FirebaseDatabase.getInstance();
                 myRef = db.getReference("User");
@@ -156,7 +155,7 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
                     }
                 });
             } else {
-                Log.d("login", "Failed");
+                //Log.d("login", "Failed");
             }
         }
     }

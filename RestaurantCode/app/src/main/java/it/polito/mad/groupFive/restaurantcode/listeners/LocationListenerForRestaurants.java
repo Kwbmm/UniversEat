@@ -4,12 +4,11 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.util.Log;
 import android.widget.Button;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.*;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,7 +18,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.SearchRestaurants.RestaurantAdapter;
 
 public class LocationListenerForRestaurants implements LocationListener {
@@ -62,7 +60,7 @@ public class LocationListenerForRestaurants implements LocationListener {
             this.longitude[0] = a.getLongitude();
             this.searchBtn.setEnabled(true);
         } catch (IOException e) {
-            Log.e(METHOD_NAME,e.getMessage());
+            //Log.e(METHOD_NAME,e.getMessage());
         }
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference dbRoot = db.getReference("restaurant");

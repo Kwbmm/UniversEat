@@ -3,14 +3,11 @@ package it.polito.mad.groupFive.restaurantcode.CreateRestaurant;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +20,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -196,28 +192,28 @@ public class CreateRestaurant_2 extends Fragment {
            restaurant=getR.getRest();}
 
             if(address.getText().toString().trim().equals("") || address.getText() == null){
-                Log.w(METHOD_NAME,"TextView Address is either empty or null");
+                //Log.w(METHOD_NAME,"TextView Address is either empty or null");
                 return false;
             }
             restaurant.setAddress(address.getText().toString());
 
 
             if(city.getText().toString().trim().equals("") || city.getText() == null){
-                Log.w(METHOD_NAME,"TextView City is either empty or null");
+                //Log.w(METHOD_NAME,"TextView City is either empty or null");
                 return false;
             }
             restaurant.setCity(city.getText().toString());
 
 
             if(ZIPCode.getText().toString().trim().equals("") || ZIPCode.getText() == null){
-                Log.w(METHOD_NAME,"TextView ZIPCode is either empty or null");
+                //Log.w(METHOD_NAME,"TextView ZIPCode is either empty or null");
                 return false;
             }
             restaurant.setZip(ZIPCode.getText().toString());
 
 
             if(state.getText().toString().trim().equals("") || state.getText() == null){
-                Log.w(METHOD_NAME,"TextView State is either empty or null");
+                //Log.w(METHOD_NAME,"TextView State is either empty or null");
                 return false;
             }
             restaurant.setState(state.getText().toString());

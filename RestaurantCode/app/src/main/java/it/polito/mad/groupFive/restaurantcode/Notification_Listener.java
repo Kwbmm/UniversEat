@@ -1,9 +1,8 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 import android.app.IntentService;
-import android.content.Intent;
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -17,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Formatter;
-import java.util.Locale;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -166,7 +164,7 @@ public class Notification_Listener extends IntentService {
 
                             for (final String rid:rest_favs){
                                DatabaseReference menuref= db.getReference("menu");
-                                Log.v("rid",rid);
+                                //Log.v("rid",rid);
                                 menuref.orderByChild("rid").equalTo(rid).addChildEventListener(new ChildEventListener() {
                                     @Override
                                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {

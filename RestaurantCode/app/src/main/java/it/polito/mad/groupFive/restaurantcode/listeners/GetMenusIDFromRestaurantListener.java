@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.location.Location;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -109,11 +108,11 @@ class GetMenuFromRestaurantListener implements ValueEventListener{
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e("onFailure",e.getMessage());
+                        //Log.e("onFailure",e.getMessage());
                     }
                 });
             } catch (MenuException e) {
-                Log.e(METHOD_NAME, e.getMessage());
+                //Log.e(METHOD_NAME, e.getMessage());
             }
         }
     }

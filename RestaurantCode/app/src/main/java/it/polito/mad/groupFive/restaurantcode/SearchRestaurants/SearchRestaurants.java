@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -95,7 +94,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
 
             @Override
             public void onError(Status status) {
-                Log.e("onError",status.getStatusMessage());
+                //Log.e("onError",status.getStatusMessage());
             }
         });
     }
@@ -104,12 +103,12 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
         final String METHOD_NAME = this.getClass().getName() + " - checkLocationPermissions";
         if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            Log.i(METHOD_NAME,"Requesting location permissions");
+            //Log.i(METHOD_NAME,"Requesting location permissions");
             String[] permission = new String[]{ android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION};
             ActivityCompat.requestPermissions(this,permission,LOCATION_REQUEST_CODE);
         }
         else{
-            Log.i(METHOD_NAME,"Location permissions granted");
+            //Log.i(METHOD_NAME,"Location permissions granted");
             //getLastKnownLocation();
             getAccurateLocation();
         }
@@ -124,7 +123,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
                 checkLocationPermissions();
             }
             else{
-                Log.w(METHOD_NAME,"Permission was not granted");
+                //Log.w(METHOD_NAME,"Permission was not granted");
                 getRestaurants(-1);
             }
         }
@@ -170,7 +169,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
         RestaurantAdapter ra;
         switch (locationResult){
             case LOCATION_UNKNOWN: { //Fetch data from most recent to least recent, regardless of the location
-                Log.w(METHOD_NAME,"Location is unknown, I'm fetching according to most recent data first.");
+                //Log.w(METHOD_NAME,"Location is unknown, I'm fetching according to most recent data first.");
                 this.dbRoot = this.db.getReference("restaurant");
                 if(rv != null){
                     ra = new RestaurantAdapter(this.rv, this.pb,this);
@@ -197,7 +196,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
                 break;
             }
             default:
-                Log.w(METHOD_NAME,"Entering 'default' case, display error message. Location code was: "+locationResult);
+                //Log.w(METHOD_NAME,"Entering 'default' case, display error message. Location code was: "+locationResult);
                 this.pb.setVisibility(View.GONE);
                 Toast
                         .makeText(
@@ -222,7 +221,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.i("onConnected", "Successfully connected to google API");
+        //Log.i("onConnected", "Successfully connected to google API");
         checkLocationPermissions();
     }
 
@@ -233,6 +232,6 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.e("onConFail","GAPI con failed\n"+connectionResult.getErrorMessage());
+        //Log.e("onConFail","GAPI con failed\n"+connectionResult.getErrorMessage());
     }
 }

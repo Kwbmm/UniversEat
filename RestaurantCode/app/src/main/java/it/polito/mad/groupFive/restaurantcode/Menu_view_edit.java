@@ -12,11 +12,11 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -75,15 +74,10 @@ public class Menu_view_edit extends NavigationDrawer {
 
 
     }
-
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onPause(){
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        super.onPause();
     }
 
     @Override
@@ -218,7 +212,7 @@ public class Menu_view_edit extends NavigationDrawer {
                 getFromNetwork(imageref, menu.getMid(), holder.menu_image);
                 // holder.menu_image.setImageBitmap(menu.getImageBitmap());
             } catch (NullPointerException e) {
-                Log.e("immagine non caricata", " ");
+                //Log.e("immagine non caricata", " ");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -233,7 +227,7 @@ public class Menu_view_edit extends NavigationDrawer {
         public void remove(Menu position) {
             FirebaseDatabase db = FirebaseDatabase.getInstance();
             String removeMid = position.getMid();
-            Log.v("remove", removeMid);
+            //Log.v("remove", removeMid);
 
             DatabaseReference ref = db.getReference("menu");
             ref.child(removeMid).removeValue();
@@ -417,9 +411,9 @@ public class Menu_view_edit extends NavigationDrawer {
                     Bitmap b = new Picture(imgPath, getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
                 } catch (IOException e) {
-                    Log.e("getFromNet", e.getMessage());
+                    //Log.e("getFromNet", e.getMessage());
                 } catch (NullPointerException e) {
-                    Log.v("Image Not Loaded", this.getClass().getName());
+                    //Log.v("Image Not Loaded", this.getClass().getName());
                 }
             }
         });

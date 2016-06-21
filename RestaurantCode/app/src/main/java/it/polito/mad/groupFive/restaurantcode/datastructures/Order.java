@@ -1,6 +1,5 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

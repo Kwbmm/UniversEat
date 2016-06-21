@@ -1,16 +1,5 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import android.os.Build;
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.ReviewException;
-
 /**
  * @author Marco Ardizzone
  * @class Review

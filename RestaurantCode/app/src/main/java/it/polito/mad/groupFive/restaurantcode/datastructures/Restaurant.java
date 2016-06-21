@@ -1,13 +1,8 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import android.util.Log;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -506,7 +501,7 @@ public class Restaurant {
         } catch (NullPointerException e){
             return false;
         }
-        Log.w(METHOD_NAME,"Switch not entered, returning wrong value");
+        //Log.w(METHOD_NAME,"Switch not entered, returning wrong value");
         return false;
     }
 

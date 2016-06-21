@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,14 +46,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
-
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-
 import it.polito.mad.groupFive.restaurantcode.datastructures.User;
-
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-import it.polito.mad.groupFive.restaurantcode.holders.RestaurantViewHolder;
 
 
 /**
@@ -172,7 +167,7 @@ public class Profile extends NavigationDrawer {
                 getFromNetwork(imageref,rest.getRid(),img);
                 //  img.setImageBitmap(restaurant.getImageBitmap());
             } catch (NullPointerException e){
-                Log.e("immagine non caricata"," ");
+                //Log.e("immagine non caricata"," ");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -200,7 +195,7 @@ public class Profile extends NavigationDrawer {
             this.user=dataSnapshot.getValue(user.getClass());
 
 
-            Log.v("name",user.getName());
+            //Log.v("name",user.getName());
 
             try {
                 FirebaseStorage storage=FirebaseStorage.getInstance();
@@ -222,7 +217,7 @@ public class Profile extends NavigationDrawer {
                         edit.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Log.v("Click","Prova click edit owner");
+                                //Log.v("Click","Prova click edit owner");
                                 Intent edit = new Intent(getBaseContext(), EditProfile.class);
                                 startActivity(edit);
 
@@ -325,7 +320,7 @@ public class Profile extends NavigationDrawer {
 
 
             } catch (NullPointerException e){
-                Log.e("immagine non caricata"," ");
+                //Log.e("immagine non caricata"," ");
             }
 
         }
@@ -366,7 +361,7 @@ public class Profile extends NavigationDrawer {
                     Bitmap b = new Picture(imgPath,getContentResolver()).getBitmap();
                     imView.setImageBitmap(b);
                 } catch (IOException e) {
-                    Log.e("getFromNet",e.getMessage());
+                    //Log.e("getFromNet",e.getMessage());
                 }
             }
         });

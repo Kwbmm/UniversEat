@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -256,7 +255,6 @@ public class Create_simple_menu1 extends Fragment {
         final String METHOD_NAME = this.getClass().getName()+" - pickImage";
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getResources().getString(R.string.alertBox_photo_title));
         builder.setItems(choices, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -270,7 +268,7 @@ public class Create_simple_menu1 extends Fragment {
                         try {
                             photo = createImageFile();
                         } catch (IOException ioe) {
-                            Log.e(METHOD_NAME, ioe.getMessage());
+                            //Log.e(METHOD_NAME, ioe.getMessage());
                         }
                         if (photo != null) {
                             menuPicUri = Uri.fromFile(photo);
@@ -292,31 +290,31 @@ public class Create_simple_menu1 extends Fragment {
         if (Build.VERSION.SDK_INT >= 23) {
             if (getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.v(METHOD_NAME,"Permission granted");
+                //Log.v(METHOD_NAME,"Permission granted");
                 return true;
             } else {
 
-                Log.v(METHOD_NAME,"Permission revoked");
+                //Log.v(METHOD_NAME,"Permission revoked");
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         }
         else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(METHOD_NAME,"Permission granted");
+            //Log.v(METHOD_NAME,"Permission granted");
             return true;
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        final String METHOD_NAME = this.getClass().getName()+" - onRequestPermissionResult";
+        final String METHOD_NAME = this.getClass().getName() + " - onRequestPermissionResult";
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-            Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            //Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
             pickImage();
+        } else {
+            //Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
         }
-        else
-            Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
     }
 
     private File createImageFile() throws IOException {
@@ -344,14 +342,18 @@ public class Create_simple_menu1 extends Fragment {
             try{
                 this.menuPicView.setImageBitmap(new Picture(this.menuPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
                 this.isImageSet=true;
-            } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
+            } catch(IOException ioe) {
+                //Log.e(METHOD_NAME,ioe.getMessage());
+            }
         }
         if(resultCode == CreateRestaurant.RESULT_OK && requestCode == CAPTURE_IMAGE){
             this.menuPicView = (ImageView) getActivity().findViewById(R.id.cmiw_1_1);
             try{
                 this.menuPicView.setImageBitmap(new Picture(this.menuPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
                 this.isImageSet = true;
-            } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
+            } catch(IOException ioe) {
+                //Log.e(METHOD_NAME,ioe.getMessage());
+            }
         }
     }
 
@@ -371,7 +373,7 @@ public class Create_simple_menu1 extends Fragment {
                     progressBar.setVisibility(View.INVISIBLE);
                     next.setVisibility(View.VISIBLE);
                 } catch (IOException e) {
-                    Log.e("getFromNet",e.getMessage());
+                    //Log.e("getFromNet",e.getMessage());
                 }
             }
         });
