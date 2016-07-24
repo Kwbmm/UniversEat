@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -72,6 +73,7 @@ public class Create_simple_menu2 extends Fragment {
     private CheckBox drink;
     private ViewGroup viewGroup;
     private View load;
+    private TextView addDish;
     ArrayList<Course> courselist = new ArrayList<Course>();
 
     // TODO: Rename and change types of parameters
@@ -157,29 +159,8 @@ public class Create_simple_menu2 extends Fragment {
         });
 
     }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.toolbar_add,menu);
-        menu.findItem(R.id.add_ab).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                        Course newDish;
-                try {
-                    FirebaseDatabase db=FirebaseDatabase.getInstance();
-                    DatabaseReference ref=db.getReference("course");
-                    String cid= ref.push().getKey();
-                    newDish=new Course(data.getMenu().getMid(),cid);
-                    data.setNewDish(newDish);
-                } catch (CourseException e) {
-                    e.printStackTrace();
-                }
-                Add_simple_dish add_dish=new Add_simple_dish();
-                getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fragment_holder,add_dish).commit();
-                return true;
-            }
-        });
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -188,6 +169,8 @@ public class Create_simple_menu2 extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.actionBar_createMenu);
         viewGroup=container;
         View v=inflater.inflate(R.layout.fragment_create_simple_menu2, container, false);
         setUpData(v);
@@ -207,6 +190,24 @@ public class Create_simple_menu2 extends Fragment {
         drink= (CheckBox) v.findViewById(R.id.cbch_2_1);
         fee=(CheckBox)v.findViewById(R.id.cbch_2_2);
         TextView end =(TextView) v.findViewById(R.id.fin);
+        addDish=(TextView)v.findViewById(R.id.add_dish);
+        addDish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Course newDish;
+                try {
+                    FirebaseDatabase db=FirebaseDatabase.getInstance();
+                    DatabaseReference ref=db.getReference("course");
+                    String cid= ref.push().getKey();
+                    newDish=new Course(data.getMenu().getMid(),cid);
+                    data.setNewDish(newDish);
+                } catch (CourseException e) {
+                    e.printStackTrace();
+                }
+                Add_simple_dish add_dish=new Add_simple_dish();
+                getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fragment_holder,add_dish).commit();
+            }
+        });
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

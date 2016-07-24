@@ -432,4 +432,6 @@
     <string name="add_picture">Scegli una foto...</string>
     <string name="actionBar_addDish">Aggiungi un Piatto</string>
     <string name="actionBar_addTags">Aggiungi Tag</string>
+    <string name="view_restaurant">Vai al ristorante →</string>
+    <string name="add_a_dish">Aggiungi un Piatto</string>
 </resources>
