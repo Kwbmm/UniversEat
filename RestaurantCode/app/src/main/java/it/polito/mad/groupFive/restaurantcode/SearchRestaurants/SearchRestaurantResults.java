@@ -14,10 +14,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -84,15 +89,27 @@ public class SearchRestaurantResults extends NavigationDrawer {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
-                Dialog customADB = new Dialog(SearchRestaurantResults.this);
+                final Dialog customADB = new Dialog(SearchRestaurantResults.this);
                 customADB.setContentView(R.layout.custom_search_restaurant_alert_dialog);
                 customADB.setCancelable(true);
+
+                /*
+                This lines of code are for adjusting the size of the dialog box.
+                See: http://stackoverflow.com/a/8836169
+                 */
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                lp.copyFrom(customADB.getWindow().getAttributes());
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
                 customADB.show();
+                customADB.getWindow().setAttributes(lp);
                 AppCompatSeekBar distanceSlider = (AppCompatSeekBar) customADB.findViewById(R.id.distanceSlider);
                 distanceSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        Log.d("Seekbar","Progress: "+progress);
+                        TextView distanceValue = (TextView) customADB.findViewById(R.id.textView_distanceValue);
+                        distanceValue.setText(progress+" Km");
                     }
 
                     @Override
@@ -105,53 +122,69 @@ public class SearchRestaurantResults extends NavigationDrawer {
 
                     }
                 });
-                /*
-                String[] items = getResources().getStringArray(R.array.filterCurtainRestaurantItems);
-                final boolean[] selectedItems = new boolean[items.length];
+                Button cancelButton = (Button) customADB.findViewById(R.id.button_Cancel);
+                final CheckBox cbDistance = (CheckBox) customADB.findViewById(R.id.distanceCustomADB);
+                cbDistance.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(cbDistance.isChecked())
+                            customADB.findViewById(R.id.linearLayout_Distance).setVisibility(View.VISIBLE);
+                        else
+                            customADB.findViewById(R.id.linearLayout_Distance).setVisibility(View.INVISIBLE);
+                    }
+                });
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        customADB.dismiss();
+                    }
+                });
+                Button filterButton = (Button) customADB.findViewById(R.id.button_Filter);
+                filterButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean isFiltered = false;
+                        CheckBox cbTicket = (CheckBox) customADB.findViewById(R.id.ticketCustomADB);
+                        CheckBox cbRating = (CheckBox) customADB.findViewById(R.id.ratingCustomADB);
+                        CheckBox cbOpen = (CheckBox) customADB.findViewById(R.id.openCustomADB);
+                        CheckBox cbDistance = (CheckBox) customADB.findViewById(R.id.distanceCustomADB);
+                        Integer distance = null;
 
-                AlertDialog.Builder filterCurtain = new AlertDialog.Builder(SearchRestaurantResults.this);
-                filterCurtain
-                        .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                selectedItems[which] = isChecked;
+                        boolean[] selectedItems = new boolean[]{
+                                cbTicket.isChecked(),
+                                cbRating.isChecked(),
+                                cbOpen.isChecked(),
+                                cbDistance.isChecked()
+                        };
+
+                        if(restaurants == null){ //Save the original set
+                            restaurants = new ArrayList<>();
+                            for (int i = 0; i < ((RestaurantAdapter)rv.getAdapter()).getRestaurants().size(); i++) {
+                                restaurants.add(((RestaurantAdapter)rv.getAdapter()).getRestaurants().get(i));
                             }
-                        })
-                        .setPositiveButton(getResources().getString(R.string.SearchResult_filterConfirmButtonText), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                boolean isFiltered = false;
-                                if(restaurants == null){ //Save the original set
-                                    restaurants = new ArrayList<>();
-                                    for (int i = 0; i < ((RestaurantAdapter)rv.getAdapter()).getRestaurants().size(); i++) {
-                                        restaurants.add(((RestaurantAdapter)rv.getAdapter()).getRestaurants().get(i));
-                                    }
+                        }
+                        RestaurantAdapter ra = new RestaurantAdapter(rv,pb,context);
+                        for (int i = 0; i < restaurants.size(); i++) {
+                            RestaurantAdapter.DistanceRestaurant dr = restaurants.get(i);
+                            ra.addChildWithDistance(dr,dr.getDistance());
+                        }
+                        for (int i = 0; i < selectedItems.length; i++) {
+                            if(selectedItems[i]){
+                                if(i == 3){ //Filter by distance, get the distance
+                                    distance = ((SeekBar) customADB.findViewById(R.id.distanceSlider)).getProgress();
                                 }
-                                RestaurantAdapter ra = new RestaurantAdapter(rv,pb,context);
-                                for (int i = 0; i < restaurants.size(); i++) {
-                                    RestaurantAdapter.DistanceRestaurant dr = restaurants.get(i);
-                                    ra.addChildWithDistance(dr,dr.getDistance());
-                                }
-                                for (int i = 0; i < selectedItems.length; i++) {
-                                    if(selectedItems[i]){
-                                        ra.filter(i);
-                                        isFiltered = true;
-                                    }
-                                }
-                                if(isFiltered){
-                                    ra.updateEntries();
-                                }
-                                rv.setAdapter(ra);
+                                ra.filter(i,distance);
+                                isFiltered = true;
                             }
-                        })
-                        .setNegativeButton(getResources().getString(R.string.SearchResult_filterCancelButtonText), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Arrays.fill(selectedItems,false);
-                            }
-                        })
-                        .show();
-                */
+                        }
+                        if(isFiltered){
+                            ra.updateEntries();
+                        }
+                        rv.setAdapter(ra);
+                        customADB.dismiss();
+                    }
+                });
+
                 return true;
             }
         });

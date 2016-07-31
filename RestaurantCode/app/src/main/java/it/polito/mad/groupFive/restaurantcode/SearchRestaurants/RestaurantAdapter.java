@@ -178,7 +178,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         }
     }
 
-    public void filter(int choice){
+    public void filter(int choice,Integer distance){
         switch (choice){
             case 0: //By ticket
                 this.filterByTicket();
@@ -190,7 +190,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                 this.filterByOpenNow();
                 break;
             case 3: //Less than 3 km
-                this.filterByNear();
+                this.filterByDistance(distance);
                 break;
         }
     }
@@ -222,10 +222,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         }
     }
 
-    private void filterByNear() {
+    private void filterByDistance(Integer distance) {
         for (int i = 0; i < this.restaurants.size(); i++) {
             DistanceRestaurant dr = this.restaurants.get(i);
-            if(dr.getDistance() <= DISTANCE_NEAR)
+            if(dr.getDistance() <= distance)
                 dr.toKeep = true;
         }
     }
