@@ -109,7 +109,7 @@ public class SearchRestaurantResults extends NavigationDrawer {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                         TextView distanceValue = (TextView) customADB.findViewById(R.id.textView_distanceValue);
-                        distanceValue.setText(progress+" Km");
+                        distanceValue.setText(progress+1+" Km");
                     }
 
                     @Override
@@ -172,6 +172,7 @@ public class SearchRestaurantResults extends NavigationDrawer {
                             if(selectedItems[i]){
                                 if(i == 3){ //Filter by distance, get the distance
                                     distance = ((SeekBar) customADB.findViewById(R.id.distanceSlider)).getProgress();
+                                    distance++; //Fix for the slider range
                                 }
                                 ra.filter(i,distance);
                                 isFiltered = true;

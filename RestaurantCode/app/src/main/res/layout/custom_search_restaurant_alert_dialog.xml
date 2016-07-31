@@ -56,18 +56,17 @@
             />
         <android.support.v7.widget.AppCompatSeekBar
             android:layout_width="0dp"
-            android:layout_weight="0.7"
+            android:layout_weight="0.6"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:progress="5"
-            android:max="10"
+            android:progress="4"
+            android:max="9"
             android:id="@+id/distanceSlider"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.1"
+            android:layout_weight="0.2"
             android:text="@string/defaultDistanceCustomAlertDialog"
-            android:gravity="end"
             android:id="@+id/textView_distanceValue"
             />
     </LinearLayout>
