@@ -117,6 +117,10 @@
     <!-- END SearchMenuResults.java -->
 
     <!-- SearchRestaurantResults.java -->
+    <string name="ticketCustomAlertDialog">Ticket</string>
+    <string name="ratingCustomAlertDialog">Rating from 3 to 5</string>
+    <string name="openCustomAlertDialog">Open now</string>
+    <string name="nearCustomAlertDialog">Near here</string>
     <string-array name="filterCurtainRestaurantItems">
         <item>Ticket</item>
         <item>Rating from 3 to 5</item>

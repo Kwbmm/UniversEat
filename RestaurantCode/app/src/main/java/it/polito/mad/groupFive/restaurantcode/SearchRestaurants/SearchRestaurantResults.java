@@ -1,17 +1,23 @@
 package it.polito.mad.groupFive.restaurantcode.SearchRestaurants;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -78,8 +84,31 @@ public class SearchRestaurantResults extends NavigationDrawer {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 final String METHOD_NAME = this.getClass().getName()+" - onMenuItemClick";
+                Dialog customADB = new Dialog(SearchRestaurantResults.this);
+                customADB.setContentView(R.layout.custom_search_restaurant_alert_dialog);
+                customADB.setCancelable(true);
+                customADB.show();
+                AppCompatSeekBar distanceSlider = (AppCompatSeekBar) customADB.findViewById(R.id.distanceSlider);
+                distanceSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        Log.d("Seekbar","Progress: "+progress);
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+                /*
                 String[] items = getResources().getStringArray(R.array.filterCurtainRestaurantItems);
                 final boolean[] selectedItems = new boolean[items.length];
+
                 AlertDialog.Builder filterCurtain = new AlertDialog.Builder(SearchRestaurantResults.this);
                 filterCurtain
                         .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
@@ -122,6 +151,7 @@ public class SearchRestaurantResults extends NavigationDrawer {
                             }
                         })
                         .show();
+                */
                 return true;
             }
         });
