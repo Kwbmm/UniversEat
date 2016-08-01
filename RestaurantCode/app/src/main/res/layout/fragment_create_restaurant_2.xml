@@ -1,126 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
+
     <RelativeLayout
+        android:id="@+id/create_r_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/create_r_2">
+        android:padding="10dp">
         <!-- Restaurant Address -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_Address"
-            android:text="@string/frg_create_restaurant_2_textView_Address"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            />
-        <EditText
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText_Address"
-            android:layout_below="@id/textView_Address"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:inputType="text"
-            android:hint="@string/frg_create_restaurant_2_editView_AddressHint"
-            />
+            android:id="@+id/address"
+            android:layout_below="@+id/mapPickerText"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_toRightOf="@+id/imageView20">
 
+            <EditText
+                android:id="@+id/editText_Address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentStart="false"
+                android:layout_below="@+id/imageView_map"
+                android:layout_toRightOf="@+id/imageView20"
+                android:hint="@string/frg_create_restaurant_2_textView_Address"
+                android:inputType="textCapWords"
+                android:textColor="#DE000000"
+                android:textColorHint="#8A000000"
+                android:textIsSelectable="false"
+                android:textSize="16sp" />
+        </android.support.design.widget.TextInputLayout>
         <!--
             For now we are just using a fixed image, as suggest by Prof. Malnati.
             Later we'll implement the google map view.
         -->
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/imageView_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:scaleType="centerCrop"
             android:src="@drawable/restaurant_map_view"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/editText_Address"
-            />
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp" />
 
-        <!-- Restaurant City -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_City"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:layout_below="@id/imageView_map"
-            android:text="@string/frg_create_restaurant_2_textView_City"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            />
+        <!-- Restaurant City --><android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/city"
+        android:layout_below="@+id/address"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_toRightOf="@+id/imageView21">
+
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/editText_City"
-            android:layout_below="@id/textView_City"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:inputType="text"
-            android:hint="@string/frg_create_restaurant_2_editView_CityHint"
-            />
-
-        <!-- Restaurant ZIP Code -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_ZIPCode"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:layout_below="@id/editText_City"
-            android:text="@string/frg_create_restaurant_2_textView_ZIPCode"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            />
-        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText_ZIPCode"
-            android:layout_below="@id/textView_ZIPCode"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:inputType="number"
-            android:hint="@string/frg_create_restaurant_2_editView_ZIPCodeHint"
-            />
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
+            android:layout_below="@+id/editText_Address"
+            android:layout_toRightOf="@+id/imageView21"
+            android:hint="@string/frg_create_restaurant_2_textView_City"
+            android:inputType="textCapWords"
+            android:textColor="#DE000000"
+            android:textColorHint="#8A000000"
+            android:textIsSelectable="false"
+            android:textSize="16sp" />
+    </android.support.design.widget.TextInputLayout>
 
-        <!-- Restaurant State -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_State"
-            android:textSize="@dimen/frg_textView_textSize"
-            android:layout_below="@id/editText_ZIPCode"
-            android:text="@string/frg_create_restaurant_2_textView_State"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            />
-        <EditText
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText_State"
-            android:layout_below="@id/textView_State"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:inputType="text"
-            android:hint="@string/frg_create_restaurant_2_editView_StateHint"
-            />
+            android:id="@+id/zip"
+            android:layout_below="@+id/city"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_toRightOf="@+id/imageView22">
+            <!-- Restaurant ZIP Code -->
+            <EditText
+                android:id="@+id/editText_ZIPCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentStart="false"
+                android:layout_below="@id/editText_City"
+                android:layout_toRightOf="@+id/imageView22"
+                android:hint="@string/frg_create_restaurant_2_textView_ZIPCode"
+                android:inputType="number"
+                android:textColor="#DE000000"
+                android:textColorHint="#8A000000"
+                android:textIsSelectable="false"
+                android:textSize="16sp" />
+        </android.support.design.widget.TextInputLayout>
 
-        <Button
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/state"
+            android:layout_below="@+id/zip"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_toRightOf="@+id/imageView23">
+            <!-- Restaurant State -->
+            <EditText
+                android:id="@+id/editText_State"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentStart="false"
+                android:layout_below="@id/editText_ZIPCode"
+                android:layout_toRightOf="@+id/imageView23"
+                android:hint="@string/frg_create_restaurant_2_textView_State"
+                android:inputType="textCapWords"
+                android:textColor="#DE000000"
+                android:textColorHint="#8A000000"
+                android:textIsSelectable="false"
+                android:textSize="16sp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/mapPickerText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView_map"
+            android:layout_alignLeft="@+id/imageView_map"
+            android:layout_alignRight="@+id/imageView_map"
+            android:layout_alignTop="@+id/imageView_map"
+            android:layout_centerHorizontal="true"
+            android:background="#70000000"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/pick_a_place_on_the_map"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView20"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/address"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/ic_marker_black"
+            android:tint="@color/material_grey_600"
+            android:layout_marginTop="5dp" />
+
+        <ImageView
+            android:id="@+id/imageView21"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignTop="@+id/city"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/ic_capitol_black"
+            android:tint="@color/material_grey_600"
+            android:layout_marginTop="5dp" />
+
+        <ImageView
+            android:id="@+id/imageView22"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/zip"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/ic_marker2_black"
+            android:tint="@color/material_grey_600"
+            android:layout_marginTop="5dp" />
+
+        <ImageView
+            android:id="@+id/imageView23"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/state"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/ic_flag_black"
+            android:tint="@color/material_grey_600"
+            android:layout_marginTop="5dp" />
+
+        <TextView
             android:id="@+id/Button_Next"
-            android:layout_alignParentRight="true"
+            style="@style/Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text="@string/next"
-            android:layout_below="@id/editText_State"
-            android:layout_marginTop="@dimen/btn_marginTop"
-            android:layout_marginRight="@dimen/btn_marginRight"
-            android:layout_marginEnd="@dimen/btn_marginRight"
-            />
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/state"
+            android:text="@string/next" />
+
     </RelativeLayout>
 </ScrollView>

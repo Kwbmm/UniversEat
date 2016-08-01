@@ -15,7 +15,12 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:text="@string/fragment_delete_dish_complete"
-            android:id="@+id/dd_compl"/>
+            android:id="@+id/dd_compl"
+            android:layout_marginBottom="10dp"
+            android:background="@color/colorAccent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="#ffffff" />
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"

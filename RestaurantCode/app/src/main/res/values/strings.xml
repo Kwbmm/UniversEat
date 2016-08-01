@@ -1,45 +1,63 @@
 <resources>
-    <string name="app_name">Restaurant App n5</string>
+    <string name="app_name">UniversEat</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="featureUnavail">This feature is still under development…</string>
     <string name="user_pref">RestaurantCode.Userdata</string>
     <string-array name="drawer_option_login">
-        <item>Search</item>
+        <item>Home</item>
+        <item>Search Restaurants</item>
         <item>Login</item>
         <item>Register</item>
     </string-array>
     <string-array name="drawer_option_logged_manager">
-        <item>Search</item>
+        <item>Home</item>
+        <item>Search Restaurants</item>
         <item>Profile</item>
         <item>Orders</item>
         <item>Manage Restaurant</item>
         <item>Logout</item>
     </string-array>
     <string-array name="drawer_option_logged_user">
-        <item>Search</item>
+        <item>Home</item>
+        <item>Search Restaurants</item>
         <item>Profile</item>
         <item>Logout</item>
     </string-array>
     <string-array name="week">
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-        <item>Sunday</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
+    <string-array name="weekENG">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
     </string-array>
 
     <!-- activity_home.xml -->
-    <string name="search_hello">What do you want to eat?</string>
+    <string name="search_helloMenu">What do you want to eat?</string>
+    <string name="search_helloRestaurant">Where are you?</string>
     <string name="home_imageButtonOpt_contentDesc">This button can change the search type.</string>
     <string name="checkbox_searchByRestaurant">Search by Restaurant</string>
     <string name="checkbox_searchByDish">Search by Dish</string>
+    <string name="toast_getMenusUnexpectedError">It seems like you\'re going to starve… I wasn\'t able to fetch any menu…</string>
     <!-- END activity_home.xml -->
 
+    <!-- activity_search_restaurants.xml -->
+    <string name="searchRestaurants_btnSearchText">Search Restaurants</string>
+    <!-- END activity_search_restaurants.xml-->
+
     <!-- fragment_creatlog_1.xml -->
-    <string name="frg_creatLog1_textViewImageText">Profile Image</string>
+    <string name="frg_creatLog1_textViewImageText">Add a picture</string>
     <!-- END fragment_creatlog_1.xml -->
 
     <!-- restaurant_view.xml -->
@@ -71,51 +89,40 @@
     <string name="restaurauntInfo_textViewTimetable">Timetable:\nMon: time\nTue: time\nWed: time\nThu: time\nFri: time\nSat: time\nSun: time</string>
     <string name="toastFail">Something went wrong or some mandatory fields are empty!</string>
 
+    <string name="toastRestaurantLoadDataFail">We couldn\'t download data from the net :(</string>
+    <string name="toastRestaurantImageLoadFail">We couldn\'t download the image from the net :(</string>
+
     <string name="restaurantViewEdit_textViewName">Restaurant Name</string>
 
     <string name="reviewlist_imageButtonImg">Restaurant Image</string>
     <string name="reviewlist_textViewName">Restaurant Name</string>
     <string name="finish">Finish</string>
 
-    <!-- SearchResult.java -->
-    <string name="SearchResult_toastFailLoadDM">Data Manager failed loading files.. :(</string>
+    <!-- SearchMenuResults.java -->
+    <string name="SearchResult_toastFailLoadData">We are unable to download data.. :(</string>
     <string name="SearchResult_toastNoRestaurants">There are no restaurants to show.</string>
     <string name="SearchResult_toastNoMenus">There are no menus to show.</string>
-
-    <string-array name="sortCurtainMenuItems">
-        <item>A-Z</item>
-        <item>Z-A</item>
-        <item>Price lower first</item>
-        <item>Price higher first</item>
-    </string-array>
-
-    <string-array name="sortCurtainRestaurantItems">
-        <item>A-Z</item>
-        <item>Z-A</item>
-        <item>Price lower first</item>
-        <item>Price higher first</item>
-        <item>Nearest first</item>
-    </string-array>
+    <string name="SearchResult_filterConfirmButtonText">Filter</string>
+    <string name="SearchResult_filterCancelButtonText">Cancel</string>
 
     <string-array name="filterCurtainMenuItems">
-        <item>Ticket only</item>
-        <item>No ticket</item>
         <item>Beverage included</item>
-        <item>Beverage not included</item>
-        <item>Service Fee: yes</item>
-        <item>Service Fee: no</item>
+        <item>No Service Fee</item>
+        <item>Vegan</item>
+        <item>Vegetarian</item>
+        <item>Price from 1 to 10</item>
+        <item>Price from 11 to 25</item>
+        <item>Price greater than 25</item>
     </string-array>
+    <!-- END SearchMenuResults.java -->
 
-    <string-array name="filterCurtainRestaurantItems">
-        <item>Ticket only</item>
-        <item>No ticket</item>
-        <item>Beverage included</item>
-        <item>Beverage not included</item>
-        <item>Service Fee: yes</item>
-        <item>Service Fee: no</item>
-        <item>Open now</item>
-    </string-array>
-    <!-- END SearchResult.java -->
+    <!-- SearchRestaurantResults.java -->
+    <string name="ticketCustomAlertDialog">Ticket</string>
+    <string name="ratingCustomAlertDialog">At least 3 stars</string>
+    <string name="openCustomAlertDialog">Open now</string>
+    <string name="distanceCustomAlertDialog">Distance</string>
+    <string name="defaultDistanceCustomAlertDialog">5 Km</string>
+    <!-- END SearchRestaurantResults.java -->
 
     <!-- toolbar_search_data.xml -->
     <string name="sortTitle">Sort by</string>
@@ -248,8 +255,8 @@
     <string name="button_end">END</string>
     <string name="restaurantowner">Restaurant owner</string>
 
-    <string name="login">Here you create a new account</string>
-    <string name="login1">Check the box if you are a RESTAURANT OWNER:</string>
+    <string name="login">Create a new account</string>
+    <string name="login1">Check the box if you are a Restaurant Owner</string>
     <string name="login_rest">RESTAURANT OWNER</string>
 
     <string name="toastRegisterPasswordFail">Entered passwords do not match!</string>
@@ -266,7 +273,7 @@
     <string name="add_dish_Vegan">Vegan</string>
     <string name="add_dish_Vegetarian">Vegetarian</string>
     <string name="add_dish_Hot">Hot</string>
-    <string name="add_dish_Add">Add</string>
+    <string name="add_dish_Add">Add Dish</string>
     <string name="add_dish_Gluten_free">Gluten free</string>
 
     <!-- fragment_create_menu.xml -->
@@ -290,7 +297,7 @@
     <string name="fragment_delete_dish_complete">Complete</string>
 
     <!-- fragment_login_view.xml-->
-    <string name="fragment_login_view_Username">Username</string>
+    <string name="fragment_login_view_Email">Email</string>
     <string name="fragment_login_view_Password">Password</string>
     <string name="fragment_login_view_Login">Login</string>
     <string name="fragment_login_view_Register">Register</string>
@@ -309,6 +316,7 @@
     <string name="make_order_date">Pick a date</string>
     <string name="make_order_time">Pick a time</string>
     <string name="make_order_notes">Any notes?</string>
+    <string name="select_date_time">Please select date and time!</string>
 
     <!-- menu_choice.xml-->
     <string name="menu_choice_Option">Option</string>
@@ -321,6 +329,11 @@
     <string name="menu_details_order">Order now!</string>
     <string name="menu_details_course">Course Name</string>
     <string name="menu_details_option">Option Name</string>
+
+    <string name="nowOpen">Now open</string>
+    <string name="nowClosed">Closed</string>
+    <string name="view_timetable">SHOW TIMETABLE</string>
+    <string name="hide_timetable">HIDE</string>
 
     <!-- menu_dish_frag.xml-->
     <string name="menu_dish_frag_DishName">DishName</string>
@@ -346,7 +359,7 @@
     <!-- MakeOrder.java-->
     <string name="MakeOrder_name">Please insert a name</string>
     <string name="MakeOrder_past">You can\'t order in the past!</string>
-    <string name="MakeOrder_successful">Order successful</string>
+    <string name="MakeOrder_successful">Order created as</string>
 
     <!-- Menu_details.java-->
     <string name="Menu_details_beverage_incl">Beverage included</string>
@@ -362,33 +375,41 @@
 
     <!--Restaurant_info_user-->
     <string name="closed">Closed</string>
+    <string name="review_based_on">reviews</string>
 
+    <string name="title_review">Write a title for the review</string>
+    <string name="rating_service">Service</string>
+    <string name="rating_place">Place</string>
+    <string name="rating_food">Food</string>
+    <string name="rating_pqr">Price</string>
+    <string name="rating_comment">Comments</string>
+
+    <string name="password6">Password must be at least 6 char</string>
+    <string name="email">The mail address is not correct</string>
 
     <array name="tags">
         <item>Pizza</item>
         <item>Pasta</item>
-        <item>Meat</item>
-        <item>Fish</item>
-        <item>Cocktail</item>
-        <item>Cake</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Meat</item>
-        <item>Fish</item>
-        <item>Cocktail</item>
-        <item>Cake</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Meat</item>
-        <item>Fish</item>
-        <item>Cocktail</item>
-        <item>Cake</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Meat</item>
-        <item>Fish</item>
-        <item>Cocktail</item>
-        <item>Cake</item>
+        <item>Carne</item>
+        <item>Pesce</item>
+        <item>Verdura</item>
+        <item>Dolce</item>
+        <item>Sushi</item>
+        <item>Riso</item>
+        <item>Kebab</item>
+        <item>Pollo</item>
+        <item>Cinese</item>
+        <item>Patatine</item>
+        <item>Panino</item>
+        <item>Formaggio</item>
+        <item>Insalata</item>
+        <item>Birra</item>
+        <item>Gelato</item>
+        <item>Bibita</item>
+        <item>Vino</item>
+        <item>Spumante</item>
+        <item>Etnico</item>
+        <item>Casereccio</item>
     </array>
 
     <array name="cuisine">
@@ -406,4 +427,70 @@
         <item>Dessert</item>
         <item>Side Dish</item>
     </array>
+
+    <string name="_new_order_notification_title_template">" New order": %1$s</string>
+
+    <!-- TODO: remove this placeholder text -->
+    <string name="_new_order_notification_placeholder_text_template">You said %1$s and lorem ipsum
+        dolor sit amet, consectetur adipiscing elit. Etiam non enim magna. Morbi dictum, velit vel
+        semper venenatis, magna odio volutpat velit, at ullamcorper nulla lacus sed turpis.
+        Pellentesque vitae metus elit, nec tincidunt tellus. Integer sed nisl sem, ullamcorper
+        ornare lacus. Duis ac mauris sed massa congue volutpat. Donec sed erat sit amet turpis
+        viverra rhoncus sit amet nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec
+        tortor.
+    </string>
+    <string name="new_menu_notification_title_template">New menu: %1$s</string>
+
+    <!-- TODO: remove this placeholder text -->
+    <string name="new_menu_notification_placeholder_text_template">You said %1$s and lorem ipsum
+        dolor sit amet, consectetur adipiscing elit. Etiam non enim magna. Morbi dictum, velit vel
+        semper venenatis, magna odio volutpat velit, at ullamcorper nulla lacus sed turpis.
+        Pellentesque vitae metus elit, nec tincidunt tellus. Integer sed nisl sem, ullamcorper
+        ornare lacus. Duis ac mauris sed massa congue volutpat. Donec sed erat sit amet turpis
+        viverra rhoncus sit amet nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec
+        tortor.
+    </string>
+
+    <string name="action_share">Share</string>
+    <string name="action_reply">Reply</string>
+    <string name="actionBar_profile">Profile</string>
+    <string name="actionBar_restaurantManagement">Restaurant management</string>
+    <string name="actionBar_makeOrder">Make an order</string>
+    <string name="actionBar_restaurantInfo">Restaurant Infos</string>
+    <string name="actionBar_restaurantMenus">Menus</string>
+    <string name="actionBar_restaurantReviews">Reviews</string>
+    <string name="actionBar_menu">Menu Infos</string>
+    <string name="actionBar_makeReview">Make a Review</string>
+    <string name="actionBar_orders">Orders</string>
+    <string name="actionBar_myMenus">My Menus</string>
+    <string name="actionBar_createMenu">Create Menu</string>
+    <string name="actionBar_createRestaurant">Create Restaurant</string>
+    <string name="actionBar_signUp">Sign Up</string>
+    <string name="universeat">UniversEat</string>
+    <string name="from_here"> from here</string>
+    <string name="from_here2"></string>
+    <string name="my_favourite_restaurants">My favourite restaurants</string>
+    <string name="added_favourite">" has been added to your favourites"</string>
+    <string name="write_your_review_here">Write your review here</string>
+    <string name="old_email">Old Email</string>
+    <string name="new_email">New Email</string>
+    <string name="info">INFO</string>
+    <string name="menu">MENU</string>
+    <string name="review">REVIEW</string>
+    <string name="call">CALL</string>
+    <string name="website">WEBSITE</string>
+    <string name="fav">FAV</string>
+    <string name="pick_a_place_on_the_map">Pick a place on the map</string>
+    <string name="create">Create</string>
+    <string name="actionBar_editProfile">Edit Profile</string>
+    <string name="need_to_login">You need to login first!</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="check_email">Check your email inbox</string>
+    <string name="fill_all_fields">Fill all the fields</string>
+    <string name="pay_now">Pay now</string>
+    <string name="add_picture">Add a picture...</string>
+    <string name="actionBar_addDish">Add a Dish</string>
+    <string name="actionBar_addTags">Add Tags</string>
+    <string name="view_restaurant">View restaurant →</string>
+    <string name="add_a_dish">Add a Dish</string>
 </resources>

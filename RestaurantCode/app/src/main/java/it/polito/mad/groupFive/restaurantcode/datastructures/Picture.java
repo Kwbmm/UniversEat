@@ -44,6 +44,8 @@ public class Picture {
     public Picture(Uri uri, ContentResolver resolver, int widthMax, int heightMax) {
         this.uri = uri;
         this.resolver = resolver;
+        Picture.MAX_WIDTH = widthMax;
+        Picture.MAX_HEIGHT = heightMax;
     }
 
     private boolean getInformation() throws IOException {

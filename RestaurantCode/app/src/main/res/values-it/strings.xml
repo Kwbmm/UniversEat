@@ -1,37 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">App Ristoranti n5</string>
+    <string name="app_name">UniversEat</string>
     <string name="open">Aperto</string>
     <string name="close">Chiuso</string>
     <string name="user_pref">RestaurantCode.Userdata</string>
     <string-array name="drawer_option_login">
-        <item>Ricerca</item>
+        <item>Home</item>
+        <item>Cerca Ristoranti</item>
         <item>Login</item>
         <item>Registrati</item>
     </string-array>
     <string-array name="drawer_option_logged_user">
-        <item>Search</item>
-        <item>Profile</item>
+        <item>Home</item>
+        <item>Cerca Ristoranti</item>
+        <item>Profilo</item>
         <item>Logout</item>
     </string-array>
     <string-array name="drawer_option_logged_manager">
-        <item>Ricerca</item>
+        <item>Home</item>
+        <item>Cerca Ristoranti</item>
         <item>Profilo</item>
         <item>Ordini</item>
         <item>Gestione Ristorante</item>
         <item>Logout</item>
     </string-array>
     <string-array name="week">
-        <item>Lunedì</item>
-        <item>Martedì</item>
-        <item>Mercoledì</item>
-        <item>Giovedì</item>
-        <item>Venerdì</item>
-        <item>Sabato</item>
-        <item>Domenica</item>
+        <item>Lun</item>
+        <item>Mar</item>
+        <item>Mer</item>
+        <item>Gio</item>
+        <item>Ven</item>
+        <item>Sab</item>
+        <item>Dom</item>
+    </string-array>
+    <string-array name="weekENG">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
     </string-array>
 
-    <string name="search_hello">Che cosa vorresti mangiare?</string>
+    <string name="search_helloMenu">Che cosa vorresti mangiare?</string>
     <string name="checkbox_searchByRestaurant">Ricerca per ristorante</string>
     <string name="checkbox_searchByDish">Ricerca per piatto</string>
 
@@ -64,7 +76,7 @@
 
     <string name="reviewlist_imageButtonImg">Immagine del ristorante</string>
     <string name="reviewlist_textViewName">Nome del ristorante</string>
-    <string name="finish">Fine</string>
+    <string name="finish">Salva</string>
 
 
     <!-- Create_menu_frag.java -->
@@ -88,7 +100,7 @@
     <string name="friday">Ven</string>
     <string name="saturday">Sab</string>
     <string name="sunday">Dom</string>
-    <string name="next">Prossimo</string>
+    <string name="next">Continua</string>
 
     <!-- END timetable_restaurant_item.xml-->
 
@@ -124,7 +136,7 @@
 
     <!-- activity_create_menu_frag2.xml -->
     <string name="checkBox_ServiceFee">Coperto</string>
-    <string name="checkBox_BeverageIncluded">Bevande incluse</string>
+    <string name="checkBox_BeverageIncluded">Bevanda inclusa</string>
     <string name="editText_Price">Prezzo</string>
     <!-- END activity_create_menu_frag2.xml -->
 
@@ -183,43 +195,20 @@
     <string name="nickname">Username</string>
     <string name="password">Password</string>
     <string name="password_repeat">Ripeti la password</string>
-    <string name="button_end">FINE</string>
+    <string name="button_end">Salva</string>
     <string name="restaurantowner">Proprietario di ristorante</string>
 
-    <string name="login">Creazione nuovo account</string>
-    <string name="login1">Spunta qui se sei un RISTORATORE:</string>
+    <string name="login">Crea un nuovo account</string>
+    <string name="login1">Spunta qui se sei un Ristoratore</string>
     <string name="login_rest">RISTORATORE</string>
 
-    <string name="SearchResult_toastFailLoadDM">Il Data Manager non è riuscito a caricare i file… :(</string>
     <string name="SearchResult_toastNoMenus">Non ci sono menù da mostrare.</string>
     <string name="SearchResult_toastNoRestaurants">Non ci sono ristoranti da mostrare.</string>
 
     <!--Restaurant_info_user-->
     <string name="closed">Chiuso</string>
 
-    <array name="tags">
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Carne</item>
-        <item>Pesce</item>
-        <item>Vino</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Carne</item>
-        <item>Pesce</item>
-        <item>Vino</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Carne</item>
-        <item>Pesce</item>
-        <item>Vino</item>
-        <item>Cake</item>
-        <item>Pizza</item>
-        <item>Pasta</item>
-        <item>Meat</item>
-        <item>Fish</item>
-        <item>Cocktail</item>
-    </array>
+
     <string name="restaurantView_textViewRestaurantAddress">Indirizzo</string>
     <string name="restaurantView_textViewRestaurantName">Nome del Ristorante</string>
     <string name="restaurantView_textViewRestaurantDescription">Descrizione</string>
@@ -236,7 +225,7 @@
     <string name="add_dish_Vegan">Vegano</string>
     <string name="add_dish_Vegetarian">Vegetariano</string>
     <string name="add_dish_Hot">Piccante</string>
-    <string name="add_dish_Add">Aggiungi</string>
+    <string name="add_dish_Add">Aggiungi Piatto</string>
     <string name="add_dish_Gluten_free">Senza glutine</string>
 
     <!-- fragment_create_menu.xml -->
@@ -253,7 +242,7 @@
     <string name="fragment_delete_dish_complete">Completa</string>
 
     <!-- fragment_login_view.xml-->
-    <string name="fragment_login_view_Username">Username</string>
+    <string name="fragment_login_view_Email">Indirizzo Email</string>
     <string name="fragment_login_view_Password">Password</string>
     <string name="fragment_login_view_Login">Login</string>
     <string name="fragment_login_view_Register">Registrati</string>
@@ -262,10 +251,10 @@
     <string name="fragment_restaurant_menu_user_Complete_Menu">Menù completo</string>
 
     <!-- fragment_simple_menu_add_tags.xml-->
-    <string name="fragment_simple_menu_add_tags_Add_new_tags">Aggiungi nuovi tag</string>
+    <string name="fragment_simple_menu_add_tags_Add_new_tags">Aggiungi</string>
 
     <!-- incorrect_login.xml-->
-    <string name="incorrect_login">Username o password non corretta</string>
+    <string name="incorrect_login">Username o password non corretti</string>
 
     <!-- make_order.xml-->
     <string name="make_order_Reservation_Name">Nome prenotazione</string>
@@ -278,7 +267,7 @@
 
     <!-- menu_details.xml-->
     <string name="menu_details_Menu_Name">Nome del menu</string>
-    <string name="menu_details_beverage">Bevande non incluse</string>
+    <string name="menu_details_beverage">Bevanda non inclusa</string>
     <string name="menu_details_service">Coperto non incluso</string>
     <string name="menu_details_Menu_description">Descrizione del menu</string>
     <string name="menu_details_order">Ordina ora!</string>
@@ -309,18 +298,20 @@
     <!-- MakeOrder.java-->
     <string name="MakeOrder_name">Per favore inserire un nome</string>
     <string name="MakeOrder_past">Non puoi ordinare nel passato!</string>
-    <string name="MakeOrder_successful">Ordine completato con successo</string>
+    <string name="MakeOrder_successful">Ordine creato a nome</string>
+    <string name="select_date_time">Prima seleziona data e ora</string>
+
 
     <!-- Menu_details.java-->
-    <string name="Menu_details_beverage_incl">Bevande incluse</string>
-    <string name="Menu_details_beverage_not">Bevande non incluse</string>
+    <string name="Menu_details_beverage_incl">Bevanda inclusa</string>
+    <string name="Menu_details_beverage_not">Bevanda non inclusa</string>
     <string name="Menu_details_service_fee_incl">Coperto incluso</string>
     <string name="Menu_details_service_fee_not">Coperto non incluso</string>
 
     <!-- Menu_view_edit.java-->
     <string name="Menu_view_edit_Edit">Modifica</string>
     <string name="Menu_view_edit_Delete">Elimina</string>
-    <string name="Menu_view_edit_Cancel">Cancella</string>
+    <string name="Menu_view_edit_Cancel">Annulla</string>
     <string name="Menu_view_edit_options">Opzioni modifica</string>
 
     <array name="cuisine">
@@ -339,6 +330,14 @@
         <item>Contorno</item>
         <item>Secondo</item>
     </array>
+
+    <string name="title_review">Scrivi un titolo per la recensione</string>
+    <string name="rating_service">Servizio</string>
+    <string name="rating_place">Locale</string>
+    <string name="rating_food">Cibo</string>
+    <string name="rating_pqr">Prezzo</string>
+    <string name="rating_comment">Commenti</string>
+
     <string name="toastRegisterPasswordFail">Le password inserite non coincidono</string>
     <string name="sortTitle">Ordina per</string>
     <string name="frg_create_restaurant_2_editView_AddressHint">Indirizzo del ristorante</string>
@@ -353,5 +352,86 @@
     <string name="featureUnavail">Questa funzionalità è ancora in fase di sviluppo</string>
     <string name="filterTitle">Filtra per…</string>
     <string name="Ticket_Restaurant"></string>
+    <string name="SearchResult_toastFailLoadData">Non riusciamo a caricare i dati..</string>
+    <string name="toastRestaurantImageLoadFail">Non siamo riusciti a scaricare l\'immagine dalla rete :(</string>
+    <string name="toastRestaurantLoadDataFail">Non siamo riusciti a scaricare i dati dalla rete :(</string>
+    <string name="SearchResult_filterCancelButtonText">Annulla</string>
+    <string name="SearchResult_filterConfirmButtonText">Filtra</string>
+    <string name="searchRestaurants_btnSearchText">Cerca Ristoranti</string>
+    <string name="search_helloRestaurant">Dove ti trovi?</string>
 
+    <string name="password6">La password deve essere di almeno 6 caratteri</string>
+    <string name="email">L\' indirizzo mail non è corretto</string>
+    <string name="actionBar_profile">Profilo</string>
+    <string name="actionBar_restaurantManagement">Gestione Ristorante</string>
+    <string name="actionBar_makeOrder">Ordina</string>
+    <string name="actionBar_restaurantInfo">Info Ristorante</string>
+    <string name="actionBar_restaurantMenus">Menu</string>
+    <string name="actionBar_restaurantReviews">Recensioni</string>
+    <string name="actionBar_menu">Info Menu</string>
+    <string name="actionBar_makeReview">Scrivi una Recensione</string>
+    <string name="actionBar_orders">Ordini</string>
+    <string name="actionBar_myMenus">I Miei Menu</string>
+    <string name="actionBar_createMenu">Crea Menu</string>
+    <string name="actionBar_createRestaurant">Crea Ristorante</string>
+    <string name="actionBar_signUp">Crea un Account</string>
+    <string name="action_reply">Rispondi</string>
+    <string name="action_share">Condividi</string>
+    <string name="toast_getMenusUnexpectedError">Sembra che dovrai morire di fame… Non sono riuscito a trovare alcun menu :(</string>
+    <string name="review_based_on">recensioni</string>
+    <string name="actionBar_restaurantSearch">Cerca Ristoranti</string>
+
+    <string name="nowOpen">Aperto!</string>
+    <string name="nowClosed">Chiuso</string>
+    <string name="view_timetable">MOSTRA ORARIO</string>
+    <string name="hide_timetable">NASCONDI</string>
+
+    <string-array name="filterCurtainMenuItems">
+        <item>Bevanda inclusa</item>
+        <item>Senza coperto</item>
+        <item>Vegano</item>
+        <item>Vegetariano</item>
+        <item>Prezzo inferiore a 10€</item>
+        <item>Prezzo da 11€ a 25€</item>
+        <item>Prezzo superiore a 25€</item>
+    </string-array>
+
+    <string name="ticketCustomAlertDialog">Ticket</string>
+    <string name="ratingCustomAlertDialog">Almeno 3 stelle</string>
+    <string name="openCustomAlertDialog">Aperto ora</string>
+    <string name="distanceCustomAlertDialog">Distanza</string>
+    <string name="defaultDistanceCustomAlertDialog">5 Km</string>
+
+
+    <string name="emailaddressold">Inserisci la vecchia mail</string>
+    <string name="emailaddressnew">Inserisci la nuova mail</string>
+    <string name="passwordwrong">La password non è corretta</string>
+    <string name="mailwrong">La vecchia mail non è corretta</string>
+    <string name="universeat">UniversEat</string>
+    <string name="from_here"> da qui</string>
+    <string name="from_here2">A</string>
+    <string name="my_favourite_restaurants">I miei ristoranti preferiti</string>
+    <string name="added_favourite">" è stato aggiunto ai tuoi preferiti"</string>
+    <string name="write_your_review_here">Scrivi qui la tua recensione</string>
+    <string name="old_email">Vecchia Email</string>
+    <string name="new_email">Nuova Email</string>
+    <string name="info">INFO</string>
+    <string name="menu">MENU</string>
+    <string name="review">RECENSIONI</string>
+    <string name="call">CHIAMA</string>
+    <string name="website">SITO WEB</string>
+    <string name="fav">SALVA</string>
+    <string name="pick_a_place_on_the_map">Scegli un punto sulla mappa</string>
+    <string name="create">Crea</string>
+    <string name="actionBar_editProfile">Modifica Profilo</string>
+    <string name="need_to_login">Effettua il login per ordinare!</string>
+    <string name="reset_password">Reimposta la Password</string>
+    <string name="check_email">Controlla la tua posta in arrivo</string>
+    <string name="fill_all_fields">Riempi tutti i campi</string>
+    <string name="pay_now">Paga ora</string>
+    <string name="add_picture">Scegli una foto...</string>
+    <string name="actionBar_addDish">Aggiungi un Piatto</string>
+    <string name="actionBar_addTags">Aggiungi Tag</string>
+    <string name="view_restaurant">Vai al ristorante →</string>
+    <string name="add_a_dish">Aggiungi un Piatto</string>
 </resources>

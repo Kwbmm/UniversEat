@@ -4,28 +4,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Review;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 
 /**
@@ -47,7 +49,7 @@ public class Review_user_view extends Fragment {
     restaurantData restData;
     Restaurant rest;
     ReviewAdapter adp;
-    ArrayList<Review> alreviews;
+    ArrayList<Review> reviews;
     RecyclerView recyclerView;
 
     // TODO: Rename and change types of parameters
@@ -85,17 +87,6 @@ public class Review_user_view extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.toolbar_add,menu);
-        MenuItem item=menu.findItem(R.id.add_ab);
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent new_rew= new Intent(getContext(),Create_review.class);
-                new_rew.putExtra("rid",rest.getRid());
-                startActivityForResult(new_rew,1);
-                return true;
-            }
-        });
         super.onCreateOptionsMenu(menu, inflater);
 
     }
@@ -103,27 +94,37 @@ public class Review_user_view extends Fragment {
     public void readdata(View v) {
 
 
-        rest=restData.getRestaurant();
-
-        try {
-            rest.getData();
-        } catch (RestaurantException e) {
-            e.printStackTrace();
-        }
-        alreviews=rest.getReviews();
-        adp= new ReviewAdapter(alreviews);
+        adp= new ReviewAdapter();
         recyclerView=(RecyclerView)v.findViewById(R.id.review_list);
         recyclerView.setAdapter(adp);
         LinearLayoutManager llm=new LinearLayoutManager(v.getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        TextView r_count= (TextView)v.findViewById(R.id.review_counter);
-        r_count.setText(adp.getItemCount()+" reviews");
+        FloatingActionButton fab = (FloatingActionButton)v.findViewById(R.id.fab);
+        if(FirebaseAuth.getInstance().getCurrentUser()==null) {
+            fab.setVisibility(View.GONE);
+        }
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("rid",rest.getRid());
+                bundle.putFloat("ratingNumber",rest.getRatingNumber());
+                bundle.putFloat("ratingValue",rest.getRating());
+                New_Create_review create_review = new New_Create_review();
+                create_review.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up,R.anim.slide_down)
+                        .addToBackStack(null).add(R.id.frame,create_review).commit();
+            }
+        });
+
+        /*TextView r_count= (TextView)v.findViewById(R.id.review_counter);
+        r_count.setText(((int)rest.getRatingNumber())+" reviews");
         TextView r_name=(TextView)v.findViewById(R.id.restaurant_name);
         r_name.setText(rest.getName());
         RatingBar rate=(RatingBar)v.findViewById(R.id.rate);
-        rate.setRating(rest.getRating());
-
+        rate.setRating(rest.getRating());*/
 
     }
 
@@ -141,7 +142,40 @@ public class Review_user_view extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        reviews=new ArrayList<>();
+        rest=restData.getRestaurant();
         View v =inflater.inflate(R.layout.fragment_review_user_view, container, false);
+        FirebaseDatabase db=FirebaseDatabase.getInstance();
+        DatabaseReference reference=db.getReference("review");
+        //Log.v("rev id ",rest.getRid());
+        reference.orderByChild("rid").equalTo(rest.getRid()).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Review nrev=dataSnapshot.getValue(Review.class);
+                reviews.add(nrev);
+                adp.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         readdata(v);
 
         return v;
@@ -183,10 +217,9 @@ public class Review_user_view extends Fragment {
     }
 
     public class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
-        ArrayList<Review> reviews;
 
-        public ReviewAdapter(ArrayList<Review> reviews){
-            this.reviews=reviews;
+        public ReviewAdapter(){
+
 
         }
 
@@ -203,15 +236,8 @@ public class Review_user_view extends Fragment {
             Review rev=reviews.get(position);
             holder.rating.setRating(rev.getRating());
             holder.title.setText(rev.getTitle());
-            holder.review.setText(rev.getReviewText());
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(rev.getDate());
-            String time = String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.HOUR_OF_DAY))+":"+
-                    String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MINUTE));
-            String date = String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.DAY_OF_MONTH))+"/"+
-                    String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MONTH))+"/"+
-                    String.format(Locale.getDefault(),"%04d",calendar.get(Calendar.YEAR));
-            holder.dat.setText(time+" "+date);
+            holder.review.setText("                         "+rev.getReviewText());
+            holder.dat.setText(rev.getDate());
 
         }
 

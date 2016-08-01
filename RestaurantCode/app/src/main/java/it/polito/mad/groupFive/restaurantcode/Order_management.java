@@ -1,59 +1,97 @@
 package it.polito.mad.groupFive.restaurantcode;
 
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
+import java.util.ArrayList;
+
 import it.polito.mad.groupFive.restaurantcode.datastructures.Order;
 
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
-
 public class Order_management extends NavigationDrawer {
-    private Restaurant restaurant;
     private SharedPreferences sharedPreferences;
     private ArrayList<Order> orders;
     private String[] months;
     private int deletecheck;
+    private  String uid;
+    private String rid;
+    private OrderAdapter orderAdapter;
+    private FirebaseDatabase db;
+    private DatabaseReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(R.string.actionBar_orders);
         months=getResources().getStringArray(R.array.months);
+        orders=new ArrayList<>();
         sharedPreferences=this.getSharedPreferences(getString(R.string.user_pref),this.MODE_PRIVATE);
-        int uid=sharedPreferences.getInt("uid",-1);
-        int rid=sharedPreferences.getInt("rid",-1);
-        Log.e("RID E UID",""+rid+" "+uid);
-        try {
-            restaurant=new Restaurant(this,rid);
-            restaurant.getData();
-        } catch (RestaurantException e) {
-            Log.e("Exception",e.toString());
-        }
+        uid=sharedPreferences.getString("uid",null);
+        rid=sharedPreferences.getString("rid",null);
+        //Log.e("RID E UID",""+rid+" "+uid);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.reservationlist, mlay);
-        //generaordinifittizi();
-        showOrders();
+
+        db=FirebaseDatabase.getInstance();
+        ref=db.getReference("order");
+        ref.orderByChild("rid").equalTo(rid).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Order order=new Order();
+                order.setOid(dataSnapshot.getKey());
+                order.setUid(dataSnapshot.child("uid").getValue().toString());
+                order.setMid(dataSnapshot.child("mid").getValue().toString());
+                order.setRid(rid);
+
+                order.setDate(dataSnapshot.child("date").getValue().toString());
+                order.setMenuName(dataSnapshot.child("menuname").getValue().toString());
+                order.setName(dataSnapshot.child("name").getValue().toString());
+                order.setNotes(dataSnapshot.child("notes").getValue().toString());
+                orders.add(order);
+                showOrders();
+                orderAdapter.notifyDataSetChanged();
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -66,12 +104,11 @@ public class Order_management extends NavigationDrawer {
     private boolean showOrders() {
         TextView noitems = (TextView)findViewById(R.id.noItemsTextView);
         ListView lview = (ListView) findViewById(R.id.listView);
-        orders=restaurant.getOrders();
-        Log.v("Order",String.valueOf(orders.size()));
+        //Log.v("Order",String.valueOf(orders.size()));
         if (orders.size()>0) {
             noitems.setVisibility(View.INVISIBLE);
             lview.setVisibility(View.VISIBLE);
-            OrderAdapter orderAdapter = new OrderAdapter(this, orders);
+            orderAdapter= new OrderAdapter();
             lview.setAdapter(orderAdapter);
             return true;
         } else {
@@ -90,19 +127,17 @@ public class Order_management extends NavigationDrawer {
     }
 
     public class OrderAdapter extends BaseAdapter {
-        ArrayList<Order> orderlist;
-        Context context;
-        public OrderAdapter(Context context,ArrayList<Order> orders){
-            this.orderlist=orders;
-            this.context=context;
+
+        public OrderAdapter(){
+
         }
 
         @Override
-        public int getCount() { return orderlist.size(); }
+        public int getCount() { return orders.size(); }
 
         @Override
         public Object getItem(int position) {
-            return orderlist.get(position);
+            return orders.get(position);
         }
 
         @Override
@@ -112,11 +147,9 @@ public class Order_management extends NavigationDrawer {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView= LayoutInflater.from(context).inflate(R.layout.reservation,null);
+            convertView= LayoutInflater.from(getBaseContext()).inflate(R.layout.reservation,null);
             TextView username= (TextView) convertView.findViewById(R.id.order_username);
             TextView userID= (TextView) convertView.findViewById(R.id.order_userID);
-            TextView hour=(TextView) convertView.findViewById(R.id.hour);
-            TextView minutes = (TextView) convertView.findViewById(R.id.minutes);
             TextView date=(TextView) convertView.findViewById(R.id.date);
             TextView oid = (TextView)convertView.findViewById(R.id.order_OID);
             TextView meal=(TextView) convertView.findViewById(R.id.order_meal);
@@ -133,13 +166,9 @@ public class Order_management extends NavigationDrawer {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (which==0){
+                                ref.child(orders.get(deletecheck).getOid()).removeValue();
                                 orders.remove(deletecheck);
-                                restaurant.setOrders(orders);
-                                try {
-                                    restaurant.saveData();
-                                } catch (RestaurantException e) {
-                                    e.printStackTrace();
-                                }
+                                orderAdapter.notifyDataSetChanged();
                                 showOrders();
                             }else{
                                 deletecheck=0;
@@ -150,33 +179,23 @@ public class Order_management extends NavigationDrawer {
                     });
 
                     dialog.show();
-                    try {
-                        restaurant.saveData();
+
                         showOrders();
-                    } catch (RestaurantException e) {
-                        e.printStackTrace();
-                    }
+
 
                 }
             });
 
-            Order order= orderlist.get(position);
-            Calendar calendar= Calendar.getInstance();
-            calendar.setTime(order.getDate());
+            Order order= orders.get(position);
             username.setText(order.getName());
             userID.setText(" (User #"+String.valueOf(order.getUid())+")");
-            notes.setText(order.getNotes());
-            hour.setText(String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.HOUR_OF_DAY)));
-            minutes.setText(String.format(Locale.getDefault(),"%02d",calendar.get(Calendar.MINUTE)));
-            date.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))+" "+months[calendar.get(Calendar.MONTH)]);
+            notes.setText("\""+order.getNotes()+"\"");
+            if(order.getNotes().length()==0)
+                notes.setVisibility(View.GONE);
+            date.setText(order.getDate());
             oid.setText("Order ID: "+String.valueOf(order.getOid()));
-            String mealID="#"+String.valueOf(order.getMid());
-            try {
-                if(restaurant.getMenuByID(order.getMid())!=null)
-                    mealID=restaurant.getMenuByID(order.getMid()).getName();
-            } catch (RestaurantException e) {
-                e.printStackTrace();
-            }
+            String mealID=String.valueOf(order.getMenuName());
+
             meal.setText("Menu: "+mealID);
             return convertView;
         }

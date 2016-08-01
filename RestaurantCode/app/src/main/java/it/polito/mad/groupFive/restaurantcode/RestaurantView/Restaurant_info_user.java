@@ -1,6 +1,10 @@
 package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,14 +13,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import it.polito.mad.groupFive.restaurantcode.R;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 
 /**
@@ -27,13 +44,16 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
  * Use the {@link Restaurant_info_user#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Restaurant_info_user extends Fragment {
+public class Restaurant_info_user extends Fragment implements OnMapReadyCallback {
 
     public interface restaurantData{
         public Restaurant getRestaurant();
     }
     restaurantData data;
     Restaurant restaurant;
+    MapView mapView;
+    FileDownloadTask imageDownloadTask;
+    ImageDownloadListener idl;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -84,61 +104,86 @@ public class Restaurant_info_user extends Fragment {
 
         View v=inflater.inflate(R.layout.fragment_restaurant_info_user, container, false);
         getRestaurantData(v);
+        //init map
+        MapsInitializer.initialize(this.getActivity());
+        mapView = (MapView) v.findViewById(R.id.gmap);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
         return v;
     }
 
-    public void getRestaurantData(View v){
+    public void getRestaurantData(View v) {
         restaurant=data.getRestaurant();
+        TextView restopen= (TextView)v.findViewById(R.id.restaurant_open);
+        ImageView open=(ImageView)v.findViewById(R.id.imageView9);
+        if(restaurant.isOpen()){
+            restopen.setText(R.string.nowOpen);
+            restopen.setTextColor(Color.rgb(0,100,0));
+        }
+        else {
+            restopen.setText(R.string.nowClosed);
+            restopen.setTextColor(Color.rgb(200,0,0));
+        }
+        TextView restdescr = (TextView)v.findViewById(R.id.restaurant_description);
+        restdescr.setText(restaurant.getDescription());
+        TextView restaddr=(TextView) v.findViewById(R.id.restaurant_address);
+        restaddr.setText(restaurant.getAddress()+", "+restaurant.getCity()+" "+restaurant.getZip()+" "+restaurant.getState());
+        RelativeLayout resttel=(RelativeLayout)v.findViewById(R.id.layout_call);
+        resttel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent dialIntent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+restaurant.getTelephone()));
+                startActivity(dialIntent);
+            }
+        });
+        RelativeLayout restweb=(RelativeLayout)v.findViewById(R.id.layout_web);
+        restweb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent webIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://"+restaurant.getWebsite()));
+                startActivity(webIntent);
+            }
+        });
+        RelativeLayout restfav=(RelativeLayout)v.findViewById(R.id.layout_fav);
+        restfav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO
+            }
+
+        });
+
+        /*
+        ImageView restImage=(ImageView)v.findViewById(R.id.restaurant_image);
+
+        FirebaseStorage storage=FirebaseStorage.getInstance();
+        StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
         try {
-            restaurant.getData();
-        } catch (RestaurantException e) {
+            getFromNetwork(imageref,restaurant.getRid(),restImage);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        TextView rest_rev_det =(TextView)v.findViewById(R.id.restaurant_rev_details);
-        rest_rev_det.setText("Based on "+restaurant.getReviews().size()+" Reviews");
-        TextView restname= (TextView) v.findViewById(R.id.restaurant_name);
-        restname.setText(restaurant.getName());
-        TextView restaddr=(TextView) v.findViewById(R.id.restaurant_address);
-        restaddr.setText(restaurant.getAddress());
-        TextView resttel=(TextView)v.findViewById(R.id.restaurant_tel);
-        resttel.setText(restaurant.getTelephone());
-        RatingBar restrating= (RatingBar) v.findViewById(R.id.restaurant_rating);
-        restrating.setRating(restaurant.getRating());
-        ImageView restImage=(ImageView)v.findViewById(R.id.restaurant_image);
-        restImage.setImageBitmap(restaurant.getImageBitmap());
-
-        LinearLayout ll = (LinearLayout) v.findViewById(R.id.restaurant_time_t);
+        */
+        final LinearLayout ll = (LinearLayout) v.findViewById(R.id.restaurant_time_t);
         int count=0;
-        for(String weekday : getResources().getStringArray(R.array.week)){
+        for(String weekday : getResources().getStringArray(R.array.weekENG)){
             LayoutInflater li = LayoutInflater.from(v.getContext());
             View timetableItem = li.inflate(R.layout.timetable_view,null);
             TextView dow= (TextView) timetableItem.findViewById(R.id.dow);
-            dow.setText(weekday);
-            TextView dinner= (TextView) timetableItem.findViewById(R.id.time_dinner);
-            SimpleDateFormat sd=new SimpleDateFormat("HH:mm");
-            if (restaurant.getTimetableDinner().containsKey(count)){
-            dinner.setText(sd.format(restaurant.getTimetableDinner().get(count)[0])+"-"+sd.format(restaurant.getTimetableDinner().get(count)[1]));}
-            else {
-                dinner.setText(getResources().getString(R.string.closed));
-            }
+            dow.setText(getResources().getStringArray(R.array.week)[count]);
+            String time="";
             TextView lunch=(TextView)timetableItem.findViewById(R.id.time_lunch);
-            if (restaurant.getTimetableLunch().containsKey(count)){
-                lunch.setText(sd.format(restaurant.getTimetableLunch().get(count)[0])+"-"+sd.format(restaurant.getTimetableLunch().get(count)[1]));}
-            else {
-                lunch.setText(getResources().getString(R.string.closed));
+            if (restaurant.getTimetableLunch()!=null&&restaurant.getTimetableLunch().containsKey(weekday)) {
+                time=time.concat(restaurant.getTimetableLunch().get(weekday).get("start")+"-"+restaurant.getTimetableLunch().get(weekday).get("end"));
             }
+            if (restaurant.getTimetableDinner()!=null&&restaurant.getTimetableDinner().containsKey(weekday)) {
+                if(!time.equals("")) time=time.concat("\n");
+                time=time.concat((restaurant.getTimetableDinner().get(weekday).get("start") + "-" + (restaurant.getTimetableDinner().get(weekday).get("end"))));
+            }
+            if(time.equals("")) time=getString(R.string.closed);
+            lunch.setText(time);
             ll.addView(timetableItem);
             count++;
-        }
-
-
-    }
-
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
         }
     }
 
@@ -173,5 +218,76 @@ public class Restaurant_info_user extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
+        ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
+        final File dir = cw.getDir("images", Context.MODE_PRIVATE);
+        File filePath = new File(dir,id);
+        this.imageDownloadTask = storageRoot.child(id).getFile(filePath);
+        this.idl = new ImageDownloadListener(imView,dir,id);
+        this.imageDownloadTask.addOnSuccessListener(this.idl);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        //TODO this.imageDownloadTask.removeOnSuccessListener(this.idl);
+        mapView.onPause();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onLowMemory(){
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map){
+        LatLng latLng = new LatLng(restaurant.getXCoord(),restaurant.getYCoord());
+        map.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title(restaurant.getName()));
+        map.moveCamera(CameraUpdateFactory.zoomTo(15));
+        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+    }
+
+    private class ImageDownloadListener implements OnSuccessListener<FileDownloadTask.TaskSnapshot>{
+        private ImageView imView;
+        private File directory;
+        private String id;
+        public ImageDownloadListener(ImageView imageView, File imageDirectory, String imageID){
+            this.imView = imageView;
+            this.directory = imageDirectory;
+            this.id = imageID;
+        }
+        @Override
+        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+            File img = new File(this.directory, this.id);
+            Uri imgPath = Uri.fromFile(img);
+            try {
+                Bitmap b = new Picture(imgPath,getActivity().getContentResolver()).getBitmap();
+                this.imView.setImageBitmap(b);
+            } catch (IOException e) {
+                //Log.e("getFromNet",e.getMessage());
+            }
+        }
     }
 }

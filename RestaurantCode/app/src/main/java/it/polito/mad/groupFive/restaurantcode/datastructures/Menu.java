@@ -1,20 +1,10 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.util.Log;
-
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.HashMap;
+import java.util.Map;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.MenuException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * @author Marco Ardizzone
@@ -24,120 +14,91 @@ import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.Restaura
  */
 public class Menu {
 
-    transient private Restaurant r=null;
-
-    private int mid;
-    private String name=null;
-    private String description=null;
+    private String rid; //The restaurant ID this menu belongs to
+    private String mid;
+    private String name;
+    private String description;
     private float price;
-    private byte[] image;
+    private String imageLocalPath;
     private int type;
-    private int choiceAmount;
-    private ArrayList<Course> courses = new ArrayList<>();
-    private ArrayList<Option> options = new ArrayList<>();
-    private boolean ticket;
     private boolean beverage;
     private boolean serviceFee;
-    private int rid;
+    private boolean vegetarian;
+    private boolean vegan;
+    private boolean spicy;
+    private boolean glutenfree;
+    private ArrayList<Course> courses = new ArrayList<>();
+
 
     /**
-     * Create an instance of Menu: requires, as parameter, its restaurant object.
-     * The ID of the menu is generated automatically.
+     * Creates a new Menu object.
      *
-     * @param restaurant The restaurant object whose this menu belongs to.
-     * @throws MenuException If menu id is negative
+     * @param rid The restaurant ID to which this menu belongs to.
+     * @param mid The ID of this Menu object.
+     * @throws MenuException If restaurant ID or menu ID are null.
      */
-    public Menu(Restaurant restaurant) throws MenuException {
-        this(restaurant, Menu.randInt());
-    }
+    public Menu(String rid, String mid) throws MenuException {
+        if(rid == null)
+            throw new MenuException("Restaurant ID cannot be null");
 
-    /**
-     * Create an instance of Menu: requires, as parameters, its restaurant object and an integer
-     * positive ID to uniquely identifying this object.
-     *
-     * @param restaurant The restaurant object whose course belongs to
-     * @param mid A positive integer unique identifier.
-     * @throws MenuException If menu id is negative
-     */
-    public Menu(Restaurant restaurant, int mid) throws MenuException {
-        this.r = restaurant;
-        if(mid < 0)
-            throw new MenuException("Menu ID must be positive");
+        if(mid == null)
+            throw new MenuException("Menu ID cannot be null");
+        this.rid = rid;
         this.mid = mid;
-        try {
-            r.getData();
-        } catch (RestaurantException e) {
-            e.printStackTrace();
-        }
-        this.rid=r.getRid();
+    }
+    public Menu(String mid) throws MenuException {
+        if(mid == null)
+            throw new MenuException("Menu ID cannot be null");
+        this.mid = mid;
+    }
+    public Menu(){
+
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid;
     }
 
     /**
-     * Generate a random integer in the range [1, Integer.MAX_VALUE]
-     * @return In integer in the range [1, Integer.MAX_VALUE]
-     */
-    private static int randInt() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            return ThreadLocalRandom.current().nextInt(1,Integer.MAX_VALUE);
-        else{
-            Random rand= new Random();
-            int result;
-            if((result=rand.nextInt(Integer.MAX_VALUE)) == 0)
-                return Menu.randInt();
-            return result;
-        }
-    }
-
-    /**
-     * Fetch the data corresponding to the Menu ID of this object from the JSON file.
-     * Fetch operations are always performed inside the restaurant object, this is just a call to
-     * that method.
+     * Creates a Map of this Object, ready to be put as value inside Firebase DB.
      *
-     * @throws MenuException If fetch fails
+     * @return A Map representing this object.
      */
-    public void getData() throws MenuException {
-        final String METHOD_NAME = this.getClass().getName()+" - getData";
-        try {
-            this.r.getData();
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            throw new MenuException(e.getMessage());
-        }
-        Menu dummy = null;
-        try {
-            dummy = this.r.getMenuByID(this.mid);
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            throw new MenuException(e.getMessage());
-        }
-        this.copyData(dummy);
-    }
+    public Map<String, Object> toMap(){
+        final String METHOD_NAME = this.getClass().getName()+" - saveData";
 
-    /**
-     * Copy all the data took from the JSON file on this object.
-     * @param dummy A dummy Menu object, on which the JSON data is written to.
-     */
-    private void copyData(Menu dummy) {
-        this.mid = dummy.getMid();
-        this.name = dummy.getName();
-        this.description = dummy.getDescription();
-        this.price = dummy.getPrice();
-        this.image = dummy.getImageByteArray();
-        this.type = dummy.getType();
-        this.choiceAmount = dummy.getChoiceAmount();
-        this.courses = dummy.getCourses();
-        this.ticket = dummy.acceptTicket();
-        this.beverage = dummy.isBeverage();
-        this.serviceFee = dummy.isServiceFee();
-        this.options = dummy.getOptions();
+        HashMap<String, Object> output = new HashMap<>();
+        output.put("mid",this.mid);
+        output.put("rid",this.rid);
+        output.put("name",this.name);
 
+        output.put("description",this.description);
+        output.put("price",this.price);
+        output.put("imageLocalPath",this.imageLocalPath);
+        output.put("type",this.type);
+        output.put("beverage",this.beverage);
+        output.put("serviceFee",this.serviceFee);
+        output.put("spicy",this.spicy);
+        output.put("vegan",this.vegan);
+        output.put("vegetarian",this.vegetarian);
+        output.put("glutenfree",this.glutenfree);
+
+        HashMap<String,Boolean> tagMap = new HashMap<>();
+        for(String tag : this.getTags()){
+            tagMap.put(tag,true);
+        }
+        output.put("tags",tagMap);
+
+        return output;
     }
 
     /**
      *
      * @return The ID
      */
-    public int getMid(){ return this.mid; }
+    public String getMid(){ return this.mid; }
+
+    public String getRid(){ return this.rid; }
 
     /**
      *
@@ -152,29 +113,27 @@ public class Menu {
     public String getDescription(){ return this.description; }
 
     /**
+     * Get the filename of this menu's image.
+     * @return The name of the image.
+     */
+    public String getImageName(){
+        String[] arrayString = this.imageLocalPath.split("/");
+        return arrayString[arrayString.length-1];
+    }
+
+    /**
+     * Get the local path of where the menu's image is stored.
+     * @return The location of the image.
+     */
+    public String getImageLocalPath() {
+        return this.imageLocalPath;
+    }
+
+    /**
      *
      * @return The price of the menu
      */
     public float getPrice(){ return this.price; }
-
-    /**
-     *
-     * @return The byte representation of the image
-     */
-    public byte[] getImageByteArray() {
-        return this.image;
-    }
-
-    /**
-     * Returns the Bitmap of the image.
-     * If you can, use getImageByteArray instead of this one as it is more efficient.
-     *
-     * @return The Bitmap representing the image.
-     */
-    public Bitmap getImageBitmap(){
-        final String METHOD_NAME = this.getClass().getName()+" - getImageBitmap";
-        return BitmapFactory.decodeByteArray(this.image,0,this.image.length);
-    }
 
     /**
      * This method returns a textual representation of the type of menu. It can be:
@@ -217,9 +176,9 @@ public class Menu {
      * @param id The id of the course
      * @return The requested course or null if nothing is found.
      */
-    public Course getCourseByID(int id){
+    public Course getCourseByID(String id){
         for(Course course : this.courses)
-            if(course.getCid() == id)
+            if(course.getCid().equals(id))
                 return course;
         return null;
     }
@@ -295,19 +254,6 @@ public class Menu {
     }
 
     /**
-     * Returns true if the menu can be bought with tickets. False otherwise.
-     *
-     * @return true or false
-     */
-    public boolean acceptTicket(){ return this.ticket; }
-
-    /**
-     *
-     * @return The number of multiple choice menu
-     */
-    public int getChoiceAmount(){ return this.choiceAmount; }
-
-    /**
      *
      * @return True if beverage is included, false otherwise.
      */
@@ -323,25 +269,9 @@ public class Menu {
         return serviceFee;
     }
 
-    /**
-     *
-     * @return An ArrayList with all the options for this menu.
-     */
-    public ArrayList<Option> getOptions(){ return this.options; }
 
-    /**
-     * Looks for an Option object with the given ID in the set of available Options.
-     * If a match is found, the corresponding Option object is returned, otherwise the method returns
-     * null.
-     *
-     * @param optID The ID to look for.
-     * @return Option object if successful, null otherwise
-     */
-    public Option getOptionByID(int optID) {
-        for(Option o : this.options)
-            if(o.getOptID() == optID)
-                return o;
-        return null;
+    public void setRid(String rid) {
+        this.rid = rid;
     }
 
     /**
@@ -360,89 +290,29 @@ public class Menu {
 
     /**
      *
-     * @param mid The ID of the menu
-     * @throws MenuException if menu id is negative.
-     */
-    public void setMid(int mid) throws MenuException {
-        if(mid < 0)
-            throw new MenuException("Menu ID must be positive");
-        this.mid = mid;
-    }
-
-    /**
-     *
      * @param name The name of the menu
      */
-    public void setName(String name){ this.name = name; }
+    public Menu setName(String name){ this.name = name; return this;}
 
     /**
      *
      * @param description The description of the menu
      */
-    public void setDescription(String description){ this.description = description; }
-
-    /**
-     *
-     * @return Restaurant reference to fetch data
-     */
-
-    public int getRid() {
-        return rid;
-    }
+    public Menu setDescription(String description){ this.description = description; return this; }
 
     /**
      *
      * @param price The price of the menu
-
      */
-    public void setPrice(float price){ this.price = price; }
+    public Menu setPrice(float price){ this.price = price; return this; }
 
     /**
-     *
-     * @param image Byte array representing the image
+     * Sets the local path of this menu's image.
+     * @param imagePath The local path of the image
      */
-    public void setImageFromByteArray(byte[] image){ this.image = image; }
-
-    /**
-     * Sets the byte array representation of the image from a given input Bitmap.
-     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
-     *
-     * @param image Bitmap representing the image
-     */
-    public void setImageFromBitmap(Bitmap image){
-        final String METHOD_NAME = this.getClass().getName()+" - setImageFromBitmap";
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, output);
-        this.image = output.toByteArray();
-    }
-
-    /**
-     * Sets the byte array representation of the image from a given input Drawable. The drawable
-     * is first converted to a Bitmap and then setImageFromBitmap is called.
-     * If you can, use setImageFromByteArray instead of this one as it is more efficient.
-     *
-     * @param image Drawable representing the image
-     */
-    public void setImageFromDrawable(Drawable image){
-        Bitmap bitmap = null;
-
-        if (image instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) image;
-            if(bitmapDrawable.getBitmap() != null) {
-                this.setImageFromBitmap(bitmapDrawable.getBitmap());
-            }
-        }
-
-        if(image.getIntrinsicWidth() <= 0 || image.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(image.getIntrinsicWidth(), image.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(bitmap);
-        image.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        image.draw(canvas);
-        this.setImageFromBitmap(bitmap);
+    public Menu setImageLocal(String imagePath) {
+        this.imageLocalPath = imagePath;
+        return this;
     }
 
     /**
@@ -480,27 +350,15 @@ public class Menu {
      *
      * @param courses The list of courses of this menu
      */
-    public void setCourses(ArrayList<Course> courses){ this.courses = courses; }
-
-    /**
-     *
-     * @param v true or false.
-     */
-    public void setTicket(boolean v){ this.ticket = v; }
-
-    /**
-     *
-     * @param choiceAmount The number of multiple choice menu
-     */
-    public void setChoiceAmount(int choiceAmount){ this.choiceAmount=choiceAmount; }
+    public Menu setCourses(ArrayList<Course> courses){ this.courses = courses; return this; }
 
     /**
      * Sets if beverage is included.
      *
      * @param beverage true or false
      */
-    public void setBeverage(boolean beverage) {
-        this.beverage = beverage;
+    public Menu setBeverage(boolean beverage) {
+        this.beverage = beverage; return this;
     }
 
     /**
@@ -508,11 +366,13 @@ public class Menu {
      *
      * @param serviceFee true or false
      */
-    public void setServiceFee(boolean serviceFee) { this.serviceFee = serviceFee; }
-
-    /**
-     *
-     * @param opts An ArrayList of options to set on this menu.
-     */
-    public void setOptions(ArrayList<Option> opts){ this.options = opts; }
+    public Menu setServiceFee(boolean serviceFee) { this.serviceFee = serviceFee; return this; }
+    public boolean isVegetarian(){return this.vegetarian;};
+    public boolean isVegan(){return this.vegan;};
+    public boolean isSpicy(){return this.spicy;};
+    public boolean isGlutenfree(){return this.glutenfree;};
+    public Menu setVegetarian(boolean vegetarian){this.vegetarian=vegetarian; return this;};
+    public Menu setVegan(boolean vegan){this.vegan=vegan; return this;};
+    public Menu setSpicy(boolean spicy){this.spicy=spicy; return this;};
+    public Menu setGlutenfree(boolean glutenfree){this.glutenfree=glutenfree; return this;};
 }

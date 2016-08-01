@@ -1,8 +1,9 @@
 package it.polito.mad.groupFive.restaurantcode.RestaurantView;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,21 +11,34 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import it.polito.mad.groupFive.restaurantcode.Menu_details;
+import it.polito.mad.groupFive.restaurantcode.New_Menu_details;
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Menu;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.holders.MenuViewHolder;
 
 
@@ -49,13 +63,14 @@ public class Restaurant_menu_user extends Fragment {
     private OnFragmentInteractionListener mListener;
     public interface restaurantData{
         public Restaurant getRestaurant();
-        public int getMid();
+        public String getMid();
+        public ArrayList<Menu> getMenus();
     }
     restaurantData restData;
     ArrayList<Menu> menusshared;
     Restaurant rest;
     MenuAdapter adp;
-    private int mid;
+    private String mid;
 
     public Restaurant_menu_user() {
         // Required empty public constructor
@@ -80,9 +95,7 @@ public class Restaurant_menu_user extends Fragment {
     }
     public void readdata(View v) {
 
-
         rest=restData.getRestaurant();
-        menusshared = rest.getMenus();
         adp= new MenuAdapter(menusshared,mid);
         RecyclerView recyclerView=(RecyclerView)v.findViewById(R.id.my_recycler_view);
         recyclerView.setAdapter(adp);
@@ -108,6 +121,55 @@ public class Restaurant_menu_user extends Fragment {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_restaurant_menu_user, container, false);
         mid=restData.getMid();
+        menusshared=new ArrayList<>();
+        FirebaseDatabase db=FirebaseDatabase.getInstance();
+        DatabaseReference ref2=db.getReference("menu");
+        ref2.orderByChild("rid").equalTo(restData.getRestaurant().getRid()).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+
+                Menu  menu = new Menu();
+                //Log.v("rid",(String)dataSnapshot.child("name").getValue());
+                menu.setRid((String)dataSnapshot.child("rid").getValue());
+                menu.setName((String) dataSnapshot.child("name").getValue());
+                //Log.v("name",menu.getName());
+                menu.setMid(dataSnapshot.child("mid").getValue().toString());
+                menu.setBeverage((Boolean) dataSnapshot.child("beverage").getValue());
+                menu.setDescription((String) dataSnapshot.child("description").getValue());
+                menu.setPrice(Float.parseFloat(dataSnapshot.child("price").getValue().toString()));
+                menu.setServiceFee((Boolean) dataSnapshot.child("serviceFee").getValue());
+                menu.setType(Integer.parseInt(dataSnapshot.child("type").getValue().toString()));
+                menu.setImageLocal((String) dataSnapshot.child("imageLocalPath").getValue());
+                menu.setSpicy((Boolean) dataSnapshot.child("spicy").getValue());
+                menu.setVegetarian((Boolean) dataSnapshot.child("vegetarian").getValue());
+                menu.setVegan((Boolean) dataSnapshot.child("vegan").getValue());
+                menu.setGlutenfree((Boolean) dataSnapshot.child("glutenfree").getValue());
+                menusshared.add(menu);
+                adp.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         readdata(v);
         return v;
     }
@@ -170,9 +232,9 @@ public class Restaurant_menu_user extends Fragment {
 
     public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
         private ArrayList<Menu> menus;
-        private int mid;
+        private String mid;
 
-        public MenuAdapter(ArrayList<Menu> menus,int mid){
+        public MenuAdapter(ArrayList<Menu> menus,String mid){
             this.mid=mid;
             this.menus=menus;
             sort();
@@ -182,10 +244,10 @@ public class Restaurant_menu_user extends Fragment {
             Collections.sort(this.menus, new Comparator<Menu>() {
                 @Override
                 public int compare(Menu lhs, Menu rhs) {
-                    if(lhs.getMid()==mid){
+                    if(lhs.getMid().toString().equals(mid)){
                         return -3;
                     }
-                    if (rhs.getMid()==mid){
+                    if (rhs.getMid().toString().equals(mid)){
                         return +3;
                     }
 
@@ -207,16 +269,28 @@ public class Restaurant_menu_user extends Fragment {
         @Override
         public void onBindViewHolder(MenuViewHolder holder, int position) {
             Menu menu =menus.get(position);
-            if(menu.getMid()==mid){
-                holder.card.setCardBackgroundColor(Color.YELLOW);
+            if(menu.getMid().toString().equals(mid)){
+                holder.card.setCardBackgroundColor(getResources().getColor(R.color.colorAccent));
             }
-            holder.menu_description.setText(menu.getDescription());
+            String s=menu.getDescription();
+            holder.menu_description.setText(s);
             holder.menu_name.setText(menu.getName());
-            holder.menu_price.setText(menu.getPrice()+"€");
+            holder.menu_price.setText(String.format("%.2f", menu.getPrice())+"€");
+            if(!menu.isSpicy()) holder.spicy_icon.setColorFilter(Color.GRAY);
+            if(!menu.isVegan()) holder.vegan_icon.setColorFilter(Color.GRAY);
+            if(!menu.isVegetarian()) holder.vegetarian_icon.setColorFilter(Color.GRAY);
+            if(!menu.isGlutenfree()) holder.glutenfree_icon.setColorFilter(Color.GRAY);
             try {
-                holder.menu_image.setImageBitmap(menu.getImageBitmap());
+                FirebaseStorage storage=FirebaseStorage.getInstance();
+                StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");
+                try {
+                    getFromNetwork(imageref,menu.getMid(),holder.menu_image);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                //holder.menu_image.setImageBitmap(menu.getImageBitmap());
             } catch (NullPointerException e){
-                Log.e("immagine non caricata"," ");
+                //Log.e("immagine non caricata"," ");
             }
             holder.card.setOnClickListener(new OnCardClick(menu));
 
@@ -232,11 +306,7 @@ public class Restaurant_menu_user extends Fragment {
         public void remove(int position){
             menus.remove(position);
             rest.setMenus(menus);
-            try {
-                rest.saveData();
-            } catch (RestaurantException e) {
-                e.printStackTrace();
-            }
+             //save
             menusshared=menus;
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, menus.size());
@@ -291,11 +361,37 @@ public class Restaurant_menu_user extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Intent menu_info=new Intent(getContext(), Menu_details.class);
-                menu_info.putExtra("rid",menu.getRid());
-                menu_info.putExtra("mid",menu.getMid());
-                startActivity(menu_info);
+                Bundle bundle = new Bundle();
+                bundle.putString("rid",menu.getRid());
+                bundle.putString("mid",menu.getMid());
+                New_Menu_details menu_details = new New_Menu_details();
+                menu_details.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up,R.anim.slide_down)
+                        .addToBackStack(null).add(R.id.frame,menu_details).commit();
             }
         }
+    }
+
+    private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
+        ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
+        final File dir = cw.getDir("images", Context.MODE_PRIVATE);
+        File filePath = new File(dir,id);
+        storageRoot.child(id).getFile(filePath).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                File img = new File(dir, id);
+                Uri imgPath = Uri.fromFile(img);
+                try {
+                    Bitmap b = new Picture(imgPath,getActivity().getContentResolver()).getBitmap();
+                    imView.setImageBitmap(b);
+                } catch (IOException e) {
+                    //Log.e("getFromNet",e.getMessage());
+                }
+                catch (NullPointerException e){
+
+                }
+            }
+        });
     }
 }

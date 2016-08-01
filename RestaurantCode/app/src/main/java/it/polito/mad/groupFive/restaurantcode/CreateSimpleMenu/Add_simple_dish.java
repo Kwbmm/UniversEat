@@ -3,8 +3,9 @@ package it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,19 +13,21 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,6 +112,7 @@ public class Add_simple_dish extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_add_simple_dish, container, false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.actionBar_addDish);
         data=sData.getdata();
 
         newDish=sData.getdata().getNewDish();
@@ -132,21 +136,24 @@ public class Add_simple_dish extends Fragment{
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
+
                     newDish.setName(name.getText().toString());
                     newDish.setVegan(vegan.isChecked());
                     newDish.setGlutenFree(glutenFree.isChecked());
                     newDish.setVegetarian(vegetarian.isChecked());
                     newDish.setSpicy(hot.isChecked());
-                    ArrayList<Course> alc=data.getMenu().getCourses();
-                    alc.add(newDish);
-                    data.getMenu().setCourses(alc);
-                    data.getRest().saveData();
-                    Log.v("back","back");
-                    getFragmentManager().popBackStack();
-                }  catch (RestaurantException e) {
-                    e.printStackTrace();
-                }
+
+                    FirebaseDatabase db=FirebaseDatabase.getInstance();
+                    DatabaseReference ref=db.getReference("course");
+                    ref.child(newDish.getCid()).setValue(newDish.toMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            getFragmentManager().popBackStack();
+                        }
+                    });
+
+
+
 
 
             }
@@ -172,13 +179,13 @@ public class Add_simple_dish extends Fragment{
             ArrayList<String> res;
 
             res=sData.getdata().getNewDish().getTags();
-            Log.v("count",res.size()+"");
+            //Log.v("count",res.size()+"");
             int count=0,lng=0;
             for (String s:res){
                 View child=LayoutInflater.from(getContext()).inflate(R.layout.tag_card_frag,null);
                 TextView tag_name=(TextView)child.findViewById(R.id.tag_name);
                 //lng+=res[count].length();
-                Log.v("count",count+"");
+                //Log.v("count",count+"");
                 tag_name.setText(s);
                 if(lng+s.length()>20){
                     horlay=new LinearLayout(getContext());

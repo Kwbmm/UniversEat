@@ -4,34 +4,41 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import it.polito.mad.groupFive.restaurantcode.R;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 
 
 /**
@@ -56,6 +63,7 @@ public class CreateRestaurant_1 extends Fragment {
     private String mParam2;
 
     private Uri restaurantPicUri = null;
+    private String restaurantPicAbsPath;
     private View parentView=null;
 
     private onFragInteractionListener mListener;
@@ -63,12 +71,19 @@ public class CreateRestaurant_1 extends Fragment {
     private boolean isImageSet=false;
 
     private Restaurant restaurant = null;
+    private String uid,rid;
     /*view items*/
     private ImageView restaurantImg;
+    private ImageView imageView16;
+    private ImageView imageView17;
+    private ImageView imageView18;
+    private ImageView imageView19;
     private TextView description;
     private TextView name;
     private TextView telephone;
     private TextView website;
+    private ProgressBar progressBar;
+    private TextView btnNext;
 
     public CreateRestaurant_1() {
     }
@@ -109,18 +124,55 @@ public class CreateRestaurant_1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
-
+        this.rid = getR.getRest().getRid();
+        this.uid = getR.getRest().getUid();
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_1, container, false);
-
+        imageView16=(ImageView)parentView.findViewById(R.id.imageView16);
+        imageView17=(ImageView)parentView.findViewById(R.id.imageView17);
+        imageView18=(ImageView)parentView.findViewById(R.id.imageView18);
+        imageView19=(ImageView)parentView.findViewById(R.id.imageView19);
         restaurantImg = (ImageView) this.parentView.findViewById(R.id.imageView_RestaurantImage);
         name = (TextView) parentView.findViewById(R.id.editText_RestaurantName);
+        name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView16.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView16.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         description=(TextView) parentView.findViewById(R.id.editText_Description);
+        description.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView17.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView17.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         restaurantImg = (ImageView) parentView.findViewById(R.id.imageView_RestaurantImage);
         telephone= (TextView) parentView.findViewById(R.id.editText_Telephone);
+        telephone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView18.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView18.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         website= (TextView) parentView.findViewById(R.id.editText_Website);
+        website.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView19.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView19.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
+        progressBar=(ProgressBar)parentView.findViewById(R.id.progressBar2);
+        progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        btnNext = (TextView) this.parentView.findViewById(R.id.Button_Next);
+        TextView addPic=(TextView) parentView.findViewById(R.id.textView_image);
         if(getR.editmode()){
-        fetchData();}
-        restaurantImg.setOnClickListener(new View.OnClickListener() {
+           fetchData();
+        }
+        addPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isStoragePermissionGranted()){
@@ -136,7 +188,6 @@ public class CreateRestaurant_1 extends Fragment {
             }
         });
 
-        Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,11 +196,10 @@ public class CreateRestaurant_1 extends Fragment {
                     if(setRestaurantData()){
                         onFragInteractionListener obs = (onFragInteractionListener) a;
                         obs.onChangeFrag1(restaurant);
-
                     }
                     else{
                         Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
-                        .show();
+                                .show();
                     }
                 }
             }
@@ -158,70 +208,72 @@ public class CreateRestaurant_1 extends Fragment {
         return this.parentView;
     }
 
-    private void fetchData(){
-        restaurant=getR.getRest();
-        name.setText(restaurant.getName());
-        description.setText(restaurant.getDescription());
-        telephone.setText(restaurant.getTelephone());
-        website.setText(restaurant.getWebsite());
-        restaurantImg.setImageBitmap(restaurant.getImageBitmap());
-    }
+        private void fetchData() {
+            final String METHOD_NAME = this.getClass().getName() + " - fetchData";
+            this.restaurant=getR.getRest();
+            btnNext.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+            name.setText(restaurant.getName());
+            description.setText(restaurant.getDescription());
+            telephone.setText(restaurant.getTelephone());
+            website.setText(restaurant.getWebsite());
+            FirebaseStorage storage=FirebaseStorage.getInstance();
+            StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/restaurant/");
+            try {
+                getFromNetwork(imageref,restaurant.getRid(),restaurantImg);
+                this.isImageSet = true;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+          /*  try {
+                //restaurantImg.setImageBitmap(restaurant.getImageBitmap());
+            } catch (RestaurantException e) {
+                Log.e(METHOD_NAME,e.getMessage());
+            }
+        }*/
 
+        }
     private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
-
-        try {
-            if(getR.editmode()){
-                isImageSet=true;
-            }else {
-            restaurant=new Restaurant(getContext());
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putInt("rid",restaurant.getRid());
-            editor.apply();}
-
-
+            restaurant=getR.getRest();
             if(name.getText().toString().trim().equals("") || name.getText() == null){
-                Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
+                //Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
                 return false;
             }
             restaurant.setName(name.getText().toString());
 
 
             if(description.getText().toString().trim().equals("") || description.getText() == null){
-                Log.w(METHOD_NAME,"TextView Description is either empty or null");
+                //Log.w(METHOD_NAME,"TextView Description is either empty or null");
                 return false;
             }
             restaurant.setDescription(description.getText().toString());
 
 
             if(!isImageSet){
-                Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
+                //Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
                 return false;
             }
-            if(!getR.editmode()){
-            restaurant.setImageFromDrawable(restaurantImg.getDrawable());}
 
+            if(!getR.editmode()){
+                restaurant.setImageLocalPath(this.restaurantPicUri.toString());
+            }
+            restaurant.setImageLocalPath(this.restaurantPicUri.toString());
 
             if(telephone.getText().toString().trim().equals("") || telephone.getText() == null){
-                Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
+                //Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
                 return false;
             }
             restaurant.setTelephone(telephone.getText().toString());
 
-
             if(website.getText().toString().trim().equals("") || website.getText() == null){
-                Log.w(METHOD_NAME,"TextView Website is either empty or null");
+                //Log.w(METHOD_NAME,"TextView Website is either empty or null");
                 return false;
             }
             restaurant.setWebsite(website.getText().toString());
-
             return true;
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-            return false;
-        }
     }
 
     private void pickImage(){
@@ -229,7 +281,6 @@ public class CreateRestaurant_1 extends Fragment {
         final String METHOD_NAME = this.getClass().getName()+" - pickImage";
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getResources().getString(R.string.alertBox_photo_title));
         builder.setItems(choices, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -243,9 +294,10 @@ public class CreateRestaurant_1 extends Fragment {
                         try {
                             photo = createImageFile();
                         } catch (IOException ioe) {
-                            Log.e(METHOD_NAME, ioe.getMessage());
+                            //Log.e(METHOD_NAME, ioe.getMessage());
                         }
                         if (photo != null) {
+                            restaurantPicAbsPath = photo.getAbsolutePath();
                             restaurantPicUri = Uri.fromFile(photo);
                             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, restaurantPicUri);
                             startActivityForResult(cameraIntent, CAPTURE_IMAGE);
@@ -253,9 +305,7 @@ public class CreateRestaurant_1 extends Fragment {
                     }
                 } else if (choices[which].equals(getResources().getString(R.string.pick_gallery))) {
                     //Choose from gallery
-                    Intent intent = new Intent();
-                    intent.setType(IMAGE_TYPE);
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.intentChooser_select_image)), SELECT_PICTURE);
                 }
             }
@@ -268,17 +318,17 @@ public class CreateRestaurant_1 extends Fragment {
         if (Build.VERSION.SDK_INT >= 23) {
             if (getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.v(METHOD_NAME,"Permission granted");
+                //Log.v(METHOD_NAME,"Permission granted");
                 return true;
             } else {
 
-                Log.v(METHOD_NAME,"Permission revoked");
+                //Log.v(METHOD_NAME,"Permission revoked");
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         }
         else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(METHOD_NAME,"Permission granted");
+            //Log.v(METHOD_NAME,"Permission granted");
             return true;
         }
     }
@@ -288,11 +338,12 @@ public class CreateRestaurant_1 extends Fragment {
         final String METHOD_NAME = this.getClass().getName()+" - onRequestPermissionResult";
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-            Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+            //Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
             pickImage();
         }
-        else
-            Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
+        else {
+            //Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
+        }
     }
 
     private File createImageFile() throws IOException {
@@ -321,14 +372,16 @@ public class CreateRestaurant_1 extends Fragment {
             try{
                 this.restaurantImg.setImageBitmap(new Picture(this.restaurantPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
                 this.isImageSet = true;
-            } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
+            } catch(IOException ioe) { //Log.e(METHOD_NAME,ioe.getMessage());}
         }
         if(resultCode == CreateRestaurant.RESULT_OK && requestCode == CAPTURE_IMAGE){
             this.restaurantPicView = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
             try{
                 this.restaurantImg.setImageBitmap(new Picture(this.restaurantPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
                 this.isImageSet = true;
-            } catch(IOException ioe){Log.e(METHOD_NAME,ioe.getMessage());}
+            } catch(IOException ioe){
+                //Log.e(METHOD_NAME,ioe.getMessage());
+            }}
         }
     }
 
@@ -352,5 +405,27 @@ public class CreateRestaurant_1 extends Fragment {
 
     public interface onFragInteractionListener {
         void onChangeFrag1(Restaurant r);
+    }
+
+    private void getFromNetwork(StorageReference storageRoot, final String id, final ImageView imView) throws FileNotFoundException {
+        ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
+        final File dir = cw.getDir("images", Context.MODE_PRIVATE);
+        File filePath = new File(dir,id);
+        storageRoot.child(id).getFile(filePath).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                File img = new File(dir, id);
+                Uri imgPath = Uri.fromFile(img);
+                restaurantPicUri=imgPath;
+                try {
+                    Bitmap b = new Picture(imgPath,getActivity().getContentResolver()).getBitmap();
+                    imView.setImageBitmap(b);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    btnNext.setVisibility(View.VISIBLE);
+                } catch (IOException e) {
+                    //Log.e("getFromNet",e.getMessage());
+                }
+            }
+        });
     }
 }

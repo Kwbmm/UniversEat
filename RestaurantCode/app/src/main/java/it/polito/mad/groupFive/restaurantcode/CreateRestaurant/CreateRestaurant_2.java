@@ -2,20 +2,24 @@ package it.polito.mad.groupFive.restaurantcode.CreateRestaurant;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
+
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,8 +45,17 @@ public class CreateRestaurant_2 extends Fragment {
     private TextView city;
     private TextView ZIPCode;
     private TextView state;
+    private TextView mapPickerText;
+    private ImageView imageView20;
+    private ImageView imageView21;
+    private ImageView imageView22;
+    private ImageView imageView23;
+    private LatLng latLng;
+    private int PLACE_PICKER_REQUEST = 1;
 
-    private Restaurant restaurant=null;
+    private Restaurant restaurant;
+    private String rid; //The id of the restaurant, passed from the activity
+    private String uid; //The id of the owner of the restaurant, passed from the activity
 
     public CreateRestaurant_2() {
         // Required empty public constructor
@@ -85,13 +98,64 @@ public class CreateRestaurant_2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_2, container, false);
+        this.rid = getR.getRest().getRid();
+        this.uid = getR.getRest().getUid();
+        imageView20=(ImageView)parentView.findViewById(R.id.imageView20);
+        imageView21=(ImageView)parentView.findViewById(R.id.imageView21);
+        imageView22=(ImageView)parentView.findViewById(R.id.imageView22);
+        imageView23=(ImageView)parentView.findViewById(R.id.imageView23);
         address = (TextView) parentView.findViewById(R.id.editText_Address);
+        address.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView20.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView20.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         city = (TextView) parentView.findViewById(R.id.editText_City);
+        city.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView21.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView21.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         ZIPCode = (TextView) parentView.findViewById(R.id.editText_ZIPCode);
+        ZIPCode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView22.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView22.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
         state = (TextView) parentView.findViewById(R.id.editText_State);
+        state.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) imageView23.setColorFilter(getResources().getColor(R.color.colorPrimary));
+                else imageView23.setColorFilter(getResources().getColor(R.color.material_grey_600));
+            }
+        });
+        mapPickerText = (TextView) parentView.findViewById(R.id.mapPickerText);
+        mapPickerText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    PlacePicker.IntentBuilder intentBuilder =
+                            new PlacePicker.IntentBuilder();
+                    Intent intent = intentBuilder.build(getActivity());
+                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
+
+                } catch (GooglePlayServicesRepairableException
+                        | GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         if(getR.editmode()){
-        fetchData();}
-        Button btnNext = (Button) this.parentView.findViewById(R.id.Button_Next);
+            fetchData();
+        }
+        TextView btnNext = (TextView) this.parentView.findViewById(R.id.Button_Next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,55 +181,53 @@ public class CreateRestaurant_2 extends Fragment {
         this.restaurant=getR.getRest();
         address.setText(restaurant.getAddress());
         state.setText(restaurant.getState());
-        ZIPCode.setText(restaurant.getZIPCode());
+        ZIPCode.setText(restaurant.getZip());
         city.setText(restaurant.getCity());
     }
 
     private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
 
-        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
-
-        try {
-
-
-            if(!getR.editmode())restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));
+       if(!getR.editmode()){
+           restaurant=getR.getRest();}
 
             if(address.getText().toString().trim().equals("") || address.getText() == null){
-                Log.w(METHOD_NAME,"TextView Address is either empty or null");
+                //Log.w(METHOD_NAME,"TextView Address is either empty or null");
                 return false;
             }
             restaurant.setAddress(address.getText().toString());
 
 
             if(city.getText().toString().trim().equals("") || city.getText() == null){
-                Log.w(METHOD_NAME,"TextView City is either empty or null");
+                //Log.w(METHOD_NAME,"TextView City is either empty or null");
                 return false;
             }
             restaurant.setCity(city.getText().toString());
 
 
             if(ZIPCode.getText().toString().trim().equals("") || ZIPCode.getText() == null){
-                Log.w(METHOD_NAME,"TextView ZIPCode is either empty or null");
+                //Log.w(METHOD_NAME,"TextView ZIPCode is either empty or null");
                 return false;
             }
-            restaurant.setZIPCode(ZIPCode.getText().toString());
+            restaurant.setZip(ZIPCode.getText().toString());
 
 
             if(state.getText().toString().trim().equals("") || state.getText() == null){
-                Log.w(METHOD_NAME,"TextView State is either empty or null");
+                //Log.w(METHOD_NAME,"TextView State is either empty or null");
                 return false;
             }
             restaurant.setState(state.getText().toString());
 
-            //TODO Manage GMaps to set this data
-            //restaurant.setXcoord();
-            //restaurant.setYcoord();
+            try{
+                if(latLng.equals(null)) return false;
+            } catch(NullPointerException e){
+                return false;
+            }
+            restaurant.setXCoord(latLng.latitude);
+            restaurant.setYCoord(latLng.longitude);
             return true;
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            return false;
-        }
+
+
     }
 
     @Override
@@ -198,5 +260,16 @@ public class CreateRestaurant_2 extends Fragment {
      */
     public interface onFragInteractionListener {
         void onChangeFrag2(Restaurant r);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                Place place = PlacePicker.getPlace(getContext(),data);
+                latLng = place.getLatLng();
+                String msg = place.getName()+" "+latLng.toString();
+                mapPickerText.setText(msg);
+            }
+        }
     }
 }

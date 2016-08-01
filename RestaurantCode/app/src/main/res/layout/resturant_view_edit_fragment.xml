@@ -1,96 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
-    card_view:cardElevation="5dp"
-    card_view:cardCornerRadius="5dp"
-    card_view:cardUseCompatPadding="true">
-    <RelativeLayout
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp">
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="140dp"
-        android:background="#ffffff"
-        android:layout_margin="5dp"
-        android:id="@+id/restaurant_view_layout">
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:minHeight="140dp"
+        card_view:cardCornerRadius="@dimen/cardview_default_radius"
+        card_view:cardElevation="@dimen/cardview_default_elevation"
+        card_view:cardPreventCornerOverlap="false"
+        card_view:cardUseCompatPadding="true"
+        android:clickable="false">
+
+        <RelativeLayout
+            android:id="@+id/restaurant_view_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:minHeight="140dp"
+            android:clickable="false"
+            android:background="@drawable/ripple_effect">
+
+            <ImageView
+                android:id="@+id/restaurant_image"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="10dp"
+                android:scaleType="centerCrop"
+                android:src="@color/material_grey_300" />
+
 
             <ImageButton
+                android:id="@+id/restaurant_edit"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_alignParentRight="true"
                 android:src="@drawable/ic_settings_black"
-                android:id="@+id/restaurant_edit"
-                />
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:backgroundTint="#ffffff" />
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_below="@id/restaurant_name"
-            android:src="@mipmap/ic_launcher"
-            android:id="@+id/restaurant_image"/>
+            <TextView
+                android:id="@+id/restaurant_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="10dp"
+                android:layout_toEndOf="@+id/restaurant_image"
+                android:layout_toRightOf="@+id/restaurant_image"
+                android:text="@string/frg_create_restaurant_1_textView_RestaurantName"
+                android:textColor="#DE000000"
+                android:textSize="20sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
-        <TextView
-            android:id="@+id/restaurant_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/frg_create_restaurant_1_textView_RestaurantName"
-            android:textSize="25dp"
-            android:layout_toLeftOf="@id/restaurant_edit"
-            android:layout_toRightOf="@id/restaurant_image"
-            android:textStyle="bold" />
+            <RatingBar
+                android:id="@+id/restaurant_rating"
+                style="@style/Base.Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="false"
+                android:layout_toEndOf="@+id/restaurant_image"
+                android:layout_toRightOf="@+id/restaurant_image"
+                android:numStars="5"
+                android:rating="3.5"
+                android:stepSize="0.5"
+                android:layout_below="@+id/restaurant_address" />
 
-
-
-       <RatingBar
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:id="@+id/restaurant_rating"
-           android:layout_toRightOf="@id/restaurant_image"
-           style="@style/Base.Widget.AppCompat.RatingBar.Indicator"
-           android:layout_below="@id/restaurant_name"
-           android:numStars="5"
-           android:stepSize="0.5"
-           android:rating="3.5" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/restaurant_address"
-            android:layout_below="@id/restaurant_rating"
-            android:textSize="18dp"
-            android:layout_toRightOf="@id/restaurant_image"
-            android:text="@string/frg_create_restaurant_2_textView_Address"/>
-        <ImageView
-            android:id="@+id/restaurant_icon1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/restaurant_icon1"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/restaurant_icon2"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/restaurant_icon2"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/restaurant_icon3"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/restaurant_icon3"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/restaurant_icon4"/>
+            <TextView
+                android:id="@+id/restaurant_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/restaurant_name"
+                android:layout_alignStart="@+id/restaurant_rating"
+                android:layout_below="@+id/restaurant_name"
+                android:text="@string/frg_create_restaurant_2_textView_Address"
+                android:textSize="14sp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="#8A000000" />
 
 
-
-    </RelativeLayout>
-</android.support.v7.widget.CardView>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</FrameLayout>

@@ -6,17 +6,14 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import it.polito.mad.groupFive.restaurantcode.R;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
-import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.UserException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
 /**
  * Created by Giovanni on 22/04/16.
@@ -38,8 +35,7 @@ public class Createlog_frag extends Fragment{
     private String mParam2;
 
     private Uri userPicUri = null;
-    private RestaurantOwner user_r=null;
-    private Customer user=null;
+    private User user=null;
     private boolean owner=false;
 
     public Createlog_frag(){
@@ -82,12 +78,10 @@ public class Createlog_frag extends Fragment{
         });
 
 
-        Button btnNext = (Button) v.findViewById(R.id.Button_Next_login);
+        TextView btnNext = (TextView) v.findViewById(R.id.Button_Next_login);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(METHOD_NAME,"Press Next: OK");
-
                 Activity a = getActivity();
                 if(a instanceof OnFragmentInteractionListener) {
                     setUserData();
@@ -125,19 +119,8 @@ public class Createlog_frag extends Fragment{
         final String METHOD_NAME = this.getClass().getName()+" - setUserData";
         SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
         SharedPreferences.Editor editor=sp.edit();
-        try {
-            if(owner) {
-                user_r = new RestaurantOwner(getActivity());
-                editor.putInt("uid",user_r.getUid());
-                editor.apply();
-            }
-            else{
-                user = new Customer(getActivity());
-                editor.putInt("uid",user.getUid());
-                editor.apply();
-            }
-        } catch (UserException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-        }
+        user = new User();
+        editor.putString("uid",user.getUid());
+        editor.apply();
     }
 }

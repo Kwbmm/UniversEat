@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SearchRestaurants.SearchRestaurants"
+    android:background="@color/material_grey_100">
+
+    <fragment
+        android:id="@+id/place_autocomplete_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentTop="true"
+        android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:id="@+id/button_SearchRestaurants"
+        android:layout_below="@id/place_autocomplete_fragment"
+        android:text="@string/searchRestaurants_btnSearchText"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:enabled="false"
+        android:background="@color/colorAccent"
+        android:textColor="#ffffff"
+        android:layout_alignParentRight="true"
+        android:elevation="2dp"
+        android:minWidth="88dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:textSize="14dp" />
+    <!-- Loading bar -->
+    <ProgressBar
+        android:layout_width="@dimen/progressBar_size"
+        android:layout_height="@dimen/progressBar_size"
+        android:id="@+id/progressBar_loadingDataRestaurant"
+        android:indeterminate="true"
+        android:layout_centerInParent="true"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/searchRestaurants_recyclerView"
+        android:layout_below="@id/button_SearchRestaurants"
+        android:focusable="false"
+        android:visibility="gone"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" />
+</RelativeLayout>

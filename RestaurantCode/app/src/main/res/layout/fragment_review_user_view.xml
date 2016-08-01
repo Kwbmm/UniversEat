@@ -1,49 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
-
-<RelativeLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/relativeLayout"
-    android:layout_alignParentTop="true">
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/reviewlist_textViewName"
-        android:id="@+id/restaurant_name"
-        android:layout_alignParentTop="true"
-        android:textAlignment="center"
-        android:textSize="30dp"
-        />
-    <RatingBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/rate"
-        android:layout_below="@id/restaurant_name"
-        android:layout_centerHorizontal="true"
-        android:isIndicator="true"
-        style="@style/Base.Widget.AppCompat.RatingBar.Indicator"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="2001 reviews"
-        android:id="@+id/review_counter"
-        android:layout_below="@id/rate"
-        android:layout_centerHorizontal="true"
-        />
-</RelativeLayout>
-<android.support.v7.widget.RecyclerView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@id/relativeLayout"
-    android:id="@+id/review_list">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-</android.support.v7.widget.RecyclerView>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/review_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+    </android.support.v7.widget.RecyclerView>
+    <android.support.design.widget.FloatingActionButton
+        android:src="@drawable/ic_add_24dp"
+        app:fabSize="normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/fab"
+        android:tint="#ffffff" />
 </RelativeLayout>

@@ -1,15 +1,11 @@
 package it.polito.mad.groupFive.restaurantcode.datastructures;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.DataManagerException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 /**
  * @author Marco Ardizzone
@@ -63,6 +59,7 @@ public class DataManager {
      */
     private void setRestaurant(String name) throws DataManagerException {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurant";
+        /*
         String regex = "^(r)(\\d+)(\\.json)";
         Pattern restaurantFilenamePattern = Pattern.compile(regex);
         Matcher m = restaurantFilenamePattern.matcher(name);
@@ -78,7 +75,7 @@ public class DataManager {
                         name+"\n"+
                         e.getMessage());
             }
-        }
+        }*/
     }
 
     /**
@@ -121,7 +118,7 @@ public class DataManager {
      * @param rid Restaurant ID
      * @return Restaurant object or null if no match.
      */
-    public Restaurant getRestaurantByID(int rid){
+    public Restaurant getRestaurantByID(String rid){
         for(Restaurant r : this.restaurants)
             if(r.getRid() == rid)
                 return r;
@@ -158,7 +155,7 @@ public class DataManager {
      * @param mid ID to look for
      * @return The Menu object matching the ID or null if no match is found.
      */
-    public Menu getMenuByID(int mid){
+    public Menu getMenuByID(String mid){
         for(Menu m : this.menus)
             if(m.getMid() == mid)
                 return m;
@@ -195,9 +192,9 @@ public class DataManager {
      * @param cid Course ID to look for.
      * @return Course object or null if no match is found.
      */
-    public Course getCourseByID(int cid){
+    public Course getCourseByID(String cid){
         for(Course c : this.courses)
-            if(c.getCid() == cid)
+            if(c.getCid().equals(cid))
                 return c;
         return null;
     }

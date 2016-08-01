@@ -1,32 +1,48 @@
 package it.polito.mad.groupFive.restaurantcode.CreateSimpleMenu;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Course;
+import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CourseException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 import it.polito.mad.groupFive.restaurantcode.holders.DishViewHolder;
 
 /**
@@ -44,6 +60,7 @@ public class Create_simple_menu2 extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     public interface shareData{
         MenuData getdata();
+        void loading();
     }
     private shareData sData;
     private it.polito.mad.groupFive.restaurantcode.datastructures.Menu menu;
@@ -54,6 +71,10 @@ public class Create_simple_menu2 extends Fragment {
     private EditText price;
     private CheckBox fee;
     private CheckBox drink;
+    private ViewGroup viewGroup;
+    private View load;
+    private TextView addDish;
+    ArrayList<Course> courselist = new ArrayList<Course>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -96,37 +117,61 @@ public class Create_simple_menu2 extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.toolbar_add,menu);
-        menu.findItem(R.id.add_ab).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        data=sData.getdata();
+        menu=sData.getdata().getMenu();
+        FirebaseDatabase db=FirebaseDatabase.getInstance();
+        DatabaseReference ref=db.getReference("course");
+        ref.orderByChild("mid").equalTo(sData.getdata().getMenu().getMid()).addChildEventListener(new ChildEventListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Course course= new Course();
+                course.setName(dataSnapshot.child("name").getValue().toString());
+                course.setGlutenFree((boolean)dataSnapshot.child("glutenFree").getValue());
+                course.setVegan((boolean)dataSnapshot.child("vegan").getValue());
+                course.setCid(dataSnapshot.child("cid").getValue().toString());
+                course.setSpicy((boolean)dataSnapshot.child("spicy").getValue());
+                course.setVegetarian((boolean)dataSnapshot.child("vegetarian").getValue());
 
-                        Course newDish;
-                try {
-                    newDish=new Course(data.getRest());
-                    data.setNewDish(newDish);
-                } catch (CourseException e) {
-                    e.printStackTrace();
-                }
-                Add_simple_dish add_dish=new Add_simple_dish();
-                getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fragment_holder,add_dish).commit();
-                return true;
+
+                menu.getCourses().add(course);
+                adp.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
+
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        data=sData.getdata();
-        rest=sData.getdata().getRest();
-        menu=sData.getdata().getMenu();
+
         // Inflate the layout for this fragment
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.actionBar_createMenu);
+        viewGroup=container;
         View v=inflater.inflate(R.layout.fragment_create_simple_menu2, container, false);
         setUpData(v);
         fetchData();
@@ -144,27 +189,77 @@ public class Create_simple_menu2 extends Fragment {
         price= (EditText) v.findViewById(R.id.fcm2_price);
         drink= (CheckBox) v.findViewById(R.id.cbch_2_1);
         fee=(CheckBox)v.findViewById(R.id.cbch_2_2);
-        Button end =(Button)v.findViewById(R.id.fin);
+        TextView end =(TextView) v.findViewById(R.id.fin);
+        addDish=(TextView)v.findViewById(R.id.add_dish);
+        addDish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Course newDish;
+                try {
+                    FirebaseDatabase db=FirebaseDatabase.getInstance();
+                    DatabaseReference ref=db.getReference("course");
+                    String cid= ref.push().getKey();
+                    newDish=new Course(data.getMenu().getMid(),cid);
+                    data.setNewDish(newDish);
+                } catch (CourseException e) {
+                    e.printStackTrace();
+                }
+                Add_simple_dish add_dish=new Add_simple_dish();
+                getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fragment_holder,add_dish).commit();
+            }
+        });
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-
+                sData.loading();
                     if(price.getText().toString().length()>0) {
+                        courselist=menu.getCourses();
+                        menu.setGlutenfree(true);
+                        menu.setVegan(true);
+                        menu.setVegetarian(true);
+                        menu.setSpicy(false);
+                        for(Course c:courselist) {
+                            if (!c.isGlutenFree()) menu.setGlutenfree(false);
+                            if(!c.isVegan()) menu.setVegan(false);
+                            if(!c.isVegetarian()) menu.setVegetarian(false);
+                            if(c.isSpicy()) menu.setSpicy(true);
+                        }
                         menu.setPrice(Float.valueOf(price.getText().toString()));
                         menu.setServiceFee(fee.isChecked());
                         menu.setBeverage(drink.isChecked());
-                        rest.saveData();
-                        getActivity().finish();
+                        FirebaseDatabase db= FirebaseDatabase.getInstance();
+                        DatabaseReference ref=db.getReference("menu");
+                        ref.child(menu.getMid()).setValue(menu.toMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                FirebaseStorage storage = FirebaseStorage.getInstance();
+                                StorageReference storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/"+menu.getMid());
+                                try {
+                                    Bitmap image= new Picture(Uri.parse(menu.getImageLocalPath()),getActivity().getContentResolver(),300,300).getBitmap();
+                                    ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+                                    image.compress(Bitmap.CompressFormat.PNG,20,outputStream);
+                                    ByteArrayInputStream inputStream=new ByteArrayInputStream(outputStream.toByteArray());
+                                    storageRoot.putStream(inputStream).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            getActivity().finish();
+                                        }
+                                    });
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+
+                            }
+                        });
+
                     }
                     else
                         Toast.makeText(getContext(),getResources().getString(R.string.toast_empty_price), Toast.LENGTH_LONG)
                                 .show();
 
 
-                } catch (RestaurantException e) {
-                    e.printStackTrace();
-                }
+
             }
         });
 
@@ -227,43 +322,22 @@ public class Create_simple_menu2 extends Fragment {
 
         @Override
         public void onBindViewHolder(DishViewHolder holder, int position) {
-            int visible;
             Course course= courses.get(position);
             holder.dish_name.setText(course.getName());
-            Log.v("Course",course.getName());
+            //Log.v("Course",course.getName());
             holder.delete.setOnClickListener(new onClickRemove(position,courses));
 
-            if(course.isGlutenFree()){
-                visible=View.VISIBLE;
-            }
-            else{
-                visible=View.INVISIBLE;
-            }
-            holder.glunten_free.setVisibility(visible);
+            if(!course.isGlutenFree())
+                holder.glunten_free.setColorFilter(Color.GRAY);
 
-            if(course.isSpicy()){
-                visible=View.VISIBLE;
-            }
-            else{
-                visible=View.INVISIBLE;
-            }
-            holder.hot.setVisibility(visible);
+            if(!course.isSpicy())
+                holder.hot.setColorFilter(Color.GRAY);
 
-            if(course.isVegan()){
-                visible=View.VISIBLE;
-            }
-            else{
-                visible=View.INVISIBLE;
-            }
-            holder.vegan.setVisibility(visible);
+            if(!course.isVegan())
+                holder.vegan.setColorFilter(Color.GRAY);
 
-            if(course.isVegetarian()){
-                visible=View.VISIBLE;
-            }
-            else{
-                visible=View.INVISIBLE;
-            }
-            holder.vegetarian.setVisibility(visible);
+            if(!course.isVegetarian())
+                holder.vegetarian.setColorFilter(Color.GRAY);
 
 
 
@@ -279,6 +353,9 @@ public class Create_simple_menu2 extends Fragment {
             }
             @Override
             public void onClick(View v) {
+                FirebaseDatabase db =FirebaseDatabase.getInstance();
+                DatabaseReference ref=db.getReference("course");
+                ref.child(alc.get(position).getCid()).removeValue();
                 alc.remove(position);
                 adp.notifyItemRemoved(position);
                 adp.notifyDataSetChanged();

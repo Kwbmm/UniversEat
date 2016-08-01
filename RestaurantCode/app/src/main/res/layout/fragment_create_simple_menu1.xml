@@ -1,102 +1,149 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fcm1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="5dp"
-    tools:context=".CreateMenu.Create_menu_frag"
-    android:id="@+id/fcm1">
+    tools:context=".CreateMenu.Create_menu_frag">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@+id/imageView14">
+
+            <EditText
+                android:id="@+id/cmed_1_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imageView14"
+                android:hint="@string/Menu_name"
+                android:inputType="textCapSentences"
+                android:textColor="#DE000000"
+                android:textColorHint="#8A000000"
+                android:textSize="16sp" />
+        </android.support.design.widget.TextInputLayout>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/Menu_name"
-            android:id="@+id/cmtw_1_1"
-            android:layout_alignParentTop="true"
-            android:textSize="20dp"
-            android:layout_marginTop="10dp"
-           android:textAlignment="center"
-            android:textStyle="bold"
-            />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/cmed_1_1"
-            android:inputType="textCapSentences"
-            android:layout_below="@id/cmtw_1_1"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/fragment_create_simple_menu1_Menu_Image"
-            android:layout_below="@id/cmed_1_1"
             android:id="@+id/image_label"
-            android:textSize="20dp"
-            android:textAlignment="center"
-            android:textStyle="bold"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/description"
+            android:layout_toRightOf="@+id/cmiw_1_1"
+            android:background="@drawable/ripple_effect"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:text="@string/add_picture"
+            android:textColor="#DE000000"
+            android:textSize="16sp"
+            android:layout_marginTop="22dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:paddingLeft="4dp" />
+
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
             android:id="@+id/cmiw_1_1"
-            android:src="@drawable/ic_add_a_photo_black_24dp"
-            android:layout_below="@+id/image_label"
-            android:layout_centerHorizontal="true"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/frg_create_restaurant_1_textView_Description"
-            android:id="@+id/cmtw_1_2"
-            android:layout_below="@id/cmiw_1_1"
-            android:textSize="20dp"
-            android:layout_marginTop="10dp"
-            android:textAlignment="center"
-            android:textStyle="bold"
-            />
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="false"
+            android:layout_alignTop="@+id/image_label"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/ic_picture_black" />
+
         <LinearLayout
+            android:id="@+id/scm_ll_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/scm_ll_button"
             android:layout_alignParentBottom="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
+
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:text="@string/fragment_create_simple_menu1_Send_notification"/>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/next"
-                android:id="@+id/next"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="right"/>
+                android:text="@string/fragment_create_simple_menu1_Send_notification"
+                android:visibility="invisible" />
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/scm_lltext"
-            android:layout_below="@id/cmtw_1_2"
-            android:layout_above="@id/scm_ll_button">
-        <EditText
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:id="@+id/cmed_1_2"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:id="@+id/description"
+            android:layout_below="@+id/name"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@+id/imageView15">
 
-            />
-        </LinearLayout>
+            <EditText
+                android:id="@+id/cmed_1_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cmed_1_1"
+
+                android:layout_toRightOf="@+id/imageView14"
+                android:hint="@string/frg_create_restaurant_1_textView_Description"
+                android:inputType="textMultiLine"
+                android:textColor="#DE000000"
+                android:textColorHint="#8A000000"
+                android:textSize="16sp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/imageView14"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignTop="@+id/name"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/ic_menu_black"
+            android:tint="@color/material_grey_600"
+            android:layout_marginTop="5dp" />
+
+        <ImageView
+            android:id="@+id/imageView15"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/description"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/ic_info_black"
+            android:tint="@color/material_grey_600"
+            android:layout_marginTop="5dp" />
+
+        <TextView
+            android:id="@+id/next"
+            style="@style/Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/image_label"
+            android:text="@string/next" />
+
+        <ProgressBar
+            android:id="@+id/progressBar4"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/next"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="5dp"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 

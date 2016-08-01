@@ -1,104 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
-    card_view:cardElevation="5dp"
-    card_view:cardCornerRadius="5dp"
-    card_view:cardUseCompatPadding="true"
-    android:id="@+id/menu_card">
-    <RelativeLayout
+    android:layout_height="140dp"
+    android:layout_marginTop="5dp">
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/menu_card"
         android:layout_width="match_parent"
         android:layout_height="140dp"
-        android:background="#ffffff"
-        android:layout_margin="5dp"
-        android:id="@+id/menu_view_layout">
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:src="@mipmap/ic_launcher"
-            android:id="@+id/menu_image"/>
-        <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_settings_black"
-            android:id="@+id/menu_edit"/>
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        card_view:cardCornerRadius="@dimen/cardview_default_radius"
+        card_view:cardElevation="@dimen/cardview_default_elevation"
+        card_view:cardPreventCornerOverlap="false"
+        card_view:cardUseCompatPadding="true">
 
-        <TextView
-            android:id="@+id/menu_name"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/menu_details_Menu_Name"
-            android:layout_toRightOf="@id/menu_image"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:layout_toLeftOf="@id/menu_edit"
-            />
+            android:layout_height="match_parent"
+            android:layout_above="@+id/menu_icon3"
+            android:layout_toEndOf="@+id/menu_image"
+            android:minHeight="140dp"
+            android:background="@drawable/ripple_effect"
+            android:clickable="false">
 
+            <TextView
+                android:id="@+id/menu_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/menu_description"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/menu_description"
+                android:text="@string/menu_details_Menu_Name"
+                android:textColor="#DE000000"
+                android:textSize="20sp"
+                android:ellipsize="end"
+                android:maxLines="1" />
 
+            <TextView
+                android:id="@+id/menu_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/menu_name"
+                android:layout_marginRight="10dp"
+                android:layout_toEndOf="@+id/menu_image"
+                android:layout_toRightOf="@+id/menu_image"
+                android:text="@string/menu_details_Menu_description"
+                android:textSize="14sp"
+                android:maxLines="4"
+                android:ellipsize="end"
+                android:textColor="#DE000000" />
 
+            <ImageView
+                android:id="@+id/menu_icon1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@+id/menu_image"
+                android:layout_toRightOf="@+id/menu_image"
+                android:src="@drawable/ic_hot_black"
+                android:tint="#FFD32F2F" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:id="@+id/menu_description"
-            android:layout_below="@id/menu_name"
-            android:layout_toRightOf="@id/menu_image"
-            android:textSize="18dp"
-            android:text="@string/menu_details_Menu_description"
-            android:maxLength="150"
-            />
-        <TextView
-            android:id="@+id/menu_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:text="7€"
-            android:textSize="25dp"
-            android:paddingRight="10dp"/>
-        <ImageView
-            android:id="@+id/menu_icon1"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_hot_black"
-            android:tint="#a60101" />
-            android:layout_marginLeft="10dp"/>
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/menu_icon1"
-            android:layout_marginLeft="5dp"
-            android:src="@drawable/ic_nogluten_black"
-            android:tint="#c8a004"
-            android:id="@+id/menu_icon2"/>
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/menu_icon2"
-            android:layout_marginLeft="5dp"
-            android:src="@drawable/ic_vegetarian_black"
-            android:tint="#951f9b"
-            android:id="@+id/menu_icon3"/>
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/menu_icon3"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/menu_icon4"
-            android:src="@drawable/ic_vegan_black"
-            android:tint="#007f24" />
+            <ImageView
+                android:id="@+id/menu_icon2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/menu_icon1"
+                android:src="@drawable/ic_nogluten_black"
+                android:tint="#FFFBC02D" />
 
+            <ImageView
+                android:id="@+id/menu_icon3"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/menu_icon2"
+                android:src="@drawable/ic_vegetarian_black"
+                android:tint="#7b1fa2" />
 
+            <ImageView
+                android:id="@+id/menu_icon4"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/menu_icon3"
+                android:src="@drawable/ic_vegan_black"
+                android:tint="#388e3c" />
 
-    </RelativeLayout>
-</android.support.v7.widget.CardView>
+            <ImageView
+                android:id="@+id/menu_image"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="10dp"
+                android:scaleType="centerCrop"
+                android:src="@color/material_grey_300" />
+
+            <ImageButton
+                android:id="@+id/menu_edit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_settings_black"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:backgroundTint="#ffffff" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</FrameLayout>

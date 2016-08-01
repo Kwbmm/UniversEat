@@ -1,147 +1,136 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_grey_100">
-    <ScrollView
+    android:background="@color/fragmentWhite"
+    android:clickable="true">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/sv1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:clickable="true"
+        app:cardCornerRadius="@dimen/cardview_default_radius"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true">
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/fl_redit"
-            android:background="@color/material_grey_100">
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
 
-            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:card="http://schemas.android.com/apk/res-auto"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card:cardElevation="3dp"
-                card:cardUseCompatPadding="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_margin="10dp"
-                android:id="@+id/view2">
-                <RelativeLayout
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="5dp">
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_toRightOf="@+id/imageView26"
+                    android:background="@drawable/ripple_effect"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:text="@string/make_order_date"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#DE000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/date"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_toRightOf="@+id/imageView27"
+                    android:background="@drawable/ripple_effect"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:text="@string/make_order_time"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#DE000000"
+                    android:textSize="16sp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/time"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_toRightOf="@+id/imageView28">
 
                     <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:inputType="textMultiLine"
-                        android:ems="10"
-                        android:id="@+id/reservation_name"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:hint="@string/make_order_Reservation_Name"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:textSize="20dp" />
-                </RelativeLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:card="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card:cardElevation="3dp"
-                card:cardUseCompatPadding="true"
-                android:layout_below="@+id/view2"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:id="@+id/dateCard"
-                android:clickable="true">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp">
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="50dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="@string/make_order_date"
-                        android:id="@+id/setDate"
-                        android:gravity="center|center_horizontal"
-                        android:textSize="20dp" />
-                </RelativeLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:card="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card:cardElevation="3dp"
-                card:cardUseCompatPadding="true"
-                android:layout_below="@+id/dateCard"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:id="@+id/hourCard"
-                android:clickable="true">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="50dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="@string/make_order_time"
-                        android:id="@+id/setHour"
-                        android:gravity="center|center_horizontal"
-                        android:textSize="20dp" />
-                </RelativeLayout>
-
-            </android.support.v7.widget.CardView>
-
-
-            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:card="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card:cardElevation="3dp"
-                card:cardUseCompatPadding="true"
-                android:layout_below="@+id/hourCard"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp">
-
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:inputType="textMultiLine"
-                        android:ems="10"
-                        android:id="@+id/reservation_notes"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
+                        android:id="@+id/notes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/time"
+                        android:layout_toRightOf="@+id/imageView28"
+                        android:gravity="center_vertical"
                         android:hint="@string/make_order_notes"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:textSize="20dp" />
-                </RelativeLayout>
+                        android:inputType="textMultiLine"
+                        android:maxLines="4"
+                        android:textColor="#DE000000"
+                        android:textColorHint="#8A000000"
+                        android:textSize="16sp" />
+                </android.support.design.widget.TextInputLayout>
 
-            </android.support.v7.widget.CardView>
+                <TextView
+                    android:id="@+id/pay"
+                    style="@style/Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/note"
+                    android:text="@string/pay_now" />
 
-        </RelativeLayout>
-    </ScrollView>
+                <ImageView
+                    android:id="@+id/imageView26"
+                    android:layout_width="40dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignTop="@+id/date"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_calendar_black"
+                    android:tint="@color/material_grey_600" />
+
+                <ImageView
+                    android:id="@+id/imageView27"
+                    android:layout_width="40dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignTop="@+id/time"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_clock_black"
+                    android:tint="@color/material_grey_600" />
+
+                <ImageView
+                    android:id="@+id/imageView28"
+                    android:layout_width="40dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignTop="@+id/note"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/ic_pen_black"
+                    android:tint="@color/material_grey_600" />
+            </RelativeLayout>
+        </ScrollView>
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

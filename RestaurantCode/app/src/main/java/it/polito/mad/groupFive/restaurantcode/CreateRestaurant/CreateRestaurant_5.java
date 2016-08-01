@@ -2,24 +2,23 @@ package it.polito.mad.groupFive.restaurantcode.CreateRestaurant;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.ArrayMap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
 
 
 /**
@@ -39,6 +38,9 @@ public class CreateRestaurant_5 extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private TextView btnFinish;
+    private ProgressBar progressBar;
+    private String rid,uid;
 
     private onFragInteractionListener mListener;
 
@@ -86,11 +88,17 @@ public class CreateRestaurant_5 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String METHOD_NAME = this.getClass().getName()+" - onCreateView";
         this.parentView = inflater.inflate(R.layout.fragment_create_restaurant_5, container, false);
-
-        Button btnFinish = (Button) this.parentView.findViewById(R.id.Button_Finish);
+        this.rid = getR.getRest().getRid();
+        this.uid = getR.getRest().getUid();
+        this.restaurant=getR.getRest();
+        progressBar=(ProgressBar)parentView.findViewById(R.id.progressBar6);
+        progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        btnFinish = (TextView) this.parentView.findViewById(R.id.Button_Finish);
         btnFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnFinish.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 Activity a = getActivity();
                 if(a instanceof onFragInteractionListener) {
                     if(setRestaurantData()){
@@ -100,6 +108,8 @@ public class CreateRestaurant_5 extends Fragment {
                     else{
                         Toast.makeText(getContext(),getResources().getString(R.string.toastFail),Toast.LENGTH_LONG)
                                 .show();
+                        progressBar.setVisibility(View.INVISIBLE);
+                        btnFinish.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -111,10 +121,8 @@ public class CreateRestaurant_5 extends Fragment {
     private boolean setRestaurantData() {
         final String METHOD_NAME = this.getClass().getName()+" - setRestaurantData";
 
-        SharedPreferences sp=getActivity().getSharedPreferences(getString(R.string.user_pref), CreateRestaurant.MODE_PRIVATE);
 
-        try {
-            restaurant=new Restaurant(getContext(),sp.getInt("rid",-1));
+
             //Get all the tickets
             ArrayList<CheckBox> ticketCBs = new ArrayList<>();
             //TODO wanna add more tickets??
@@ -122,16 +130,12 @@ public class CreateRestaurant_5 extends Fragment {
             ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_2));
             ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_3));
             ticketCBs.add((CheckBox) this.parentView.findViewById(R.id.ticket_4));
-            HashSet<String> ticketSet = new HashSet<>();
+            Map<String,Boolean> ticketMap = new HashMap<>();
             for(CheckBox cb : ticketCBs){
-                if(cb.isChecked()) ticketSet.add(cb.getText().toString());
+                if(cb.isChecked()) ticketMap.put(cb.getText().toString(),true);
             }
-            restaurant.setTickets(ticketSet);
+            restaurant.setTickets(ticketMap);
             return true;
-        } catch (RestaurantException e) {
-            Log.e(METHOD_NAME, e.getMessage());
-            return false;
-        }
     }
 
     @Override
@@ -139,6 +143,7 @@ public class CreateRestaurant_5 extends Fragment {
         super.onAttach(context);
         if (context instanceof onFragInteractionListener) {
             mListener = (onFragInteractionListener) context;
+            getR=(getRestaurant) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement onFragInteractionListener");

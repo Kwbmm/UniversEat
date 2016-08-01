@@ -2,35 +2,47 @@ package it.polito.mad.groupFive.restaurantcode.Login;
 
 import android.app.FragmentManager;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
 import android.widget.FrameLayout;
 
-import java.util.Random;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 import it.polito.mad.groupFive.restaurantcode.NavigationDrawer;
 import it.polito.mad.groupFive.restaurantcode.R;
-import it.polito.mad.groupFive.restaurantcode.datastructures.Customer;
-import it.polito.mad.groupFive.restaurantcode.datastructures.RestaurantOwner;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.CustomerException;
-import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantOwnerException;
+import it.polito.mad.groupFive.restaurantcode.datastructures.User;
 
 /**
  * Created by Giovanni on 22/04/16.
  */
 public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFragmentInteractionListener, Createlog_frag1.OnFragmentInteractionListener{
-    private int uid;
+    private String uid;
     private boolean owner;
-    private RestaurantOwner user_r=null;
-    private Customer user=null;
+    private User user_r=null;
+    private User user=null;
     private Bundle bundle;
+    private Bitmap image;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final String METHOD_NAME =this.getClass().getName()+" - OnCreate";
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(R.string.actionBar_signUp);
         FrameLayout mlay= (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_createlogin, mlay);
         Createlog_frag fragment= new Createlog_frag();
@@ -40,16 +52,10 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
     public void onChangeFrag0(boolean o){
         final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag0";
         SharedPreferences sp=getSharedPreferences(getString(R.string.user_pref), CreateLogin.MODE_PRIVATE);
-        uid=sp.getInt("uid",-1);
+        uid=sp.getString("uid",null);
         this.owner=o;
-        try {
-            if (owner)
-                user_r = new RestaurantOwner(getApplicationContext(),uid);
-            else
-                user = new Customer(getApplicationContext(),uid);
-        } catch (RestaurantOwnerException | CustomerException e) {
-            Log.e(METHOD_NAME,e.getMessage());
-        }
+        user = new User(owner);
+
         bundle = new Bundle();
         bundle.putBoolean("owner", owner);
         SharedPreferences.Editor editor=sp.edit();
@@ -57,49 +63,100 @@ public class CreateLogin extends NavigationDrawer implements Createlog_frag.OnFr
         editor.apply();
         Createlog_frag1 frag1 = new Createlog_frag1();
         frag1.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.ac_login,frag1).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.slide_left_in,R.anim.slide_left_out,R.anim.slide_right_in,R.anim.slide_right_out)
+                .replace(R.id.ac_login,frag1).addToBackStack(null).commit();
     }
 
-    public void onChangeFrag(Customer u, RestaurantOwner u_r) {
+    public void onChangeFrag(User u, Bitmap image) {
         final String METHOD_NAME = this.getClass().getName() + " - onChangeFrag";
-        if(owner){
-            user_r.setName(u_r.getName());
-            user_r.setSurname(u_r.getSurname());
-            user_r.setEmail(u_r.getEmail());
-            user_r.setUserName(u_r.getUserName());
-            user_r.setImageFromBitmap(u_r.getImageBitmap());
-            user_r.setPassword(u_r.getPassword());
-            try {
-                user_r.saveData();
-            } catch (RestaurantOwnerException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-            }
-        }
-        else {
-            user.setName(u.getName());
-            user.setSurname(u.getSurname());
-            user.setEmail(u.getEmail());
-            user.setUserName(u.getUserName());
-            user.setImageFromBitmap(u.getImageBitmap());
-            user.setPassword(u.getPassword());
-            try {
-                user.saveData();
-            } catch (CustomerException e) {
-                Log.e(METHOD_NAME,e.getMessage());
-            }
-        }
-        finish();
+
+        this.image=image;
+        user.setName(u.getName());
+        user.setSurname(u.getSurname());
+        user.setEmail(u.getEmail());
+        user.setUserName(u.getUserName());
+        user.setPassword(u.getPassword());
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(new Created(user));
+
+
     }
 
     @Override
     public void onBackPressed(){
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-            Log.i("MainActivity", "popping backstack");
+            //Log.i("MainActivity", "popping backstack");
             fm.popBackStack();
         } else {
-            Log.i("MainActivity", "nothing on backstack, calling super");
+            //Log.i("MainActivity", "nothing on backstack, calling super");
             super.onBackPressed();
+        }
+    }
+    private class Created implements OnCompleteListener {
+        User user;
+        FirebaseDatabase db;
+        DatabaseReference myRef;
+
+        public Created(User user) {
+            this.user = user;
+        }
+
+
+        @Override
+        public void onComplete(@NonNull Task task) {
+            if (task.isSuccessful()) {
+                //Log.v("login", "Success");
+                String key;
+                db = FirebaseDatabase.getInstance();
+                myRef = db.getReference("User");
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                auth.signInWithEmailAndPassword(user.getEmail(), user.getPassword());
+                SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.user_pref),MODE_PRIVATE);
+                SharedPreferences.Editor editor= sharedPreferences.edit();
+                editor.putString("uid",auth.getCurrentUser().getUid());
+                editor.putString("psw",user.getPassword());
+                editor.putString("email",user.getEmail());
+                editor.commit();
+
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                FirebaseUser firebaseUser = auth.getCurrentUser();
+                user.setUid(firebaseUser.getUid());
+                myRef.push().setValue(user);
+                byte[] data = baos.toByteArray();
+
+                FirebaseStorage storage=FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com");
+                final StorageReference userImg =storageRef.child("Users/"+user.getUid()+".jpg");
+
+                UploadTask uploadTask = userImg.putBytes(data);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        SharedPreferences sharedPreferences;
+                        sharedPreferences = getSharedPreferences(getString(R.string.user_pref), MODE_PRIVATE);
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putBoolean("logged",true);
+                        editor.apply();
+                        onFragmentInteraction();
+                        finish();
+                    }
+                });
+            } else {
+                //Log.d("login", "Failed");
+            }
         }
     }
 }
