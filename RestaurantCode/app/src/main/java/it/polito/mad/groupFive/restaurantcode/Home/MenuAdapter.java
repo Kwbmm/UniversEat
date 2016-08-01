@@ -151,10 +151,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
         if(menu.getName().length()>18)
             holder.menu_name.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
         holder.menu_price.setText(String.format(Locale.getDefault(),"%.2f", menu.getPrice())+"€");
-        if(!menu.isSpicy()) holder.spicy_icon.setColorFilter(Color.GRAY);
-        if(!menu.isVegan()) holder.vegan_icon.setColorFilter(Color.GRAY);
-        if(!menu.isVegetarian()) holder.vegetarian_icon.setColorFilter(Color.GRAY);
-        if(!menu.isGlutenfree()) holder.glutenfree_icon.setColorFilter(Color.GRAY);
+        if(!menu.isSpicy()) holder.spicy_icon.setColorFilter(Color.GRAY); else holder.spicy_icon.setColorFilter(Color.parseColor("#FFD32F2F"));
+        if(!menu.isVegan()) holder.vegan_icon.setColorFilter(Color.GRAY); else holder.vegan_icon.setColorFilter(Color.parseColor("#388e3c"));
+        if(!menu.isVegetarian()) holder.vegetarian_icon.setColorFilter(Color.GRAY); else holder.vegetarian_icon.setColorFilter(Color.parseColor("#7b1fa2"));
+        if(!menu.isGlutenfree()) holder.glutenfree_icon.setColorFilter(Color.GRAY); else holder.glutenfree_icon.setColorFilter(Color.parseColor("#FFFBC02D"));
         File img = new File(menu.getImageLocalPath());
         try {
             holder.menu_image.setImageBitmap(new Picture(Uri.fromFile(img),context.getContentResolver(),300,300).getBitmap());
