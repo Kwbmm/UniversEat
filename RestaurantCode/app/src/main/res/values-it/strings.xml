@@ -380,6 +380,8 @@
     <string name="toast_getMenusUnexpectedError">Sembra che dovrai morire di fame… Non sono riuscito a trovare alcun menu :(</string>
     <string name="review_based_on">recensioni</string>
     <string name="actionBar_restaurantSearch">Cerca Ristoranti</string>
+    <string name="passwordmandatory">Password (campo obbligatorio)</string>
+    <string name="titleedit">Cambio mail e/o immagine</string>
 
     <string name="nowOpen">Aperto!</string>
     <string name="nowClosed">Chiuso</string>

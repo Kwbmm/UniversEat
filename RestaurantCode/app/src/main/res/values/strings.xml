@@ -386,6 +386,8 @@
 
     <string name="password6">Password must be at least 6 char</string>
     <string name="email">The mail address is not correct</string>
+    <string name="passwordmandatory">Password (mandatory field)</string>
+    <string name="titleedit">Change mail or image</string>
 
     <array name="tags">
         <item>Pizza</item>
