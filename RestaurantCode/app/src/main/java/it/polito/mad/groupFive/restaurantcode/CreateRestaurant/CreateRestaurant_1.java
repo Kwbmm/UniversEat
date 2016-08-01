@@ -240,21 +240,21 @@ public class CreateRestaurant_1 extends Fragment {
 
             restaurant=getR.getRest();
             if(name.getText().toString().trim().equals("") || name.getText() == null){
-                //Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
+                Log.w(METHOD_NAME,"TextView RestaurantName is either empty or null");
                 return false;
             }
             restaurant.setName(name.getText().toString());
 
 
             if(description.getText().toString().trim().equals("") || description.getText() == null){
-                //Log.w(METHOD_NAME,"TextView Description is either empty or null");
+                Log.w(METHOD_NAME,"TextView Description is either empty or null");
                 return false;
             }
             restaurant.setDescription(description.getText().toString());
 
 
             if(!isImageSet){
-                //Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
+                Log.w(METHOD_NAME,"ImageView RestaurantImage is null");
                 return false;
             }
 
@@ -264,13 +264,13 @@ public class CreateRestaurant_1 extends Fragment {
             restaurant.setImageLocalPath(this.restaurantPicUri.toString());
 
             if(telephone.getText().toString().trim().equals("") || telephone.getText() == null){
-                //Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
+                Log.w(METHOD_NAME,"TextView Telephone is either empty or null");
                 return false;
             }
             restaurant.setTelephone(telephone.getText().toString());
 
             if(website.getText().toString().trim().equals("") || website.getText() == null){
-                //Log.w(METHOD_NAME,"TextView Website is either empty or null");
+                Log.w(METHOD_NAME,"TextView Website is either empty or null");
                 return false;
             }
             restaurant.setWebsite(website.getText().toString());

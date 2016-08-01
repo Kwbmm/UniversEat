@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -133,7 +134,7 @@ public class CreateRestaurant
             this.storageRoot.putStream(inputStream).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    //Log.i(METHOD_NAME,"Image upload successful");
+                    Log.i(METHOD_NAME,"Image upload successful");
                     SharedPreferences sharedPreferences=getSharedPreferences(getString(R.string.user_pref),CreateRestaurant.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("rid",restaurant.getRid());
@@ -142,7 +143,7 @@ public class CreateRestaurant
                 }
             });
         } catch (IOException e) {
-            //Log.e(METHOD_NAME,e.getMessage());
+            Log.e(METHOD_NAME,e.getMessage());
         }
     }
 
