@@ -396,12 +396,12 @@
         <item>Prezzo superiore a 25€</item>
     </string-array>
 
-    <string-array name="filterCurtainRestaurantItems">
-        <item>Ticket</item>
-        <item>Almeno 3 stelle</item>
-        <item>Aperto adesso</item>
-        <item>Nei dintorni (3 km)</item>
-    </string-array>
+    <string name="ticketCustomAlertDialog">Ticket</string>
+    <string name="ratingCustomAlertDialog">Almeno 3 stelle</string>
+    <string name="openCustomAlertDialog">Aperto ora</string>
+    <string name="distanceCustomAlertDialog">Distanza</string>
+    <string name="defaultDistanceCustomAlertDialog">5 Km</string>
+
 
     <string name="emailaddressold">Inserisci la vecchia mail</string>
     <string name="emailaddressnew">Inserisci la nuova mail</string>

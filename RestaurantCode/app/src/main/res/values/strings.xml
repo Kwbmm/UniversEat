@@ -118,16 +118,10 @@
 
     <!-- SearchRestaurantResults.java -->
     <string name="ticketCustomAlertDialog">Ticket</string>
-    <string name="ratingCustomAlertDialog">Rating from 3 to 5</string>
+    <string name="ratingCustomAlertDialog">At least 3 stars</string>
     <string name="openCustomAlertDialog">Open now</string>
     <string name="distanceCustomAlertDialog">Distance</string>
     <string name="defaultDistanceCustomAlertDialog">5 Km</string>
-    <string-array name="filterCurtainRestaurantItems">
-        <item>Ticket</item>
-        <item>Rating from 3 to 5</item>
-        <item>Open now</item>
-        <item>Near here (3 Km)</item>
-    </string-array>
     <!-- END SearchRestaurantResults.java -->
 
     <!-- toolbar_search_data.xml -->
