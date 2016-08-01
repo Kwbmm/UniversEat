@@ -150,7 +150,7 @@ public class CreateRestaurant_4 extends Fragment {
                 public void onClick(View v) {
                     int startHour = 17;
                     int startMinute = 0;
-                    CustomTimePickerDialog ctpd = new CustomTimePickerDialog(getContext(),
+                    TimePickerDialog tpd = new TimePickerDialog(getContext(),
                             new TimePickerDialog.OnTimeSetListener() {
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -164,10 +164,8 @@ public class CreateRestaurant_4 extends Fragment {
                             },
                             startHour,
                             startMinute, true);
-                    ctpd.setTitle(getResources().getString(R.string.titleTimePickerFrom));
-                    ctpd.setMin(startHour,startMinute);
-                    ctpd.setMax(18,59);
-                    ctpd.show();
+                    tpd.setTitle(getResources().getString(R.string.titleTimePickerFrom));
+                    tpd.show();
                 }
             });
 
@@ -177,7 +175,7 @@ public class CreateRestaurant_4 extends Fragment {
                 public void onClick(View v) {
                     int startHour = 0;
                     int startMinute = 0;
-                    CustomTimePickerDialog ctpd = new CustomTimePickerDialog(getContext(),
+                    TimePickerDialog tpd = new TimePickerDialog(getContext(),
                             new TimePickerDialog.OnTimeSetListener() {
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -191,10 +189,8 @@ public class CreateRestaurant_4 extends Fragment {
                             },
                             startHour,
                             startMinute, true);
-                    ctpd.setTitle(getResources().getString(R.string.titleTimePickerFrom));
-                    ctpd.setMin(startHour,startMinute);
-                    ctpd.setMax(7,59);
-                    ctpd.show();
+                    tpd.setTitle(getResources().getString(R.string.titleTimePickerTo));
+                    tpd.show();
                 }
             });
             if (getR.editmode()){

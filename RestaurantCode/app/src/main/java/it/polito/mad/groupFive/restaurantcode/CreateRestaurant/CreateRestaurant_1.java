@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -294,7 +295,7 @@ public class CreateRestaurant_1 extends Fragment {
                         try {
                             photo = createImageFile();
                         } catch (IOException ioe) {
-                            //Log.e(METHOD_NAME, ioe.getMessage());
+                            Log.e(METHOD_NAME, ioe.getMessage());
                         }
                         if (photo != null) {
                             restaurantPicAbsPath = photo.getAbsolutePath();
@@ -338,11 +339,11 @@ public class CreateRestaurant_1 extends Fragment {
         final String METHOD_NAME = this.getClass().getName()+" - onRequestPermissionResult";
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-            //Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+            Log.v(METHOD_NAME,"Permission: "+permissions[0]+ "was "+grantResults[0]);
             pickImage();
         }
         else {
-            //Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
+            Log.e(METHOD_NAME,"Permission: "+permissions[0]+" was "+grantResults[0]);
         }
     }
 
@@ -372,7 +373,7 @@ public class CreateRestaurant_1 extends Fragment {
             try{
                 this.restaurantImg.setImageBitmap(new Picture(this.restaurantPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
                 this.isImageSet = true;
-            } catch(IOException ioe) { //Log.e(METHOD_NAME,ioe.getMessage());}
+            } catch(IOException ioe) { Log.e(METHOD_NAME,ioe.getMessage());}
         }
         if(resultCode == CreateRestaurant.RESULT_OK && requestCode == CAPTURE_IMAGE){
             this.restaurantPicView = (ImageView) getActivity().findViewById(R.id.imageView_RestaurantImage);
@@ -380,8 +381,8 @@ public class CreateRestaurant_1 extends Fragment {
                 this.restaurantImg.setImageBitmap(new Picture(this.restaurantPicUri,getActivity().getContentResolver(),imageWidth,imageHeight).getBitmap());
                 this.isImageSet = true;
             } catch(IOException ioe){
-                //Log.e(METHOD_NAME,ioe.getMessage());
-            }}
+                Log.e(METHOD_NAME,ioe.getMessage());
+            }
         }
     }
 

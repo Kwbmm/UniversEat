@@ -153,24 +153,19 @@ public class CreateRestaurant_3 extends Fragment {
                 public void onClick(View v) {
                     int startHour = 10;
                     int startMinute = 0;
-                    CustomTimePickerDialog ctpd = new CustomTimePickerDialog(getContext(),
-                            new TimePickerDialog.OnTimeSetListener() {
-                                @Override
-                                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                    hourStart = hourOfDay;
-                                    minuteStart = minute;
-                                    btnFrom.setText(
-                                            String.format(Locale.getDefault(),"%02d",hourOfDay)+
-                                                    ":" +
-                                                    String.format(Locale.getDefault(),"%02d",minute));
-                                }
-                            },
-                            startHour,
-                            startMinute, true);
-                    ctpd.setTitle(getResources().getString(R.string.titleTimePickerFrom));
-                    ctpd.setMin(startHour,startMinute);
-                    ctpd.setMax(12,59);
-                    ctpd.show();
+                    TimePickerDialog tpd = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            hourStart = hourOfDay;
+                            minuteStart = minute;
+                            btnFrom.setText(
+                                    String.format(Locale.getDefault(),"%02d",hourOfDay)+
+                                            ":" +
+                                            String.format(Locale.getDefault(),"%02d",minute));
+                        }
+                    },startHour,startMinute, true);
+                    tpd.setTitle(getResources().getString(R.string.titleTimePickerFrom));
+                    tpd.show();
                 }
             });
 
@@ -181,7 +176,7 @@ public class CreateRestaurant_3 extends Fragment {
                 public void onClick(View v) {
                     int startHour = 15;
                     int startMinute = 0;
-                    CustomTimePickerDialog ctpd = new CustomTimePickerDialog(getContext(),
+                    TimePickerDialog tpd = new TimePickerDialog(getContext(),
                             new TimePickerDialog.OnTimeSetListener() {
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -195,10 +190,8 @@ public class CreateRestaurant_3 extends Fragment {
                             },
                             startHour,
                             startMinute, true);
-                    ctpd.setTitle(getResources().getString(R.string.titleTimePickerFrom));
-                    ctpd.setMin(startHour,startMinute);
-                    ctpd.setMax(16,59);
-                    ctpd.show();
+                    tpd.setTitle(getResources().getString(R.string.titleTimePickerTo));
+                    tpd.show();
                 }
             });
             if (getR.editmode()){
