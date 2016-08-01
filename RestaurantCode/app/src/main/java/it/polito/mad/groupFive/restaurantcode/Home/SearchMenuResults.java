@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -224,9 +225,15 @@ public class SearchMenuResults extends NavigationDrawer {
          * @param weight Weight of the object
          */
         public void addChild(Menu m,int weight){
-            final String METHOD_NAME = this.getClass().getName()+" - filterByTicket";
+            final String METHOD_NAME = this.getClass().getName()+" - addChild";
             try {
                 WeightedMenu wm = new WeightedMenu(m,weight);
+
+                //Check if menu is not duplicate
+                for(int i =0; i < this.menus.size(); i++)
+                    if(this.menus.get(i).getMid().equals(wm.getMid()))
+                        return;
+
                 this.menus.add(wm);
                 if(rv.getVisibility() == View.GONE){
                     pb.setVisibility(View.GONE);
