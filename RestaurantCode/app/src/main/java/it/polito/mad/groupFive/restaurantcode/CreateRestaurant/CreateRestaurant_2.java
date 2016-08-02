@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,9 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -266,6 +271,16 @@ public class CreateRestaurant_2 extends Fragment {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
                 Place place = PlacePicker.getPlace(getContext(),data);
+
+                Pattern p = Pattern.compile("([\\p{L} ]+), +(\\d+), +(\\d+) *([\\p{L}, ]+), +([\\p{L} ]+)");
+                Matcher m = p.matcher(place.getAddress().toString().trim());
+                if(m.matches()){
+                    address.setText(m.group(1)+" "+m.group(2));
+                    ZIPCode.setText(m.group(3));
+                    city.setText(m.group(4));
+                    state.setText(m.group(5));
+                }
+
                 latLng = place.getLatLng();
                 String msg = place.getName()+" "+latLng.toString();
                 mapPickerText.setText(msg);
