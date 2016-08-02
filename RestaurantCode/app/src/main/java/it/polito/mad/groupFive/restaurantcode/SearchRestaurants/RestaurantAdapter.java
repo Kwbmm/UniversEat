@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -225,7 +226,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     private void filterByDistance(Integer distance) {
         for (int i = 0; i < this.restaurants.size(); i++) {
             DistanceRestaurant dr = this.restaurants.get(i);
-            if(dr.getDistance() <= distance)
+            if(dr.getDistance() <= distance.floatValue())
                 dr.toKeep = true;
         }
     }

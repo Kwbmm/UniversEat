@@ -173,6 +173,7 @@ public class SearchRestaurantResults extends NavigationDrawer {
                                 if(i == 3){ //Filter by distance, get the distance
                                     distance = ((SeekBar) customADB.findViewById(R.id.distanceSlider)).getProgress();
                                     distance++; //Fix for the slider range
+                                    distance*= 1000; //Transform to meters
                                 }
                                 ra.filter(i,distance);
                                 isFiltered = true;
