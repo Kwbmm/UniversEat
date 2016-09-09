@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:background="#ffffff">
 
-            <com.google.android.gms.maps.MapView
+            <it.polito.mad.groupFive.restaurantcode.RestaurantView.CustomMapView
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:id="@+id/gmap" />

@@ -106,7 +106,7 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
         getRestaurantData(v);
         //init map
         MapsInitializer.initialize(this.getActivity());
-        mapView = (MapView) v.findViewById(R.id.gmap);
+        mapView = (CustomMapView) v.findViewById(R.id.gmap);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
         return v;
