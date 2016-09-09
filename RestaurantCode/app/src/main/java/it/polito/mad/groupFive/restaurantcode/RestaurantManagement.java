@@ -40,6 +40,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import it.polito.mad.groupFive.restaurantcode.CreateRestaurant.CreateRestaurant;
+import it.polito.mad.groupFive.restaurantcode.RestaurantView.User_info_view;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Picture;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
 import it.polito.mad.groupFive.restaurantcode.datastructures.exceptions.RestaurantException;
@@ -162,13 +163,7 @@ public class RestaurantManagement extends NavigationDrawer {
             visible=true;
             RelativeLayout rl = (RelativeLayout) findViewById(R.id.restaurant_view_layout);
             if (rl != null) {
-                rl.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent menuView =new Intent(v.getContext(),Menu_view_edit.class);
-                        startActivity(menuView);
-                    }
-                });
+                rl.setOnClickListener(new onEditClick(1));
             }
             getRestaurantData();
             return true;
@@ -248,7 +243,7 @@ public class RestaurantManagement extends NavigationDrawer {
         @Override
         public void onClick(View v) {
             AlertDialog.Builder dialog=new AlertDialog.Builder(RestaurantManagement.this);
-            final CharSequence[] items = { getString(R.string.Menu_view_edit_Edit), getString(R.string.Menu_view_edit_Delete),getString(R.string.Menu_view_edit_Cancel) };
+            final CharSequence[] items = { getString(R.string.Menu_view_edit_View), getString(R.string.Menu_view_edit_Edit), getString(R.string.Menu_view_edit_Editmenus), getString(R.string.Menu_view_edit_Delete),getString(R.string.Menu_view_edit_Cancel) };
             dialog.setItems(items,new onPositionClickDialog(position));
             dialog.show();
 
@@ -341,86 +336,108 @@ public class RestaurantManagement extends NavigationDrawer {
         public void onClick(DialogInterface dialog, int which) {
             switch (which){
                 case 0:{
+                    Intent restaurant_view = new Intent(getBaseContext(), User_info_view.class);
+                    restaurant_view.putExtra("rid", restaurant.getRid());
+                    startActivity(restaurant_view);
+                    break;
+                }
+                case 2:{
+                    Intent menuView =new Intent(v.getContext(),Menu_view_edit.class);
+                    startActivity(menuView);
+                    break;
+                }
+                case 1:{
                     Intent edit_menu=new Intent(getBaseContext(),CreateRestaurant.class);
                     edit_menu.putExtra("rid",restaurant.getRid());
                     startActivityForResult(edit_menu,3);
                     break;
                 }
-                case 1:{
-                    SharedPreferences.Editor editor=sharedPreferences.edit();
-                    editor.remove("rid");
-                    editor.apply();
-                    final FirebaseDatabase db=FirebaseDatabase.getInstance();
-                    DatabaseReference ref=db.getReference("restaurant");
-                    ref.child(rid).removeValue();
-
-                    //Delete image
-                    SuccessDeleteImageListener sdil = new SuccessDeleteImageListener();
-                    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-                    StorageReference storageReference = firebaseStorage.getReference("restaurant");
-                    storageReference.child(rid).delete().addOnSuccessListener(sdil);
-
-                    ref=db.getReference("menu");
-                    ref.orderByChild("rid").equalTo(rid).addChildEventListener(new ChildEventListener() {
+                case 3:{
+                    final AlertDialog.Builder confirmDialog=new AlertDialog.Builder(RestaurantManagement.this);
+                    final CharSequence[] items = { getString(R.string.menu_view_edit_yes), getString(R.string.menu_view_edit_no) };
+                    confirmDialog.setTitle(getString(R.string.menu_view_edit_delete));
+                    confirmDialog.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            String mid=dataSnapshot.child("mid").getValue().toString();
-                            DatabaseReference ref=db.getReference("menu");
-                            ref.child(mid).removeValue();
-                            ref=db.getReference("course");
-                            ref.orderByChild("mid").equalTo(mid).addChildEventListener(new ChildEventListener() {
-                                @Override
-                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                    String cid=dataSnapshot.child("cid").getValue().toString();
-                                    DatabaseReference ref=db.getReference("course");
-                                    ref.child(cid).removeValue();
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which==0){
+                                SharedPreferences.Editor editor=sharedPreferences.edit();
+                                editor.remove("rid");
+                                editor.apply();
+                                final FirebaseDatabase db=FirebaseDatabase.getInstance();
+                                DatabaseReference ref=db.getReference("restaurant");
+                                ref.child(rid).removeValue();
 
-                                }
+                                //Delete image
+                                SuccessDeleteImageListener sdil = new SuccessDeleteImageListener();
+                                FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                                StorageReference storageReference = firebaseStorage.getReference("restaurant");
+                                storageReference.child(rid).delete().addOnSuccessListener(sdil);
 
-                                @Override
-                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                ref=db.getReference("menu");
+                                ref.orderByChild("rid").equalTo(rid).addChildEventListener(new ChildEventListener() {
+                                    @Override
+                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                        String mid=dataSnapshot.child("mid").getValue().toString();
+                                        DatabaseReference ref=db.getReference("menu");
+                                        ref.child(mid).removeValue();
+                                        ref=db.getReference("course");
+                                        ref.orderByChild("mid").equalTo(mid).addChildEventListener(new ChildEventListener() {
+                                            @Override
+                                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                                String cid=dataSnapshot.child("cid").getValue().toString();
+                                                DatabaseReference ref=db.getReference("course");
+                                                ref.child(cid).removeValue();
 
-                                }
+                                            }
 
-                                @Override
-                                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                                            @Override
+                                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                                }
+                                            }
 
-                                @Override
-                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                                            @Override
+                                            public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                                }
+                                            }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
+                                            @Override
+                                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                                }
-                            });
-                        }
+                                            }
 
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
 
-                        }
+                                            }
+                                        });
+                                    }
 
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+                                    @Override
+                                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                        }
+                                    }
 
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                                    @Override
+                                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                        }
+                                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                                    @Override
+                                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                                v.setVisibility(View.INVISIBLE);
+                                plus.setVisible(true);
+                            }
                         }
                     });
-                    v.setVisibility(View.INVISIBLE);
-                    plus.setVisible(true);
+                    confirmDialog.show();
                     break;
                 }
                 default:{

@@ -194,7 +194,7 @@ public class Menu_view_edit extends NavigationDrawer {
         @Override
         public void onBindViewHolder(MenuEditViewHolder holder, int position) {
             Menu menu = menus.get(position);
-            holder.card.setOnClickListener(new CardListener(menu.getRid(), menu.getMid()));
+            holder.card.setOnClickListener(new onEditclick(menu));
             String s = menu.getDescription();
             holder.menu_desctiprion.setText(s);
             holder.menu_name.setText(menu.getName());
@@ -204,7 +204,6 @@ public class Menu_view_edit extends NavigationDrawer {
             if (!menu.isVegan()) holder.vegan_icon.setColorFilter(Color.GRAY);
             if (!menu.isVegetarian()) holder.vegetarian_icon.setColorFilter(Color.GRAY);
             if (!menu.isGlutenfree()) holder.glutenfree_icon.setColorFilter(Color.GRAY);
-            holder.edit.setOnClickListener(new onEditclick(menu));
             try {
 
                 FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -250,7 +249,7 @@ public class Menu_view_edit extends NavigationDrawer {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(Menu_view_edit.this);
-                final CharSequence[] items = {getString(R.string.Menu_view_edit_Edit), getString(R.string.Menu_view_edit_Delete), getString(R.string.Menu_view_edit_Cancel)};
+                final CharSequence[] items = {getString(R.string.Menu_view_edit_Viewmenu), getString(R.string.Menu_view_edit_Editmenu), getString(R.string.Menu_view_edit_Delete), getString(R.string.Menu_view_edit_Cancel)};
                 dialog.setItems(items, new onPositionClickDialog(position));
                 dialog.show();
 
@@ -267,16 +266,38 @@ public class Menu_view_edit extends NavigationDrawer {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case 0: {
+                    case 0:{
+                        Bundle bundle = new Bundle();
+                        bundle.putString("rid", position.getRid());
+                        bundle.putString("mid", position.getMid());
+                        New_Menu_details menu_details = new New_Menu_details();
+                        menu_details.setArguments(bundle);
+                        getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
+                                .addToBackStack(null).add(R.id.frame, menu_details).commit();
+                        break;
+                    }
+                    case 1: {
                         //TODO:edit intent
                         Intent edit_menu = new Intent(getBaseContext(), Create_simple_menu.class);
                         edit_menu.putExtra("mid", position.getMid());
                         startActivityForResult(edit_menu, 3);
                         break;
                     }
-                    case 1: {
+                    case 2: {
                         //TODO:delete item
-                        remove(position);
+                        final AlertDialog.Builder confirmDialog=new AlertDialog.Builder(Menu_view_edit.this);
+                        final CharSequence[] items = { getString(R.string.menu_view_edit_yes), getString(R.string.menu_view_edit_no) };
+                        confirmDialog.setTitle(getString(R.string.menu_view_edit_delete));
+                        confirmDialog.setItems(items, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (which==0){
+                                    remove(position);
+                                }
+                            }
+                        });
+                        confirmDialog.show();
                         break;
                     }
                     default: {
@@ -371,28 +392,6 @@ public class Menu_view_edit extends NavigationDrawer {
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-
-        }
-    }
-
-    private class CardListener implements View.OnClickListener {
-        String rid, mid;
-
-        public CardListener(String rid, String mid) {
-            this.rid = rid;
-            this.mid = mid;
-        }
-
-        @Override
-        public void onClick(View v) {
-            Bundle bundle = new Bundle();
-            bundle.putString("rid", rid);
-            bundle.putString("mid", mid);
-            New_Menu_details menu_details = new New_Menu_details();
-            menu_details.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
-                    .addToBackStack(null).add(R.id.frame, menu_details).commit();
 
         }
     }

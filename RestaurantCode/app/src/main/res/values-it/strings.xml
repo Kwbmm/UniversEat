@@ -158,7 +158,7 @@
     <string name="menu_view_edit_fixed_price_menu">Menu prezzo fisso</string>
     <string name="menu_view_edit_yes">Si</string>
     <string name="menu_view_edit_no">No</string>
-    <string name="menu_view_edit_delete">Eliminare?</string>
+    <string name="menu_view_edit_delete">Sei sicuro?</string>
     <!-- END Class Create_menu_frag -->
 
     <string-array name="months">
@@ -436,4 +436,8 @@
     <string name="actionBar_addTags">Aggiungi Tag</string>
     <string name="view_restaurant">Vai al ristorante →</string>
     <string name="add_a_dish">Aggiungi un Piatto</string>
+    <string name="Menu_view_edit_View">Vedi</string>
+    <string name="Menu_view_edit_Editmenus">I miei menu</string>
+    <string name="Menu_view_edit_Viewmenu">Vedi</string>
+    <string name="Menu_view_edit_Editmenu">Modifica</string>
 </resources>
