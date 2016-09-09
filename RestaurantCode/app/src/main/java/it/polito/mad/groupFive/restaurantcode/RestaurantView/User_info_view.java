@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -100,8 +101,8 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                     r_name.setText(restaurant.getName());
                     if(restaurant.getName().length()>18)
                         r_name.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
-                    r_rating.setText(String.format("%.1f", restaurant.getRating()));
-                    r_ratingBar.setRating(restaurant.getRating());
+                    r_rating.setText(String.format("%.1f", restaurant.getRating()*restaurant.getRatingNumber()));
+                    r_ratingBar.setRating(restaurant.getRating()*restaurant.getRatingNumber());
                     r_reviews.setText(String.format("%.0f", restaurant.getRatingNumber()) + " " + getResources().getString(R.string.review_based_on));
                     ImageView restImage = (ImageView) findViewById(R.id.restaurant_image);
 
