@@ -426,7 +426,7 @@
     <string name="pick_a_place_on_the_map">Scegli un punto sulla mappa</string>
     <string name="create">Crea</string>
     <string name="actionBar_editProfile">Modifica Profilo</string>
-    <string name="need_to_login">Effettua il login per ordinare!</string>
+    <string name="need_to_login">Devi prima effettuare il login!</string>
     <string name="reset_password">Reimposta la Password</string>
     <string name="check_email">Controlla la tua posta in arrivo</string>
     <string name="fill_all_fields">Riempi tutti i campi</string>
@@ -440,4 +440,5 @@
     <string name="Menu_view_edit_Editmenus">I miei menu</string>
     <string name="Menu_view_edit_Viewmenu">Vedi</string>
     <string name="Menu_view_edit_Editmenu">Modifica</string>
+    <string name="unfav">SALVATO</string>
 </resources>

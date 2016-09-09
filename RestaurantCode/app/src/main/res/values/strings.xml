@@ -499,4 +499,5 @@
     <string name="Menu_view_edit_Editmenus">My menus</string>
     <string name="Menu_view_edit_Viewmenu">View</string>
     <string name="Menu_view_edit_Editmenu">Edit</string>
+    <string name="unfav">UNFAV</string>
 </resources>
