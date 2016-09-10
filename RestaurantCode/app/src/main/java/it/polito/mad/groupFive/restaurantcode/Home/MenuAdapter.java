@@ -116,6 +116,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
                 pb.setVisibility(View.GONE);
                 rv.setVisibility(View.VISIBLE);
             }
+            this.rv.scrollToPosition(0);
         } catch (MenuException e) {
             //Log.e(METHOD_NAME,e.getMessage());
         }
@@ -130,6 +131,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuViewHolder>{
                 pb.setVisibility(View.GONE);
                 rv.setVisibility(View.VISIBLE);
             }
+            this.rv.scrollToPosition(0);
         } catch (MenuException e) {
             //Log.e(METHOD_NAME,e.getMessage());
         }

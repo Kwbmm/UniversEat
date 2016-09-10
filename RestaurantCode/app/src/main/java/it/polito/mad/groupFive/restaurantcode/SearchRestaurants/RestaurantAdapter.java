@@ -50,8 +50,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                     .setImageLocalPath(r.getImageLocalPath())
                     .setAddress(r.getAddress())
                     .setCity(r.getCity())
-                    .setRating(r.getRating())
-                    .setRatingNumber(1)
+                    .setRating(r.getRating()*r.getRatingNumber())
+                    .setRatingNumber(r.getRatingNumber())
                     .setState(r.getState())
                     .setXCoord(r.getXCoord())
                     .setYCoord(r.getYCoord())
@@ -160,6 +160,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                 pb.setVisibility(View.GONE);
                 rv.setVisibility(View.VISIBLE);
             }
+            this.rv.scrollToPosition(0);
         } catch (RestaurantException e) {
             //Log.e(METHOD_NAME,e.getMessage());
         }
@@ -174,6 +175,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                 pb.setVisibility(View.GONE);
                 rv.setVisibility(View.VISIBLE);
             }
+            this.rv.scrollToPosition(0);
         } catch (RestaurantException e) {
             //Log.e(METHOD_NAME,e.getMessage());
         }
@@ -271,7 +273,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         holder.restaurant_name.setText(restaurant.getName());
         if(restaurant.getName().length()>18)
             holder.restaurant_name.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
-        holder.restaurant_rating.setRating(restaurant.getRating());
+        holder.restaurant_rating.setRating(restaurant.getRating()*restaurant.getRatingNumber());
+        Log.d("Fix Rating","rating: "+holder.restaurant_rating.getRating());
         String s;
         holder.restaurant_description.setText(restaurant.getDescription());
         float distance = restaurant.getDistance();
