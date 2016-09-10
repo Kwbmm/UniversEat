@@ -6,8 +6,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +25,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.datastructures.Restaurant;
@@ -79,21 +85,14 @@ public class Review_user_view extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         readdata(getView());
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-    }
-
-    public void readdata(View v) {
-
-
+    private void readdata(View v) {
         adp= new ReviewAdapter();
         recyclerView=(RecyclerView)v.findViewById(R.id.review_list);
         recyclerView.setAdapter(adp);
@@ -110,7 +109,7 @@ public class Review_user_view extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("rid",rest.getRid());
                 bundle.putFloat("ratingNumber",rest.getRatingNumber());
-                bundle.putFloat("ratingValue",rest.getRating());
+                bundle.putFloat("ratingValue",rest.getRating()*rest.getRatingNumber());
                 New_Create_review create_review = new New_Create_review();
                 create_review.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction()
@@ -118,13 +117,11 @@ public class Review_user_view extends Fragment {
                         .addToBackStack(null).add(R.id.frame,create_review).commit();
             }
         });
+    }
 
-        /*TextView r_count= (TextView)v.findViewById(R.id.review_counter);
-        r_count.setText(((int)rest.getRatingNumber())+" reviews");
-        TextView r_name=(TextView)v.findViewById(R.id.restaurant_name);
-        r_name.setText(rest.getName());
-        RatingBar rate=(RatingBar)v.findViewById(R.id.rate);
-        rate.setRating(rest.getRating());*/
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
 
     }
 
@@ -141,19 +138,18 @@ public class Review_user_view extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        reviews=new ArrayList<>();
+
         rest=restData.getRestaurant();
         View v =inflater.inflate(R.layout.fragment_review_user_view, container, false);
+        readdata(v);
+
         FirebaseDatabase db=FirebaseDatabase.getInstance();
         DatabaseReference reference=db.getReference("review");
-        //Log.v("rev id ",rest.getRid());
         reference.orderByChild("rid").equalTo(rest.getRid()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Review nrev=dataSnapshot.getValue(Review.class);
-                reviews.add(nrev);
-                adp.notifyDataSetChanged();
+                adp.addChild(nrev);
             }
 
             @Override
@@ -176,8 +172,6 @@ public class Review_user_view extends Fragment {
 
             }
         });
-        readdata(v);
-
         return v;
     }
 
@@ -218,16 +212,68 @@ public class Review_user_view extends Fragment {
 
     public class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
 
+        private SortedList<Review> reviews;
+
         public ReviewAdapter(){
+            this.reviews = new SortedList<Review>(Review.class, new SortedList.Callback<Review>() {
+                @Override
+                public int compare(Review o1, Review o2) {
+                    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                    try {
+                        Date d1 = df.parse(o1.getDate());
+                        Date d2 = df.parse(o2.getDate());
+                        if(d1.getTime() < d2.getTime())
+                            return 1;
+                        if(d1.getTime() > d2.getTime())
+                            return -1;
+                        else
+                            return 0;
+                    } catch (ParseException e) {
+                        Log.e("Compare",e.getMessage());
+                    }
+                    return 0;
+                }
 
+                @Override
+                public void onInserted(int position, int count) {
+                    notifyItemRangeInserted(position,count);
+                }
 
+                @Override
+                public void onRemoved(int position, int count) {
+                    notifyItemRangeRemoved(position,count);
+                }
+
+                @Override
+                public void onMoved(int fromPosition, int toPosition) {
+                    notifyItemMoved(fromPosition,toPosition);
+                }
+
+                @Override
+                public void onChanged(int position, int count) {
+                    notifyItemRangeChanged(position,count);
+                }
+
+                @Override
+                public boolean areContentsTheSame(Review oldItem, Review newItem) {
+                    return oldItem.getRid().equals(newItem.getRid()) && oldItem.getDate().equals(newItem.getDate()) && oldItem.getUid().equals(newItem.getUid());
+                }
+
+                @Override
+                public boolean areItemsTheSame(Review item1, Review item2) {
+                    return item1.getRid().equals(item2.getRid()) && item1.getDate().equals(item2.getDate()) && item1.getUid().equals(item2.getUid());
+                }
+            });
+        }
+
+        public void addChild(Review r){
+            this.reviews.add(r);
         }
 
         @Override
         public ReviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View review_view = LayoutInflater.from(parent.getContext()).inflate(R.layout.review,null);
             ReviewHolder holder=new ReviewHolder(review_view);
-
             return holder;
         }
 
@@ -238,7 +284,6 @@ public class Review_user_view extends Fragment {
             holder.title.setText(rev.getTitle());
             holder.review.setText("                         "+rev.getReviewText());
             holder.dat.setText(rev.getDate());
-
         }
 
         @Override

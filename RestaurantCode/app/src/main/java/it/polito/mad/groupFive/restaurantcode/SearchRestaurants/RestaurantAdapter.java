@@ -274,7 +274,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         if(restaurant.getName().length()>18)
             holder.restaurant_name.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
         holder.restaurant_rating.setRating(restaurant.getRating()*restaurant.getRatingNumber());
-        Log.d("Fix Rating","rating: "+holder.restaurant_rating.getRating());
         String s;
         holder.restaurant_description.setText(restaurant.getDescription());
         float distance = restaurant.getDistance();
