@@ -218,7 +218,7 @@ public class Review_user_view extends Fragment {
             this.reviews = new SortedList<Review>(Review.class, new SortedList.Callback<Review>() {
                 @Override
                 public int compare(Review o1, Review o2) {
-                    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                    DateFormat df = new SimpleDateFormat("dd/MM/yyyy kk:mm:ss");
                     try {
                         Date d1 = df.parse(o1.getDate());
                         Date d2 = df.parse(o2.getDate());
@@ -283,7 +283,8 @@ public class Review_user_view extends Fragment {
             holder.rating.setRating(rev.getRating());
             holder.title.setText(rev.getTitle());
             holder.review.setText("                         "+rev.getReviewText());
-            holder.dat.setText(rev.getDate());
+            String[] date=rev.getDate().split(" ");
+            holder.dat.setText(date[0]);
         }
 
         @Override

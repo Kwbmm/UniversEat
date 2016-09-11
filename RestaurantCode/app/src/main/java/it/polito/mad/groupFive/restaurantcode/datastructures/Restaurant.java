@@ -167,7 +167,7 @@ public class Restaurant {
      * @return the rating of restaurant
      */
     public float getRating() {
-        return rating/ratingNumber;}
+        return rating;}
 
     /**
      *

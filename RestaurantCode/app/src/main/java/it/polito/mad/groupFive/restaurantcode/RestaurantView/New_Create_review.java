@@ -113,7 +113,10 @@ public class New_Create_review extends Fragment {
                 int day=date.get(Calendar.DAY_OF_MONTH);
                 int month=date.get(Calendar.MONTH)+1;
                 int year=date.get(Calendar.YEAR);
-                rev.setDate(day + "/" + month + "/" + year);
+                int hour=date.get(Calendar.HOUR_OF_DAY);
+                int minutes=date.get(Calendar.MINUTE);
+                int seconds=date.get(Calendar.SECOND);
+                rev.setDate(day + "/" + month + "/" + year + " " + String.format("%02d:%02d:%02d", hour,minutes,seconds));
                 DatabaseReference ref = db.getReference("review");
                 ref.push().setValue(rev).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -126,7 +129,7 @@ public class New_Create_review extends Fragment {
                             public void onComplete(@NonNull Task<Void> task) {
                                 FirebaseDatabase db = FirebaseDatabase.getInstance();
                                 DatabaseReference reference = db.getReference("restaurant");
-                                Float tot = ratingValue + sum;
+                                Float tot = (ratingValue + sum)/ratingNumber;
                                 reference.child(rid).child("rating").setValue(tot.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {

@@ -493,7 +493,7 @@
     <string name="add_picture">Add a picture...</string>
     <string name="actionBar_addDish">Add a Dish</string>
     <string name="actionBar_addTags">Add Tags</string>
-    <string name="view_restaurant">View restaurant →</string>
+    <string name="view_restaurant">View restaurant ></string>
     <string name="add_a_dish">Add a Dish</string>
     <string name="Menu_view_edit_View">View</string>
     <string name="Menu_view_edit_Editmenus">My menus</string>

@@ -50,7 +50,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                     .setImageLocalPath(r.getImageLocalPath())
                     .setAddress(r.getAddress())
                     .setCity(r.getCity())
-                    .setRating(r.getRating()*r.getRatingNumber())
+                    .setRating(r.getRating())
                     .setRatingNumber(r.getRatingNumber())
                     .setState(r.getState())
                     .setXCoord(r.getXCoord())
@@ -273,7 +273,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         holder.restaurant_name.setText(restaurant.getName());
         if(restaurant.getName().length()>18)
             holder.restaurant_name.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
-        holder.restaurant_rating.setRating(restaurant.getRating()*restaurant.getRatingNumber());
+        holder.restaurant_rating.setRating(restaurant.getRating());
         String s;
         holder.restaurant_description.setText(restaurant.getDescription());
         float distance = restaurant.getDistance();
