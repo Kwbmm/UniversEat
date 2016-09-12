@@ -118,9 +118,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RestaurantView.Create_review"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".CreateSimpleMenu.Create_simple_menu"
             android:screenOrientation="portrait" />
 
