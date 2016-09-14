@@ -4,7 +4,7 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -26,7 +26,7 @@ public class LocationListenerForRestaurants implements LocationListener {
     private RestaurantAdapter ra;
     private Context context;
     private SupportPlaceAutocompleteFragment paf;
-    private Button searchBtn;
+    private TextView searchBtn;
     private double[] latitude,longitude;
 
     public LocationListenerForRestaurants(
@@ -34,7 +34,7 @@ public class LocationListenerForRestaurants implements LocationListener {
             RestaurantAdapter ra,
             Context context,
             SupportPlaceAutocompleteFragment paf,
-            Button searchBtn,
+            TextView searchBtn,
             double[] latitude,
             double[] longitude) {
         this.gac = gac;

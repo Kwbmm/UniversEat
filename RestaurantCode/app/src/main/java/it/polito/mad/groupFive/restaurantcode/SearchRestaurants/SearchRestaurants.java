@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -43,7 +44,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
 
     private RecyclerView rv;
     private ProgressBar pb;
-    private Button btnSearch;
+    private TextView btnSearch;
     private FirebaseDatabase db;
     private DatabaseReference dbRoot;
     private FrameLayout mlay;
@@ -70,7 +71,7 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
         this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataRestaurant);
         pb.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         this.rv = (RecyclerView) findViewById(R.id.searchRestaurants_recyclerView);
-        this.btnSearch = (Button) findViewById(R.id.button_SearchRestaurants);
+        this.btnSearch = (TextView) findViewById(R.id.button_SearchRestaurants);
         this.btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

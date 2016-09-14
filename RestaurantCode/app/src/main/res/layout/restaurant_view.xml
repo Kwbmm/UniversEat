@@ -30,7 +30,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/ic_heart_border_black"
-                android:backgroundTint="#ffffff" />
+                android:backgroundTint="@android:color/transparent" />
 
             <TextView
                 android:id="@+id/restaurant_name"

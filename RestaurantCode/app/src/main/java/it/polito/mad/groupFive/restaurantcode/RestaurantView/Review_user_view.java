@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.LeadingMarginSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -282,7 +284,7 @@ public class Review_user_view extends Fragment {
             Review rev=reviews.get(position);
             holder.rating.setRating(rev.getRating());
             holder.title.setText(rev.getTitle());
-            holder.review.setText("                         "+rev.getReviewText());
+            holder.review.setText(createIndentedText(rev.getReviewText(),330,0));
             String[] date=rev.getDate().split(" ");
             holder.dat.setText(date[0]);
         }
@@ -312,5 +314,10 @@ public class Review_user_view extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    SpannableString createIndentedText(String text, int marginFirstLine, int marginNextLines) {
+        SpannableString result=new SpannableString(text);
+        result.setSpan(new LeadingMarginSpan.Standard(marginFirstLine, marginNextLines),0,text.length(),0);
+        return result;
     }
 }

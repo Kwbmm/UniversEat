@@ -106,6 +106,8 @@ public class Create_simple_menu2 extends Fragment {
     private void fetchData(){
         if (sData.getdata().isEdit()){
             price.setText(String.valueOf(sData.getdata().getMenu().getPrice()));
+            drink.setChecked(sData.getdata().getMenu().isBeverage());
+            fee.setChecked(sData.getdata().getMenu().isServiceFee());
         }
     }
 

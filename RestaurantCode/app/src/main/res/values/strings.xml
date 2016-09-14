@@ -290,8 +290,8 @@
     <string name="fragment_create_simple_menu1_Menu_Image">Menu Image</string>
     <string name="fragment_create_simple_menu1_Send_notification">Send notification</string>
     <string name="fragment_create_simple_menu1_Dishes">Dishes</string>
-    <string name="toast_empty_field">Name or description is empty!</string>
-    <string name="toast_empty_price">Price is empty!</string>
+    <string name="toast_empty_field">Fill in all fields and select a picture!</string>
+    <string name="toast_empty_price">Insert a price!</string>
 
     <!-- fragment_delete_dish.xml-->
     <string name="fragment_delete_dish_complete">Complete</string>
