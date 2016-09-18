@@ -51,9 +51,11 @@ public class Review_user_view extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    public interface restaurantData{
+
+    public interface restaurantData {
         public Restaurant getRestaurant();
     }
+
     restaurantData restData;
     Restaurant rest;
     ReviewAdapter adp;
@@ -95,28 +97,28 @@ public class Review_user_view extends Fragment {
     }
 
     private void readdata(View v) {
-        adp= new ReviewAdapter();
-        recyclerView=(RecyclerView)v.findViewById(R.id.review_list);
+        adp = new ReviewAdapter();
+        recyclerView = (RecyclerView) v.findViewById(R.id.review_list);
         recyclerView.setAdapter(adp);
-        LinearLayoutManager llm=new LinearLayoutManager(v.getContext());
+        LinearLayoutManager llm = new LinearLayoutManager(v.getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        FloatingActionButton fab = (FloatingActionButton)v.findViewById(R.id.fab);
-        if(FirebaseAuth.getInstance().getCurrentUser()==null) {
+        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             fab.setVisibility(View.GONE);
         }
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putString("rid",rest.getRid());
-                bundle.putFloat("ratingNumber",rest.getRatingNumber());
-                bundle.putFloat("ratingValue",rest.getRating()*rest.getRatingNumber());
+                bundle.putString("rid", rest.getRid());
+                bundle.putFloat("ratingNumber", rest.getRatingNumber());
+                bundle.putFloat("ratingValue", rest.getRating() * rest.getRatingNumber());
                 New_Create_review create_review = new New_Create_review();
                 create_review.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up,R.anim.slide_down)
-                        .addToBackStack(null).add(R.id.frame,create_review).commit();
+                        .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
+                        .addToBackStack(null).add(R.id.frame, create_review).commit();
             }
         });
     }
@@ -141,16 +143,16 @@ public class Review_user_view extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        rest=restData.getRestaurant();
-        View v =inflater.inflate(R.layout.fragment_review_user_view, container, false);
+        rest = restData.getRestaurant();
+        View v = inflater.inflate(R.layout.fragment_review_user_view, container, false);
         readdata(v);
 
-        FirebaseDatabase db=FirebaseDatabase.getInstance();
-        DatabaseReference reference=db.getReference("review");
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference reference = db.getReference("review");
         reference.orderByChild("rid").equalTo(rest.getRid()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Review nrev=dataSnapshot.getValue(Review.class);
+                Review nrev = dataSnapshot.getValue(Review.class);
                 adp.addChild(nrev);
             }
 
@@ -189,14 +191,14 @@ public class Review_user_view extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-            restData=(restaurantData) context;
+            restData = (restaurantData) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
 
-    public static class ReviewHolder extends RecyclerView.ViewHolder{
+    public static class ReviewHolder extends RecyclerView.ViewHolder {
         protected TextView title;
         protected TextView review;
         protected RatingBar rating;
@@ -204,10 +206,10 @@ public class Review_user_view extends Fragment {
 
         public ReviewHolder(View itemView) {
             super(itemView);
-            title= (TextView) itemView.findViewById(R.id.review_title);
-            review= (TextView) itemView.findViewById(R.id.review);
-            rating=(RatingBar) itemView.findViewById(R.id.ratebar);
-            dat=(TextView) itemView.findViewById(R.id.date);
+            title = (TextView) itemView.findViewById(R.id.review_title);
+            review = (TextView) itemView.findViewById(R.id.review);
+            rating = (RatingBar) itemView.findViewById(R.id.ratebar);
+            dat = (TextView) itemView.findViewById(R.id.date);
 
         }
     }
@@ -216,7 +218,7 @@ public class Review_user_view extends Fragment {
 
         private SortedList<Review> reviews;
 
-        public ReviewAdapter(){
+        public ReviewAdapter() {
             this.reviews = new SortedList<Review>(Review.class, new SortedList.Callback<Review>() {
                 @Override
                 public int compare(Review o1, Review o2) {
@@ -224,36 +226,36 @@ public class Review_user_view extends Fragment {
                     try {
                         Date d1 = df.parse(o1.getDate());
                         Date d2 = df.parse(o2.getDate());
-                        if(d1.getTime() < d2.getTime())
+                        if (d1.getTime() < d2.getTime())
                             return 1;
-                        if(d1.getTime() > d2.getTime())
+                        if (d1.getTime() > d2.getTime())
                             return -1;
                         else
                             return 0;
                     } catch (ParseException e) {
-                        Log.e("Compare",e.getMessage());
+                        Log.e("Compare", e.getMessage());
                     }
                     return 0;
                 }
 
                 @Override
                 public void onInserted(int position, int count) {
-                    notifyItemRangeInserted(position,count);
+                    notifyItemRangeInserted(position, count);
                 }
 
                 @Override
                 public void onRemoved(int position, int count) {
-                    notifyItemRangeRemoved(position,count);
+                    notifyItemRangeRemoved(position, count);
                 }
 
                 @Override
                 public void onMoved(int fromPosition, int toPosition) {
-                    notifyItemMoved(fromPosition,toPosition);
+                    notifyItemMoved(fromPosition, toPosition);
                 }
 
                 @Override
                 public void onChanged(int position, int count) {
-                    notifyItemRangeChanged(position,count);
+                    notifyItemRangeChanged(position, count);
                 }
 
                 @Override
@@ -268,24 +270,24 @@ public class Review_user_view extends Fragment {
             });
         }
 
-        public void addChild(Review r){
+        public void addChild(Review r) {
             this.reviews.add(r);
         }
 
         @Override
         public ReviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View review_view = LayoutInflater.from(parent.getContext()).inflate(R.layout.review,null);
-            ReviewHolder holder=new ReviewHolder(review_view);
+            View review_view = LayoutInflater.from(parent.getContext()).inflate(R.layout.review, null);
+            ReviewHolder holder = new ReviewHolder(review_view);
             return holder;
         }
 
         @Override
         public void onBindViewHolder(ReviewHolder holder, int position) {
-            Review rev=reviews.get(position);
+            Review rev = reviews.get(position);
             holder.rating.setRating(rev.getRating());
             holder.title.setText(rev.getTitle());
-            holder.review.setText(createIndentedText(rev.getReviewText(),330,0));
-            String[] date=rev.getDate().split(" ");
+            holder.review.setText(createIndentedText(rev.getReviewText(), 330, 0));
+            String[] date = rev.getDate().split(" ");
             holder.dat.setText(date[0]);
         }
 
@@ -315,9 +317,10 @@ public class Review_user_view extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
     SpannableString createIndentedText(String text, int marginFirstLine, int marginNextLines) {
-        SpannableString result=new SpannableString(text);
-        result.setSpan(new LeadingMarginSpan.Standard(marginFirstLine, marginNextLines),0,text.length(),0);
+        SpannableString result = new SpannableString(text);
+        result.setSpan(new LeadingMarginSpan.Standard(marginFirstLine, marginNextLines), 0, text.length(), 0);
         return result;
     }
 }

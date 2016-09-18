@@ -116,7 +116,7 @@ public class New_Create_review extends Fragment {
                 int hour=date.get(Calendar.HOUR_OF_DAY);
                 int minutes=date.get(Calendar.MINUTE);
                 int seconds=date.get(Calendar.SECOND);
-                rev.setDate(day + "/" + month + "/" + year + " " + String.format("%02d:%02d:%02d", hour,minutes,seconds));
+                rev.setDate(String.format("%02d/%02d/%04d", day,month,year) + " " + String.format("%02d:%02d:%02d", hour,minutes,seconds));
                 DatabaseReference ref = db.getReference("review");
                 ref.push().setValue(rev).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

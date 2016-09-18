@@ -122,7 +122,7 @@ public class SearchRestaurantResults extends NavigationDrawer {
 
                     }
                 });
-                Button cancelButton = (Button) customADB.findViewById(R.id.button_Cancel);
+                TextView cancelButton = (TextView) customADB.findViewById(R.id.button_Cancel);
                 final CheckBox cbDistance = (CheckBox) customADB.findViewById(R.id.distanceCustomADB);
                 cbDistance.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -139,7 +139,7 @@ public class SearchRestaurantResults extends NavigationDrawer {
                         customADB.dismiss();
                     }
                 });
-                Button filterButton = (Button) customADB.findViewById(R.id.button_Filter);
+                TextView filterButton = (TextView) customADB.findViewById(R.id.button_Filter);
                 filterButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

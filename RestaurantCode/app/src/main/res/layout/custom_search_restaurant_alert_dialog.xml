@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:id="@+id/customSearchRestaurantsADB"
     android:padding="@dimen/activity_horizontal_margin"
     >
@@ -77,23 +77,21 @@
         android:layout_below="@id/linearLayout_Distance"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:id="@+id/linearLayout_Buttons"
-        style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-        >
-        <Button
+        android:id="@+id/linearLayout_Buttons">
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/SearchResult_filterCancelButtonText"
             android:layout_weight="0.5"
-            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            style="@style/Button"
             android:id="@+id/button_Cancel"
             />
-        <Button
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/SearchResult_filterConfirmButtonText"
             android:layout_weight="0.5"
-            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            style="@style/Button"
             android:id="@+id/button_Filter"
             />
     </LinearLayout>
