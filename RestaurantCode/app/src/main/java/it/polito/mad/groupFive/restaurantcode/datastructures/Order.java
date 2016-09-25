@@ -18,9 +18,9 @@ public class Order {
     private String mid;
     private String rid;
     private String date;
+    private String creationDate;
 
-
-
+    private String restaurantName;
     private String notes;
     private String name;
     private String menuName;
@@ -100,6 +100,8 @@ public class Order {
         output.put("notes",this.notes);
         output.put("name",this.name);
         output.put("menuname",this.menuName);
+        output.put("restaurantName",this.restaurantName);
+        output.put("creationDate",this.creationDate);
         output.put("notified",this.notified);
         return output;
     }
@@ -165,4 +167,10 @@ public class Order {
      * @param notes Some additional notes to attach to the order.
      */
     public Order setNotes(String notes){this.notes=notes; return this;}
+
+    public Order setRestaurantName(String restaurantName){this.restaurantName=restaurantName; return this;}
+    public String getRestaurantName(){return this.restaurantName;}
+    public Order setCreationDate(String date){this.creationDate=date; return this;}
+    public String getCreationDate(){return this.creationDate;}
 }
+

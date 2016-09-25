@@ -26,8 +26,6 @@ public class SplashScreen extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startup);
-        ProgressBar progressBar =(ProgressBar)findViewById(R.id.progressBar);
-        progressBar.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
         findViewById(R.id.splash_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -11,12 +11,18 @@
         android:id="@+id/splash_image"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
-    <ProgressBar
-        android:layout_width="@dimen/progressBar_size"
-        android:layout_height="@dimen/progressBar_size"
-        android:id="@+id/progressBar"
-        android:indeterminate="true"
-        android:layout_below="@+id/splash_image"
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="UniversEat"
+        android:id="@+id/textView3"
+        android:layout_alignParentTop="false"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp" />
+        android:textColor="#ffffff"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/splash_image" />
 </RelativeLayout>

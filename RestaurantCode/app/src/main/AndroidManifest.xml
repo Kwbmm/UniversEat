@@ -107,7 +107,9 @@
         <activity
             android:name=".Order_management"
             android:launchMode="singleTop"
-            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Orders_User"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".RestaurantView.User_info_view"

@@ -117,7 +117,7 @@
                 android:layout_alignParentTop="false"
                 android:layout_alignParentLeft="false"
                 android:layout_alignParentStart="false"
-                android:src="@drawable/ic_user_black"
+                android:src="@drawable/ic_restaurant_building_black"
                 android:tint="#DE000000"
                 android:layout_below="@+id/order_meal"
                 android:layout_above="@+id/imageView36" />

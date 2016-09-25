@@ -33,6 +33,7 @@ public class New_MakeOrder extends Fragment implements TimePickerFragment.Listen
     private String uid;
     private String name;
     private String menuName;
+    private String restaurantName;
     private TextView date;
     private TextView time;
     private EditText notes;
@@ -60,6 +61,7 @@ public class New_MakeOrder extends Fragment implements TimePickerFragment.Listen
         rid=getArguments().getString("rid");
         mid=getArguments().getString("mid");
         menuName=getArguments().getString("menuName");
+        restaurantName=getArguments().getString("restaurantName");
         db = FirebaseDatabase.getInstance();
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         User user = new User(uid);
@@ -116,11 +118,14 @@ public class New_MakeOrder extends Fragment implements TimePickerFragment.Listen
                     order.setRid(rid);
                     order.setMid(mid);
                     order.setDate(chosenDate.get(Calendar.HOUR_OF_DAY)+":"+String.format("%02d",chosenDate.get(Calendar.MINUTE))
-                        +" "+(chosenDate.get(Calendar.DAY_OF_MONTH)+1)+"/"+chosenDate.get(Calendar.MONTH)+"/"+chosenDate.get(Calendar.YEAR));
+                            +" "+(chosenDate.get(Calendar.DAY_OF_MONTH)+1)+"/"+chosenDate.get(Calendar.MONTH)+"/"+chosenDate.get(Calendar.YEAR));
+                    order.setCreationDate(now.get(Calendar.HOUR_OF_DAY)+":"+String.format("%02d",now.get(Calendar.MINUTE))
+                            +" "+(now.get(Calendar.DAY_OF_MONTH)+1)+"/"+now.get(Calendar.MONTH)+"/"+now.get(Calendar.YEAR));
                     order.setName(name);
                     order.setNotes(notes.getText().toString());
                     order.setUid(uid);
                     order.setMenuName(menuName);
+                    order.setRestaurantName(restaurantName);
                     order.setNotified(false);
                     DatabaseReference reference=db.getReference("order");
                     String key= reference.push().getKey();

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +77,7 @@ public class EditProfile extends NavigationDrawer{
     private EditText txtmailold;
     private EditText txtpassword;
     private String password;
+    private ProgressBar progressBar;
     private boolean changemail=true;
     FrameLayout mlay;
     private FirebaseDatabase db;
@@ -130,10 +133,8 @@ public class EditProfile extends NavigationDrawer{
             }
         });
         TextView addPic=(TextView) findViewById(R.id.textView_imageText_e);
-
-
-
-
+        progressBar=(ProgressBar)findViewById(R.id.progressBar);
+        progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
         addPic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,12 +153,13 @@ public class EditProfile extends NavigationDrawer{
         });
 
 
-        TextView btnNext = (TextView) findViewById(R.id.Button_Next_e);
+        final TextView btnNext = (TextView) findViewById(R.id.Button_Next_e);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                     if(setUserData()){
-
+                        btnNext.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.VISIBLE);
                         final FirebaseAuth auth = FirebaseAuth.getInstance();
 
                         Firebase.setAndroidContext(getApplicationContext());
@@ -178,7 +180,8 @@ public class EditProfile extends NavigationDrawer{
                             uploadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    btnNext.setVisibility(View.VISIBLE);
                                 }
 
                             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

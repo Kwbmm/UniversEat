@@ -14,14 +14,16 @@
         <item>Home</item>
         <item>Search Restaurants</item>
         <item>Profile</item>
-        <item>Orders</item>
-        <item>Manage Restaurant</item>
+        <item>My Orders</item>
+        <item>Restaurant Management</item>
+        <item>Restaurant Reservations</item>
         <item>Logout</item>
     </string-array>
     <string-array name="drawer_option_logged_user">
         <item>Home</item>
         <item>Search Restaurants</item>
         <item>Profile</item>
+        <item>My Orders</item>
         <item>Logout</item>
     </string-array>
     <string-array name="week">
@@ -456,14 +458,14 @@
     <string name="action_share">Share</string>
     <string name="action_reply">Reply</string>
     <string name="actionBar_profile">Profile</string>
-    <string name="actionBar_restaurantManagement">Restaurant management</string>
+    <string name="actionBar_restaurantManagement">Restaurant Management</string>
     <string name="actionBar_makeOrder">Make an order</string>
     <string name="actionBar_restaurantInfo">Restaurant Infos</string>
     <string name="actionBar_restaurantMenus">Menus</string>
     <string name="actionBar_restaurantReviews">Reviews</string>
     <string name="actionBar_menu">Menu Infos</string>
     <string name="actionBar_makeReview">Make a Review</string>
-    <string name="actionBar_orders">Orders</string>
+    <string name="actionBar_orders">Restaurant Reservations</string>
     <string name="actionBar_myMenus">My Menus</string>
     <string name="actionBar_createMenu">Create Menu</string>
     <string name="actionBar_createRestaurant">Create Restaurant</string>
@@ -500,4 +502,13 @@
     <string name="Menu_view_edit_Viewmenu">View</string>
     <string name="Menu_view_edit_Editmenu">Edit</string>
     <string name="unfav">UNFAV</string>
+    <string name="details">Details</string>
+    <string name="viewMenu">View Menu</string>
+    <string name="viewRestaurant">View Restaurant</string>
+    <string name="myOrders">My Orders</string>
+    <string name="orderCreatedAt">"Order created at "</string>
+    <string name="orderID">"\nOrder ID: "</string>
+    <string name="userID">"\nUser ID: "</string>
+    <string name="menuID">"\nMenu ID: "</string>
+    <string name="orderDetails">Order Details</string>
 </resources>

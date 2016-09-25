@@ -243,7 +243,7 @@ public class RestaurantManagement extends NavigationDrawer {
         @Override
         public void onClick(View v) {
             AlertDialog.Builder dialog=new AlertDialog.Builder(RestaurantManagement.this);
-            final CharSequence[] items = { getString(R.string.Menu_view_edit_View), getString(R.string.Menu_view_edit_Edit), getString(R.string.Menu_view_edit_Editmenus), getString(R.string.Menu_view_edit_Delete),getString(R.string.Menu_view_edit_Cancel) };
+            final CharSequence[] items = { getString(R.string.Menu_view_edit_View), getString(R.string.Menu_view_edit_Edit), getString(R.string.Menu_view_edit_Editmenus), getString(R.string.Menu_view_edit_Delete) };
             dialog.setItems(items,new onPositionClickDialog(position));
             dialog.show();
 

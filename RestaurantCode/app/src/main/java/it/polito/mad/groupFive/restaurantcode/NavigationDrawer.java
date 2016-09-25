@@ -278,17 +278,22 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     if (position == 2) {
                         Intent profile = new Intent(getBaseContext(), Profile.class);
                         startActivity(profile);
+                    }
 
-                    }
                     if (position == 3) {
-                        Intent intent = new Intent(view.getContext(), Order_management.class);
-                        startActivity(intent);
+                        Intent orders = new Intent(getBaseContext(), Orders_User.class);
+                        startActivity(orders);
                     }
+
                     if (position == 4) {
                         Intent intent = new Intent(view.getContext(), RestaurantManagement.class);
                         startActivity(intent);
                     }
                     if (position == 5) {
+                        Intent intent = new Intent(view.getContext(), Order_management.class);
+                        startActivity(intent);
+                    }
+                    if (position == 6) {
                         phase = 0;
                         SharedPreferences.Editor editor=sharedPreferences.edit();
                         editor.clear();
@@ -321,6 +326,11 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     }
 
                     if (position == 3) {
+                        Intent orders = new Intent(getBaseContext(), Orders_User.class);
+                        startActivity(orders);
+                    }
+
+                    if (position == 4) {
                         phase = 0;
                         SharedPreferences.Editor editor=sharedPreferences.edit();
                         editor.clear();

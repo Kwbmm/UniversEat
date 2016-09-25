@@ -149,6 +149,7 @@ public class New_Menu_details extends Fragment {
                                 bundle.putString("rid",menu.getRid());
                                 bundle.putString("mid",menu.getMid());
                                 bundle.putString("menuName",menu.getName());
+                                bundle.putString("restaurantName",restaurant.getName());
                                 New_MakeOrder makeOrder = new New_MakeOrder();
                                 makeOrder.setArguments(bundle);
                                 fadeoutBackground=false;

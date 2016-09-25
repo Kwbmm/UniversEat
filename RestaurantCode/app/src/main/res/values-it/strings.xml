@@ -14,14 +14,16 @@
         <item>Home</item>
         <item>Cerca Ristoranti</item>
         <item>Profilo</item>
+        <item>I Miei Ordini</item>
         <item>Logout</item>
     </string-array>
     <string-array name="drawer_option_logged_manager">
         <item>Home</item>
         <item>Cerca Ristoranti</item>
         <item>Profilo</item>
-        <item>Ordini</item>
+        <item>I Miei Ordini</item>
         <item>Gestione Ristorante</item>
+        <item>Prenotazioni Ristorante</item>
         <item>Logout</item>
     </string-array>
     <string-array name="week">
@@ -370,7 +372,7 @@
     <string name="actionBar_restaurantReviews">Recensioni</string>
     <string name="actionBar_menu">Info Menu</string>
     <string name="actionBar_makeReview">Scrivi una Recensione</string>
-    <string name="actionBar_orders">Ordini</string>
+    <string name="actionBar_orders">Prenotazioni Ristorante</string>
     <string name="actionBar_myMenus">I Miei Menu</string>
     <string name="actionBar_createMenu">Crea Menu</string>
     <string name="actionBar_createRestaurant">Crea Ristorante</string>
@@ -441,4 +443,13 @@
     <string name="Menu_view_edit_Viewmenu">Vedi</string>
     <string name="Menu_view_edit_Editmenu">Modifica</string>
     <string name="unfav">SALVATO</string>
+    <string name="details">Dettagli</string>
+    <string name="viewMenu">Vedi Menu</string>
+    <string name="viewRestaurant">Vedi Ristorante</string>
+    <string name="myOrders">I Miei Ordini</string>
+    <string name="orderCreatedAt">"Ordine creato alle "</string>
+    <string name="orderID">"\nOrder ID: "</string>
+    <string name="userID">"\nUser ID: "</string>
+    <string name="menuID">"\nMenu ID: "</string>
+    <string name="orderDetails">Dettagli Ordine</string>
 </resources>

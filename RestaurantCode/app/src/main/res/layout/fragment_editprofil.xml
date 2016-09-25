@@ -160,5 +160,16 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
+        <ProgressBar
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/progressBar"
+            android:visibility="invisible"
+            android:layout_alignTop="@+id/Button_Next_e"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="35dp" />
+
     </RelativeLayout>
 </ScrollView>
