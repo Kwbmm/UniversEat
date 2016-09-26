@@ -8,17 +8,24 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +38,8 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.SortedMap;
 
 import it.polito.mad.groupFive.restaurantcode.Home.Home;
 import it.polito.mad.groupFive.restaurantcode.Login.CreateLogin;
@@ -43,14 +52,16 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
     private int phase;//0 Logged out 1 logged in
     private boolean usertype;// false user true restaurant manager
     private User user;
-    private ArrayAdapter<String> adapter;
+    private DrawerAdapter adapter;
+    HashMap<Integer,String> optionsname;
+    HashMap<Integer,Integer> optionsicon;
     private DrawerLayout drawerLayout;
     private static int REGISTRATION=1;
-    private ImageView imageView;
     SharedPreferences sharedPreferences;
+    Handler handler;
     private Notification_Listener notify;
     private static boolean isDBPersistanceEnabled = false;
-
+    int startActivityDelay=250;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView dList;
@@ -66,53 +77,86 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         // not a real activity, it's used to extend toolbar and navigation drawer to all activity created
         super.onCreate(savedInstanceState);
         getSupportActionBar().setElevation(4);
-        //setup();
-
-
+        handler = new Handler();
         getUserinfo();
         checkUser();
         createDrawer();
-        checkPic();
-
     }
 
-    private void checkPic(){
-        final String METHOD_NAME = this.getClass().getName()+" - checkPic";
-        if(phase==1){
-            if (usertype){
-                //TODO Fix
-                String uid=sharedPreferences.getString("uid",null);
-                user=new User ();
-                if(uid!=null){
-                    FirebaseStorage storage=FirebaseStorage.getInstance();
-                    StorageReference ref=storage.getReference("Users");
-                    try {
-                        getFromNetwork(ref,uid+".jpg",imageView);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }}
-                //this.imageView.setImageBitmap(user.getImageBitmap());
-
-            }
-
-        }
-    }
-
-    public ArrayAdapter<String> createAdapter() {
-        ArrayAdapter<String> adp;
-        String[] options;
+    public DrawerAdapter createAdapter() {
+        DrawerAdapter adp;
+        optionsname = new HashMap<>();
+        optionsicon = new HashMap<>();
         if (phase != 0) {
             if (usertype){
-                options = getResources().getStringArray(R.array.drawer_option_logged_manager);}
+                optionsname.put(0,getResources().getStringArray(R.array.drawer_option_logged_manager)[0]);
+                optionsicon.put(0,R.drawable.ic_home_black);
+                optionsname.put(1,getResources().getStringArray(R.array.drawer_option_logged_manager)[1]);
+                optionsicon.put(1,R.drawable.ic_search_black);
+                optionsname.put(2,getResources().getStringArray(R.array.drawer_option_logged_manager)[2]);
+                optionsicon.put(2,R.drawable.ic_user_black);
+                optionsname.put(3,getResources().getStringArray(R.array.drawer_option_logged_manager)[3]);
+                optionsicon.put(3,R.drawable.ic_waiter_black);
+                optionsname.put(4,getResources().getStringArray(R.array.drawer_option_logged_manager)[4]);
+                optionsicon.put(4,R.drawable.ic_settings_black);
+                optionsname.put(5,getResources().getStringArray(R.array.drawer_option_logged_manager)[5]);
+                optionsicon.put(5,R.drawable.ic_reservations_black);
+                optionsname.put(6,getResources().getStringArray(R.array.drawer_option_logged_manager)[6]);
+                optionsicon.put(6,R.drawable.ic_logout_black);
+            }
             else{
-                options=getResources().getStringArray(R.array.drawer_option_logged_user);
+                optionsname.put(0,getResources().getStringArray(R.array.drawer_option_logged_user)[0]);
+                optionsicon.put(0,R.drawable.ic_home_black);
+                optionsname.put(1,getResources().getStringArray(R.array.drawer_option_logged_user)[1]);
+                optionsicon.put(1,R.drawable.ic_search_black);
+                optionsname.put(2,getResources().getStringArray(R.array.drawer_option_logged_user)[2]);
+                optionsicon.put(2,R.drawable.ic_user_black);
+                optionsname.put(3,getResources().getStringArray(R.array.drawer_option_logged_user)[3]);
+                optionsicon.put(3,R.drawable.ic_waiter_black);
+                optionsname.put(4,getResources().getStringArray(R.array.drawer_option_logged_user)[4]);
+                optionsicon.put(4,R.drawable.ic_logout_black);
             }
         } else {
-            options = getResources().getStringArray(R.array.drawer_option_login);
-
+            optionsname.put(0,getResources().getStringArray(R.array.drawer_option_login)[0]);
+            optionsicon.put(0,R.drawable.ic_home_black);
+            optionsname.put(1,getResources().getStringArray(R.array.drawer_option_login)[1]);
+            optionsicon.put(1,R.drawable.ic_search_black);
+            optionsname.put(2,getResources().getStringArray(R.array.drawer_option_login)[2]);
+            optionsicon.put(2,R.drawable.ic_login_black);
+            optionsname.put(3,getResources().getStringArray(R.array.drawer_option_login)[3]);
+            optionsicon.put(3,R.drawable.ic_register_black);
         }
-        adp = new ArrayAdapter<String>(this, R.layout.list_item, options);
+        adp = new DrawerAdapter();
         return adp;
+    }
+
+    private class DrawerAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return optionsname.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(getBaseContext()).inflate(R.layout.drawer_item, null);
+            RelativeLayout relativeLayout = (RelativeLayout) convertView.findViewById(R.id.drawer_layout);
+            TextView textView = (TextView) convertView.findViewById(R.id.drawer_text);
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.drawer_icon);
+            textView.setText(optionsname.get(position));
+            imageView.setImageDrawable(getResources().getDrawable(optionsicon.get(position)));
+            return convertView;
+        }
     }
 
     @Override
@@ -143,8 +187,6 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        this.imageView = (ImageView) findViewById(R.id.iw);
-        this.imageView.setImageDrawable(getResources().getDrawable(R.drawable.new_icon_inverted));
         dList = (ListView) findViewById(R.id.left_drawer);
         dList.setAdapter(adapter);
         dList.setOnItemClickListener(new DrawerListener());
@@ -230,7 +272,6 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         dList.deferNotifyDataSetChanged();
         Toast toast = Toast.makeText(getBaseContext(), "Login Completed", Toast.LENGTH_SHORT);
         toast.show();
-        checkPic();
         hideSoftKeyboard();
     }
 
@@ -240,12 +281,26 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (phase == 0) {
                 if (position == 0) {
-                    Intent home = new Intent(getBaseContext(), Home.class);
-                    startActivity(home);
+                    drawerLayout.closeDrawers();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent home = new Intent(getBaseContext(), Home.class);
+                            startActivity(home);
+                            overridePendingTransition(0,0);
+                        }
+                    },startActivityDelay);
                 }
                 if(position == 1){
-                    Intent searchRestaurants = new Intent(getBaseContext(), SearchRestaurants.class);
-                    startActivity(searchRestaurants);
+                    drawerLayout.closeDrawers();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent searchRestaurants = new Intent(getBaseContext(), SearchRestaurants.class);
+                            startActivity(searchRestaurants);
+                            overridePendingTransition(0,0);
+                        }
+                    },startActivityDelay);
                 }
                 if (position == 2) {
                     dList.setAdapter(createAdapter());
@@ -260,38 +315,87 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                     //Todo intent create profile
                 }
                 if (position==3){
-                    Intent registration=new Intent(getBaseContext(), CreateLogin.class);
-                    startActivityForResult(registration,REGISTRATION);
+                    drawerLayout.closeDrawers();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent registration=new Intent(getBaseContext(), CreateLogin.class);
+                            startActivityForResult(registration,REGISTRATION);
+                            overridePendingTransition(0,0);
+                        }
+                    },startActivityDelay);
                 }
 
             } else {
                 if(usertype){
                     if (position == 0) {
-                        Intent home = new Intent(getBaseContext(), Home.class);
-                        startActivity(home);
+                        drawerLayout.closeDrawers();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent home = new Intent(getBaseContext(), Home.class);
+                                startActivity(home);
+                                overridePendingTransition(0,0);
+                            }
+                        },startActivityDelay);
                     }
                     if(position == 1){
-                        Intent searchRestaurants = new Intent(getBaseContext(), SearchRestaurants.class);
-                        startActivity(searchRestaurants);
+                        drawerLayout.closeDrawers();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent searchRestaurants = new Intent(getBaseContext(), SearchRestaurants.class);
+                                startActivity(searchRestaurants);
+                                overridePendingTransition(0,0);
+                            }
+                        },startActivityDelay);
                     }
 
                     if (position == 2) {
-                        Intent profile = new Intent(getBaseContext(), Profile.class);
-                        startActivity(profile);
+                        drawerLayout.closeDrawers();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent profile = new Intent(getBaseContext(), Profile.class);
+                                startActivity(profile);
+                                overridePendingTransition(0,0);
+                            }
+                        },startActivityDelay);
                     }
 
                     if (position == 3) {
-                        Intent orders = new Intent(getBaseContext(), Orders_User.class);
-                        startActivity(orders);
+                        drawerLayout.closeDrawers();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent orders = new Intent(getBaseContext(), Orders_User.class);
+                                startActivity(orders);
+                                overridePendingTransition(0,0);
+                            }
+                        },startActivityDelay);
                     }
 
                     if (position == 4) {
-                        Intent intent = new Intent(view.getContext(), RestaurantManagement.class);
-                        startActivity(intent);
+                        drawerLayout.closeDrawers();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(getBaseContext(), RestaurantManagement.class);
+                                startActivity(intent);
+                                overridePendingTransition(0,0);
+                            }
+                        },startActivityDelay);
                     }
                     if (position == 5) {
-                        Intent intent = new Intent(view.getContext(), Order_management.class);
-                        startActivity(intent);
+                        drawerLayout.closeDrawers();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(getBaseContext(), Order_management.class);
+                                startActivity(intent);
+                                overridePendingTransition(0,0);
+                            }
+                        },startActivityDelay);
                     }
                     if (position == 6) {
                         phase = 0;
@@ -301,33 +405,66 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                         editor.putBoolean("logged",false);
                         editor.commit();
                         FirebaseAuth.getInstance().signOut();
-                        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
-                        imageView.invalidate();
                         if (notify!=null){
                         notify.stopSelf();}
                         dList.setAdapter(createAdapter());
                         dList.deferNotifyDataSetChanged();
-                        //todo remove user from preferences
+                        drawerLayout.closeDrawers();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent home = new Intent(getBaseContext(), Home.class);
+                                home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(home);
+                            }
+                        },startActivityDelay);
                     }
                 }else{
                     if (position == 0) {
-                        Intent home = new Intent(getBaseContext(), Home.class);
-                        startActivity(home);
+                        drawerLayout.closeDrawers();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent home = new Intent(getBaseContext(), Home.class);
+                                startActivity(home);
+                                overridePendingTransition(0,0);
+                            }
+                        },startActivityDelay);
                     }
-
                     if(position == 1){
-                        Intent searchRestaurants = new Intent(getBaseContext(), SearchRestaurants.class);
-                        startActivity(searchRestaurants);
+                        drawerLayout.closeDrawers();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent searchRestaurants = new Intent(getBaseContext(), SearchRestaurants.class);
+                                startActivity(searchRestaurants);
+                                overridePendingTransition(0,0);
+                            }
+                        },startActivityDelay);
                     }
 
                     if (position == 2) {
-                        Intent profile = new Intent(getBaseContext(), Profile.class);
-                        startActivity(profile);
+                        drawerLayout.closeDrawers();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent profile = new Intent(getBaseContext(), Profile.class);
+                                startActivity(profile);
+                                overridePendingTransition(0,0);
+                            }
+                        },startActivityDelay);
                     }
 
                     if (position == 3) {
-                        Intent orders = new Intent(getBaseContext(), Orders_User.class);
-                        startActivity(orders);
+                        drawerLayout.closeDrawers();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent orders = new Intent(getBaseContext(), Orders_User.class);
+                                startActivity(orders);
+                                overridePendingTransition(0,0);
+                            }
+                        },startActivityDelay);
                     }
 
                     if (position == 4) {
@@ -338,11 +475,17 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
                         editor.putBoolean("logged",false);
                         FirebaseAuth.getInstance().signOut();
                         editor.commit();
-                        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_picture));
-                        imageView.invalidate();
                         dList.setAdapter(createAdapter());
                         dList.deferNotifyDataSetChanged();
-                        //todo remove user from preferences
+                        drawerLayout.closeDrawers();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent home = new Intent(getBaseContext(), Home.class);
+                                home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(home);
+                            }
+                        },startActivityDelay);
                     }
                 }
             }
