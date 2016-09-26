@@ -425,6 +425,8 @@ public class CreateRestaurant_1 extends Fragment {
                     btnNext.setVisibility(View.VISIBLE);
                 } catch (IOException e) {
                     //Log.e("getFromNet",e.getMessage());
+                } catch (NullPointerException e){
+
                 }
             }
         });

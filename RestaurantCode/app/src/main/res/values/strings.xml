@@ -511,4 +511,5 @@
     <string name="userID">"\nUser ID: "</string>
     <string name="menuID">"\nMenu ID: "</string>
     <string name="orderDetails">Order Details</string>
+    <string name="edit_tags">Edit Tags</string>
 </resources>

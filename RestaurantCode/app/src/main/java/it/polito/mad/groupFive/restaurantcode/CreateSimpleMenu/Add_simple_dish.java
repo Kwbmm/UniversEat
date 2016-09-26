@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -122,7 +123,7 @@ public class Add_simple_dish extends Fragment{
         hot=(CheckBox)v.findViewById(R.id.nd_ck_3);
         glutenFree=(CheckBox)v.findViewById(R.id.nd_ck_4);
 
-        ImageButton add_tags= (ImageButton) v.findViewById(R.id.add_tags_but);
+        TextView add_tags= (TextView) v.findViewById(R.id.editTags);
         add_tags.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import it.polito.mad.groupFive.restaurantcode.R;
 import it.polito.mad.groupFive.restaurantcode.holders.TagsHolder;
@@ -43,7 +46,7 @@ public class Simple_menu_add_tags extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    private ArrayList<String> c_tags;
+    private ArrayMap<String,Boolean> tags;
 
     public Simple_menu_add_tags() {
         // Required empty public constructor
@@ -87,8 +90,11 @@ public class Simple_menu_add_tags extends Fragment {
     }
     public void setUpData(View v){
         TagAdapter adp;
-        c_tags=new ArrayList<String>();
-        adp= new TagAdapter(convertStringArrayToArraylist(getResources().getStringArray(R.array.tags)));
+        tags=new ArrayMap<>();
+        for(String s : convertStringArrayToArraylist(getResources().getStringArray(R.array.tags))){
+            tags.put(s,false);
+        }
+        adp= new TagAdapter(tags);
         RecyclerView recyclerView;
         recyclerView=(RecyclerView)v.findViewById(R.id.tag_list);
         recyclerView.setAdapter(adp);
@@ -99,7 +105,10 @@ public class Simple_menu_add_tags extends Fragment {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ArrayList<String> c_tags=new ArrayList<String>();
+                for(int i=0;i<tags.size();i++){
+                    if(tags.valueAt(i)) c_tags.add(tags.keyAt(i));
+                }
                 sData.getdata().getNewDish().setTags(c_tags);
                 //Log.v("vect",c_tags.size()+"");
                 getFragmentManager().popBackStack();
@@ -148,9 +157,9 @@ public class Simple_menu_add_tags extends Fragment {
     }
 
     public class TagAdapter extends RecyclerView.Adapter<TagsHolder>{
-        ArrayList<String> tags;
+        ArrayMap<String,Boolean> tags;
 
-        public TagAdapter(ArrayList<String> tags){
+        public TagAdapter(ArrayMap<String,Boolean> tags){
             this.tags=tags;
 
         }
@@ -162,10 +171,19 @@ public class Simple_menu_add_tags extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(TagsHolder holder, int position) {
-            holder.checkBox.setText(tags.get(position));
-            holder.checkBox.setOnCheckedChangeListener( new CheckedManagement(tags.get(position)));
-
+        public void onBindViewHolder(TagsHolder holder, final int position) {
+            holder.checkBox.setText(tags.keyAt(position));
+            holder.checkBox.setChecked(tags.valueAt(position));
+            holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(tags.valueAt(position)){
+                        tags.setValueAt(position,false);
+                    }else{
+                        tags.setValueAt(position,true);
+                    }
+                }
+            });
         }
 
         @Override
@@ -179,22 +197,5 @@ public class Simple_menu_add_tags extends Fragment {
             stringList.add(s);
         }
         return stringList;
-    }
-
-    public class CheckedManagement implements CompoundButton.OnCheckedChangeListener {
-        String tag;
-
-        public CheckedManagement(String tag) {
-            this.tag = tag;
-        }
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked == true) {
-                c_tags.add(tag);
-            }else{
-                c_tags.remove(tag);
-            }
-        }
     }
 }

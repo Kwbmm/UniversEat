@@ -374,6 +374,8 @@ public class Create_simple_menu1 extends Fragment {
                     next.setVisibility(View.VISIBLE);
                 } catch (IOException e) {
                     //Log.e("getFromNet",e.getMessage());
+                } catch (NullPointerException e){
+
                 }
             }
         });
