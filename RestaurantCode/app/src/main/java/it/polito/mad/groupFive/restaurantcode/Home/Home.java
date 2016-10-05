@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -39,10 +40,13 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
     private static final int LOCATION_REQUEST_CODE = 1;
     private static final long LOCATION_UPDATE_TIME_MS = 3000;
     private static final long LOCATION_UPDATE_FASTEST_TIME_MS = 5000;
+    private static final String LLM_STATE_CODE = "42";
 
     private static boolean isDBPersistanceEnabled = false;
 
     private RecyclerView rv;
+    private LinearLayoutManager llm;
+    private Parcelable llmState;
     private ProgressBar pb;
     private FirebaseDatabase db;
     private DatabaseReference dbRoot;
@@ -59,14 +63,16 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         mlay.inflate(this, R.layout.activity_home, mlay);
         ProgressBar progressBar =(ProgressBar)findViewById(R.id.progressBar_loadingDataHome);
         progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        this.db = FirebaseDatabase.getInstance();
+        this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
+        this.rv = (RecyclerView) findViewById(R.id.home_recyclerViewHome);
+        this.llm = new LinearLayoutManager(this);
+        this.llm.setOrientation(LinearLayoutManager.VERTICAL);
         this.gac = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        this.db = FirebaseDatabase.getInstance();
-        this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataHome);
-        this.rv = (RecyclerView) findViewById(R.id.home_recyclerViewHome);
 
         /**
          * These lines of code are for setting up the searchViewMenu and let it know about the activity
@@ -83,9 +89,35 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if(this.llmState != null){
+            this.llm.onRestoreInstanceState(this.llmState);
+        }
+    }
+
+    @Override
     protected void onPause(){
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         super.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(this.llm.getChildCount() >= 1){
+            //Save the state of the LLM only if there is something bound to it
+            this.llmState = this.llm.onSaveInstanceState();
+            outState.putParcelable(LLM_STATE_CODE, llmState);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState != null){
+            this.llmState = savedInstanceState.getParcelable(LLM_STATE_CODE);
+        }
     }
 
     private void checkLocationPermissions(){
@@ -122,23 +154,21 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         final String METHOD_NAME = this.getClass().getName() + " - getLocation";
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //Get the current location
-        if(this.rv != null){
+        if(this.rv != null && this.llmState == null){
             MenuAdapter ma = new MenuAdapter(this.rv,this.pb,this);
             this.rv.setAdapter(ma);
-            LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-            llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-            this.rv.setLayoutManager(llmVertical);
-            if(lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-                //Create a location request object first
-                LocationRequest locationReq = new LocationRequest();
-                locationReq.setInterval(LOCATION_UPDATE_TIME_MS);
-                locationReq.setFastestInterval(LOCATION_UPDATE_FASTEST_TIME_MS);
-                locationReq.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                LocationServices.FusedLocationApi.requestLocationUpdates(this.gac,locationReq,new LocationListenerForMenus(this.gac,ma,this));
-            }
-            else{
-                getMenus(-1);
-            }
+            this.rv.setLayoutManager(this.llm);
+                if(lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                    //Create a location request object first
+                    LocationRequest locationReq = new LocationRequest();
+                    locationReq.setInterval(LOCATION_UPDATE_TIME_MS);
+                    locationReq.setFastestInterval(LOCATION_UPDATE_FASTEST_TIME_MS);
+                    locationReq.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                    LocationServices.FusedLocationApi.requestLocationUpdates(this.gac,locationReq,new LocationListenerForMenus(this.gac,ma,this));
+                }
+                else{
+                    getMenus(-1);
+                }
         }
     }
 
@@ -158,13 +188,11 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
         switch (locationResult){
             case LOCATION_UNKNOWN: { //Fetch data from most recent to least recent, regardless of the location
                 //Log.w(METHOD_NAME,"Location is unknown, I'm fetching according to most recent data first.");
-                if(rv != null){
+                if(rv != null && this.llmState == null){
                     this.dbRoot = this.db.getReference("menu");
                     ma = new MenuAdapter(this.rv, this.pb,this);
                     rv.setAdapter(ma);
-                    LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-                    llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-                    this.rv.setLayoutManager(llmVertical);
+                    this.rv.setLayoutManager(this.llm);
                     Query menuQuery = this.dbRoot.limitToLast(30); //Get the newest 10 menus
                     menuQuery.addListenerForSingleValueEvent(new GetMenusListener(ma,this));
                 }
@@ -176,9 +204,7 @@ public class Home extends NavigationDrawer implements GoogleApiClient.Connection
                     this.dbRoot = this.db.getReference("restaurant");
                     ma = new MenuAdapter(this.rv, this.pb,this);
                     rv.setAdapter(ma);
-                    LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-                    llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-                    this.rv.setLayoutManager(llmVertical);
+                    this.rv.setLayoutManager(this.llm);
                     //Log.i(METHOD_NAME,"Preparing query for fetching data..");
                     Query menuQuery = this.dbRoot.limitToLast(10); //Get the newest 10 restaurants
                     menuQuery.addListenerForSingleValueEvent(new GetMenusIDFromRestaurantListener(ma,this.lastKnown,this));
