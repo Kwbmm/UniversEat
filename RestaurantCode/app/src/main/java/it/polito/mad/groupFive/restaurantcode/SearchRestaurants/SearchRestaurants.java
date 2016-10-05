@@ -7,11 +7,14 @@ import android.graphics.PorterDuff;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -41,8 +44,11 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
     private static final int LOCATION_REQUEST_CODE = 1;
     private static final long LOCATION_UPDATE_TIME_MS = 3000;
     private static final long LOCATION_UPDATE_FASTEST_TIME_MS = 5000;
+    private static final String LLM_STATE_CODE = "42";
 
     private RecyclerView rv;
+    private LinearLayoutManager llm;
+    private Parcelable llmState;
     private ProgressBar pb;
     private TextView btnSearch;
     private FirebaseDatabase db;
@@ -61,16 +67,12 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
         getSupportActionBar().setTitle(R.string.actionBar_restaurantSearch);
         mlay = (FrameLayout) findViewById(R.id.frame);
         mlay.inflate(this, R.layout.activity_search_restaurants, mlay);
-
-        this.gac = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
         this.db = FirebaseDatabase.getInstance();
         this.pb = (ProgressBar) findViewById(R.id.progressBar_loadingDataRestaurant);
         pb.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         this.rv = (RecyclerView) findViewById(R.id.searchRestaurants_recyclerView);
+        this.llm = new LinearLayoutManager(this);
+        this.llm.setOrientation(LinearLayoutManager.VERTICAL);
         this.btnSearch = (TextView) findViewById(R.id.button_SearchRestaurants);
         this.btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +100,40 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
                 //Log.e("onError",status.getStatusMessage());
             }
         });
+        this.gac = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(this.llmState != null){
+            this.llm.onRestoreInstanceState(this.llmState);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        this.llmState = this.llm.onSaveInstanceState();
+        outState.putParcelable(LLM_STATE_CODE, llmState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState != null){
+            this.llmState = savedInstanceState.getParcelable(LLM_STATE_CODE);
+        }
     }
 
     private void checkLocationPermissions(){
@@ -143,12 +179,10 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
 
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //Get the current location
-        if(this.rv != null){
+        if(this.rv != null && this.llmState == null){
             RestaurantAdapter ra = new RestaurantAdapter(this.rv,this.pb,this);
             this.rv.setAdapter(ra);
-            LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-            llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-            this.rv.setLayoutManager(llmVertical);
+            this.rv.setLayoutManager(this.llm);
             if(lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
                 //Create a location request object first
                 LocationRequest locationReq = new LocationRequest();
@@ -172,12 +206,10 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
             case LOCATION_UNKNOWN: { //Fetch data from most recent to least recent, regardless of the location
                 //Log.w(METHOD_NAME,"Location is unknown, I'm fetching according to most recent data first.");
                 this.dbRoot = this.db.getReference("restaurant");
-                if(rv != null){
+                if(rv != null && this.llmState == null){
                     ra = new RestaurantAdapter(this.rv, this.pb,this);
                     rv.setAdapter(ra);
-                    LinearLayoutManager llmVertical = new LinearLayoutManager(this);
-                    llmVertical.setOrientation(LinearLayoutManager.VERTICAL);
-                    this.rv.setLayoutManager(llmVertical);
+                    this.rv.setLayoutManager(this.llm);
                     Query restaurantQuery = this.dbRoot.limitToFirst(30); //Get the first 30 restaurants
                     restaurantQuery.addListenerForSingleValueEvent(new GetRestaurantListener(ra,this));
                 }
@@ -210,14 +242,14 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
 
     @Override
     protected void onStart() {
-        this.gac.connect();
         super.onStart();
+        this.gac.connect();
     }
 
     @Override
     protected void onStop() {
-        this.gac.disconnect();
         super.onStop();
+        this.gac.disconnect();
     }
 
     @Override
@@ -233,6 +265,6 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        //Log.e("onConFail","GAPI con failed\n"+connectionResult.getErrorMessage());
+        Log.e("onConFail","GAPI con failed\n"+connectionResult.getErrorMessage());
     }
 }
