@@ -270,8 +270,6 @@ public class NavigationDrawer extends AppCompatActivity implements Login_view.On
         adapter.notifyDataSetChanged();
         dList.setAdapter(createAdapter());
         dList.deferNotifyDataSetChanged();
-        Toast toast = Toast.makeText(getBaseContext(), "Login Completed", Toast.LENGTH_SHORT);
-        toast.show();
         hideSoftKeyboard();
     }
 
