@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import it.polito.mad.groupFive.restaurantcode.NavigationDrawer;
 import it.polito.mad.groupFive.restaurantcode.R;
@@ -85,6 +86,7 @@ public class User_info_view extends NavigationDrawer implements Restaurant_info_
                             .setTelephone((String) dataSnapshot.child("telephone").getValue())
                             .setZip((String) dataSnapshot.child("zip").getValue())
                             .setImageLocalPath((String) dataSnapshot.child("imageLocalPath").getValue());
+                    restaurant.setTickets((Map<String,Boolean>) dataSnapshot.child("tickets").getValue());
                     float rating = Float.parseFloat(dataSnapshot.child("rating").getValue().toString());
                     restaurant.setRating(rating);
                     double xcoord = Double.parseDouble(dataSnapshot.child("xcoord").getValue().toString());

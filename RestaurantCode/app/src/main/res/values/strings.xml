@@ -512,4 +512,6 @@
     <string name="menuID">"\nMenu ID: "</string>
     <string name="orderDetails">Order Details</string>
     <string name="edit_tags">Edit Tags</string>
+    <string name="loginCompleted">Login Completed</string>
+    <string name="create_your_restaurant">Create your restaurant</string>
 </resources>

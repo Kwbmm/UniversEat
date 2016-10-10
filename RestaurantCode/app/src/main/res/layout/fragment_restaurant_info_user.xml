@@ -154,6 +154,22 @@
                 android:layout_marginRight="40dp"
                 android:textColor="#DE000000" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tickets"
+                android:id="@+id/restaurant_tickets"
+                android:textSize="14sp"
+                android:layout_toRightOf="@+id/imageView"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="30dp"
+                android:layout_alignTop="@+id/imageView"
+                android:minHeight="50dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginRight="40dp"
+                android:textColor="#DE000000" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
@@ -174,6 +190,18 @@
                 android:layout_marginTop="10dp"
                 android:src="@drawable/ic_clock_black"
                 android:layout_below="@+id/restaurant_address"
+                android:tint="@color/colorPrimary" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:id="@+id/imageView"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentStart="false"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_ticket_black"
+                android:layout_below="@+id/restaurant_open"
                 android:tint="@color/colorPrimary" />
 
             <TextView
@@ -221,7 +249,7 @@
                 android:id="@+id/button_time_img1"
                 android:src="@drawable/ic_calendar_black"
                 android:layout_marginLeft="20dp"
-                android:layout_below="@+id/restaurant_open"
+                android:layout_below="@+id/restaurant_tickets"
                 android:layout_marginTop="10dp"
                 android:tint="@color/colorPrimary" />
 

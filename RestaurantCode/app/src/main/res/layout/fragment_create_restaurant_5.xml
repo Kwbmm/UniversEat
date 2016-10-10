@@ -10,15 +10,16 @@
         android:orientation="vertical"
         >
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
             android:text="@string/frg_create_restaurant_5_textView_AcceptedTickets"
             android:textSize="20sp"
-            android:gravity="center_horizontal"
+            android:gravity="center_vertical"
             android:layout_marginTop="10dp"
             android:textColor="#DE000000"
             android:id="@+id/acceptedTickets"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="10dp"
+            android:layout_centerHorizontal="true" />
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,5 +82,14 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="5dp"
             android:layout_marginRight="35dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:id="@+id/imageView37"
+            android:src="@drawable/ic_ticket_black"
+            android:layout_alignTop="@+id/acceptedTickets"
+            android:layout_toLeftOf="@+id/acceptedTickets"
+            android:layout_marginRight="10dp" />
     </RelativeLayout>
 </ScrollView>

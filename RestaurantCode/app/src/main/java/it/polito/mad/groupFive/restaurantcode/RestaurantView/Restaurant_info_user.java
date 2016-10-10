@@ -169,6 +169,21 @@ public class Restaurant_info_user extends Fragment implements OnMapReadyCallback
         restdescr.setText(restaurant.getDescription());
         TextView restaddr = (TextView) v.findViewById(R.id.restaurant_address);
         restaddr.setText(restaurant.getAddress() + ", " + restaurant.getCity() + " " + restaurant.getZip() + " " + restaurant.getState());
+        TextView resttickets = (TextView) v.findViewById(R.id.restaurant_tickets);
+        String tickets="";
+        try{
+            for(String s : restaurant.getTickets().keySet()){
+                if (restaurant.getTickets().get(s)){
+                    if(tickets.equals("")) {
+                        tickets=s;
+                    } else {
+                        tickets=tickets+", "+s;
+                    }
+                }
+            }
+        } catch (NullPointerException e){}
+        if(tickets.equals("")) tickets="No tickets accepted";
+        resttickets.setText(tickets);
         RelativeLayout resttel = (RelativeLayout) v.findViewById(R.id.layout_call);
         resttel.setOnClickListener(new View.OnClickListener() {
             @Override

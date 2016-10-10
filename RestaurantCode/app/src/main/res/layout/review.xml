@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingLeft="20dp"
     android:paddingTop="20dp"
-    android:background="#ffffff">
+    android:background="@android:color/transparent">
 
             <RatingBar
                 android:id="@+id/ratebar"

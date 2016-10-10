@@ -453,4 +453,6 @@
     <string name="menuID">"\nMenu ID: "</string>
     <string name="orderDetails">Dettagli Ordine</string>
     <string name="edit_tags">Modifica Tag</string>
+    <string name="loginCompleted">Login completato</string>
+    <string name="create_your_restaurant">Crea il tuo ristorante</string>
 </resources>

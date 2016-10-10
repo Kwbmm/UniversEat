@@ -175,7 +175,7 @@ public class Login_view extends Fragment {
                                             editor.putString("psw", password.getText().toString());
                                             editor.putString("email", username.getText().toString());
                                             editor.commit();
-                                            Toast toast = Toast.makeText(getContext(), "Login Completed", Toast.LENGTH_SHORT);
+                                            Toast toast = Toast.makeText(getContext(), R.string.loginCompleted, Toast.LENGTH_SHORT);
                                             toast.show();
                                             mListener.onFragmentInteraction();
                                             getFragmentManager().popBackStack();
@@ -187,7 +187,7 @@ public class Login_view extends Fragment {
                                             editor.putString("psw", password.getText().toString());
                                             editor.putString("email", username.getText().toString());
                                             editor.commit();
-                                            Toast toast = Toast.makeText(getContext(), "Login Completed", Toast.LENGTH_SHORT);
+                                            Toast toast = Toast.makeText(getContext(), R.string.loginCompleted, Toast.LENGTH_SHORT);
                                             toast.show();
                                             //Log.v("pws", password.getText().toString());
                                             mListener.onFragmentInteraction();

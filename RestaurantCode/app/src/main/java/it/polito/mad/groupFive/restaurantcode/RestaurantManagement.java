@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -71,11 +72,10 @@ public class RestaurantManagement extends NavigationDrawer {
 
     private String uid,rid;
     private FrameLayout mlay;
-
+    private Button createRestaurant;
     private SharedPreferences sharedPreferences;
     private Boolean visible=true;
     private View v;
-    private MenuItem plus;
     private View load;
 
     @Override
@@ -85,6 +85,16 @@ public class RestaurantManagement extends NavigationDrawer {
         getSupportActionBar().setTitle(R.string.actionBar_restaurantManagement);
         mlay= (FrameLayout) findViewById(R.id.frame);
         v=mlay.inflate(getBaseContext(), R.layout.restaurant_view_edit, mlay);
+        createRestaurant=(Button)findViewById(R.id.create_restaurant);
+        if(sharedPreferences.getString("rid",null)==null)createRestaurant.setVisibility(View.VISIBLE);
+        createRestaurant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getApplicationContext(),CreateRestaurant.class);
+                intent.putExtra("rid","-1");
+                startActivityForResult(intent,CREATE_RESTAURANT);
+            }
+        });
         load= LayoutInflater.from(this).inflate(R.layout.loading_bar,null);
 
         FirebaseDatabase db=FirebaseDatabase.getInstance();
@@ -96,8 +106,6 @@ public class RestaurantManagement extends NavigationDrawer {
                 mlay.addView(load);
                 ProgressBar pb=(ProgressBar)findViewById(R.id.progressBar_loading);
                 pb.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
-                if(plus!=null){
-                    plus.setVisible(false);}
                 SharedPreferences.Editor editor=sharedPreferences.edit();
                 editor.putString("rid",(String)dataSnapshot.child("rid").getValue());
                 editor.commit();
@@ -144,9 +152,6 @@ public class RestaurantManagement extends NavigationDrawer {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.toolbar_add, menu);
-        MenuItem item=menu.findItem(R.id.add_ab);
-        plus=item;
         return true;
     }
 
@@ -155,6 +160,7 @@ public class RestaurantManagement extends NavigationDrawer {
         final String METHOD_NAME = this.getClass().getName() + " - showRestaurant";
         this.rid = sharedPreferences.getString("rid",null);
         if ( this.rid != null){
+            createRestaurant.setVisibility(View.GONE);
             this.uid=sharedPreferences.getString("uid",null);
             LinearLayout rview= (LinearLayout) findViewById(R.id.fl_redit);
             v=rview.inflate(this,R.layout.resturant_view_edit_fragment,rview);
@@ -173,15 +179,6 @@ public class RestaurantManagement extends NavigationDrawer {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        SharedPreferences.Editor editor= sharedPreferences.edit();
-        if(item.getItemId()==R.id.add_ab){
-            //Log.v("intent","newRest");
-            Intent intent=new Intent(getApplicationContext(),CreateRestaurant.class);
-            intent.putExtra("rid","-1");
-            item.setVisible(false);
-            startActivityForResult(intent,CREATE_RESTAURANT);
-
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -433,7 +430,7 @@ public class RestaurantManagement extends NavigationDrawer {
                                     }
                                 });
                                 v.setVisibility(View.INVISIBLE);
-                                plus.setVisible(true);
+                                createRestaurant.setVisibility(View.VISIBLE);
                             }
                         }
                     });
