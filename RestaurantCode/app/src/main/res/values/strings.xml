@@ -514,4 +514,5 @@
     <string name="edit_tags">Edit Tags</string>
     <string name="loginCompleted">Login Completed</string>
     <string name="create_your_restaurant">Create your restaurant</string>
+    <string name="nearby_restaurants">Nearby Restaurants</string>
 </resources>

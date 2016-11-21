@@ -15,8 +15,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ import com.google.firebase.database.Query;
 
 import it.polito.mad.groupFive.restaurantcode.NavigationDrawer;
 import it.polito.mad.groupFive.restaurantcode.R;
+import it.polito.mad.groupFive.restaurantcode.Restaurant_map;
 import it.polito.mad.groupFive.restaurantcode.listeners.GetRestaurantListener;
 import it.polito.mad.groupFive.restaurantcode.listeners.LocationListenerForRestaurants;
 
@@ -266,5 +268,25 @@ public class SearchRestaurants extends NavigationDrawer implements GoogleApiClie
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.e("onConFail","GAPI con failed\n"+connectionResult.getErrorMessage());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.clear();
+        getMenuInflater().inflate(R.menu.toolbar_map,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.map_ab) {
+            Restaurant_map restaurant_map = new Restaurant_map();
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up,R.anim.slide_down)
+                    .addToBackStack(null).add(R.id.frame,restaurant_map).commit();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

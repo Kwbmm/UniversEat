@@ -455,4 +455,5 @@
     <string name="edit_tags">Modifica Tag</string>
     <string name="loginCompleted">Login completato</string>
     <string name="create_your_restaurant">Crea il tuo ristorante</string>
+    <string name="nearby_restaurants">Ristoranti nei paraggi</string>
 </resources>
