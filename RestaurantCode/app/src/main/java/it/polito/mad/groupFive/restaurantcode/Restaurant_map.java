@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -207,6 +208,13 @@ public class Restaurant_map extends Fragment implements OnMapReadyCallback, Goog
         googleMap.setMyLocationEnabled(true);
         googleMap.setOnInfoWindowClickListener(this);
         this.mMap=googleMap;
+
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+        if (location != null)
+        {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+        }
     }
 
     @Override
