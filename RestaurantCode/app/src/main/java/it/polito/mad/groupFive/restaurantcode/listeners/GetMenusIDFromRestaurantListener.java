@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,11 +42,12 @@ public class GetMenusIDFromRestaurantListener implements ValueEventListener {
         for(DataSnapshot ds : dataSnapshot.getChildren()) {
             String rid = (String) ds.child("rid").getValue();
             double x = ((Double)ds.child("xcoord").getValue());
-            double y = ((Double)ds.child("xcoord").getValue());
+            double y = ((Double)ds.child("ycoord").getValue());
             Location here = new Location("dummy location");
             here.setLatitude(x);
             here.setLongitude(y);
             float distance = this.location.distanceTo(here);
+
 
             FirebaseDatabase db = FirebaseDatabase.getInstance();
             DatabaseReference menuRef = db.getReference("menu");
