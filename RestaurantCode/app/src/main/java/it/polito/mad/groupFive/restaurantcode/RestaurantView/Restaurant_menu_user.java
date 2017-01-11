@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -129,7 +131,7 @@ public class Restaurant_menu_user extends Fragment {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
 
-                Menu  menu = new Menu();
+                final Menu  menu = new Menu();
                 //Log.v("rid",(String)dataSnapshot.child("name").getValue());
                 menu.setRid((String)dataSnapshot.child("rid").getValue());
                 menu.setName((String) dataSnapshot.child("name").getValue());
@@ -140,14 +142,28 @@ public class Restaurant_menu_user extends Fragment {
                 menu.setPrice(Float.parseFloat(dataSnapshot.child("price").getValue().toString()));
                 menu.setServiceFee((Boolean) dataSnapshot.child("serviceFee").getValue());
                 menu.setType(Integer.parseInt(dataSnapshot.child("type").getValue().toString()));
-                menu.setImageLocal((String) dataSnapshot.child("imageLocalPath").getValue());
                 menu.setSpicy((Boolean) dataSnapshot.child("spicy").getValue());
                 menu.setVegetarian((Boolean) dataSnapshot.child("vegetarian").getValue());
                 menu.setVegan((Boolean) dataSnapshot.child("vegan").getValue());
                 menu.setGlutenfree((Boolean) dataSnapshot.child("glutenfree").getValue());
-                menusshared.add(menu);
-                adp.notifyDataSetChanged();
-
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRoot = storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");
+                ContextWrapper cw = new ContextWrapper(getContext());
+                File dir = cw.getDir("images", Context.MODE_PRIVATE);
+                final File filePath = new File(dir,menu.getMid());
+                storageRoot.child(menu.getMid()).getFile(filePath).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        menu.setImageLocal(filePath.getAbsolutePath());
+                        menusshared.add(menu);
+                        adp.notifyDataSetChanged();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Log.e("onFailure",e.getMessage());
+                    }
+                });
             }
 
             @Override
@@ -272,6 +288,9 @@ public class Restaurant_menu_user extends Fragment {
             if(menu.getMid().toString().equals(mid)){
                 holder.card.setCardBackgroundColor(getResources().getColor(R.color.colorAccent));
             }
+            else{
+                holder.card.setCardBackgroundColor(getResources().getColor(R.color.cardview_light_background));
+            }
             String s=menu.getDescription();
             holder.menu_description.setText(s);
             holder.menu_name.setText(menu.getName());
@@ -280,22 +299,13 @@ public class Restaurant_menu_user extends Fragment {
             if(!menu.isVegan()) holder.vegan_icon.setColorFilter(Color.GRAY);
             if(!menu.isVegetarian()) holder.vegetarian_icon.setColorFilter(Color.GRAY);
             if(!menu.isGlutenfree()) holder.glutenfree_icon.setColorFilter(Color.GRAY);
+            File img = new File(menu.getImageLocalPath());
             try {
-                FirebaseStorage storage=FirebaseStorage.getInstance();
-                StorageReference imageref=storage.getReferenceFromUrl("gs://luminous-heat-4574.appspot.com/menus/");
-                try {
-                    getFromNetwork(imageref,menu.getMid(),holder.menu_image);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                //holder.menu_image.setImageBitmap(menu.getImageBitmap());
-            } catch (NullPointerException e){
-                //Log.e("immagine non caricata"," ");
+                holder.menu_image.setImageBitmap(new Picture(Uri.fromFile(img),getActivity().getContentResolver(),300,300).getBitmap());
+            } catch (IOException e) {
+                //Log.e(METHOD_NAME,e.getMessage());
             }
             holder.card.setOnClickListener(new OnCardClick(menu));
-
-
-
         }
 
         @Override
